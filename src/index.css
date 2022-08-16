@@ -1,3 +1,11 @@
+:root {
+  --primary: #0070F8;
+  --font-color : #1A1A1A;
+  --bg-color: #FFF;
+  --idle-color: #E5E5E5;
+  --white: #FFF;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -25,12 +33,214 @@ code {
 }
 
 .shadow-box {
-  width: 250px;
+  width: 236px;
   display: none;
+}
+
+.banner-box{
+  width : 472px;
+  height : 100%;
 }
 
 .main-body {
   flex: 1;
+}
+
+.banner-image{
+  width: 100%;
+  height : 100vh;
+}
+
+.wrapper {
+  overflow: hidden;
+  font-family: 'Work Sans';
+  font-style: normal;
+  font-weight: 500;
+  padding: 40px 48px;
+  background-color: var(--bg-color);
+  color: var(--font-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  padding: 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.content {
+  margin: 40px 0px 40px 0px;
+  width: 448px;
+}
+
+.content-dashboard {
+  width: 920px;
+}
+
+.content-center {
+  width: 448px;
+  text-align: center;
+}
+
+.justify-grid {
+  padding: 0px;
+}
+
+.justify-center {
+  flex-direction: row;
+  align-items: center;
+}
+
+.primary {
+  color: var(--primary) !important;
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.title {
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 40px;
+  color: var(--font-color);
+}
+
+.banner-image {
+  width: 100%;
+  height: 100vh;
+}
+
+.mobile-image {
+  width: 450px;
+}
+
+.banner {
+  display: block;
+}
+
+.f-10 {
+  font-size: 10px;
+}
+
+.f-14 {
+  font-size: 14px;
+}
+
+.f-16 {
+  font-size: 16px;
+}
+
+.f-24 {
+  font-size: 24px;
+}
+
+.f-32 {
+  font-size: 32px;
+}
+
+.f-40 {
+  font-size: 40px;
+}
+
+.f-48 {
+  font-size: 48px;
+}
+
+.fw-500 {
+  font-weight: 500;
+}
+
+.left {
+  float: left !important;
+}
+
+.right {
+  float: right !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mr-16{
+  margin-right: 16px;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+.mb-32 {
+  margin-bottom: 32px;
+}
+
+.ml-16 {
+  margin-left: 16px;
+}
+
+.p-6 {
+  padding: 6px;
+}
+
+.p-8 {
+  padding: 8px;
+}
+
+.p-16 {
+  padding: 16px;
+}
+
+.p-24{
+  padding: 24px;
+}
+
+.pl-24{
+  padding-left : 24px;
+}
+
+.flex {
+  display: flex;
+}
+
+.right-div {
+  width: 100%;
+  text-align: right;
+}
+
+.email-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 24px 8px 8px;
+  gap: 12px;
+  width: 214px;
+  background: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 40px;
+}
+
+@media screen and (max-width: 767px) {
+  .banner {
+    display: none;
+  }
+
+  .project-header {
+    text-align: center;
+  }
+
+  .title {
+    text-align: center;
+  }
+
+  .mobile-image {
+    width: 100%;
+  }
 }
 
 @media screen and (min-width: 768px) {
