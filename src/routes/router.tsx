@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import MenuBarTag from '../Layouts/menuBar';
 import SideBar from '../Layouts/menuSideBar';
+import Login from '../managerApp/Login';
 
 const routes = [
   {
@@ -10,7 +11,7 @@ const routes = [
       {
         path: "login",
         sideBar: <SideBar></SideBar>,
-        main: <h1>Hello World Main</h1>,
+        main: <Login/>,
         footer: <MenuBarTag></MenuBarTag>
       },
       {

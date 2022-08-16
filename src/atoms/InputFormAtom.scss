@@ -1,0 +1,192 @@
+.input-form-atom {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    position: relative;
+
+    &.invalid {
+        label {
+            color: red !important;
+        }
+
+        textarea,
+        input {
+            border-color: red !important;
+
+        }
+    }
+
+    &:not(.populated) {
+        // &:hover {
+        //     background: #dddddd;
+        // }
+    }
+
+    .label-con {
+        margin-top: 5px;
+
+        label {
+            font-size: 12px;
+            color: #1a1a1a;
+            line-height: 14px;
+            padding-bottom: 10px;
+        }
+
+        .icon {
+            cursor: pointer;
+            font-size: 13px !important;
+        }
+    }
+
+    &.focus {
+        // background: #fff !important;
+        // border-color: #1f8eed;
+        // label {
+        //     color: #1f8eed;
+        // }
+
+        textarea,
+        input {
+            background: #fff;
+            color: #000;
+            outline: none;
+
+            &:invalid {
+                outline: none !important;
+                box-shadow: none !important;
+            }
+
+            &:hover {
+                background: #fff !important;
+            }
+        }
+
+        .selection {
+            background: #fff !important;
+            color: #000 !important;
+            outline: none !important;
+
+            &:hover {
+                background: #fff !important;
+            }
+        }
+    }
+
+    textarea,
+    input {
+        height: 45px;
+        line-height: 45px;
+        padding: 0 16px;
+        font-size: 15px;
+        outline: none !important;
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+
+        &:invalid {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        &::placeholder {
+            color: #bdbdbd;
+        }
+    }
+
+    .selection {
+        height: 405x !important;
+        line-height: 45px !important;
+        padding: 0 16px !important;
+        font-size: 15px !important;
+        outline: none !important;
+        width: 100% !important;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        background: transparent !important;
+
+        .menu {
+            max-height: 200px !important;
+
+            .item {
+                font-size: 14px !important;
+            }
+        }
+
+        &::placeholder {
+            color: #bdbdbd;
+        }
+    }
+
+    textarea {
+        height: 168px;
+        line-height: 20px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+    }
+
+    .counter {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        font-size: 10px;
+        color: #848484;
+    }
+
+    .warning {
+        position: absolute;
+        z-index: 111;
+        top: calc(100% + 10px);
+        display: flex;
+        padding: 9px 12px;
+        background: #ffffff;
+        border: 1px solid #000000;
+        box-sizing: border-box;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 2px;
+        font-size: 15px;
+        left: -20px;
+
+        img {
+            height: 25px;
+            width: inherit;
+            margin-right: 15px;
+        }
+
+        &::after {
+            position: absolute;
+            top: -16px;
+            left: 57px;
+            height: 30px;
+            width: 30px;
+            background: white;
+            content: "";
+            border-top: 1px solid #000;
+            border-left: 1px solid #000;
+            rotate: 45deg;
+        }
+
+        span {
+            position: relative;
+            z-index: 122;
+        }
+    }
+
+    .description {
+        position: absolute;
+        top: 25px;
+        left: -15px;
+        width: calc(100% + 30px);
+        background: #fff;
+        background: #fff;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 5px;
+        padding: 20px 24px;
+        font-size: 14px;
+        line-height: 16px;
+        z-index: 122;
+    }
+}

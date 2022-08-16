@@ -1,18 +1,7 @@
 interface IUser {
   id: number
-  name?: string
-  email?: string
-  password?: string
-  token?: string
+  name?: string | null
+  email?: string | null
+  password?: string | null
+  token?: string | null
 }
-
-type AuthUserState = {
-  loginUser?: IUser
-}
-
-type AuthAction = {
-  type: string
-  loginUser: IUser
-}
-
-type DispatchType = (args: AuthUserState) => AuthUserState
