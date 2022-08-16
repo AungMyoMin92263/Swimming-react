@@ -1,0 +1,64 @@
+
+.side-bar {
+  display: none;
+  position: fixed;
+  left: 0px;
+  width: 250px;
+  height: 100vh;
+  background-color: white;
+  border-right: 1px solid #cccccc;
+}
+
+.aside-title {
+  font-size: 1.1rem;
+  text-align: center;
+  font-weight: 400;
+  padding: 50px 0px;
+}
+
+.content-box {
+  flex: 1;
+}
+
+.class-box {
+  border-top: 1px solid #cccccc;
+}
+
+.class-box .menu-label {
+  padding: 20px;
+  color: #808080;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.list-item {
+  display: flex;
+  width: 100%;
+  padding: 20px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.list-item .item-icon {
+  width: 40px;
+  margin-right: 10px;
+  text-align: center;
+}
+
+.list-item .item-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #808080;
+}
+
+.list-item.active {
+  background-color: #E6F1FE;
+}
+
+.list-item.active .item-text {
+  color: #1A1A1A;
+}
+
+

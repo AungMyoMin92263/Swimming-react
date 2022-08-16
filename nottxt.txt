@@ -1,0 +1,42 @@
+// "connected-react-router": "^6.9.3",
+    // "history": "4.10.1",
+
+    <div className='main'>
+            <div className='side-bar'>
+              {routes.map((route, index) => (
+                <Route
+                  key={index + 'app-aside'}
+                  path={route.path}
+                >
+                  {route.child.map((child, index) => (
+                    <Route key={index + 'child-aside'} element={child.sideBar} />
+                  ))}
+                </Route>
+              ))}
+            </div>
+            <div className='main-body'>
+              {routes.map((route, index) => (
+                <Route
+                  key={index + 'app-aside'}
+                  path={route.path}
+                >
+                  {route.child.map((child, index) => (
+                    <Route key={index + 'child-aside'} element={child.main} />
+                  ))}
+                </Route>
+              ))}
+            </div>
+
+            <div className='footer'>
+              {routes.map((route, index) => (
+                <Route
+                  key={index + 'app-aside'}
+                  path={route.path}
+                >
+                  {route.child.map((child, index) => (
+                    <Route key={index + 'child-aside'} element={child.footer} />
+                  ))}
+                </Route>
+              ))}
+            </div>
+          </div>
