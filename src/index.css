@@ -1,24 +1,14 @@
 :root {
   --primary: #0070F8;
-  --font-color : #1A1A1A;
+  --font-color: #1A1A1A;
   --bg-color: #FFF;
   --idle-color: #E5E5E5;
   --white: #FFF;
 }
 
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  min-width: 350px;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: "Work Sans";
+  font-style: normal;
 }
 
 .app-layout {
@@ -37,30 +27,27 @@ code {
   display: none;
 }
 
-.banner-box{
-  width : 472px;
-  height : 100%;
+.banner-box {
+  display: none;
 }
 
 .main-body {
   flex: 1;
 }
 
-.banner-image{
+.banner-image {
   width: 100%;
-  height : 100vh;
+  height: 100vh;
 }
 
 .wrapper {
-  overflow: hidden;
-  font-family: 'Work Sans';
-  font-style: normal;
   font-weight: 500;
   padding: 40px 48px;
   background-color: var(--bg-color);
   color: var(--font-color);
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
 
 .container {
@@ -120,8 +107,9 @@ code {
   width: 450px;
 }
 
-.banner {
-  display: block;
+.form-footer{
+  display: flex;
+  justify-content: space-between;
 }
 
 .f-10 {
@@ -168,7 +156,7 @@ code {
   text-align: center;
 }
 
-.mr-16{
+.mr-16 {
   margin-right: 16px;
 }
 
@@ -196,12 +184,12 @@ code {
   padding: 16px;
 }
 
-.p-24{
+.p-24 {
   padding: 24px;
 }
 
-.pl-24{
-  padding-left : 24px;
+.pl-24 {
+  padding-left: 24px;
 }
 
 .flex {
@@ -226,9 +214,6 @@ code {
 }
 
 @media screen and (max-width: 767px) {
-  .banner {
-    display: none;
-  }
 
   .project-header {
     text-align: center;
@@ -244,8 +229,15 @@ code {
 }
 
 @media screen and (min-width: 768px) {
+
   .side-bar,
   .shadow-box {
+    display: block;
+  }
+
+  .banner-box {
+    width: 472px;
+    height: 100%;
     display: block;
   }
 }

@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import InputFormAtom from '../atoms/InputFormAtom';
-import { AuthInterface } from '../stores/model/auth-interface';
-import { StoreState } from '../stores/reducers';
-import { signOut, signIn } from '../stores/actions';
-import "./Login.css"
+import InputFormAtom from '../../atoms/InputFormAtom';
+import { AuthInterface } from '../../stores/model/auth-interface';
+import { StoreState } from '../../stores/reducers';
+import { signOut, signIn } from '../../stores/actions';
 import { Navigate } from 'react-router-dom';
 interface IStates {
   email: string;

@@ -2,12 +2,13 @@ import React from "react";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import MenuBarTag from "../Layouts/menuBar";
 import SideBar from "../Layouts/menuSideBar";
-import Login from "../managerApp/Login";
+import Login from "../managerApp/manager/Login";
+import { useNavigate } from 'react-router-dom';
 
 //import pages
-import AdminDashboardPage from "../pages/admin/AdminDashboard";
-import AdminLoginPage from "../pages/admin/AdminLogin";
-import AdminWelcomePage from "../pages/admin/AdminWelcome";
+import AdminDashboardPage from "../managerApp/admin/AdminDashboard";
+import AdminLoginPage from "../managerApp/admin/AdminLogin";
+import AdminWelcomePage from "../managerApp/admin/AdminWelcome";
 
 const routes = [
   {
@@ -16,14 +17,14 @@ const routes = [
       {
         path: "login",
         sideBar: <></>,
-        main: <Login />,
+        main: <AdminLoginPage />,
         footer: <></>,
         isSideBar: false,
       },
       {
         path: "welcome",
         sideBar: <></>,
-        main: <AdminLoginPage />,
+        main: <AdminWelcomePage />,
         footer: <></>,
         isSideBar: false,
       },
@@ -34,6 +35,18 @@ const routes = [
         footer: <></>,
         isSideBar: true,
       },
+    ],
+  },
+  {
+    path: "/manager",
+    child: [
+      {
+        path: "login",
+        sideBar: <></>,
+        main: <Login />,
+        footer: <></>,
+        isSideBar: false,
+      }
     ],
   },
 ];
