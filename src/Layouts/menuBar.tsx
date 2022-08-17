@@ -6,19 +6,19 @@ function MenuBarTag(){
     <div className="menu-list">
       <div className="menu-item">
         <img src={"/assets/icons/home.png"} alt="home" className="item-icon" />
-        <span className="item-text">home</span>
+        <span className="item-text">Home</span>
       </div>
       <div className="menu-item">
         <img src={"/assets/icons/classes.png"} alt="className" className="item-icon" />
-        <span className="item-text">classNames</span>
+        <span className="item-text">Classes</span>
       </div>
       <div className="menu-item">
         <img src={"/assets/icons/events.png"} alt="event" className="item-icon" />
-        <span className="item-text">events</span>
+        <span className="item-text">Events</span>
       </div>
       <div className="menu-item">
         <img src={"/assets/icons/me.png"} alt="profile" className="item-icon" />
-        <span className="item-text">me</span>
+        <span className="item-text">Me</span>
       </div>
     </div>
   </div>)

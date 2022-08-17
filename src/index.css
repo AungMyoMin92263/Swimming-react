@@ -12,7 +12,7 @@ body {
 }
 
 .app-layout {
-  background-color: #e6e6e6;
+  background-color: #FFF;
 }
 
 .main-layout {
@@ -107,7 +107,7 @@ body {
   width: 450px;
 }
 
-.form-footer{
+.form-footer {
   display: flex;
   justify-content: space-between;
 }
@@ -152,8 +152,12 @@ body {
   float: right !important;
 }
 
-.text-center {
-  text-align: center;
+.ml-197{
+  margin-left: 197px;
+}
+
+.mr-8 {
+  margin-right: 8px;
 }
 
 .mr-16 {
@@ -192,7 +196,22 @@ body {
   padding-left: 24px;
 }
 
-.flex {
+.mt-8{
+  margin-top: 8px;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.align-center{
+  display: flex;
+  align-items: center;
+}
+
+.flex{
   display: flex;
 }
 
@@ -211,6 +230,61 @@ body {
   background: #FFFFFF;
   border: 1px solid #E5E5E5;
   border-radius: 40px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.primary-btn {
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 24px 12px 28px;
+  gap: 4px;
+
+  width: 113px;
+  height: 48px;
+  background: var(--primary);
+  border-radius: 8px;
+  border: none;
+  color: var(--white);
+}
+
+.secondary-btn {
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 24px 12px 28px;
+  gap: 4px;
+
+  width: 113px;
+  height: 48px;
+
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  background-color: var(--white);
+  color: var(--primary)
+}
+
+.item-icon {
+  width: 32px;
+  margin-right: 10px;
+  text-align: center;
+}
+
+.hr {
+  width: 448px;
+  height: 1px;
+  background: #E5E5E5;
+}
+
+.cursor{
+  cursor: pointer;
 }
 
 @media screen and (max-width: 767px) {

@@ -91,8 +91,7 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
       passwordMsg,
     } = this.state;
     let { authUser } = this.props;
-    return (
-      <div className="wrapper">
+    return (<div className="wrapper">
         {authUser.error && <p>error occured</p>}
         {authUser.isSignedIn && <Navigate to="/admin/welcome" replace={true} />}
         <div className="primary f-16 project-header">

@@ -40,7 +40,7 @@
 }
 
 .list-item .item-icon {
-  width: 40px;
+  width: 32px;
   margin-right: 10px;
   text-align: center;
 }
@@ -59,6 +59,14 @@
 
 .list-item.active .item-text {
   color: #1A1A1A;
+}
+
+.crop_text_cart{
+  display: block;
+  width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 

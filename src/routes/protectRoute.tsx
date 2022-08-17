@@ -9,9 +9,9 @@ interface CustomRouteInterface {
   path: string
 }
 const ProtectedRoute = (prop: CustomRouteInterface) => {
-  if (!prop?.user && prop.path != "login") {
-    return <Navigate to="login" replace />;
-  }
+  // if (!prop?.user && prop.path !== "login") {
+  //   return <Navigate to="/admin/login" replace />;
+  // }
 
   return prop?.children;
 };

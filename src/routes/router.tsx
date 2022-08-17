@@ -9,9 +9,18 @@ import { useNavigate } from 'react-router-dom';
 import AdminDashboardPage from "../managerApp/admin/AdminDashboard";
 import AdminLoginPage from "../managerApp/admin/AdminLogin";
 import AdminWelcomePage from "../managerApp/admin/AdminWelcome";
+import AddSchoolPage from "../managerApp/admin/AddSchool";
+import InviteManagerPage from "../managerApp/admin/InviteManager";
+import AddMoreSchoolPage from "../managerApp/admin/AddMoreSchool";
+
+import ManagerDashboardPage from "../managerApp/manager/ManagerDashboard";
 import ProtectedRoute from "./protectRoute";
 import { createBrowserHistory } from "history";
+
 const windowHistory = createBrowserHistory({ window });
+
+const propsMenu = { isAdmin : true};
+const propsMenuManager = { isAdmin : false};
 const routes = [
   {
     path: "/admin",
@@ -32,10 +41,33 @@ const routes = [
       },
       {
         path: "dashboard",
-        sideBar: <SideBar></SideBar>,
+        sideBar: <SideBar {...propsMenu}></SideBar>,
         main: () => (<><AdminDashboardPage /></>),
         footer: <></>,
         isSideBar: true,
+      },
+      
+      {
+        path: "add-school",
+        sideBar: <></>,
+        main: (props: any) => (<><AddSchoolPage {...props} /></>),
+        footer: <></>,
+        isSideBar: false,
+      },
+     
+      {
+        path: "invite-manager",
+        sideBar: <></>,
+        main: (props: any) => (<><InviteManagerPage {...props} /></>),
+        footer: <></>,
+        isSideBar: false,
+      },
+      {
+        path: "add-more-school",
+        sideBar: <></>,
+        main: (props: any) => (<><AddMoreSchoolPage {...props} /></>),
+        footer: <></>,
+        isSideBar: false,
       },
     ],
   },
@@ -48,7 +80,14 @@ const routes = [
         main: () => (<><Login /></>),
         footer: <></>,
         isSideBar: false,
-      }
+      },
+      {
+        path: "dashboard",
+        sideBar: <SideBar {...propsMenuManager}></SideBar>,
+        main: () => (<><ManagerDashboardPage /></>),
+        footer: <></>,
+        isSideBar: true,
+      },
     ],
   },
 ];

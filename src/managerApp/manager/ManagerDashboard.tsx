@@ -20,7 +20,7 @@ interface UserSignInPage {
 
 type IProps = UserSignInPage;
 
-class AdminDashboardPage extends React.Component<IProps, IStates> {
+class ManagerDashboardPage extends React.Component<IProps, IStates> {
   constructor(props: any) {
     super(props);
 
@@ -96,4 +96,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { signIn })(AdminDashboardPage);
+export default connect(mapStateToProps, { signIn })(ManagerDashboardPage);
