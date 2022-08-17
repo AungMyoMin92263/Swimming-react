@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Outlet, Route, Routes, unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import MenuBarTag from "../Layouts/menuBar";
 import SideBar from "../Layouts/menuSideBar";
 import Login from "../managerApp/manager/Login";
@@ -9,7 +9,9 @@ import { useNavigate } from 'react-router-dom';
 import AdminDashboardPage from "../managerApp/admin/AdminDashboard";
 import AdminLoginPage from "../managerApp/admin/AdminLogin";
 import AdminWelcomePage from "../managerApp/admin/AdminWelcome";
-
+import ProtectedRoute from "./protectRoute";
+import { createBrowserHistory } from "history";
+const windowHistory = createBrowserHistory({ window });
 const routes = [
   {
     path: "/admin",
@@ -17,21 +19,21 @@ const routes = [
       {
         path: "login",
         sideBar: <></>,
-        main: <AdminLoginPage />,
+        main: () => (<><AdminLoginPage /></>),
         footer: <></>,
         isSideBar: false,
       },
       {
         path: "welcome",
         sideBar: <></>,
-        main: <AdminWelcomePage />,
+        main: (props: any) => (<><AdminWelcomePage {...props} /></>),
         footer: <></>,
         isSideBar: false,
       },
       {
         path: "dashboard",
         sideBar: <SideBar></SideBar>,
-        main: <AdminDashboardPage />,
+        main: () => (<><AdminDashboardPage /></>),
         footer: <></>,
         isSideBar: true,
       },
@@ -43,7 +45,7 @@ const routes = [
       {
         path: "login",
         sideBar: <></>,
-        main: <Login />,
+        main: () => (<><Login /></>),
         footer: <></>,
         isSideBar: false,
       }
@@ -52,21 +54,24 @@ const routes = [
 ];
 
 class RouteList extends React.Component {
-  renderPage = (child: any, index: any) => {
+  renderPage = (child: any, index: any, porps: any) => {
+    let prop: any
     if (child.isSideBar) {
       return (
         <Route
           path={child.path}
           key={index + "child-aside"}
           element={
-            <div className="main-layout">
-              <div>
-                <div className="shadow-box"></div>
-                {child.sideBar}
+            <ProtectedRoute {...prop} path={child.path}>
+              <div className="main-layout">
+                <div>
+                  <div className="shadow-box"></div>
+                  {child.sideBar}
+                </div>
+                <div className="main-body">{<child.main {...porps} />}</div>
+                <div className="footer-menu">{child.footer}</div>
               </div>
-              <div className="main-body">{child.main}</div>
-              <div className="footer-menu">{child.footer}</div>
-            </div>
+            </ProtectedRoute>
           }
         />
       );
@@ -74,16 +79,18 @@ class RouteList extends React.Component {
       return (
         <Route
           path={child.path}
-          key={index + "child-aside"}
+          key={index + "no-aside"}
           element={
-            <div className="main-layout">
-              <div>
-                <div className="banner-box"></div>
-                <img src="../../../assets/images/banner.png" alt="banner" className="banner-image" />
+            <ProtectedRoute {...prop} path={child.path}>
+              <div className="main-layout">
+                <div>
+                  <div className="banner-box"></div>
+                  <img src="../../../assets/images/banner.png" alt="banner" className="banner-image" />
+                </div>
+                <div className="main-body">{<child.main />}</div>
+                <div className="footer-menu">{child.footer}</div>
               </div>
-              <div className="main-body">{child.main}</div>
-              <div className="footer-menu">{child.footer}</div>
-            </div>
+            </ProtectedRoute>
           }
         />
       );
@@ -93,7 +100,7 @@ class RouteList extends React.Component {
   render() {
     return (
       <div>
-        <BrowserRouter>
+        <HistoryRouter history={windowHistory}>
           <Routes>
             {routes.map((route, index) => (
               <Route
@@ -101,12 +108,12 @@ class RouteList extends React.Component {
                 path={route.path}
                 element={
                   <div className="app-layout">
-                    <Outlet />
+                    <Outlet key={index + "child-layout"} />
                   </div>
                 }
               >
                 {route.child.map((child, index) => (
-                  <>{this.renderPage(child, index)}</>
+                  <React.Fragment key={index + "child-" + index}>{this.renderPage(child, index, windowHistory)}</React.Fragment>
                 ))}
                 {/* <Route index element={<Home />} /> */}
                 {/* {route.child.map((child, index) => (
@@ -136,7 +143,7 @@ class RouteList extends React.Component {
               </Route>
             ))}
           </Routes>
-        </BrowserRouter>
+        </HistoryRouter>
       </div>
     );
   }
