@@ -12,18 +12,25 @@ export const signIn = (signInInfo: SignInInterface) => {
     // let response: APIResInterface = { error: null, data: null }
     try {
       const response = await apiServer.post<IUser>(
-        'user/login', signInInfo
+        'users/login', signInInfo
       );
       dispatch<SignInAction>({
         type: ActionTypes.signIn,
         payload: response
       });
-    } catch (error) {
-      dispatch<SignInAction>({
-        type: ActionTypes.signIn,
-        payload: error
-      });
+    } catch (err) {
+      if (err instanceof Error) {
+        // ✅ TypeScript knows err is Error
+        dispatch<SignInAction>({
+          type: ActionTypes.getError,
+          payload: err.message
+        });
+      } else {
+        console.log('Unexpected error', err);
+      }
+      
     }
+    
 
   };
 }

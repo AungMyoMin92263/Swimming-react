@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap');
+
 :root {
   --primary: #0070F8;
+  --secondary:#808080;
   --font-color: #1A1A1A;
   --bg-color: #FFF;
   --idle-color: #E5E5E5;
@@ -86,6 +89,9 @@ body {
 .primary {
   color: var(--primary) !important;
 }
+.secondary{
+  color: var(--secondary) !important;
+}
 
 .bg-primary {
   background-color: var(--primary);
@@ -140,8 +146,16 @@ body {
   font-size: 48px;
 }
 
+.fw-400{
+  font-weight: 400;
+}
+
 .fw-500 {
   font-weight: 500;
+}
+
+.fw-600{
+  font-weight: 600;
 }
 
 .left {
@@ -199,6 +213,8 @@ body {
 .mt-8{
   margin-top: 8px;
 }
+
+
 
 .flex-center {
   display: flex;
@@ -271,6 +287,14 @@ body {
   color: var(--primary)
 }
 
+.idle-btn {
+  background: #E5E5E5;
+  border-radius: 8px;
+  border: none;
+  padding: 12px 28px;
+  color: #FFFFFF;
+}
+
 .item-icon {
   width: 32px;
   margin-right: 10px;
@@ -285,6 +309,10 @@ body {
 
 .cursor{
   cursor: pointer;
+}
+
+.justify-space-between{
+  justify-content: space-between;
 }
 
 @media screen and (max-width: 767px) {
