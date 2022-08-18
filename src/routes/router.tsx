@@ -16,80 +16,113 @@ import AddMoreSchoolPage from "../managerApp/admin/AddMoreSchool";
 import ManagerDashboardPage from "../managerApp/manager/ManagerDashboard";
 import ProtectedRoute from "./protectRoute";
 import { createBrowserHistory } from "history";
+import SchoolListPage from "../managerApp/admin/SchoolListPage";
 
 const windowHistory = createBrowserHistory({ window });
 
 const propsMenu = { isAdmin : true};
 const propsMenuManager = { isAdmin : false};
 const routes = [
-  {
-    path: "/admin",
-    child: [
-      {
-        path: "login",
-        sideBar: <></>,
-        main: () => (<><AdminLoginPage /></>),
-        footer: <></>,
-        isSideBar: false,
-      },
-      {
-        path: "welcome",
-        sideBar: <></>,
-        main: (props: any) => (<><AdminWelcomePage {...props} /></>),
-        footer: <></>,
-        isSideBar: false,
-      },
-      {
-        path: "dashboard",
-        sideBar: <SideBar {...propsMenu}></SideBar>,
-        main: () => (<><AdminDashboardPage /></>),
-        footer: <></>,
-        isSideBar: true,
-      },
-      
-      {
-        path: "add-school",
-        sideBar: <></>,
-        main: (props: any) => (<><AddSchoolPage {...props} /></>),
-        footer: <></>,
-        isSideBar: false,
-      },
-     
-      {
-        path: "invite-manager",
-        sideBar: <></>,
-        main: (props: any) => (<><InviteManagerPage {...props} /></>),
-        footer: <></>,
-        isSideBar: false,
-      },
-      {
-        path: "add-more-school",
-        sideBar: <></>,
-        main: (props: any) => (<><AddMoreSchoolPage {...props} /></>),
-        footer: <></>,
-        isSideBar: false,
-      },
-    ],
-  },
-  {
-    path: "/manager",
-    child: [
-      {
-        path: "login",
-        sideBar: <></>,
-        main: () => (<><Login /></>),
-        footer: <></>,
-        isSideBar: false,
-      },
-      {
-        path: "dashboard",
-        sideBar: <SideBar {...propsMenuManager}></SideBar>,
-        main: () => (<><ManagerDashboardPage /></>),
-        footer: <></>,
-        isSideBar: true,
-      },
-    ],
-  },
+	{
+		path: "/admin",
+		child: [
+			{
+				path: "login",
+				sideBar: <></>,
+				main: () => (
+					<>
+						<AdminLoginPage />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
+			{
+				path: "welcome",
+				sideBar: <></>,
+				main: (props: any) => (
+					<>
+						<AdminWelcomePage {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
+			{
+				path: "dashboard",
+				sideBar: <SideBar {...propsMenu}></SideBar>,
+				main: () => (
+					<>
+						<AdminDashboardPage />
+					</>
+				),
+				footer: <></>,
+				isSideBar: true,
+			},
+
+			{
+				path: "add-school",
+				sideBar: <></>,
+				main: (props: any) => (
+					<>
+						<AddSchoolPage {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
+
+			{
+				path: "invite-manager",
+				sideBar: <></>,
+				main: (props: any) => (
+					<>
+						<InviteManagerPage {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
+			{
+				path: "add-more-school",
+				sideBar: <></>,
+				main: (props: any) => (
+					<>
+						<AddMoreSchoolPage {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			}
+		],
+	},
+	{
+		path: "/manager",
+		child: [
+			{
+				path: "login",
+				sideBar: <></>,
+				main: () => (
+					<>
+						<AdminLoginPage />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
+			{
+				path: "dashboard",
+				sideBar: <SideBar {...propsMenuManager}></SideBar>,
+				main: () => (
+					<>
+						<ManagerDashboardPage />
+					</>
+				),
+				footer: <></>,
+				isSideBar: true,
+			},
+		],
+	},
 ];
 
 class RouteList extends React.Component {
