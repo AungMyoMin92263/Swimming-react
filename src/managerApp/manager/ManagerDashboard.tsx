@@ -102,7 +102,7 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 										Create a class to add students, parents and coaches
 									</div>
 									<div className='flex-center mt-16'>
-										<a href='http://localhost:4200/app/sub-page/managers/admin-dashboard'>
+										<a href='http://localhost:3000/manager/add-class'>
 											<button
 												type='submit'
 												className='primary-btn'

@@ -17,6 +17,7 @@ import ManagerDashboardPage from "../managerApp/manager/ManagerDashboard";
 import ProtectedRoute from "./protectRoute";
 import { createBrowserHistory } from "history";
 import SchoolListPage from "../managerApp/admin/SchoolListPage";
+import AddClass from "../managerApp/manager/AddClass";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -93,7 +94,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-			}
+			},
 		],
 	},
 	{
@@ -116,6 +117,17 @@ const routes = [
 				main: () => (
 					<>
 						<ManagerDashboardPage />
+					</>
+				),
+				footer: <></>,
+				isSideBar: true,
+			},
+			{
+				path: "add-class",
+				sideBar: <SideBar {...propsMenuManager}></SideBar>,
+				main: (props: any) => (
+					<>
+						<AddClass {...props}/>
 					</>
 				),
 				footer: <></>,
