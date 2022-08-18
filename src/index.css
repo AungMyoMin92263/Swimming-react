@@ -56,7 +56,7 @@ body {
 }
 
 .container {
-  padding: 16px 142px;
+  padding: 16px 12px;
   box-sizing: border-box;
   overflow: hidden;
   display: flex;
@@ -68,7 +68,7 @@ body {
 
 .content {
   margin: 40px 0px 40px 0px;
-  width: 448px;
+  /* width: 448px; */
 }
 
 .dashboard {

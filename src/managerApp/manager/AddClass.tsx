@@ -41,7 +41,7 @@ class AddClass extends React.Component<IPageProp, IStates> {
 						<span>My Report Cards</span>
 					</div>
 					<div className='container'>
-						<div className='content'>
+						<div className='content col-6'>
 							<div className='f-14 mb-16'>
 								<Link to='/admin/welcome' style={{ textDecoration: "none" }}>
 									<ArrowBackIcon
