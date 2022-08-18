@@ -1,9 +1,6 @@
 import React from "react";
-import { BrowserRouter, Outlet, Route, Routes, unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
-import MenuBarTag from "../Layouts/menuBar";
+import { Outlet, Route, Routes, unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import SideBar from "../Layouts/menuSideBar";
-import Login from "../managerApp/manager/Login";
-import { useNavigate } from 'react-router-dom';
 
 //import pages
 import AdminDashboardPage from "../managerApp/admin/AdminDashboard";
@@ -16,9 +13,9 @@ import AddMoreSchoolPage from "../managerApp/admin/AddMoreSchool";
 import ManagerDashboardPage from "../managerApp/manager/ManagerDashboard";
 import ProtectedRoute from "./protectRoute";
 import { createBrowserHistory } from "history";
-import SchoolListPage from "../managerApp/admin/SchoolListPage";
 import AddClass from "../managerApp/manager/AddClass";
 import SetDateTime from "../managerApp/manager/SetDateTime";
+import InviteCoachPage from "../managerApp/manager/InviteCoach";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -144,6 +141,17 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: true,
+			},
+			{
+				path: "invite-coach",
+				sideBar: <></>,
+				main: (props: any) => (
+					<>
+						<InviteCoachPage {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
 			},
 		],
 	},

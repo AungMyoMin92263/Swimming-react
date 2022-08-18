@@ -1,9 +1,6 @@
 import React from "react";
 import { IPageProp } from "../../pagePropsInterface";
 
-// import csss
-import styles from "./../../css/pages.module.css";
-
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import LinkIcon from '@mui/icons-material/Link';
@@ -18,7 +15,7 @@ interface IStates {
   emailMsg: string;
 }
 
-class InviteManagerPage extends React.Component<IPageProp, IStates> {
+class InviteCoachPage extends React.Component<IPageProp, IStates> {
   constructor(props: any) {
     super(props);
 
@@ -64,14 +61,14 @@ class InviteManagerPage extends React.Component<IPageProp, IStates> {
 							</div>
 							<div className='hr mb-32'></div>
 							<div className='f-32 fw-500'>
-								<span>Invite a Manager.</span>
+								<span>Invite a Coach.</span>
 							</div>
 							<div className='f-16 mb-16'>
-								<span>Invite a manager to help you run your operations.</span>
+								<span>Invite a coach to your class.</span>
 							</div>
 							<div className='fw-400 mb-16'>
 								<InputFormAtom
-									label='School Manager(s)'
+									label='Coach(es)'
 									placeholder={"Enter email(s), comma separated"}
 									warning={emailMsg}
 									type='text'
@@ -82,8 +79,8 @@ class InviteManagerPage extends React.Component<IPageProp, IStates> {
 											email: value,
 										});
 									}}
-									id='inviteManager'
-									name='inviteManager'
+									id='inviteCoach'
+									name='inviteCoach'
 									value={email}
 									required={true}
 									maxLength={200}
@@ -115,7 +112,7 @@ class InviteManagerPage extends React.Component<IPageProp, IStates> {
 								</div>
 
 								<div className='flex-center'>
-									<span>2 of 2</span>
+									<span>3 of 4</span>
 									<Link to='/admin/add-more-school'>
 										<button type='submit' className='idle-btn ml-16'>
 											Continue
@@ -131,4 +128,4 @@ class InviteManagerPage extends React.Component<IPageProp, IStates> {
   }
 }
 
-export default InviteManagerPage;
+export default InviteCoachPage;

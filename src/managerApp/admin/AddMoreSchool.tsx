@@ -47,7 +47,7 @@ class AddMoreSchoolPage extends React.Component<IPageProp, IStates> {
 									alt='right-arrow'
 									className='item-icon'
 								/>
-								<span className='f-16 crop_text_cart'>
+								<span className='f-16'>
 									Dolphin Swimming School
 								</span>
 							</div>

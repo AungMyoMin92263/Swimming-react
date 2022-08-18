@@ -99,7 +99,7 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 				</div>
 
 				<div className='container'>
-					<div className='content'>
+					<div className='content col-lg-6 col-md-8 col-12'>
 						<div className='title mb-16'>
 							<span>Login</span>
 						</div>
