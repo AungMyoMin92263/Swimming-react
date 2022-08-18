@@ -18,6 +18,7 @@ import ProtectedRoute from "./protectRoute";
 import { createBrowserHistory } from "history";
 import SchoolListPage from "../managerApp/admin/SchoolListPage";
 import AddClass from "../managerApp/manager/AddClass";
+import SetDateTime from "../managerApp/manager/SetDateTime";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -127,7 +128,18 @@ const routes = [
 				sideBar: <SideBar {...propsMenuManager}></SideBar>,
 				main: (props: any) => (
 					<>
-						<AddClass {...props}/>
+						<AddClass {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: true,
+			},
+			{
+				path: "set-date-time",
+				sideBar: <SideBar {...propsMenuManager}></SideBar>,
+				main: (props: any) => (
+					<>
+						<SetDateTime {...props} />
 					</>
 				),
 				footer: <></>,

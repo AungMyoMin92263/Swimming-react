@@ -17,7 +17,7 @@ interface IStates {
 	nameMsg: string;
 }
 
-class AddClass extends React.Component<IPageProp, IStates> {
+class SetDateTime extends React.Component<IPageProp, IStates> {
 	constructor(props: any) {
 		super(props);
 
@@ -41,7 +41,7 @@ class AddClass extends React.Component<IPageProp, IStates> {
 						<span>My Report Cards</span>
 					</div>
 					<div className='container'>
-						<div className='content col-6 col-md-6 col-sm-12'>
+						<div className='content col-lg-6 col-md-6 col-sm-12'>
 							<div className='f-14 mb-16'>
 								<Link to='/admin/welcome' style={{ textDecoration: "none" }}>
 									<ArrowBackIcon
@@ -56,18 +56,16 @@ class AddClass extends React.Component<IPageProp, IStates> {
 									alt='right-arrow'
 									className='item-icon'
 								/>
-								<span className='f-16 crop_text_cart'>
-									Dolphin Swimming School
+								<span className='f-16 '>
+									Pro Youth Morning (Dorphin swimming school)
 								</span>
 							</div>
 							<div className='hr mb-16'></div>
 							<div className='f-32 fw-500'>
-								<span>Create a class</span>
+								<span>Set date and time.</span>
 							</div>
 							<div className='f-16 mb-16 fw-400'>
-								<span>
-									Create a class to add students, parents and coaches.
-								</span>
+								<span>Create a recurring class or a one-time class.</span>
 							</div>
 							<div className='mb-16 align-center'>
 								<div className='flex-column'>
@@ -131,4 +129,4 @@ class AddClass extends React.Component<IPageProp, IStates> {
 	}
 }
 
-export default AddClass;
+export default SetDateTime;

@@ -41,7 +41,7 @@ class AddSchoolPage extends React.Component<IPageProp, IStates> {
 						<span>My Report Cards</span>
 					</div>
 					<div className='container'>
-						<div className='content'>
+						<div className='content col-6 col-md-6 col-sm-12'>
 							<div className='f-14 mb-16'>
 								<Link to='/admin/welcome' style={{ textDecoration: "none" }}>
 									<ArrowBackIcon
@@ -57,7 +57,7 @@ class AddSchoolPage extends React.Component<IPageProp, IStates> {
 								<span>Get started by adding a school you manage.</span>
 							</div>
 							<div className='mb-16 align-center'>
-								<img src='../../../assets/icons/upload.png' alt='upload' />
+								<img src='../../../assets/icons/upload.png' alt='upload' className="big-icon" />
 								<span className='primary f-14' style={{ marginLeft: "18px" }}>
 									{" "}
 									&nbsp; Upload Image
