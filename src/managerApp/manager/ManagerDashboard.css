@@ -1,0 +1,20 @@
+.createClass {
+}
+
+.body {
+    width: 312px;
+    height: 272px;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 32px;
+}
+
+.plus-icon{
+    padding: 11px;
+}
+
+img{
+   width: 58px;
+   color: #808080;
+}
