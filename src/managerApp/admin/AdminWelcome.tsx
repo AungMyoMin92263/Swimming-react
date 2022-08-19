@@ -1,8 +1,7 @@
 import React from "react";
-import { IPageProp } from "../../pagePropsInterface";
-
-// import csss
-import styles from "./../../css/pages.module.css";
+import { AuthInterface } from "../../stores/model/auth-interface";
+import { StoreState } from "../../stores/reducers";
+import { connect } from "react-redux";
 
 // icon
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -13,7 +12,11 @@ interface IStates {
   step : number,
 }
 
-class AdminWelcomePage extends React.Component<IPageProp, IStates> {
+interface IProps {
+	authUser: AuthInterface;
+}
+
+class AdminWelcomePage extends React.Component<IProps, IStates> {
   constructor(props: any) {
     super(props);
 
@@ -22,6 +25,7 @@ class AdminWelcomePage extends React.Component<IPageProp, IStates> {
     };
   }
   componentDidMount() {
+    console.log('authUser',this.props.authUser)
     //loading
   }
 
@@ -68,7 +72,7 @@ class AdminWelcomePage extends React.Component<IPageProp, IStates> {
           <span>Back</span>
         </button>
         <Link to="/admin/add-school">
-        <button type="submit" className="primary-btn" onClick={() => this.props.history.push('/admin/add-school')}>
+        <button type="submit" className="primary-btn">
           <span>Next</span>
           <ArrowForwardIcon sx={{ color: '#FFF', fontSize: 24, ml: 0.5 }} ></ArrowForwardIcon>
         </button>
@@ -107,4 +111,14 @@ class AdminWelcomePage extends React.Component<IPageProp, IStates> {
   }
 }
 
-export default AdminWelcomePage;
+const mapStateToProps = ({
+	authUser,
+}: StoreState): {
+	authUser: AuthInterface;
+} => {
+	return {
+		authUser,
+	};
+};
+
+export default connect(mapStateToProps, {})(AdminWelcomePage);

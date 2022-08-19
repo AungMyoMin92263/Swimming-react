@@ -1,4 +1,4 @@
-import { APIResInterface, AuthInterface, SignInInterface } from '../model/auth-interface';
+import { SignInInterface } from '../model/auth-interface';
 import { ActionTypes } from './types';
 import apiServer from '../../api/api-service';
 import { Dispatch } from 'redux';

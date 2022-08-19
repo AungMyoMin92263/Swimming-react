@@ -206,6 +206,9 @@ body {
 .mr-16 {
   margin-right: 16px;
 }
+.mb-8 {
+  margin-bottom: 16px;
+}
 
 .mb-16 {
   margin-bottom: 16px;
@@ -288,20 +291,27 @@ body {
 }
 
 .primary-btn {
-
   display: flex;
-  /* flex-direction: row; */
   justify-content: center;
   align-items: center;
   padding: 12px 24px 12px 28px;
   gap: 4px;
-
-  /* width: 113px;
-  height: 48px; */
   background: var(--primary);
   border-radius: 8px;
   border: none;
   color: var(--white);
+}
+
+.idle-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 24px 12px 28px;
+  gap: 4px;
+  border-radius: 8px;
+  border: none;
+  color: var(--white);
+  background: #E5E5E5;
 }
 
 .secondary-btn {
@@ -320,14 +330,6 @@ body {
   border-radius: 8px;
   background-color: var(--white);
   color: var(--primary)
-}
-
-.idle-btn {
-  background: #E5E5E5;
-  border-radius: 8px;
-  border: none;
-  padding: 12px 28px;
-  color: #FFFFFF;
 }
 
 .item-icon {
@@ -368,6 +370,12 @@ body {
 .big-icon {
   width: 120px;
   height: 120px;
+}
+
+.preview-icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
 }
 
 @media screen and (max-width: 767px) {

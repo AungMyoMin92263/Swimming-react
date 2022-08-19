@@ -1,20 +1,18 @@
 import React from "react";
 import { IPageProp } from "../../pagePropsInterface";
 
-// import csss
-import styles from "./../../css/pages.module.css";
-
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import InputFormAtom from "../../atoms/InputFormAtom";
 
 interface IStates {
   logo: string;
   isClassNameEmpty: boolean;
   className: string;
-  classNameMsg : string
+  classNameMsg: string;
+  isCompleted : boolean
 }
 
 class AddClass extends React.Component<IPageProp, IStates> {
@@ -25,7 +23,8 @@ class AddClass extends React.Component<IPageProp, IStates> {
       logo: "",
       isClassNameEmpty: true,
       className: "",
-	  classNameMsg : ''
+      classNameMsg: "",
+      isCompleted : false,
     };
   }
   componentDidMount() {
@@ -33,22 +32,28 @@ class AddClass extends React.Component<IPageProp, IStates> {
   }
 
   renderBtn = () => {
-	if(this.state.isClassNameEmpty){
-		return <button type="submit" className="idle-btn fw-600 ml-16">
-                    Continue
-                  </button>;
-	}else return <Link to="/manager/set-date-time">
-	<button
-		  type="submit"
-		  className="primary-btn"
-		>
-		  Continue
-		</button></Link>;
-  }
+    if (this.state.isClassNameEmpty) {
+      return (
+        <button type="submit" className="idle-btn fw-600 ml-16">
+          Continue
+        </button>
+      );
+    } else
+      return (
+        <>
+          {this.state.isCompleted && (
+            <Navigate to="/admin/welcome" replace={true} />
+          )}
+          <button type="submit" className="primary-btn">
+            Continue
+          </button>
+        </>
+      );
+  };
 
   render() {
     const { logo, isClassNameEmpty, className, classNameMsg } = this.state;
-	
+
     return (
       <>
         <div className="wrapper">
@@ -129,7 +134,7 @@ class AddClass extends React.Component<IPageProp, IStates> {
 
               <div className="right">
                 <span className="secondary">1 of 4</span>
-                  {this.renderBtn()}
+                {this.renderBtn()}
               </div>
             </div>
           </div>

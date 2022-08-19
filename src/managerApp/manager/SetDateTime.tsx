@@ -160,7 +160,7 @@ class SetDateTime extends React.Component<IPageProp, IStates> {
 					style={{
 						width: 40,
 						height: 40,
-						backgroundColor: "blue",
+						backgroundColor: "var(--primary)",
 						color: "#fff",
 						borderRadius: "50%",
 						padding: "5px",
@@ -240,7 +240,7 @@ class SetDateTime extends React.Component<IPageProp, IStates> {
 						<span>My Report Cards</span>
 					</div>
 					<div className='container'>
-						<div className='content '>
+						<div className='content'>
 							<div className='f-14 mb-32'>
 								<Link to='/admin/welcome' style={{ textDecoration: "none" }}>
 									<ArrowBackIcon

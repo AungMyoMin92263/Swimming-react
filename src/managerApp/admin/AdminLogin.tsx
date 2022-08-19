@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import InputFormAtom from "../../atoms/InputFormAtom";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
-import { signOut, signIn } from "../../stores/actions";
+import { signIn } from "../../stores/actions";
 import { Navigate } from "react-router-dom";
 
 interface IStates {
@@ -74,7 +74,7 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 
 	callback = () => {
 		const { email, password }: IStates = this.state;
-		this.props.signIn(email, password);
+		this.props.signIn({ email : email,password : password});
 	};
 
 	validateEmail = (email: string) => {
