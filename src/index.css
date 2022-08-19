@@ -50,6 +50,10 @@ body {
   flex-direction: column;
   height: 100vh;
 }
+.scroll-y{
+  overflow-y: auto;
+  height : auto;
+}
 
 .container {
   padding: 16px 12px;

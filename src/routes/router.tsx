@@ -16,6 +16,8 @@ import { createBrowserHistory } from "history";
 import AddClass from "../managerApp/manager/AddClass";
 import SetDateTime from "../managerApp/manager/SetDateTime";
 import InviteCoachPage from "../managerApp/manager/InviteCoach";
+import InviteStudentPage from "../managerApp/manager/InviteStudent";
+import InvitedStudentSummaryPage from "../managerApp/manager/InvitedStudentSummary";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -148,6 +150,28 @@ const routes = [
 				main: (props: any) => (
 					<>
 						<InviteCoachPage {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
+			{
+				path: "invite-student",
+				sideBar: <></>,
+				main: (props: any) => (
+					<>
+						<InviteStudentPage {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
+			{
+				path: "invite-student-summary",
+				sideBar: <></>,
+				main: (props: any) => (
+					<>
+						<InvitedStudentSummaryPage {...props} />
 					</>
 				),
 				footer: <></>,
