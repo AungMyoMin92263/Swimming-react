@@ -4,7 +4,7 @@ import InputFormAtom from "../../atoms/InputFormAtom";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { signIn } from "../../stores/actions";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 interface IStates {
 	isReEnter: boolean;
@@ -35,7 +35,7 @@ class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
 			isSecondPasswordEmpty: false,
 			passwordMsg: "",
 			passwordMatchMsg: "",
-            isCompleted: false,
+			isCompleted: false,
 		};
 	}
 
@@ -85,10 +85,13 @@ class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
 				firstPassword: "",
 				secondPassword: "",
 			});
-		
+		} else {
+			this.setState({
+				isReEnter: false,
+				isCompleted: true,
+			});
 		}
-        this.callback()
-		
+		this.callback();
 	};
 
 	callback = () => {
@@ -98,63 +101,91 @@ class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
 	};
 
 	renderPasswordInput = () => {
-		if (!this.state.isReEnter) {
+		if (!this.state.isCompleted) {
+			if (!this.state.isReEnter) {
+				return (
+					<InputFormAtom
+						label='Password'
+						placeholder={"Enter your password"}
+						warning={this.state.passwordMsg}
+						type='password'
+						showWarning={this.state.isFirstPasswordEmpty}
+						isDropdown={false}
+						callback={(value: string) => {
+							this.setState({
+								firstPassword: value,
+							});
+						}}
+						id='firstPassword'
+						name='firstPassword'
+						value={this.state.firstPassword}
+						required={true}
+						maxLength={200}
+						className=''
+						clickCallback={() => {}}
+					/>
+				);
+			} else {
+				return (
+					<InputFormAtom
+						label='Password'
+						placeholder={"Enter a password"}
+						warning={this.state.passwordMsg}
+						type='password'
+						showWarning={this.state.isSecondPasswordEmpty}
+						isDropdown={false}
+						callback={(value: string) => {
+							this.setState({
+								secondPassword: value,
+							});
+						}}
+						id='secondPassword'
+						name='secondPassword'
+						value={this.state.secondPassword}
+						required={true}
+						maxLength={200}
+						className=''
+						clickCallback={() => {}}
+					/>
+				);
+			}
+		}
+	};
+	renderTitle = () => {
+		if (this.state.isReEnter) {
+			return <span>Re-enter Password</span>;
+		} else if (!this.state.isCompleted) {
+			return <span>Create Password</span>;
+		} else {
+			return <span>Your account has been created!</span>;
+		}
+	};
+
+	renderBtn = () => {
+		if (this.state.isCompleted) {
 			return (
-				<InputFormAtom
-					label='Password'
-					placeholder={"Enter your password"}
-					warning={this.state.passwordMsg}
-					type='password'
-					showWarning={this.state.isFirstPasswordEmpty}
-					isDropdown={false}
-					callback={(value: string) => {
-						this.setState({
-							firstPassword: value,
-						});
-					}}
-					id='firstPassword'
-					name='firstPassword'
-					value={this.state.firstPassword}
-					required={true}
-					maxLength={200}
-					className=''
-					clickCallback={() => {}}
-				/>
+				<Link to='/manager/login'>
+					<button
+						type='submit'
+						className='primary-btn'
+						onClick={() => this.submit()}
+					>
+						Done
+					</button>
+				</Link>
 			);
 		} else {
 			return (
-				<InputFormAtom
-					label='Password'
-					placeholder={"Enter a password"}
-					warning={this.state.passwordMsg}
-					type='password'
-					showWarning={this.state.isSecondPasswordEmpty}
-					isDropdown={false}
-					callback={(value: string) => {
-						this.setState({
-							secondPassword: value,
-						});
-					}}
-					id='secondPassword'
-					name='secondPassword'
-					value={this.state.secondPassword}
-					required={true}
-					maxLength={200}
-					className=''
-					clickCallback={() => {}}
-				/>
+				<button
+					type='submit'
+					className='primary-btn'
+					onClick={() => this.submit()}
+				>
+					Continue
+				</button>
 			);
 		}
 	};
-	renderTitle = () =>{
-        if (this.state.isReEnter){
-            return (<span>Re-enter Password</span>)
-        }else if(this.state.isCompleted){
-            return <span>Create Password</span>;
-        }else{
-            return <span> Password</span>;
-        }
-    }
 	render(): React.ReactNode {
 		const {
 			firstPassword,
@@ -163,6 +194,7 @@ class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
 			isFirstPasswordEmpty,
 			isSecondPasswordEmpty,
 			passwordMsg,
+			isCompleted,
 		} = this.state;
 		let { authUser } = this.props;
 		return (
@@ -174,23 +206,21 @@ class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
 
 				<div className='container'>
 					<div className='content'>
-						<div className='title mb-32'>
-							{this.renderTitle()}
-						</div>
+						<div className='title mb-32'>{this.renderTitle()}</div>
 						<div className='mb-32'>
-							<span className='emailWrapper fw-500 f-14'>azlan@gmail.com</span>
+							{!isCompleted ? (
+								<span className='emailWrapper fw-500 f-14'>
+									azlan@gmail.com
+								</span>
+							) : (
+								<span className='fw-400 f-16'>Welcome to My Report Cards!</span>
+							)}
 						</div>
 						<div className='mb-32'>{this.renderPasswordInput()}</div>
 						{<p className='text-danger'>{this.state.passwordMatchMsg}</p>}
 						<div className='form-footer'>
 							<span></span>
-							<button
-								type='submit'
-								className='primary-btn'
-								onClick={() => this.submit()}
-							>
-								Continue
-							</button>
+							{this.renderBtn()}
 						</div>
 					</div>
 				</div>
