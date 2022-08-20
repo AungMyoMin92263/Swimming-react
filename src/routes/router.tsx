@@ -18,6 +18,7 @@ import SetDateTime from "../managerApp/manager/SetDateTime";
 import InviteCoachPage from "../managerApp/manager/InviteCoach";
 import InviteStudentPage from "../managerApp/manager/InviteStudent";
 import InvitedStudentSummaryPage from "../managerApp/manager/InvitedStudentSummary";
+import ManagerCreatePasswordPage from "../managerApp/manager/ManagerCreatePasswordPage";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -100,6 +101,17 @@ const routes = [
 	{
 		path: "/manager",
 		child: [
+			{
+				path: "create-password",
+				sideBar: <></>,
+				main: () => (
+					<>
+						<ManagerCreatePasswordPage />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
 			{
 				path: "login",
 				sideBar: <></>,

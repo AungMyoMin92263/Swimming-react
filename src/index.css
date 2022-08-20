@@ -38,7 +38,7 @@ body {
   width: 100%;
   flex: 1;
   background: #F5F5F5;
-  height : 100vh;
+  height: 100vh;
 }
 
 .wrapper {
@@ -50,9 +50,10 @@ body {
   flex-direction: column;
   height: 100vh;
 }
-.scroll-y{
+
+.scroll-y {
   overflow-y: auto;
-  height : auto;
+  height: auto;
 }
 
 .container {
@@ -68,7 +69,7 @@ body {
 
 .content {
   margin: 40px 0px 40px 0px;
-  /* width: 448px; */
+  width: 448px;
 }
 
 .dashboard {
@@ -206,6 +207,7 @@ body {
 .mr-16 {
   margin-right: 16px;
 }
+
 .mb-8 {
   margin-bottom: 16px;
 }
@@ -376,6 +378,16 @@ body {
   width: 120px;
   height: 120px;
   border-radius: 50%;
+}
+
+.emailWrapper {
+  flex-direction: row;
+  align-items: center;
+  padding: 6px 16px;
+  gap: 8px;
+
+  border: 1px solid #E5E5E5;
+  border-radius: 40px;
 }
 
 @media screen and (max-width: 767px) {
