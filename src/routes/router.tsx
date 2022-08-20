@@ -19,6 +19,8 @@ import InviteCoachPage from "../managerApp/manager/InviteCoach";
 import InviteStudentPage from "../managerApp/manager/InviteStudent";
 import InvitedStudentSummaryPage from "../managerApp/manager/InvitedStudentSummary";
 import ManagerCreatePasswordPage from "../managerApp/manager/ManagerCreatePasswordPage";
+import AdminRecoverPasswordPage from "../managerApp/admin/AdminRecoverPasswordPage";
+import AdminChangePasswordPage from "../managerApp/admin/AdminChangePasswordPage";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -28,6 +30,28 @@ const routes = [
 	{
 		path: "/admin",
 		child: [
+			{
+				path: "recover-password",
+				sideBar: <></>,
+				main: () => (
+					<>
+						<AdminRecoverPasswordPage />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
+			{
+				path: "change-password",
+				sideBar: <></>,
+				main: () => (
+					<>
+						<AdminChangePasswordPage />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
 			{
 				path: "login",
 				sideBar: <></>,
@@ -100,6 +124,99 @@ const routes = [
 	},
 	{
 		path: "/manager",
+		child: [
+			{
+				path: "create-password",
+				sideBar: <></>,
+				main: () => (
+					<>
+						<ManagerCreatePasswordPage />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
+			{
+				path: "login",
+				sideBar: <></>,
+				main: () => (
+					<>
+						<AdminLoginPage />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
+			{
+				path: "dashboard",
+				sideBar: <SideBar {...propsMenuManager}></SideBar>,
+				main: () => (
+					<>
+						<ManagerDashboardPage />
+					</>
+				),
+				footer: <></>,
+				isSideBar: true,
+			},
+			{
+				path: "add-class",
+				sideBar: <SideBar {...propsMenuManager}></SideBar>,
+				main: (props: any) => (
+					<>
+						<AddClass {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: true,
+			},
+			{
+				path: "set-date-time",
+				sideBar: <SideBar {...propsMenuManager}></SideBar>,
+				main: (props: any) => (
+					<>
+						<SetDateTime {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: true,
+			},
+			{
+				path: "invite-coach",
+				sideBar: <></>,
+				main: (props: any) => (
+					<>
+						<InviteCoachPage {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
+			{
+				path: "invite-student",
+				sideBar: <></>,
+				main: (props: any) => (
+					<>
+						<InviteStudentPage {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
+			{
+				path: "invite-student-summary",
+				sideBar: <></>,
+				main: (props: any) => (
+					<>
+						<InvitedStudentSummaryPage {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+			},
+		],
+	},
+	{
+		path: "/student",
 		child: [
 			{
 				path: "create-password",

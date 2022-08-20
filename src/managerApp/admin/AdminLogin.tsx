@@ -4,7 +4,7 @@ import InputFormAtom from "../../atoms/InputFormAtom";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { signIn } from "../../stores/actions";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 interface IStates {
 	email: string;
@@ -155,7 +155,10 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 						</div>
 						{authUser.error && <p className='text-danger'>{authUser.error}</p>}
 						<div className='form-footer'>
-							<span>Forgot password?</span>
+							<Link to='/admin/recover-password'>
+								<span>Forgot password?</span>
+							</Link>
+
 							<button
 								type='submit'
 								className='btn btn-primary right'
