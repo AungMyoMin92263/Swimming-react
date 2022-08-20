@@ -12,7 +12,7 @@ import TagInput from "../../components/TagInput";
 
 interface IStates {
   emails: string[];
-  isCompleted : boolean;
+  isCompleted: boolean;
 }
 
 interface IProps {
@@ -27,20 +27,20 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
     console.log("props", props);
     this.state = {
       emails: [],
-	  isCompleted : false
+      isCompleted: false,
     };
   }
   componentDidMount() {}
 
-  handleChange = (tags : string[]) => {
-	console.log('tags',tags)
-	this.setState({
-		emails : tags
-	});
-  }
+  handleChange = (tags: string[]) => {
+    console.log("tags", tags);
+    this.setState({
+      emails: tags,
+    });
+  };
 
   isValid = () => {
-	return true;
+    return true;
     // if (this.state.emails.length === 0)
     //   return false;
     // else return true;
@@ -48,7 +48,10 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 
   submit = async () => {
     if (this.isValid()) {
-	await this.props.inviteManager({user_email : this.state.emails,schoold_id : this.props.schools.result.data.id});
+      await this.props.inviteManager({
+        user_email: this.state.emails,
+        schoold_id: this.props.schools.result.data.id,
+      });
 
       this.setState({
         isCompleted: true,
@@ -79,7 +82,7 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
         </>
       );
   };
-  
+
   render() {
     const { emails } = this.state;
     return (
@@ -102,13 +105,18 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
               <div className="mb-16 flex">
                 <img
                   src={
-                    this.props.schools.result? "http://localhost:3000/api/" + this.props.schools.result.data.logo : '../../../assets/icons/logo.png'
+                    this.props.schools.result
+                      ? "http://localhost:3000/api/" +
+                        this.props.schools.result.data.logo
+                      : "../../../assets/icons/logo.png"
                   }
                   alt="right-arrow"
                   className="item-icon"
                 />
                 <span className="f-16">
-                  {this.props.schools.result? this.props.schools.result.data.name : ''}
+                  {this.props.schools.result
+                    ? this.props.schools.result.data.name
+                    : ""}
                 </span>
               </div>
               <div className="hr mb-32"></div>
@@ -119,62 +127,10 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
                 <span>Invite a manager to help you run your operations.</span>
               </div>
               <div className="fw-400 mb-16">
-                <TagInput onInputChange={this.handleChange}/>
-                {/* <InputFormAtom
-									label='School Manager(s)'
-									placeholder={"Enter email(s), comma separated"}
-									warning={emailMsg}
-									type='text'
-									showWarning={isEmailEmpty || !isEmailValid}
-									isDropdown={false}
-									callback={(value: string) => {
-										this.setState({
-											email: value,
-										});
-									}}
-									id='inviteManager'
-									name='inviteManager'
-									value={email}
-									required={true}
-									maxLength={200}
-									className=''
-									clickCallback={() => {}}
-									focusCallback={() => {
-										this.setState({
-											isEmailEmpty: false,
-											isEmailValid: true,
-										});
-									}}
-								/> */}
+                <TagInput onInputChange={this.handleChange} />
               </div>
-              {/* <div className="flex-center justify-space-between">
-                <div className="flex-center">
-                  <div
-                    style={{
-                      transform: " rotate(-45deg)",
-                      marginBottom: "5px",
-                      marginLeft: "5px",
-                    }}
-                  >
-                    <LinkIcon
-                      sx={{ color: "#0070F8", fontSize: 22, mr: 0.5 }}
-                    ></LinkIcon>
-                  </div>
 
-                  <span className="primary f-14 cursor">Copy invite link</span>
-                </div>
-
-                <div className="flex-center">
-                  <span>2 of 2</span>
-                  <Link to="/admin/add-more-school">
-                    <button type="submit" className="idle-btn ml-16">
-                      Done
-                    </button>
-                  </Link>
-                </div>
-              </div> */}
-
-<div className="right flex-center">
+              <div className="right flex-center">
                 <span className="secondary">2 of 2</span>
                 {this.renderBtn()}
               </div>
@@ -196,4 +152,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, {inviteManager})(InviteManagerPage);
+export default connect(mapStateToProps, { inviteManager })(InviteManagerPage);
