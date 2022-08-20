@@ -5,6 +5,7 @@ import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { signIn } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
+import { setItemWithObject } from "../../auth/LocalStorage";
 
 interface IStates {
 	email: string;
@@ -72,9 +73,10 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 		this.callback();
 	};
 
-	callback = () => {
+	callback = async () => {
 		const { email, password }: IStates = this.state;
-		this.props.signIn({ email : email,password : password});
+		await this.props.signIn({ email : email,password : password});
+		setItemWithObject("authUser", this.props.authUser);
 	};
 
 	validateEmail = (email: string) => {

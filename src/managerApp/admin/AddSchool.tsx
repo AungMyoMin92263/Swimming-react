@@ -1,5 +1,4 @@
 import React from "react";
-import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
@@ -10,6 +9,7 @@ import { Link, Navigate } from "react-router-dom";
 import InputFormAtom from "../../atoms/InputFormAtom";
 import { postSchool } from "../../stores/actions/school-action";
 import { SchoolInterface } from "../../stores/model/school-interface";
+import { setItemWithObject } from "../../auth/LocalStorage";
 
 interface IStates {
   name: string;
@@ -21,8 +21,8 @@ interface IStates {
 }
 
 interface IProps {
-  school: SchoolInterface;
-  postSchool : Function;
+  schools : SchoolInterface;
+  postSchool: Function;
 }
 class AddSchoolPage extends React.Component<IProps, IStates> {
   constructor(props: any) {
@@ -55,35 +55,22 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
   };
 
   isValid = () => {
-    if(this.state.name.length === 0 ||
-        this.state.image.raw  === ''
-      )return false;
-      else return true;
-  }
+    if (this.state.name.length === 0 || this.state.image.raw === "")
+      return false;
+    else return true;
+  };
 
-  submit = () => {
-    // if(this.isValid()){
-    //   this.setState({
-    //   isCompleted : true
-    // });
-    const { name, image }: IStates = this.state;
-		this.props.postSchool({ name : name,logo : image.raw});
-    console.log('props',this.props)
-  //}
-  }
-
-  handleUpload = async (e: any) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("image", this.state.image.raw);
-
-    // await fetch("YOUR_URL", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "multipart/form-data"
-    //   },
-    //   body: formData
-    // });
+  submit = async () => {
+    if (this.isValid()) {
+      const formData = new FormData();
+      formData.append("name", this.state.name);
+      formData.append("logo", this.state.image.raw);
+      await this.props.postSchool(formData);
+      setItemWithObject("school", this.props.schools);
+      this.setState({
+        isCompleted: true,
+      });
+    }
   };
 
   renderBtn = () => {
@@ -99,7 +86,11 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
           {this.state.isCompleted && (
             <Navigate to="/admin/invite-manager" replace={true} />
           )}
-          <button type="submit" className="primary-btn fw-600 ml-16" onClick={this.submit}>
+          <button
+            type="submit"
+            className="primary-btn fw-600 ml-16"
+            onClick={this.submit}
+          >
             Continue
           </button>
         </>
@@ -203,15 +194,6 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
                 <span className="secondary">1 of 2</span>
                 {this.renderBtn()}
               </div>
-
-              {/* <div className="right">
-                <span className="secondary">1 of 2</span>
-                <Link to="/admin/invite-manager">
-                  <button type="submit" className="idle-btn fw-600 ml-16">
-                    Continue
-                  </button>
-                </Link>
-              </div> */}
             </div>
           </div>
         </div>
@@ -221,13 +203,13 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
 }
 
 const mapStateToProps = ({
-  authUser,
+  schools
 }: StoreState): {
-  authUser: AuthInterface;
+  schools: SchoolInterface;
 } => {
   return {
-    authUser,
+    schools
   };
 };
 
-export default connect(mapStateToProps, {postSchool})(AddSchoolPage);
+export default connect(mapStateToProps, { postSchool })(AddSchoolPage);

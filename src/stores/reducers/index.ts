@@ -6,7 +6,7 @@ import { SchoolInterface } from "../model/school-interface";
 import { schoolReducers } from "./school-reducer";
 export interface StoreState {
   authUser: AuthInterface;
-  schools : SchoolInterface[];
+  schools : SchoolInterface;
 }
 export const reducers = combineReducers<StoreState>({
   authUser: authReducers,
