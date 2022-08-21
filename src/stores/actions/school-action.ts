@@ -14,7 +14,7 @@ if (authUser && authUser.userInfo) {
 let option: AxiosRequestConfig = {
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY2MTAxNzQ3Nn0.ys9sRn4Bl5rR6B9zwpWjuUYnTID6O3KTZC8CmpjTtwo`,
+    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY2MTAxODkwOH0.rnJaR_Zy2TroVkFkciK8YSFweZhqwsX4jAxcZtXVEKs`,
   },
 };
 
@@ -23,7 +23,7 @@ let optionImage: AxiosRequestConfig = {
     "Content-Type": "multipart/form-data",
     'Accept': "application/json",
     'type': "formData",
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY2MTAxNzQ3Nn0.ys9sRn4Bl5rR6B9zwpWjuUYnTID6O3KTZC8CmpjTtwo`,
+    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY2MTAxODkwOH0.rnJaR_Zy2TroVkFkciK8YSFweZhqwsX4jAxcZtXVEKs`,
   },
 };
 
@@ -62,7 +62,7 @@ export const postSchool = (school : SchoolInterface) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.post<School>(
-        'schools', school, optionImage
+        'school', school, optionImage
       );
 
       dispatch<createSchoolAction>({
@@ -147,7 +147,7 @@ export const inviteManager = (emails : any) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.post<School>(
-        'assigned/school', emails, option
+        'assigned-school', emails, option
       );
 
       dispatch<inviteManagerAction>({

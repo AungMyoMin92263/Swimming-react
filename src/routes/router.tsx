@@ -26,6 +26,8 @@ import AdminChangePasswordPage from "../managerApp/admin/AdminChangePasswordPage
 import StudentLoginPage from "../studentApp/student/StudentLogin";
 import StudentDashboardPage from "../studentApp/student/StudentDashboard";
 import FooterMobile from "../Layouts/footerMobile";
+import EventListPage from "../managerApp/manager/EventListPage";
+import AddEventPage from "../managerApp/manager/AddEventPage";
 
 
 const windowHistory = createBrowserHistory({ window });
@@ -46,7 +48,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 			{
 				path: "change-password",
@@ -58,7 +60,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 			{
 				path: "login",
@@ -70,7 +72,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 			{
 				path: "welcome",
@@ -82,7 +84,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 			{
 				path: "dashboard",
@@ -94,7 +96,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: true,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 
 			{
@@ -107,7 +109,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 
 			{
@@ -120,7 +122,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 			{
 				path: "add-more-school",
@@ -132,7 +134,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 		],
 	},
@@ -149,7 +151,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 			{
 				path: "login",
@@ -161,7 +163,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 			{
 				path: "dashboard",
@@ -173,7 +175,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: true,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 			{
 				path: "add-class",
@@ -185,7 +187,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: true,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 			{
 				path: "set-date-time",
@@ -197,7 +199,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: true,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 			{
 				path: "invite-coach",
@@ -209,7 +211,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 			{
 				path: "invite-student",
@@ -221,7 +223,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-				isMobileFooter : false,
+				isMobileFooter: false,
 			},
 			{
 				path: "invite-student-summary",
@@ -233,7 +235,37 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-				isMobileFooter : false,
+				isMobileFooter: false,
+			},
+			{
+				path: "event-list",
+				sideBar: (
+					<>
+						<SideBar {...propsMenuManager}></SideBar>,
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<EventListPage {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: true,
+			},
+			{
+				path: "add-event",
+				sideBar: (
+					<>
+						<SideBar {...propsMenuManager}></SideBar>,
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AddEventPage {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: true,
 			},
 		],
 	},
@@ -250,7 +282,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-				isMobileFooter : true,
+				isMobileFooter: true,
 			},
 			{
 				path: "login",
@@ -262,7 +294,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
-				isMobileFooter : true,
+				isMobileFooter: true,
 			},
 			{
 				path: "dashboard",
@@ -272,9 +304,9 @@ const routes = [
 						<StudentDashboardPage />
 					</>
 				),
-				footer: <FooterMobile ></FooterMobile>,
+				footer: <FooterMobile></FooterMobile>,
 				isSideBar: false,
-				isMobileFooter : true,
+				isMobileFooter: true,
 			},
 		],
 	},
