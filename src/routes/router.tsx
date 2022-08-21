@@ -24,10 +24,15 @@ import AdminChangePasswordPage from "../managerApp/admin/AdminChangePasswordPage
 
 //student
 import StudentLoginPage from "../studentApp/student/StudentLogin";
-import StudentDashboardPage from "../studentApp/student/StudentDashboard";
 import FooterMobile from "../Layouts/footerMobile";
 import EventListPage from "../managerApp/manager/EventListPage";
 import AddEventPage from "../managerApp/manager/AddEventPage";
+import StudentWelcomePage from "../studentApp/student/StudentWelcome";
+
+//coach
+import CoachLoginPage from "../coachApp/coach/CoachLogin";
+import CoachWelcomePage from "../coachApp/coach/CoachWelcome";
+
 
 
 const windowHistory = createBrowserHistory({ window });
@@ -297,14 +302,67 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
+				path: "welcome",
+				sideBar: <></>,
+				main: () => (
+					<>
+						<StudentWelcomePage />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
 				path: "dashboard",
 				sideBar: <></>,
 				main: () => (
 					<>
-						<StudentDashboardPage />
+						<StudentWelcomePage />
 					</>
 				),
 				footer: <FooterMobile></FooterMobile>,
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+		],
+	},
+	{
+		path: "/coach",
+		child: [
+			{
+				path: "create-password",
+				sideBar: <></>,
+				main: () => (
+					<>
+						<ManagerCreatePasswordPage />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "login",
+				sideBar: <></>,
+				main: () => (
+					<>
+						<CoachLoginPage />
+					</>
+				),
+				footer: <></>,
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "welcome",
+				sideBar: <></>,
+				main: () => (
+					<>
+						<CoachWelcomePage />
+					</>
+				),
+				footer: <></>,
 				isSideBar: false,
 				isMobileFooter: true,
 			},

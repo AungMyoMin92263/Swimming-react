@@ -23,7 +23,7 @@ interface UserSignInPage {
 
 type IProps = UserSignInPage;
 
-class StudentLoginPage extends React.Component<IProps, IStates> {
+class CoachLoginPage extends React.Component<IProps, IStates> {
   constructor(props: IProps) {
     super(props);
     console.log("props", props);
@@ -97,7 +97,7 @@ class StudentLoginPage extends React.Component<IProps, IStates> {
       <div className="wrapper-mobile">
         <div className="content-mobile center col-sm-12">
           {authUser.isSignedIn && (
-            <Navigate to="/student/welcome" replace={true} />
+            <Navigate to="/coach/welcome" replace={true} />
           )}
           <div className="primary f-16 fw-500 m-32">
             <span>My Report Cards</span>
@@ -189,4 +189,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { signIn })(StudentLoginPage);
+export default connect(mapStateToProps, { signIn })(CoachLoginPage);
