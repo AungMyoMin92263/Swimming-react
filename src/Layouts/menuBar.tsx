@@ -1,8 +1,9 @@
 import React from 'react';
 import './menuBar.css';
 
-function MenuBarTag(){
-  return (<div className="menu-bar">
+const MenuBarTag = (props : any) => {
+  return (
+  <div className="menu-bar">
     <div className="menu-list">
       <div className="menu-item">
         <img src={"/assets/icons/home.png"} alt="home" className="item-icon" />
@@ -21,7 +22,8 @@ function MenuBarTag(){
         <span className="item-text">Me</span>
       </div>
     </div>
-  </div>)
+  </div>
+  );
 }
 
-export default MenuBarTag
+export default MenuBarTag;

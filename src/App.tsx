@@ -1,20 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import RouteList from './routes/router';
-interface IProps {
-  path: string;
-}
+// interface IProps {
+//   path: string;
+// }
 
-type AppProps = IProps;
+// type AppProps = IProps;
 
-interface AppStates {
-  isBusy: boolean;
-  isAuth: boolean;
-  password: string;
-  user: string;
-  error: boolean;
-}
+// interface AppStates {
+//   isBusy: boolean;
+//   isAuth: boolean;
+//   password: string;
+//   user: string;
+//   error: boolean;
+// }
 
 class App extends React.Component {
   constructor(props?: any) {

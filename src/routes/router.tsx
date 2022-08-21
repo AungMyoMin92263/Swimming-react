@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Outlet, Route, Routes, unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import SideBar from "../Layouts/menuSideBar";
 
@@ -22,6 +22,12 @@ import ManagerCreatePasswordPage from "../managerApp/manager/ManagerCreatePasswo
 import AdminRecoverPasswordPage from "../managerApp/admin/AdminRecoverPasswordPage";
 import AdminChangePasswordPage from "../managerApp/admin/AdminChangePasswordPage";
 
+//student
+import StudentLoginPage from "../studentApp/student/StudentLogin";
+import StudentDashboardPage from "../studentApp/student/StudentDashboard";
+import FooterMobile from "../Layouts/footerMobile";
+
+
 const windowHistory = createBrowserHistory({ window });
 
 const propsMenu = { isAdmin : true};
@@ -40,6 +46,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
+				isMobileFooter : false,
 			},
 			{
 				path: "change-password",
@@ -51,6 +58,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
+				isMobileFooter : false,
 			},
 			{
 				path: "login",
@@ -62,6 +70,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
+				isMobileFooter : false,
 			},
 			{
 				path: "welcome",
@@ -73,6 +82,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
+				isMobileFooter : false,
 			},
 			{
 				path: "dashboard",
@@ -84,6 +94,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: true,
+				isMobileFooter : false,
 			},
 
 			{
@@ -96,6 +107,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
+				isMobileFooter : false,
 			},
 
 			{
@@ -108,6 +120,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
+				isMobileFooter : false,
 			},
 			{
 				path: "add-more-school",
@@ -119,6 +132,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
+				isMobileFooter : false,
 			},
 		],
 	},
@@ -135,6 +149,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
+				isMobileFooter : false,
 			},
 			{
 				path: "login",
@@ -146,6 +161,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
+				isMobileFooter : false,
 			},
 			{
 				path: "dashboard",
@@ -157,6 +173,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: true,
+				isMobileFooter : false,
 			},
 			{
 				path: "add-class",
@@ -168,6 +185,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: true,
+				isMobileFooter : false,
 			},
 			{
 				path: "set-date-time",
@@ -179,6 +197,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: true,
+				isMobileFooter : false,
 			},
 			{
 				path: "invite-coach",
@@ -190,6 +209,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
+				isMobileFooter : false,
 			},
 			{
 				path: "invite-student",
@@ -201,6 +221,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
+				isMobileFooter : false,
 			},
 			{
 				path: "invite-student-summary",
@@ -212,6 +233,7 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
+				isMobileFooter : false,
 			},
 		],
 	},
@@ -228,83 +250,31 @@ const routes = [
 				),
 				footer: <></>,
 				isSideBar: false,
+				isMobileFooter : true,
 			},
 			{
 				path: "login",
 				sideBar: <></>,
 				main: () => (
 					<>
-						<AdminLoginPage />
+						<StudentLoginPage />
 					</>
 				),
 				footer: <></>,
 				isSideBar: false,
+				isMobileFooter : true,
 			},
 			{
 				path: "dashboard",
-				sideBar: <SideBar {...propsMenuManager}></SideBar>,
+				sideBar: <></>,
 				main: () => (
 					<>
-						<ManagerDashboardPage />
+						<StudentDashboardPage />
 					</>
 				),
-				footer: <></>,
-				isSideBar: true,
-			},
-			{
-				path: "add-class",
-				sideBar: <SideBar {...propsMenuManager}></SideBar>,
-				main: (props: any) => (
-					<>
-						<AddClass {...props} />
-					</>
-				),
-				footer: <></>,
-				isSideBar: true,
-			},
-			{
-				path: "set-date-time",
-				sideBar: <SideBar {...propsMenuManager}></SideBar>,
-				main: (props: any) => (
-					<>
-						<SetDateTime {...props} />
-					</>
-				),
-				footer: <></>,
-				isSideBar: true,
-			},
-			{
-				path: "invite-coach",
-				sideBar: <></>,
-				main: (props: any) => (
-					<>
-						<InviteCoachPage {...props} />
-					</>
-				),
-				footer: <></>,
+				footer: <FooterMobile ></FooterMobile>,
 				isSideBar: false,
-			},
-			{
-				path: "invite-student",
-				sideBar: <></>,
-				main: (props: any) => (
-					<>
-						<InviteStudentPage {...props} />
-					</>
-				),
-				footer: <></>,
-				isSideBar: false,
-			},
-			{
-				path: "invite-student-summary",
-				sideBar: <></>,
-				main: (props: any) => (
-					<>
-						<InvitedStudentSummaryPage {...props} />
-					</>
-				),
-				footer: <></>,
-				isSideBar: false,
+				isMobileFooter : true,
 			},
 		],
 	},
@@ -333,24 +303,40 @@ class RouteList extends React.Component {
         />
       );
     } else {
-      return (
-        <Route
-          path={child.path}
-          key={index + "no-aside"}
-          element={
-            <ProtectedRoute {...prop} path={child.path}>
-              <div className="main-layout">
-                <div>
-                  <div className="banner-box"></div>
-                  <img src="../../../assets/images/banner.png" alt="banner" className="banner-image" />
-                </div>
-                <div className="main-body">{<child.main />}</div>
-                <div className="footer-menu">{child.footer}</div>
-              </div>
-            </ProtectedRoute>
-          }
-        />
-      );
+		if (child.isMobileFooter) {
+			return (
+				<Route
+				  path={child.path}
+				  key={index + "no-aside"}
+				  element={
+					<ProtectedRoute {...prop} path={child.path}>
+					  <div className="main-layout">
+						{/* <div className="main-body">{<child.main />}</div> */}
+						<div className="footer-menu">{<child.footer />}</div>
+					  </div>
+					</ProtectedRoute>
+				  }
+				/>
+			  );
+		}else{
+			return (
+				<Route
+				  path={child.path}
+				  key={index + "no-aside"}
+				  element={
+					<ProtectedRoute {...prop} path={child.path}>
+					  <div className="main-layout">
+						<div>
+						  <div className="banner-box"></div>
+						  <img src="../../../assets/images/banner.png" alt="banner" className="banner-image" />
+						</div>
+						<div className="main-body">{<child.main />}</div>
+					  </div>
+					</ProtectedRoute>
+				  }
+				/>
+			  );
+		}
     }
   };
 

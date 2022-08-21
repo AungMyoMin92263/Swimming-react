@@ -72,6 +72,11 @@ body {
   width: 448px;
 }
 
+.footer-menu{
+  bottom : 0px;
+  height:80px;
+}
+
 .dashboard {
   width: 100%;
   padding: 1rem 8rem;
