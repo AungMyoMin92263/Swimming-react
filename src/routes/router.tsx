@@ -328,7 +328,7 @@ class RouteList extends React.Component {
                   {child.sideBar}
                 </div>
                 <div className="main-body">{<child.main {...porps} />}</div>
-                <div className="footer-menu">{child.footer}</div>
+                {/* <div className="footer-menu">{child.footer}</div> */}
               </div>
             </ProtectedRoute>
           }
@@ -343,8 +343,8 @@ class RouteList extends React.Component {
 				  element={
 					<ProtectedRoute {...prop} path={child.path}>
 					  <div className="main-layout">
-						{/* <div className="main-body">{<child.main />}</div> */}
-						<div className="footer-menu">{<child.footer />}</div>
+						<div className="main-body">{<child.main />}</div>
+						<div className="footer-menu">{child.footer}</div>
 					  </div>
 					</ProtectedRoute>
 				  }
