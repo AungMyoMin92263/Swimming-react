@@ -20,7 +20,7 @@ interface IProps {
   inviteManager: Function;
 }
 
-class InviteManagerPage extends React.Component<IProps, IStates> {
+class AssignStudentPage extends React.Component<IProps, IStates> {
   constructor(props: any) {
     super(props);
 
@@ -40,18 +40,17 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
   };
 
   isValid = () => {
-    return true;
-    // if (this.state.emails.length === 0)
-    //   return false;
-    // else return true;
+    if (this.state.emails.length === 0)
+      return false;
+    else return true;
   };
 
   submit = async () => {
     if (this.isValid()) {
-      await this.props.inviteManager({
-        user_email: this.state.emails,
-        schoold_id: this.props.schools.result.data.id,
-      });
+      // await this.props.inviteManager({
+      //   user_email: this.state.emails,
+      //   schoold_id: this.props.schools.result.data.id,
+      // });
 
       this.setState({
         isCompleted: true,
@@ -70,7 +69,7 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
       return (
         <>
           {this.state.isCompleted && (
-            <Navigate to="/admin/add-more-school" replace={true} />
+            <Navigate to="/manager/event-list" replace={true} />
           )}
           <button
             type="submit"
@@ -114,20 +113,18 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
                   className="item-icon"
                 />
                 <span className="f-16">
-                  {this.props.schools.result
-                    ? this.props.schools.result.data.name
-                    : ""}
+                100m Freestyle (Male 9-10 y/o)
                 </span>
               </div>
               <div className="hr mb-32"></div>
               <div className="f-32 fw-500">
-                <span>Invite a Manager.</span>
+                <span>Assign Students.</span>
               </div>
               <div className="f-16 mb-32">
-                <span>Invite a manager to help you run your operations.</span>
+                <span>Assign students to your event.</span>
               </div>
               <div className="f-12 mb-16">
-                <span>School Manager(s)</span>
+                <span>Student(s)</span>
               </div>
               <div className="fw-400 mb-16">
                 <TagInput onInputChange={this.handleChange} />
@@ -155,4 +152,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { inviteManager })(InviteManagerPage);
+export default connect(mapStateToProps, { inviteManager })(AssignStudentPage);

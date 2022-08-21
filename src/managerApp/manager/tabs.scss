@@ -1,0 +1,47 @@
+:root {
+    --primary: #0070F8;
+    --secondary: #808080;
+    --font-color: #1A1A1A;
+    --bg-color: #FFF;
+    --idle-color: #E5E5E5;
+    --white: #FFF;
+  }
+
+.tab{
+    box-sizing: border-box;
+    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    
+    width: 290px;
+    height: 56px;
+    
+    border: 1px solid #E5E5E5;
+    border-radius: 8px;
+    cursor:pointer;
+}
+
+.tab-item-selected{
+    background: var(--primary);
+    color: var(--white);
+    height: 56px;
+    border-radius: 8px;
+    width: 96.67px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.tab-item{
+    height: 56px;
+    width: 96.67px;
+    border-right : 1px solid #E5E5E5;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    cursor:pointer;
+}

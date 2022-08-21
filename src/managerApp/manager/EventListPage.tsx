@@ -10,7 +10,7 @@ import { School } from "../../interfaces/School";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { signOut, signIn } from "../../stores/actions";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 
 interface IStates {
@@ -105,7 +105,7 @@ class EventListPage extends React.Component<IProps, IStates> {
 										Create an event to assign to students.
 									</div>
 									<div className='flex-center mt-16'>
-										<a href='http://localhost:3000/manager/add-class'>
+										<Link to="/manager/add-event" style={{ textDecoration : 'none'}}>
 											<button
 												type='submit'
 												className='primary-btn'
@@ -116,7 +116,7 @@ class EventListPage extends React.Component<IProps, IStates> {
 													sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
 												></AddIcon>
 											</button>
-										</a>
+										</Link>
 									</div>
 								</div>
 							</div>

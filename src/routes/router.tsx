@@ -22,6 +22,9 @@ import ManagerCreatePasswordPage from "../managerApp/manager/ManagerCreatePasswo
 import AdminRecoverPasswordPage from "../managerApp/admin/AdminRecoverPasswordPage";
 import AdminChangePasswordPage from "../managerApp/admin/AdminChangePasswordPage";
 
+import AssignStudentPage from "../managerApp/manager/AssignStudent";
+
+
 //student
 import StudentLoginPage from "../studentApp/student/StudentLogin";
 import FooterMobile from "../Layouts/footerMobile";
@@ -267,6 +270,21 @@ const routes = [
 				main: (props: any) => (
 					<>
 						<AddEventPage {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: true,
+			},
+			{
+				path: "assign-student",
+				sideBar: (
+					<>
+						<SideBar {...propsMenuManager}></SideBar>,
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AssignStudentPage {...props} />
 					</>
 				),
 				footer: <></>,
