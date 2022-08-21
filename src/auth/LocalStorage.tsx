@@ -18,3 +18,13 @@ export const setItemWithObject = (lkey: string, lvalue: object) => {
   return localStorage.setItem(lkey, JSON.stringify(lvalue));
 };
 
+export const setArrayWithObject = (lkey: string, lvalue: object) =>{
+  const previousItems = JSON.parse(getItem(lkey) || "null");
+  const newsItems = [previousItems, { lvalue }];
+  localStorage.setItem(lkey, JSON.stringify(newsItems));
+}
+
+
+export const getItemObject = (lkey: string) => {
+	return localStorage.getItem(lkey);
+};

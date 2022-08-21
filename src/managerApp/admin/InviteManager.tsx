@@ -11,148 +11,154 @@ import { Link, Navigate } from "react-router-dom";
 import TagInput from "../../components/TagInput";
 
 interface IStates {
-  emails: string[];
-  isCompleted: boolean;
+	emails: string[];
+	isCompleted: boolean;
 }
 
 interface IProps {
-  schools: any;
-  inviteManager: Function;
+	emails: string[];
+	schools: any;
+	inviteManager: Function;
 }
 
 class InviteManagerPage extends React.Component<IProps, IStates> {
-  constructor(props: any) {
-    super(props);
+	constructor(props: any) {
+		super(props);
 
-    console.log("props", props);
-    this.state = {
-      emails: [],
-      isCompleted: false,
-    };
-  }
-  componentDidMount() {}
+		console.log("props", props);
+		this.state = {
+			emails: [],
+			isCompleted: false,
+		};
+		// this.handleChange = this.handleChange.bind(this)
+	}
+	componentDidMount() {}
 
-  handleChange = (tags: string[]) => {
-    console.log("tags", tags);
-    this.setState({
-      emails: tags,
-    });
-  };
+	handleChange = (tags: string[]) => {
+		this.setState({
+			emails: tags,
+		});
+	};
 
-  isValid = () => {
-    return true;
-    // if (this.state.emails.length === 0)
-    //   return false;
-    // else return true;
-  };
+	isValid = () => {
+		// return true;
+		if (this.state.emails.length === 0) return false;
+		else return true;
+	};
 
-  submit = async () => {
-    if (this.isValid()) {
-      await this.props.inviteManager({
-        user_email: this.state.emails,
-        schoold_id: this.props.schools.result.data.id,
-      });
+	submit = async () => {
+		console.log("submit emial", this.state.emails);
+		if (this.isValid()) {
+			await this.props.inviteManager({
+				user_email: this.state.emails,
+				schoold_id: this.props.schools.result.data.id,
+			});
 
-      this.setState({
-        isCompleted: true,
-      });
-    }
-  };
+			this.setState({
+				isCompleted: true,
+			});
+		}
+	};
 
-  renderBtn = () => {
-    if (!this.isValid()) {
-      return (
-        <button type="submit" className="idle-btn fw-600 ml-16">
-          Done
-        </button>
-      );
-    } else
-      return (
-        <>
-          {this.state.isCompleted && (
-            <Navigate to="/admin/add-more-school" replace={true} />
-          )}
-          <button
-            type="submit"
-            className="primary-btn fw-600 ml-16"
-            onClick={this.submit}
-          >
-            Done
-          </button>
-        </>
-      );
-  };
+	renderBtn = () => {
+		if (!this.isValid()) {
+			return (
+				<button type='submit' className='idle-btn fw-600 ml-16'>
+					Done
+				</button>
+			);
+		} else
+			return (
+				<>
+					{this.state.isCompleted && (
+						<Navigate to='/admin/add-more-school' replace={true} />
+					)}
+					<button
+						type='submit'
+						className='primary-btn fw-600 ml-16'
+						onClick={this.submit}
+					>
+						Done
+					</button>
+				</>
+			);
+	};
 
-  render() {
-    const { emails } = this.state;
-    return (
-      <>
-        <div className="wrapper">
-          <div className="primary f-16 project-header">
-            <span>My Report Cards</span>
-          </div>
-          <div className="container">
-            <div className="content col-lg-6">
-              <div className="f-14 mb-32">
-                <Link to="/admin/add-school" style={{ textDecoration: "none" }}>
-                  <ArrowBackIcon
-                    sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-                  ></ArrowBackIcon>
-                  <span>Back</span>
-                </Link>
-              </div>
+	render() {
+		const { emails } = this.state;
 
-              <div className="mb-16 flex">
-                <img
-                  src={
-                    this.props.schools.result
-                      ? "http://localhost:3000/api/" +
-                        this.props.schools.result.data.logo
-                      : "../../../assets/icons/logo.png"
-                  }
-                  alt="right-arrow"
-                  className="item-icon"
-                />
-                <span className="f-16">
-                  {this.props.schools.result
-                    ? this.props.schools.result.data.name
-                    : ""}
-                </span>
-              </div>
-              <div className="hr mb-32"></div>
-              <div className="f-32 fw-500">
-                <span>Invite a Manager.</span>
-              </div>
-              <div className="f-16 mb-32">
-                <span>Invite a manager to help you run your operations.</span>
-              </div>
-              <div className="f-12 mb-16">
-                <span>School Manager(s)</span>
-              </div>
-              <div className="fw-400 mb-16">
-                <TagInput onInputChange={this.handleChange} />
-              </div>
+		return (
+			<>
+				<div className='wrapper'>
+					<div className='primary f-16 project-header'>
+						<span>My Report Cards</span>
+					</div>
+					<div className='container'>
+						<div className='content col-lg-6'>
+							<div className='f-14 mb-32'>
+								<Link to='/admin/add-school' style={{ textDecoration: "none" }}>
+									<ArrowBackIcon
+										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+									></ArrowBackIcon>
+									<span>Back</span>
+								</Link>
+							</div>
 
-              <div className="right flex-center">
-                <span className="secondary">2 of 2</span>
-                {this.renderBtn()}
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  }
+							<div className='mb-16 flex'>
+								<img
+									src={
+										this.props.schools.result
+											? "http://localhost:3000/api/" +
+											  this.props.schools.result.data.logo
+											: "../../../assets/icons/logo.png"
+									}
+									alt='right-arrow'
+									className='item-icon'
+								/>
+								<span className='f-16'>
+									{this.props.schools.result
+										? this.props.schools.result.data.name
+										: ""}
+								</span>
+							</div>
+							<div className='hr mb-32'></div>
+							<div className='f-32 fw-500'>
+								<span>Invite a Manager.</span>
+							</div>
+							<div className='f-16 mb-16'>
+								<span>Invite a manager to help you run your operations.</span>
+							</div>
+							<div className='fw-400 mb-16'>
+								<TagInput
+									onInputChange={this.handleChange}
+									callback={(tags: string[]) => {
+										this.setState({
+											emails: tags,
+										});
+									}}
+								/>
+							</div>
+							{/* {this.isValid() && <p className='text-danger'>At least on manager invite</p>} */}
+							<div className='right flex-center'>
+								<span className='secondary'>2 of 2</span>
+								{this.renderBtn()}
+							</div>
+						</div>
+					</div>
+				</div>
+			</>
+		);
+	}
 }
 
 const mapStateToProps = ({
-  schools,
+	schools,
 }: StoreState): {
-  schools: SchoolInterface;
+	schools: SchoolInterface;
 } => {
-  return {
-    schools,
-  };
+	return {
+		schools,
+	};
 };
 
 export default connect(mapStateToProps, { inviteManager })(InviteManagerPage);

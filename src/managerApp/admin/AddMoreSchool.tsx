@@ -9,13 +9,17 @@ import { School } from "../../interfaces/School";
 import { connect } from "react-redux";
 import { SchoolInterface } from "../../stores/model/school-interface";
 import { StoreState } from "../../stores/reducers";
+import { getItem } from "../../auth/LocalStorage";
 
 
 interface IStates {
 	schools: School[];
+	name:string;
+	image:any
 }
 interface IProps {
 	schools: any;
+	school:School
 }
 
 class AddMoreSchoolPage extends React.Component<IProps, IStates> {
@@ -23,11 +27,21 @@ class AddMoreSchoolPage extends React.Component<IProps, IStates> {
 		super(props);
 
 		this.state = {
+			name:'',
+			image:{},
 			schools: [],
 		};
 	}
 	componentDidMount() {
-		//loading
+		// var schoolobj = JSON.parse(getItem("school") || "null");
+		// if (schoolobj.result) var school = schoolobj.result.data;
+
+		// if (school) {
+		// 	this.setState({
+		// 		name: school.name,
+		// 		image: school.logo,
+		// 	});
+		// }
 	}
 
 
