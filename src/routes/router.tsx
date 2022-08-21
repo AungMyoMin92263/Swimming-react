@@ -94,16 +94,16 @@ const routes = [
 			{
 				path: "dashboard",
 				sideBar: <SideBar {...propsMenu}></SideBar>,
-				main: () => (
+				main: (props: any) => (
 					<>
-						<AdminDashboardPage />
+						<AdminDashboardPage {...props} />
 					</>
 				),
 				footer: <></>,
 				isSideBar: true,
 				isMobileFooter: false,
 			},
-
+			
 			{
 				path: "add-school",
 				sideBar: <></>,

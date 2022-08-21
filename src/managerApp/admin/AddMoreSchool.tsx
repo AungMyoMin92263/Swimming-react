@@ -6,27 +6,36 @@ import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 import InputFormAtom from "../../atoms/InputFormAtom";
 import { School } from "../../interfaces/School";
-import { IPageProp } from "../../pagePropsInterface";
+import { connect } from "react-redux";
+import { SchoolInterface } from "../../stores/model/school-interface";
+import { StoreState } from "../../stores/reducers";
+
 
 interface IStates {
-  schools: School[];
+	schools: School[];
+}
+interface IProps {
+	schools: any;
 }
 
-class AddMoreSchoolPage extends React.Component<IPageProp, IStates> {
-  constructor(props: any) {
-    super(props);
+class AddMoreSchoolPage extends React.Component<IProps, IStates> {
+	constructor(props: any) {
+		super(props);
 
-    this.state = {
-      schools: [],
-    };
-  }
-  componentDidMount() {
-    //loading
-  }
+		this.state = {
+			schools: [],
+		};
+	}
+	componentDidMount() {
+		//loading
+	}
 
-  render() {
-    const { schools } = this.state;
-    return (
+
+	render() {
+		const { schools } = this.state;
+		const {school} = this.props.schools
+		console.log(school)
+		return (
 			<>
 				<div className='wrapper'>
 					<div className='primary f-16 project-header'>
@@ -47,9 +56,7 @@ class AddMoreSchoolPage extends React.Component<IPageProp, IStates> {
 									alt='right-arrow'
 									className='item-icon'
 								/>
-								<span className='f-16'>
-									Dolphin Swimming School
-								</span>
+								<span className='f-16'>{school && school.name}</span>
 							</div>
 							<div className='hr mb-16'></div>
 							<Link to='/admin/add-school' style={{ textDecoration: "none" }}>
@@ -72,7 +79,19 @@ class AddMoreSchoolPage extends React.Component<IPageProp, IStates> {
 				</div>
 			</>
 		);
-  }
+	}
 }
 
-export default AddMoreSchoolPage;
+
+const mapStateToProps = ({
+	schools,
+}: StoreState): {
+	schools: SchoolInterface;
+} => {
+	return {
+		schools,
+	};
+};
+
+export default connect(mapStateToProps, {  })(AddMoreSchoolPage);
+

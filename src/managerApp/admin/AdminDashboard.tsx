@@ -8,19 +8,20 @@ import AddIcon from "@mui/icons-material/Add";
 import { School } from "../../interfaces/School";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
-import { signOut, signIn } from "../../stores/actions";
-import { Navigate } from "react-router-dom";
 import { connect } from "react-redux";
+import {getAllSchools} from "../../stores/actions/school-action"
+import { SchoolInterface } from './../../stores/model/school-interface';
+import { Link } from "react-router-dom";
 
 interface IStates {
 	schools: School[];
 }
-interface UserSignInPage {
-	signIn: Function;
-	authUser: AuthInterface;
+interface IProps {
+	getAllSchools: Function;
+	schoolList: any;
 }
 
-type IProps = UserSignInPage;
+
 
 class AdminDashboardPage extends React.Component<IProps, IStates> {
 	constructor(props: any) {
@@ -33,9 +34,17 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 
 	componentDidMount() {
 		//loading
+		this.getSchools();
+	}
+
+	getSchools = async () => {
+		await this.props.getAllSchools();
+		
 	}
 
 	render() {
+		// const {schools} = this.state
+		let schools = this.props.schoolList.result;
 		return (
 			<>
 				<div className='container'>
@@ -71,7 +80,7 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 								</div>
 
 								<div className='col-4 col-md-6 justify-end'>
-									<a href='http://localhost:4200/app/sub-page/managers/admin-dashboard'>
+									<Link to="/admin/add-school">
 										<button
 											type='submit'
 											className='primary-btn'
@@ -82,7 +91,7 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 												sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
 											></AddIcon>
 										</button>
-									</a>
+									</Link>
 								</div>
 							</div>
 						</div>
@@ -99,42 +108,27 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
-											<td>
-												<img
-													src='../../../assets/icons/logo.png'
-													alt='right-arrow'
-													className='icon'
-												/>
-											</td>
-											<td>Dolphin Swimming School</td>
-											<td>
-												<img
-													src='../../../assets/icons/alpha.png'
-													alt='alpha'
-													className='icon'
-												/>
-											</td>
-											<td>0</td>
-										</tr>
-										<tr>
-											<td>
-												<img
-													src='../../../assets/icons/logo.png'
-													alt='right-arrow'
-													className='icon'
-												/>
-											</td>
-											<td>Dolphin Swimming School</td>
-											<td>
-												<img
-													src='../../../assets/icons/alpha.png'
-													alt='alpha'
-													className='icon'
-												/>
-											</td>
-											<td>0</td>
-										</tr>
+										{schools &&
+											schools.map((school: School) => (
+												<tr>
+													<td>
+														<img
+															src={"https:localhost:3000/api/" + school.logo}
+															alt='right-arrow'
+															className='icon'
+														/>
+													</td>
+													<td>{school.name}</td>
+													<td>
+														<img
+															src='../../../assets/icons/alpha.png'
+															alt='alpha'
+															className='icon'
+														/>
+													</td>
+													<td>0</td>
+												</tr>
+											))}
 									</tbody>
 								</table>
 							</div>
@@ -147,13 +141,13 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 }
 
 const mapStateToProps = ({
-	authUser,
+	schoolList,
 }: StoreState): {
-	authUser: AuthInterface;
+	schoolList: any
 } => {
 	return {
-		authUser,
+		schoolList,
 	};
 };
 
-export default connect(mapStateToProps, { signIn })(AdminDashboardPage);
+export default connect(mapStateToProps, { getAllSchools })(AdminDashboardPage);

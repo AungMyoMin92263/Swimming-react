@@ -14,7 +14,7 @@ if (authUser && authUser.userInfo) {
 let option: AxiosRequestConfig = {
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY2MTAxODkwOH0.rnJaR_Zy2TroVkFkciK8YSFweZhqwsX4jAxcZtXVEKs`,
+    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY2MTA2ODYxNH0.pN7wLER4Q4-hDELdIEeM-va926w-FNd72kBrqmd-TCQ`,
   },
 };
 
@@ -23,22 +23,23 @@ let optionImage: AxiosRequestConfig = {
     "Content-Type": "multipart/form-data",
     'Accept': "application/json",
     'type': "formData",
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY2MTAxODkwOH0.rnJaR_Zy2TroVkFkciK8YSFweZhqwsX4jAxcZtXVEKs`,
+    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY2MTA2ODYxNH0.pN7wLER4Q4-hDELdIEeM-va926w-FNd72kBrqmd-TCQ`,
   },
 };
 
 export interface getSchoolsAction {
   type: ActionTypes.getSchools | ActionTypes.getError;
-  payload: School | any;
+  payload: School | School[] | any;
 }
 
 export const getAllSchools = () => {
   return async (dispatch: Dispatch) => {
     try {
-      const response = await apiServer.get<School>("school", option);
+      const response = await apiServer.get<School>("schools", option);
+      console.log('response', response.data)
       dispatch<getSchoolsAction>({
         type: ActionTypes.getSchools,
-        payload: response,
+        payload: response.data,
       });
     } catch (err) {
       if (err instanceof Error) {
@@ -62,7 +63,7 @@ export const postSchool = (school : SchoolInterface) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.post<School>(
-        'school', school, optionImage
+        'schools', school, optionImage
       );
 
       dispatch<createSchoolAction>({
@@ -91,7 +92,7 @@ export const putSchool = (school: SchoolInterface, id: number) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.put<School>(
-        "school/" + id,
+        "schools/" + id,
         school,
         option
       );
@@ -120,7 +121,7 @@ export interface deleteSchoolAction {
 export const deleteSchoolObj = (id: number) => {
   return async (dispatch: Dispatch) => {
     try {
-      const response = await apiServer.delete<School>("school/" + id, option);
+      const response = await apiServer.delete<School>("schools/" + id, option);
       dispatch<deleteSchoolAction>({
         type: ActionTypes.deleteSchool,
         payload: response,
@@ -147,7 +148,7 @@ export const inviteManager = (emails : any) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.post<School>(
-        'assigned-school', emails, option
+        'assigned/school', emails, option
       );
 
       dispatch<inviteManagerAction>({

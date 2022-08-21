@@ -3,3 +3,9 @@ export interface SchoolInterface {
     logo?: string | null;
     error?: string | null;
 }
+
+// export interface SchoolListInterface{
+//     schools?: string[] | null;
+
+// }
+
