@@ -35,6 +35,7 @@ import StudentWelcomePage from "../studentApp/student/StudentWelcome";
 //coach
 import CoachLoginPage from "../coachApp/coach/CoachLogin";
 import CoachWelcomePage from "../coachApp/coach/CoachWelcome";
+import PeopleListPage from "../managerApp/manager/PeopleListPage";
 
 
 
@@ -285,6 +286,21 @@ const routes = [
 				main: (props: any) => (
 					<>
 						<AssignStudentPage {...props} />
+					</>
+				),
+				footer: <></>,
+				isSideBar: true,
+			},
+			{
+				path: "people-list",
+				sideBar: (
+					<>
+						<SideBar {...propsMenuManager}></SideBar>,
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<PeopleListPage {...props} />
 					</>
 				),
 				footer: <></>,
