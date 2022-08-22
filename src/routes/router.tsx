@@ -36,12 +36,13 @@ import PeopleListPage from "../managerApp/manager/PeopleListPage";
 import StudentLoginPage from "../studentApp/student/StudentLogin";
 import AddEventPage from "../managerApp/manager/AddEventPage";
 import StudentWelcomePage from "../studentApp/student/StudentWelcome";
+import StudentDashboardPage from "../studentApp/student/StudentDashboard";
 
 //coach
 import CoachLoginPage from "../coachApp/coach/CoachLogin";
 import CoachWelcomePage from "../coachApp/coach/CoachWelcome";
 import ManagerSideBar from "../Layouts/ManagerMenuSideBar";
-import FooterMobileMenu from "../Layouts/footerMobile";
+import FooterMobileMenu from "../Layouts/FooterMobile";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -401,7 +402,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<StudentWelcomePage />
+						<StudentDashboardPage />
 					</>
 				),
 				footer: (props: any) => (

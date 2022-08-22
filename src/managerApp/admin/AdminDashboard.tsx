@@ -1,16 +1,13 @@
 import React from "react";
 
 // import csss
-import styles from "./../../css/pages.module.css";
 import "./AdminDashboard.css"
 import AddIcon from "@mui/icons-material/Add";
 
 import { School } from "../../interfaces/School";
-import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 import {getAllSchools} from "../../stores/actions/school-action"
-import { SchoolInterface } from './../../stores/model/school-interface';
 import { Link } from "react-router-dom";
 
 interface IStates {
