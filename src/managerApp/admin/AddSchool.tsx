@@ -9,7 +9,7 @@ import { Link, Navigate } from "react-router-dom";
 import InputFormAtom from "../../atoms/InputFormAtom";
 import { postSchool } from "../../stores/actions/school-action";
 import { SchoolInterface } from "../../stores/model/school-interface";
-import { getItem, setArrayWithObject, setItemWithObject } from "../../auth/LocalStorage";
+import { getItem, setItem } from "../../auth/LocalStorage";
 
 interface IStates {
 	name: string;
@@ -39,6 +39,12 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
 	}
 	componentDidMount() {
 		var schoolobj = JSON.parse(getItem("school") || "null");
+		var schoolImage = getItem("school_img");
+		var schoolImg = document.getElementById("logo") as HTMLImageElement;
+		if (schoolImg != null) {
+			// ⛔️ Property 'src' does not exist on type 'HTMLElement'.ts(2339)
+			schoolImg.src = schoolImage || "logo.png";
+		}
     // if (schoolobj.result) var school = schoolobj.result.data ;
     
 		// if (school) {
@@ -74,12 +80,15 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
 	};
 
 	submit = async () => {
-		if (this.isValid()) {
+		if (this.isValid()) {	
 			const formData = new FormData();
 			formData.append("name", this.state.name);
 			formData.append("logo", this.state.image.raw);
-			await this.props.postSchool(formData);
-			setArrayWithObject("schools", this.props.schools);
+			await this.props.postSchool(formData);		
+			setItem("schools_name", this.state.name);
+			setItem("school_img", this.state.image.preview);
+			setItem('school_img_file', this.state.image.raw)
+			
 			this.setState({
 				isCompleted: true,
 			});
@@ -152,37 +161,20 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
 										</>
 									) : (
 										<>
-											{this.state.name !== '' ? (
-												<>
-													<img
-														src={
-															"http://localhost:3000/api/" + this.state.image
-														}
-														alt='preview'
-														className='preview-icon cursor'
-													/>
-													<span
-														className='primary f-14 cursor'
-														style={{ marginLeft: "18px" }}
-													>
-														&nbsp; Change Image
-													</span>
-												</>
-											) : (
-												<>
-													<img
-														src='../../../assets/icons/upload.png'
-														alt='upload'
-														className='big-icon cursor'
-													/>
-													<span
-														className='primary f-14 cursor'
-														style={{ marginLeft: "18px" }}
-													>
-														&nbsp; Upload Image
-													</span>
-												</>
-											)}
+											<>
+												<img
+													id="logo"
+													src='../../../assets/icons/upload.png'
+													alt='upload'
+													className='big-icon cursor'
+												/>
+												<span
+													className='primary f-14 cursor'
+													style={{ marginLeft: "18px" }}
+												>
+													&nbsp; Upload Image
+												</span>
+											</>
 										</>
 									)}
 								</label>

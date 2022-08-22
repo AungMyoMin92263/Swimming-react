@@ -42,13 +42,14 @@ class AddMoreSchoolPage extends React.Component<IProps, IStates> {
 		// 		image: school.logo,
 		// 	});
 		// }
+		console.log("props",this.props)
 	}
 
 
 	render() {
 		const { schools } = this.state;
 		const {school} = this.props.schools
-		console.log(school)
+		console.log("school",school)
 		return (
 			<>
 				<div className='wrapper'>
@@ -63,15 +64,31 @@ class AddMoreSchoolPage extends React.Component<IProps, IStates> {
 							<div className='f-16 mb-32'>
 								<span>Get started by adding a school you manage.</span>
 							</div>
-
 							<div className='mb-16 flex'>
+								<img
+									src={
+										this.props.schools.result
+											? "http://localhost:3000/api/" +
+											  this.props.schools.result.data.logo
+											: "../../../assets/icons/logo.png"
+									}
+									alt='right-arrow'
+									className='item-icon'
+								/>
+								<span className='f-16'>
+									{this.props.schools.result
+										? this.props.schools.result.data.name
+										: ""}
+								</span>
+							</div>
+							{/* <div className='mb-16 flex'>
 								<img
 									src={"/assets/icons/logo.png"}
 									alt='right-arrow'
 									className='item-icon'
 								/>
 								<span className='f-16'>{school && school.name}</span>
-							</div>
+							</div> */}
 							<div className='hr mb-16'></div>
 							<Link to='/admin/add-school' style={{ textDecoration: "none" }}>
 								<div className='mb-16 align-center'>

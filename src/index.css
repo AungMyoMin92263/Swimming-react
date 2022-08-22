@@ -15,7 +15,7 @@ body {
 }
 
 .app-layout {
-  background-color: #FFF;
+  background-color:#F5F5F5;
 }
 
 .main-layout {
@@ -366,6 +366,8 @@ body {
 
 .item-icon {
   width: 32px;
+  height: 32px;
+  border-radius: 50%;
   margin-right: 10px;
   text-align: center;
 }
