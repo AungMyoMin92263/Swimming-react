@@ -2,7 +2,7 @@
     border: 1px solid #E5E5E5;
     border-radius: 8px;
     padding: .5em;
-    width: min(80px, 448px);
+    width: min(448px);
     margin-top: 1em;
     display: flex;
     align-items: center;
@@ -36,4 +36,5 @@
     padding: .5em 0;
     border: none;
     outline: none;
+    background: inherit;
 }

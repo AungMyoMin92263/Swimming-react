@@ -24,6 +24,7 @@ interface IProps {
 }
 
 class InviteManagerPage extends React.Component<IProps, IStates> {
+	schoolImage: string | undefined;
 	constructor(props: any) {
 		super(props);
 
@@ -35,11 +36,13 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 		// this.handleChange = this.handleChange.bind(this)
 	}
 	componentDidMount() {
-		var schoolImage = getItem("school_img");
+
+		console.log("PROPS",this.props.schools)
+		this.schoolImage = getItem("school_img") || undefined;
 		var schoolImg = document.getElementById("logo") as HTMLImageElement;
 		if (schoolImg != null) {
-			// ⛔️ Property 'src' does not exist on type 'HTMLElement'.ts(2339)
-			schoolImg.src = schoolImage || "logo.png";
+			
+			schoolImg.src = this.schoolImage || "logo.png";
 		}
 	}
 
@@ -55,55 +58,23 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 		else return true;
 	};
 
-	getBase64Image(img: any) {
-		var canvas = document.createElement("canvas");
-		canvas.width = img.width;
-		canvas.height = img.height;
-
-		// Copy the image contents to the canvas
-		var ctx = canvas.getContext("2d");
-		if (ctx) ctx.drawImage(img, 0, 0);
-
-		var dataURL = canvas.toDataURL("image/png");
-
-		return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-	}
-	b64toBlob = (b64Data: any, contentType: any, sliceSize: any) => {
-		contentType = contentType || "";
-		sliceSize = sliceSize || 512;
-
-		var byteCharacters = atob(b64Data);
-		var byteArrays = [];
-
-		for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-			var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-			var byteNumbers = new Array(slice.length);
-			for (var i = 0; i < slice.length; i++) {
-				byteNumbers[i] = slice.charCodeAt(i);
-			}
-
-			var byteArray = new Uint8Array(byteNumbers);
-
-			byteArrays.push(byteArray);
-		}
-
-		var blob = new Blob(byteArrays, { type: contentType });
-		return blob;
-	};
-
+	
 	submit = async () => {
 		console.log("click");
 		if (this.isValid()) {
-			const shool_img_file = getItem("school_img_file") || "";
-			var schoolImg = document.getElementById("logo") as HTMLImageElement;
-			var base64 = this.getBase64Image(schoolImg);
-			var schoolImgfile = this.b64toBlob(base64,"",""); 
+
+
+			let school_img_file : string | any = getItem("school_img_file") || new Blob();
+			
 			const formData = new FormData();
 			var schoolName = getItem("schools_name");
 			if (schoolName) formData.append("name", schoolName);
-			formData.append("logo", schoolImgfile);
+			formData.append("logo", school_img_file);
+
 			await this.props.postSchool(formData);
+			
+
+
 			await this.props.inviteManager({
 				user_email: this.state.emails,
 				schoold_id: this.props.schools.result.data.id,
@@ -160,7 +131,7 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 							</div>
 
 							<div className='mb-16 flex'>
-								<img src='' alt='logo' id='logo' className='item-icon' />
+								<img src={this.schoolImage} alt='logo' id='logo' className='item-icon' />
 
 								<span className='f-16'>{getItem("schools_name")}</span>
 							</div>

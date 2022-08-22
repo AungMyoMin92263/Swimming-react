@@ -38,13 +38,34 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
 		};
 	}
 	componentDidMount() {
-		var schoolobj = JSON.parse(getItem("school") || "null");
-		var schoolImage = getItem("school_img");
-		var schoolImg = document.getElementById("logo") as HTMLImageElement;
-		if (schoolImg != null) {
-			// ⛔️ Property 'src' does not exist on type 'HTMLElement'.ts(2339)
-			schoolImg.src = schoolImage || "logo.png";
+		let schoolName = getItem("schools_name");
+		if(schoolName){
+			this.setState({
+				name : schoolName
+			});
 		}
+		let school_img_file = getItem("school_img_file");
+		if(school_img_file){
+			let temp = this.state.image;
+			temp.raw = school_img_file;
+			this.setState({
+				image : temp
+			});
+		}
+		let school_img = getItem("school_img");
+		if(school_img){
+			let temp = this.state.image;
+			temp.preview = school_img;
+			this.setState({
+				image : temp
+			});
+		}
+
+		// var schoolImage = getItem("school_img");
+		// var schoolImg = document.getElementById("logo") as HTMLImageElement;
+		// if (schoolImg != null) {
+		// 	schoolImg.src = schoolImage || "logo.png";
+		// }
     // if (schoolobj.result) var school = schoolobj.result.data ;
     
 		// if (school) {
@@ -53,9 +74,9 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
 		// 		image: school.logo,
 		// 	});
 		// }
-	}
 
-	uploadImage = () => {};
+
+	}
 
 	handleChange = (e: any) => {
 		var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
@@ -66,6 +87,7 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
 				let temp = this.state.image;
 				temp.preview = URL.createObjectURL(e.target.files[0]);
 				temp.raw = e.target.files[0];
+				temp.fileName = e.target.files[0].name;
 				this.setState({
 					image: temp,
 				});
@@ -79,16 +101,20 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
 		else return true;
 	};
 
+
+
+
 	submit = async () => {
 		if (this.isValid()) {	
 			const formData = new FormData();
 			formData.append("name", this.state.name);
 			formData.append("logo", this.state.image.raw);
-			await this.props.postSchool(formData);		
+			// await this.props.postSchool(formData);	
+
 			setItem("schools_name", this.state.name);
 			setItem("school_img", this.state.image.preview);
 			setItem('school_img_file', this.state.image.raw)
-			
+
 			this.setState({
 				isCompleted: true,
 			});
