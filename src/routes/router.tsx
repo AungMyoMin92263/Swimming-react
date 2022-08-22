@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Outlet, Route, Routes, unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import SideBar from "../Layouts/menuSideBar";
-
+import { createBrowserHistory } from "history";
 //import pages
 import AdminDashboardPage from "../managerApp/admin/AdminDashboard";
 import AdminLoginPage from "../managerApp/admin/AdminLogin";
@@ -12,7 +12,6 @@ import AddMoreSchoolPage from "../managerApp/admin/AddMoreSchool";
 
 import ManagerDashboardPage from "../managerApp/manager/ManagerDashboard";
 import ProtectedRoute from "./protectRoute";
-import { createBrowserHistory } from "history";
 import AddClass from "../managerApp/manager/AddClass";
 import SetDateTime from "../managerApp/manager/SetDateTime";
 import InviteCoachPage from "../managerApp/manager/InviteCoach";
@@ -36,21 +35,22 @@ import StudentWelcomePage from "../studentApp/student/StudentWelcome";
 import CoachLoginPage from "../coachApp/coach/CoachLogin";
 import CoachWelcomePage from "../coachApp/coach/CoachWelcome";
 import PeopleListPage from "../managerApp/manager/PeopleListPage";
+import NewSideBar from "../Layouts/newMenuSideBar";
 
 
 
 const windowHistory = createBrowserHistory({ window });
 
-const propsMenu = { isAdmin : true};
-const propsMenuManager = { isAdmin : false};
+const propsMenu = { isAdmin: true };
+const propsMenuManager = { isAdmin: false };
 const routes = [
 	{
 		path: "/admin",
 		child: [
 			{
 				path: "recover-password",
-				sideBar: <></>,
-				main: () => (
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
 					<>
 						<AdminRecoverPasswordPage />
 					</>
@@ -61,8 +61,8 @@ const routes = [
 			},
 			{
 				path: "change-password",
-				sideBar: <></>,
-				main: () => (
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
 					<>
 						<AdminChangePasswordPage />
 					</>
@@ -73,8 +73,8 @@ const routes = [
 			},
 			{
 				path: "login",
-				sideBar: <></>,
-				main: () => (
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
 					<>
 						<AdminLoginPage />
 					</>
@@ -85,7 +85,7 @@ const routes = [
 			},
 			{
 				path: "welcome",
-				sideBar: <></>,
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AdminWelcomePage {...props} />
@@ -97,7 +97,7 @@ const routes = [
 			},
 			{
 				path: "dashboard",
-				sideBar: <SideBar {...propsMenu}></SideBar>,
+				sideBar: (props: any) => <SideBar {...propsMenu}></SideBar>,
 				main: (props: any) => (
 					<>
 						<AdminDashboardPage {...props} />
@@ -107,10 +107,10 @@ const routes = [
 				isSideBar: true,
 				isMobileFooter: false,
 			},
-			
+
 			{
 				path: "add-school",
-				sideBar: <></>,
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AddSchoolPage {...props} />
@@ -123,7 +123,7 @@ const routes = [
 
 			{
 				path: "invite-manager",
-				sideBar: <></>,
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<InviteManagerPage {...props} />
@@ -135,7 +135,7 @@ const routes = [
 			},
 			{
 				path: "add-more-school",
-				sideBar: <></>,
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AddMoreSchoolPage {...props} />
@@ -152,8 +152,8 @@ const routes = [
 		child: [
 			{
 				path: "create-password",
-				sideBar: <></>,
-				main: () => (
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
 					<>
 						<ManagerCreatePasswordPage />
 					</>
@@ -164,8 +164,8 @@ const routes = [
 			},
 			{
 				path: "login",
-				sideBar: <></>,
-				main: () => (
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
 					<>
 						<AdminLoginPage />
 					</>
@@ -176,8 +176,12 @@ const routes = [
 			},
 			{
 				path: "dashboard",
-				sideBar: <SideBar {...propsMenuManager}></SideBar>,
-				main: () => (
+				sideBar: (props: any) => (
+					<>
+						<NewSideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
 					<>
 						<ManagerDashboardPage />
 					</>
@@ -188,7 +192,11 @@ const routes = [
 			},
 			{
 				path: "add-class",
-				sideBar: <SideBar {...propsMenuManager}></SideBar>,
+				sideBar: (props: any) => (
+					<>
+						<NewSideBar {...props} />
+					</>
+				),
 				main: (props: any) => (
 					<>
 						<AddClass {...props} />
@@ -200,7 +208,7 @@ const routes = [
 			},
 			{
 				path: "set-date-time",
-				sideBar: <SideBar {...propsMenuManager}></SideBar>,
+				sideBar: (props: any) => <SideBar {...propsMenuManager}></SideBar>,
 				main: (props: any) => (
 					<>
 						<SetDateTime {...props} />
@@ -212,7 +220,7 @@ const routes = [
 			},
 			{
 				path: "invite-coach",
-				sideBar: <></>,
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<InviteCoachPage {...props} />
@@ -224,7 +232,7 @@ const routes = [
 			},
 			{
 				path: "invite-student",
-				sideBar: <></>,
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<InviteStudentPage {...props} />
@@ -236,7 +244,7 @@ const routes = [
 			},
 			{
 				path: "invite-student-summary",
-				sideBar: <></>,
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<InvitedStudentSummaryPage {...props} />
@@ -248,11 +256,11 @@ const routes = [
 			},
 			{
 				path: "event-list",
-				sideBar: (
+				sideBar: (props: any) => {
 					<>
-						<SideBar {...propsMenuManager}></SideBar>,
+						<NewSideBar {...props} />
 					</>
-				),
+				},
 				main: (props: any) => (
 					<>
 						<EventListPage {...props} />
@@ -263,9 +271,9 @@ const routes = [
 			},
 			{
 				path: "add-event",
-				sideBar: (
+				sideBar: (props: any) => (
 					<>
-						<SideBar {...propsMenuManager}></SideBar>,
+						<NewSideBar {...props} />
 					</>
 				),
 				main: (props: any) => (
@@ -278,11 +286,11 @@ const routes = [
 			},
 			{
 				path: "assign-student",
-				sideBar: (
+				sideBar: (props: any) => {
 					<>
-						<SideBar {...propsMenuManager}></SideBar>,
+						<NewSideBar {...props} />
 					</>
-				),
+				},
 				main: (props: any) => (
 					<>
 						<AssignStudentPage {...props} />
@@ -293,9 +301,9 @@ const routes = [
 			},
 			{
 				path: "people-list",
-				sideBar: (
+				sideBar: (props: any) => (
 					<>
-						<SideBar {...propsMenuManager}></SideBar>,
+						<NewSideBar {...props} />
 					</>
 				),
 				main: (props: any) => (
@@ -313,8 +321,8 @@ const routes = [
 		child: [
 			{
 				path: "create-password",
-				sideBar: <></>,
-				main: () => (
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
 					<>
 						<ManagerCreatePasswordPage />
 					</>
@@ -325,8 +333,8 @@ const routes = [
 			},
 			{
 				path: "login",
-				sideBar: <></>,
-				main: () => (
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
 					<>
 						<StudentLoginPage />
 					</>
@@ -337,8 +345,8 @@ const routes = [
 			},
 			{
 				path: "welcome",
-				sideBar: <></>,
-				main: () => (
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
 					<>
 						<StudentWelcomePage />
 					</>
@@ -349,8 +357,8 @@ const routes = [
 			},
 			{
 				path: "dashboard",
-				sideBar: <></>,
-				main: () => (
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
 					<>
 						<StudentWelcomePage />
 					</>
@@ -366,8 +374,8 @@ const routes = [
 		child: [
 			{
 				path: "create-password",
-				sideBar: <></>,
-				main: () => (
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
 					<>
 						<ManagerCreatePasswordPage />
 					</>
@@ -378,8 +386,8 @@ const routes = [
 			},
 			{
 				path: "login",
-				sideBar: <></>,
-				main: () => (
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
 					<>
 						<CoachLoginPage />
 					</>
@@ -390,8 +398,8 @@ const routes = [
 			},
 			{
 				path: "welcome",
-				sideBar: <></>,
-				main: () => (
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
 					<>
 						<CoachWelcomePage />
 					</>
@@ -405,85 +413,85 @@ const routes = [
 ];
 
 class RouteList extends React.Component {
-  renderPage = (child: any, index: any, porps: any) => {
-    let prop: any
-    if (child.isSideBar) {
-      return (
-        <Route
-          path={child.path}
-          key={index + "child-aside"}
-          element={
-            <ProtectedRoute {...prop} path={child.path}>
-              <div className="main-layout">
-                <div>
-                  <div className="shadow-box"></div>
-                  {child.sideBar}
-                </div>
-                <div className="main-body">{<child.main {...porps} />}</div>
-                {/* <div className="footer-menu">{child.footer}</div> */}
-              </div>
-            </ProtectedRoute>
-          }
-        />
-      );
-    } else {
-		if (child.isMobileFooter) {
+	renderPage = (child: any, index: any, porps: any) => {
+		let prop: any = { history: porps }
+		if (child.isSideBar) {
 			return (
 				<Route
-				  path={child.path}
-				  key={index + "no-aside"}
-				  element={
-					<ProtectedRoute {...prop} path={child.path}>
-					  <div className="main-layout">
-						<div className="main-body">{<child.main />}</div>
-						<div className="footer-menu">{child.footer}</div>
-					  </div>
-					</ProtectedRoute>
-				  }
+					path={child.path}
+					key={index + "child-aside"}
+					element={
+						<ProtectedRoute {...prop} path={child.path}>
+							<div className="main-layout">
+								<div>
+									<div className="shadow-box"></div>
+									{<child.sideBar {...prop} />}
+								</div>
+								<div className="main-body">{<child.main {...prop} />}</div>
+								{/* <div className="footer-menu">{child.footer}</div> */}
+							</div>
+						</ProtectedRoute>
+					}
 				/>
-			  );
-		}else{
-			return (
-				<Route
-				  path={child.path}
-				  key={index + "no-aside"}
-				  element={
-					<ProtectedRoute {...prop} path={child.path}>
-					  <div className="main-layout">
-						<div>
-						  <div className="banner-box"></div>
-						  <img src="../../../assets/images/banner.png" alt="banner" className="banner-image" />
-						</div>
-						<div className="main-body">{<child.main />}</div>
-					  </div>
-					</ProtectedRoute>
-				  }
-				/>
-			  );
+			);
+		} else {
+			if (child.isMobileFooter) {
+				return (
+					<Route
+						path={child.path}
+						key={index + "no-aside"}
+						element={
+							<ProtectedRoute {...prop} path={child.path}>
+								<div className="main-layout">
+									<div className="main-body">{<child.main />}</div>
+									<div className="footer-menu">{child.footer}</div>
+								</div>
+							</ProtectedRoute>
+						}
+					/>
+				);
+			} else {
+				return (
+					<Route
+						path={child.path}
+						key={index + "no-aside"}
+						element={
+							<ProtectedRoute {...prop} path={child.path}>
+								<div className="main-layout">
+									<div>
+										<div className="banner-box"></div>
+										<img src="../../../assets/images/banner.png" alt="banner" className="banner-image" />
+									</div>
+									<div className="main-body">{<child.main />}</div>
+								</div>
+							</ProtectedRoute>
+						}
+					/>
+				);
+			}
 		}
-    }
-  };
+	};
 
-  render() {
-    return (
-      <div>
-        <HistoryRouter history={windowHistory}>
-          <Routes>
-            {routes.map((route, index) => (
-              <Route
-                key={index + "app-aside"}
-                path={route.path}
-                element={
-                  <div className="app-layout">
-                    <Outlet key={index + "child-layout"} />
-                  </div>
-                }
-              >
-                {route.child.map((child, index) => (
-                  <React.Fragment key={index + "child-" + index}>{this.renderPage(child, index, windowHistory)}</React.Fragment>
-                ))}
-                {/* <Route index element={<Home />} /> */}
-                {/* {route.child.map((child, index) => (
+	render() {
+		return (
+			<div>
+				<HistoryRouter history={windowHistory}>
+					<Routes>
+						{routes.map((route, index) => (
+							<Route
+								key={index + "app-aside"}
+								path={route.path}
+								element={
+									<div className="app-layout">
+										<Outlet key={index + "child-layout"} />
+									</div>
+								}
+							>
+								{route.child.map((child, index) => (
+									<React.Fragment key={index + "child-" + index}>{this.renderPage(child, index, windowHistory)}</React.Fragment>
+								))}
+								{/* <Route index element={<Home />} /> */}
+								{/* {route.child.map((child, index) => (
                 // <div>
                 <Route path={child.path} key={index + 'child-aside'}
                   element={
@@ -507,12 +515,12 @@ class RouteList extends React.Component {
                   }
                 />
               ))} */}
-              </Route>
-            ))}
-          </Routes>
-        </HistoryRouter>
-      </div>
-    );
-  }
+							</Route>
+						))}
+					</Routes>
+				</HistoryRouter>
+			</div>
+		);
+	}
 }
 export default RouteList;
