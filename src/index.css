@@ -87,6 +87,7 @@ body {
 .footer-menu {
   bottom: 0px;
   height: 80px;
+  position: absolute;
 }
 
 .dashboard {
