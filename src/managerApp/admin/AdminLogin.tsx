@@ -6,6 +6,8 @@ import { StoreState } from "../../stores/reducers";
 import { signIn } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
 import { setItemWithObject } from "../../auth/LocalStorage";
+import { refreshToken } from "../../stores/actions/school-action";
+import { getAllSchools } from "../../stores/actions/school-action";
 
 interface IStates {
 	email: string;
@@ -15,10 +17,14 @@ interface IStates {
 	isPasswordEmpty: boolean;
 	emailMsg: string;
 	passwordMsg: string;
+	isNewUser : string;
 }
 interface UserSignInPage {
 	signIn: Function;
 	authUser: AuthInterface;
+	refreshToken : Function;
+	getAllSchools: Function;
+	schoolList: any;
 }
 
 type IProps = UserSignInPage;
@@ -35,6 +41,7 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 			isPasswordEmpty: false,
 			emailMsg: "",
 			passwordMsg: "",
+			isNewUser : '',
 		};
 	}
 
@@ -75,8 +82,18 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 
 	callback = async () => {
 		const { email, password }: IStates = this.state;
-		await this.props.signIn({ email : email,password : password});
-		setItemWithObject("authUser", this.props.authUser);
+
+		await this.props.signIn({ email : email,password : password});		
+		await setItemWithObject("authUser", this.props.authUser);
+		this.props.refreshToken();
+		await this.props.getAllSchools();
+		if(this.props.authUser.isSignedIn){
+		this.setState({
+			isNewUser : this.props.schoolList.result && this.props.schoolList.result.length > 0 ? 'f' : 't'
+		});
+		}
+		console.log('isNewUser',this.state.isNewUser)
+
 	};
 
 	validateEmail = (email: string) => {
@@ -95,7 +112,11 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 		let { authUser } = this.props;
 		return (
 			<div className='wrapper'>
-				{authUser.isSignedIn && <Navigate to='/admin/welcome' replace={true} />}
+				{/* { this.state.isNewUser === 't' && <Navigate to='/admin/welcome' replace={true} />}
+				{ this.state.isNewUser === 'f' && <Navigate to='/admin/dashboard' replace={true} />} */}
+
+				{ authUser.isSignedIn && <Navigate to='/admin/welcome' replace={true} />}
+
 				<div className='primary f-16 project-header'>
 					<span>My Report Cards</span>
 				</div>
@@ -177,13 +198,15 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 }
 
 const mapStateToProps = ({
-	authUser,
+	authUser,schoolList,
 }: StoreState): {
 	authUser: AuthInterface;
+	schoolList : any;
 } => {
 	return {
 		authUser,
+		schoolList,
 	};
 };
 
-export default connect(mapStateToProps, { signIn })(AdminLoginPage);
+export default connect(mapStateToProps, { signIn,refreshToken,getAllSchools })(AdminLoginPage);

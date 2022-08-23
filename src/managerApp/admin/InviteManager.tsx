@@ -9,8 +9,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { Link, Navigate } from "react-router-dom";
 import TagInput from "../../components/TagInput";
-import { getItem } from "../../auth/LocalStorage";
-
+import { removeItem } from "../../auth/LocalStorage";
+import placeholder from './../../assets/images/place-holder.png';
 interface IStates {
 	emails: string[];
 	isCompleted: boolean;
@@ -28,22 +28,12 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 	constructor(props: any) {
 		super(props);
 
-		console.log("props", props);
 		this.state = {
 			emails: [],
 			isCompleted: false,
 		};
-		// this.handleChange = this.handleChange.bind(this)
 	}
 	componentDidMount() {
-
-		console.log("PROPS",this.props.schools)
-		this.schoolImage = getItem("school_img") || undefined;
-		var schoolImg = document.getElementById("logo") as HTMLImageElement;
-		if (schoolImg != null) {
-			
-			schoolImg.src = this.schoolImage || "logo.png";
-		}
 	}
 
 	handleChange = (tags: string[]) => {
@@ -60,21 +50,8 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 
 	
 	submit = async () => {
-		console.log("click");
 		if (this.isValid()) {
-
-
-			let school_img_file : string | any = getItem("school_img_file") || new Blob();
-			
-			const formData = new FormData();
-			var schoolName = getItem("schools_name");
-			if (schoolName) formData.append("name", schoolName);
-			formData.append("logo", school_img_file);
-
-			await this.props.postSchool(formData);
-			
-
-
+			if(this.props.schools.result){
 			await this.props.inviteManager({
 				user_email: this.state.emails,
 				schoold_id: this.props.schools.result.data.id,
@@ -83,6 +60,8 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 			this.setState({
 				isCompleted: true,
 			});
+			removeItem('school');
+			}
 		}
 	};
 
@@ -111,8 +90,6 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 	};
 
 	render() {
-		const { emails } = this.state;
-
 		return (
 			<>
 				<div className='wrapper'>
@@ -131,9 +108,10 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 							</div>
 
 							<div className='mb-16 flex'>
-								<img src={this.schoolImage} alt='logo' id='logo' className='item-icon' />
+								<img src={ this.props.schools.result? "http://localhost:3000/api/" + this.props.schools.result.data.logo : placeholder } alt='logo' id='logo' 
+								 className={`${this.props.schools.result? "item-icon" : "w-48"}`}/>
 
-								<span className='f-16'>{getItem("schools_name")}</span>
+								<span className='f-16'>{this.props.schools.result && this.props.schools.result.data.name}</span>
 							</div>
 							<div className='hr mb-32'></div>
 							<div className='f-32 fw-500'>

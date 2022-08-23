@@ -6,26 +6,34 @@ import { School } from "../model/school";
 import { AxiosRequestConfig } from "axios";
 import { getItem } from "../../auth/LocalStorage";
 
-const authUser = JSON.parse(getItem("authUser") || "null");
-if (authUser && authUser.userInfo) {
-  var token = authUser.userInfo.data.token;
+var token = '';
+var option: AxiosRequestConfig;
+var optionImage: AxiosRequestConfig;
+
+export const refreshToken = () => {
+  const authUser = JSON.parse(getItem("authUser") || "null");
+  if (authUser && authUser.userInfo) {
+  token = authUser.userInfo.data.token;
+  console.log('token',token)
+
+  option = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  
+  optionImage = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      'Accept': "application/json",
+      'type': "formData",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+}
 }
 
-let option: AxiosRequestConfig = {
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY2MTA2ODYxNH0.pN7wLER4Q4-hDELdIEeM-va926w-FNd72kBrqmd-TCQ`,
-  },
-};
-
-let optionImage: AxiosRequestConfig = {
-  headers: {
-    "Content-Type": "multipart/form-data",
-    'Accept': "application/json",
-    'type': "formData",
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY2MTA2ODYxNH0.pN7wLER4Q4-hDELdIEeM-va926w-FNd72kBrqmd-TCQ`,
-  },
-};
 
 export interface getSchoolsAction {
   type: ActionTypes.getSchools | ActionTypes.getError;
