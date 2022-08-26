@@ -42,28 +42,6 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
     };
   }
   componentDidMount() {
-    // let schoolName = getItem("schools_name");
-    // if(schoolName){
-    // 	this.setState({
-    // 		name : schoolName
-    // 	});
-    // }
-    // let school_img_file = getItem("school_img_file");
-    // if(school_img_file){
-    // 	let temp = this.state.image;
-    // 	temp.raw = school_img_file;
-    // 	this.setState({
-    // 		image : temp
-    // 	});
-    // }
-    // let school_img = getItem("school_img");
-    // if(school_img){
-    // 	let temp = this.state.image;
-    // 	temp.preview = school_img;
-    // 	this.setState({
-    // 		image : temp
-    // 	});
-    // }
 
     let school = JSON.parse(getItem("school") || "null");
     if (school) {
@@ -73,20 +51,6 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
         name: school.name,
       });
     }
-
-    // var schoolImage = getItem("school_img");
-    // var schoolImg = document.getElementById("logo") as HTMLImageElement;
-    // if (schoolImg != null) {
-    // 	schoolImg.src = schoolImage || "logo.png";
-    // }
-    // if (schoolobj.result) var school = schoolobj.result.data ;
-
-    // if (school) {
-    // 	this.setState({
-    // 		name: school.name,
-    // 		image: school.logo,
-    // 	});
-    // }
   }
 
   handleChange = (e: any) => {
@@ -219,7 +183,7 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
           <div className="primary f-16 project-header">
             <span>My Report Cards</span>
           </div>
-          <div className="container">
+          <div className="container-cus">
             <div className="content col-6 col-md-6 col-sm-12">
               <div className="f-14 mb-16">
                 <Link to="/admin/welcome" style={{ textDecoration: "none" }}>

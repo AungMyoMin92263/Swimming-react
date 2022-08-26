@@ -1,11 +1,13 @@
 import React from "react";
-import { IPageProp } from "../../pagePropsInterface";
-
+import { connect } from "react-redux";
+import { StoreState } from "../../stores/reducers";
+import { inviteStudent } from "../../stores/actions/class-action";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddIcon from "@mui/icons-material/Add";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import InputFormAtom from "../../atoms/InputFormAtom";
+import { getItem, removeItem, setItemWithObject } from "../../auth/LocalStorage";
 
 interface StudentViewModel {
   studentName: string;
@@ -28,6 +30,8 @@ interface StudentViewModel {
 }
 
 interface IStates {
+  emails: string[];
+  isCompleted: boolean;
   students: StudentViewModel[];
   studentNameMsg: string;
   parentNameMsg: string;
@@ -35,11 +39,19 @@ interface IStates {
   parentEmailMsg: string;
 }
 
-class InviteStudentPage extends React.Component<IPageProp, IStates> {
+interface IProps {
+  emails: string[];
+  classes: any;
+  inviteStudent: Function;
+}
+
+class InviteStudentPage extends React.Component<IProps, IStates> {
   constructor(props: any) {
     super(props);
 
     this.state = {
+      emails: [],
+      isCompleted: false,
       students: [
         {
           studentName: "",
@@ -72,29 +84,87 @@ class InviteStudentPage extends React.Component<IPageProp, IStates> {
   }
 
   addStudent = () => {
-	let temp = this.state.students;
-	temp.push({
-			studentName: "",
-			isStudentNameValid: true,
-			isStudentNameEmpty: false,
-			studentNameMsg: "",
-			parentName: "",
-			isParentNameValid: true,
-			isParentNameEmpty: false,
-			parentNameMsg: "",
-  
-			studentEmail: "",
-			isStudentEmailValid: true,
-			isStudentEmailEmpty: false,
-			studentEmailMsg: "",
-			parentEmail: "",
-			isParentEmailValid: true,
-			isParentEmailEmpty: false,
-			parentEmailMsg: ""
-	});
-	this.setState({
-		students : temp
-	})
+    let temp = this.state.students;
+    temp.push({
+      studentName: "",
+      isStudentNameValid: true,
+      isStudentNameEmpty: false,
+      studentNameMsg: "",
+      parentName: "",
+      isParentNameValid: true,
+      isParentNameEmpty: false,
+      parentNameMsg: "",
+
+      studentEmail: "",
+      isStudentEmailValid: true,
+      isStudentEmailEmpty: false,
+      studentEmailMsg: "",
+      parentEmail: "",
+      isParentEmailValid: true,
+      isParentEmailEmpty: false,
+      parentEmailMsg: "",
+    });
+    this.setState({
+      students: temp,
+    });
+  };
+
+  isValid = () => {
+    if (this.state.students.length === 0) return false;
+    else return true;
+  };
+
+  submit = async () => {
+    if (this.isValid()) {
+      let temp = this.state.emails;
+      for(let i = 0;i < this.state.students.length;i++){
+        temp.push(this.state.students[i].studentEmail);
+      }
+      await this.setState({
+        emails: temp,
+      });
+      if (this.props.classes.result) {
+        await this.props.inviteStudent({
+          user_email: this.state.emails,
+          class_id: this.props.classes.result.data.id,
+        });
+
+        this.setState({
+          isCompleted: true,
+        });
+
+        const student = JSON.parse(getItem("students") || "null");
+        if (student) {
+          setItemWithObject("students", student.concat(this.state.students));
+        }else setItemWithObject("students", this.state.students);
+
+        removeItem("class");
+      }
+    }
+  };
+
+  renderBtn = () => {
+    if (!this.isValid()) {
+      return (
+        <button type="submit" className="idle-btn fw-600 ml-16">
+          Done
+        </button>
+      );
+    } else
+      return (
+        <>
+          {this.state.isCompleted && (
+            <Navigate to="/manager/invite-student-summary" replace={true} />
+          )}
+          <button
+            type="submit"
+            className="primary-btn fw-600 ml-16"
+            onClick={this.submit}
+          >
+            Done
+          </button>
+        </>
+      );
   };
 
   render() {
@@ -111,7 +181,7 @@ class InviteStudentPage extends React.Component<IPageProp, IStates> {
           <div className="primary f-16 project-header">
             <span>My Report Cards</span>
           </div>
-          <div className="container">
+          <div className="container-cus">
             <div className="content col-lg-6">
               <div className="f-14 mb-32">
                 <Link to="/admin/add-school" style={{ textDecoration: "none" }}>
@@ -300,17 +370,13 @@ class InviteStudentPage extends React.Component<IPageProp, IStates> {
                     <AddIcon
                       sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
                     ></AddIcon>
-                    <span className="primary">Add another school</span>
+                    <span className="primary">Add another Student</span>
                   </div>
                 </div>
 
                 <div className="flex-center">
-                  <span>4 of 4</span>
-                  <Link to="/manager/invite-student-summary">
-                    <button type="submit" className="idle-btn ml-16">
-                      Done
-                    </button>
-                  </Link>
+                  <span className="secondary">4 of 4</span>
+                  {this.renderBtn()}
                 </div>
               </div>
             </div>
@@ -321,4 +387,14 @@ class InviteStudentPage extends React.Component<IPageProp, IStates> {
   }
 }
 
-export default InviteStudentPage;
+const mapStateToProps = ({
+  classes,
+}: StoreState): {
+  classes: any;
+} => {
+  return {
+    classes,
+  };
+};
+
+export default connect(mapStateToProps, { inviteStudent })(InviteStudentPage);

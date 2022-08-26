@@ -6,9 +6,10 @@ import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 
 import { IPageProp } from "../../pagePropsInterface";
+import { getItem } from "../../auth/LocalStorage";
 
 interface IStates {
-	students: any[];
+  students: any[];
 }
 
 class InvitedStudentSummaryPage extends React.Component<IPageProp, IStates> {
@@ -20,7 +21,12 @@ class InvitedStudentSummaryPage extends React.Component<IPageProp, IStates> {
     };
   }
   componentDidMount() {
-    //loading
+    const student = JSON.parse(getItem("students") || "null");
+    if (student) {
+      this.setState({
+        students: student,
+      });
+    }
   }
 
   render() {
@@ -31,7 +37,7 @@ class InvitedStudentSummaryPage extends React.Component<IPageProp, IStates> {
           <div className="primary f-16 project-header">
             <span>My Report Cards</span>
           </div>
-          <div className="container">
+          <div className="container-cus">
             <div className="content col-lg-6 col-md-6 col-sm-12">
               <div className="mb-16 flex">
                 <img
@@ -51,27 +57,22 @@ class InvitedStudentSummaryPage extends React.Component<IPageProp, IStates> {
 
               <div className="hr mb-16"></div>
 
-              <div className="f-16 mb-32">
-                <img
-                  src="../../../assets/icons/alpha.png"
-                  alt="alpha"
-                  className="icon"
-                />
-                <span>Jerry Choo</span>
-              </div>
+              {students &&
+                students.length > 0 &&
+                students.map((student: any) => (
+                  <>
+                    <div className="f-16 mb-32">
+                      <img
+                        src="../../../assets/icons/alpha.png"
+                        alt="alpha"
+                        className="icon mr-8"
+                      />
+                      <span>{student.studentName}</span>
+                    </div>
 
-              <div className="hr mb-16"></div>
-
-              <div className="f-16 mb-32">
-                <img
-                  src="../../../assets/icons/alpha.png"
-                  alt="alpha"
-                  className="icon"
-                />
-                <span>Azlan Razali</span>
-              </div>
-
-              <div className="hr mb-16"></div>
+                    <div className="hr mb-16"></div>
+                  </>
+                ))}
               <Link
                 to="/manager/invite-student"
                 style={{ textDecoration: "none" }}

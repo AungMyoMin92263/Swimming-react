@@ -1,16 +1,12 @@
 import React from "react";
 
 // import csss
-import styles from "./../../css/pages.module.css";
 import "../admin/AdminDashboard.css";
 import "./ManagerDashboard.css";
-import AddIcon from "@mui/icons-material/Add";
-import ControlPointIcon from "@mui/icons-material/ControlPoint";
-import { School } from "../../stores/model/school";
 
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
-import { signOut, signIn } from "../../stores/actions";
+import { signIn } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 // icon
@@ -192,15 +188,7 @@ class AddEventPage extends React.Component<IProps, IStates> {
   render() {
     const {
       event,
-      isCompleted,
-      EventNameMsg,
-      isEventNameEmpty,
-      isStrokeEmpty,
-      isLengthEmpty,
-      isGenderClassEmpty,
-      isAgeClassFromEmpty,
-      isAgeClassToEmpty,
-      selectedTab,
+      EventNameMsg
     } = this.state;
 
     return (
@@ -209,7 +197,7 @@ class AddEventPage extends React.Component<IProps, IStates> {
           <div className="primary f-16 project-header">
             <span>My Report Cards</span>
           </div>
-          <div className="container">
+          <div className="container-cus">
             <div className="content col-6 col-md-6 col-sm-12">
               <div className="f-14 mb-32">
                 <Link

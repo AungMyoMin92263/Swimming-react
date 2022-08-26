@@ -1,37 +1,89 @@
 import React from "react";
-import { IPageProp } from "../../pagePropsInterface";
-
+import { connect } from "react-redux";
+import { StoreState } from "../../stores/reducers";
+import { inviteCoach } from "../../stores/actions/class-action";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import LinkIcon from '@mui/icons-material/Link';
 
-import { Link } from "react-router-dom";
-import InputFormAtom from "../../atoms/InputFormAtom";
+import { Link, Navigate } from "react-router-dom";
+import { removeItem } from "../../auth/LocalStorage";
+import TagInput from "../../components/TagInput";
 
 interface IStates {
-  email: string;
-  isEmailValid: boolean;
-  isEmailEmpty: boolean;
-  emailMsg: string;
+	emails: string[];
+	isCompleted: boolean;
 }
 
-class InviteCoachPage extends React.Component<IPageProp, IStates> {
+interface IProps {
+	emails: string[];
+	classes : any;
+	inviteCoach : Function;
+}
+class InviteCoachPage extends React.Component<IProps, IStates> {
   constructor(props: any) {
     super(props);
 
     this.state = {
-      email: "",
-      isEmailValid: true,
-      isEmailEmpty: false,
-      emailMsg: "",
+      emails : [],
+	  isCompleted : false
     };
   }
   componentDidMount() {
     //loading
   }
 
+  handleChange = (tags: string[]) => {
+	this.setState({
+		emails: tags,
+	});
+};
+
+isValid = () => {
+	if (this.state.emails.length === 0) return false;
+	else return true;
+};
+
+  submit = async () => {
+	if (this.isValid()) {
+		if(this.props.classes.result){
+		await this.props.inviteCoach({
+			user_email: this.state.emails,
+			class_id: this.props.classes.result.data.id,
+		});
+
+		this.setState({
+			isCompleted: true,
+		});
+		removeItem('class');
+		}
+	}
+};
+
+renderBtn = () => {
+	if (!this.isValid()) {
+		return (
+			<button type='submit' className='idle-btn fw-600 ml-16'>
+				Done
+			</button>
+		);
+	} else
+		return (
+			<>
+				{this.state.isCompleted && (
+					<Navigate to='/manager/invite-student' replace={true} />
+				)}
+				<button
+					type='submit'
+					className='primary-btn fw-600 ml-16'
+					onClick={this.submit}
+				>
+					Done
+				</button>
+			</>
+		);
+}
+
   render() {
-    const { email, isEmailValid, isEmailEmpty, emailMsg } = this.state;
     return (
 			<>
 				<div className='wrapper'>
@@ -66,59 +118,21 @@ class InviteCoachPage extends React.Component<IPageProp, IStates> {
 							<div className='f-16 mb-16'>
 								<span>Invite a coach to your class.</span>
 							</div>
+
 							<div className='fw-400 mb-16'>
-								<InputFormAtom
-									label='Coach(es)'
-									placeholder={"Enter email(s), comma separated"}
-									warning={emailMsg}
-									type='text'
-									showWarning={isEmailEmpty || !isEmailValid}
-									isDropdown={false}
-									callback={(value: string) => {
+								<TagInput
+									onInputChange={this.handleChange}
+									callback={(tags: string[]) => {
 										this.setState({
-											email: value,
-										});
-									}}
-									id='inviteCoach'
-									name='inviteCoach'
-									value={email}
-									required={true}
-									maxLength={200}
-									className=''
-									clickCallback={() => {}}
-									focusCallback={() => {
-										this.setState({
-											isEmailEmpty: false,
-											isEmailValid: true,
+											emails: tags,
 										});
 									}}
 								/>
 							</div>
-							<div className='flex-center justify-space-between'>
-								<div className='flex-center'>
-									<div
-										style={{
-											transform: " rotate(-45deg)",
-											marginBottom: "5px",
-											marginLeft: "5px",
-										}}
-									>
-										<LinkIcon
-											sx={{ color: "#0070F8", fontSize: 22, mr: 0.5 }}
-										></LinkIcon>
-									</div>
-
-									<span className='primary f-14 cursor'>Copy invite link</span>
-								</div>
-
-								<div className='flex-center'>
-									<span>3 of 4</span>
-									<Link to='/admin/add-more-school'>
-										<button type='submit' className='idle-btn ml-16'>
-											Continue
-										</button>
-									</Link>
-								</div>
+							{/* {this.isValid() && <p className='text-danger'>At least on manager invite</p>} */}
+							<div className='right flex-center'>
+								<span className='secondary'>3 of 4</span>
+								{this.renderBtn()}
 							</div>
 						</div>
 					</div>
@@ -128,4 +142,16 @@ class InviteCoachPage extends React.Component<IPageProp, IStates> {
   }
 }
 
-export default InviteCoachPage;
+const mapStateToProps = ({
+	classes,
+}: StoreState): {
+	classes: any;
+} => {
+	return {
+		classes,
+	};
+};
+
+export default connect(mapStateToProps, { inviteCoach })(
+	InviteCoachPage
+);

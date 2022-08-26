@@ -44,9 +44,8 @@ class AddMoreSchoolPage extends React.Component<IProps, IStates> {
 
 
 	render() {
-		const { schools } = this.state;
-		const {school} = this.props.schools
-		console.log("school",school)
+		// const {school} = this.props.schools;
+
 		return (
 			<>
 				<div className='wrapper'>

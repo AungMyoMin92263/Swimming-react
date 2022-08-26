@@ -90,7 +90,7 @@ class AdminWelcomePage extends React.Component<IProps, IStates> {
           <div className="primary f-16 project-header">
             <span>My Report Cards</span>
           </div>
-          <div className="container">
+          <div className="container-cus">
             <div className="content-center">
               <div className="fw-500 f-48">
                 <span>Welcome to My Report Cards.</span>

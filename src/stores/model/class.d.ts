@@ -6,7 +6,7 @@
     deleted_at: DateTime,
     name: string,
     school_id: number,
-    type: string,
+    type: string, //   'daily','one-day'
     open_days: string[],
     start_time: string,
     end_time: string,

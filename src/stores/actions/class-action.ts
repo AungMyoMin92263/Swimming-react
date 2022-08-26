@@ -9,13 +9,11 @@ import { getItem } from "../../auth/LocalStorage";
 var token = '';
 var option: AxiosRequestConfig;
 var optionImage: AxiosRequestConfig;
-var url = '';
 
 export const refreshTokenClass = () => {
   const authUser = JSON.parse(getItem("authUser") || "null");
   if (authUser && authUser.userInfo) {
   token = authUser.userInfo.data.token;
-  console.log('token',token)
 
   option = {
     headers: {
@@ -36,27 +34,16 @@ export const refreshTokenClass = () => {
 
 }
 }
-
-export const createURL = () => {
-  const school = JSON.parse(getItem("school") || "null");
-if (school) {
-  url = school.id + '/class';
-}
-}
-
 export interface getClassAction {
   type: ActionTypes.getClass | ActionTypes.getError;
   payload: Class | Class[] | any;
 }
 
-export const getAllclasses =  async () => {
-   await refreshTokenClass();
-   await createURL();
-   console.log('url',url)
+export const getAllclasses =  (url : string) => {
+  refreshTokenClass();
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.get<Class>(url, option);
-      console.log('response', response.data)
       dispatch<getClassAction>({
         type: ActionTypes.getClass,
         payload: response.data,
@@ -79,10 +66,8 @@ export interface createClassAction {
   payload: Class | any;
 }
 
-export const postClass = (classe : ClassInterface) => {
+export const postClass = (classe : ClassInterface,url : string) => {
   refreshTokenClass();
-  createURL();
-
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.post<Class>(
@@ -111,10 +96,8 @@ export interface editClassAction {
   payload: Class | any;
 }
 
-export const putClass = (classe: ClassInterface, id: number) => {
+export const putClass = (classe: ClassInterface, url : string, id: number) => {
   refreshTokenClass();
-  createURL();
-
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.put<Class>(
@@ -144,9 +127,8 @@ export interface deleteClassAction {
   payload: Class | any;
 }
 
-export const deleteClass = (id: number) => {
+export const deleteClass = (url : string,id: number) => {
   refreshTokenClass();
-  createURL();
 
   return async (dispatch: Dispatch) => {
     try {
@@ -210,7 +192,7 @@ export const inviteCoach = (emails : any) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.post<Class>(
-        'assigned/class/coach', emails, option
+        'assigned/class/coache', emails, option
       );
 
       dispatch<inviteCoachAction>({

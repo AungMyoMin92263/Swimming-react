@@ -1,7 +1,6 @@
 import React from "react";
 
 // import css
-import "../admin/AdminDashboard.css";
 import "./ManagerDashboard.css";
 import AddIcon from "@mui/icons-material/Add";
 import { StoreState } from "../../stores/reducers";
@@ -10,6 +9,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Class } from "../../stores/model/class";
 import placeholder from "./../../assets/images/place-holder.png";
+import { getItem } from "../../auth/LocalStorage";
 
 interface IStates {
   classes: Class[];
@@ -33,13 +33,15 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
   componentDidMount() {
     //loading
     this.getClasses();
-    console.log('this.props.classList.result',this.props.classList.result)
-
   }
 
   getClasses = async () => {
-    this.props.getAllclasses() 
-    console.log('this.props.classList.result',this.props.classList.result)
+    let url = '';
+    const user = JSON.parse(getItem("authUser") || "null");
+    if(user && user.userInfo) {
+       url = 'school/'+ user.userInfo.data.assign_school[0].id + '/class';
+       this.props.getAllclasses(url);
+    }
   };
 
   renderBody = () => {
@@ -103,7 +105,7 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
                 <span>Create a class to add students, parents and coaches</span>
               </div>
               <div className="flex-center mt-16">
-                <a href="http://localhost:3000/manager/add-class">
+                <Link to="/manager/add-class">
                   <button
                     type="submit"
                     className="primary-btn"
@@ -114,7 +116,7 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
                       sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
                     ></AddIcon>
                   </button>
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -126,7 +128,7 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
   render() {
     return (
       <>
-        <div className="container">
+        <div className="container-cus">
           <div className="dashboard">
             {/* DASHBOARD HEADER */}
             <div className="dashboard-header">
@@ -155,7 +157,7 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
                   </div>
                 </div>
                 <div className="col-4 col-md-4 justify-end">
-                  <Link to="/admin/add-class">
+                  <Link to="/manager/add-class">
                     <button
                       type="submit"
                       className="primary-btn"

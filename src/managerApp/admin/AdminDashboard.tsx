@@ -44,7 +44,7 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
     let schools = this.props.schoolList.result;
     return (
       <>
-        <div className="container">
+        <div className="container-cus">
           <div className="dashboard">
             {/* DASHBOARD HEADER */}
             <div className="dashboard-header">

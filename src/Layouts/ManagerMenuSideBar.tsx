@@ -4,7 +4,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import PoolIcon from '@mui/icons-material/Pool';
 import AddIcon from '@mui/icons-material/Add';
 
-import './menuSideBar.css';
+import './MenuSideBar.css';
 
 const ManagerSideBar = (props: IPageProp) => {
   console.log(props.history.location);

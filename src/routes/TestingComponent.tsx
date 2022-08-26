@@ -15,7 +15,7 @@ class TestingComponent extends React.Component {
 
     }
     return (
-      <div className="container">
+      <div className="container-cus">
         <ListBoxUI title="Today, 6Jun" callback={() => { }} more={true}>
           <>
             <ListItem {...item} >

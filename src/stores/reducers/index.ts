@@ -15,7 +15,7 @@ export interface StoreState {
   schools : SchoolInterface;
   schoolList : School[],
   classList : Class[],
-  class : ClassInterface;
+  classes : ClassInterface;
   menuState: MenuDataInterFace;
 
 }
@@ -23,7 +23,7 @@ export const reducers = combineReducers<StoreState>({
   authUser: authReducers,
   schools: schoolReducers,
   schoolList: schoolReducers,
-  class: classReducers,
+  classes: classReducers,
   classList: classReducers,
   menuState: MenuReducers,
 });

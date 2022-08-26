@@ -96,7 +96,7 @@ class Login extends React.Component<IProps, IStates> {
       <div className="primary f-16 project-header">
         <span>My Report Cards</span>
       </div>
-      <div className="container">
+      <div className="container-cus">
         <div className='grid'>
           <div className='row justify-content-center'>
             <div className='col-md-8'>

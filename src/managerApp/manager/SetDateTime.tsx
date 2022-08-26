@@ -1,25 +1,29 @@
 import React from "react";
-import { IPageProp } from "../../pagePropsInterface";
 
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import Stack from "@mui/material/Stack";
-import { Typography, TextField, Checkbox } from "@mui/material";
+import { Typography, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { flexbox } from "@mui/system";
+import { getItem, setItemWithObject } from "../../auth/LocalStorage";
+import { StoreState } from "../../stores/reducers";
+import { connect } from "react-redux";
+
+import { postClass, putClass } from "../../stores/actions/class-action";
+
 interface IStates {
-	isRecur: boolean;
-	selectedDays: string[];
-	isTimeStartEmpty: boolean;
-	isTimeEndEmpty: boolean;
-	classDate: Date | null;
+  isRecur: boolean;
+  selectedDays: any;
+  classObj: any;
+  image: any;
+  isCompleted: boolean;
 }
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
@@ -66,264 +70,367 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
   },
 }));
 
-var daysArray = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+var daysArray = [
+  { text: "Mo", value: "mon" },
+  { text: "Tu", value: "tue" },
+  { text: "We", value: "wed" },
+  { text: "Th", value: "thu" },
+  { text: "Fr", value: "fri" },
+  { text: "Sa", value: "sat" },
+  { text: "Su", value: "sun" },
+];
 
-class SetDateTime extends React.Component<IPageProp, IStates> {
-	constructor(props: any) {
-		super(props);
+interface IProps {
+  classes: any;
+  postClass: Function;
+  putClass: Function;
+}
+class SetDateTime extends React.Component<IProps, IStates> {
+  constructor(props: any) {
+    super(props);
 
-		this.state = {
-			isRecur: false,
-			selectedDays: [],
-			isTimeStartEmpty: true,
-			isTimeEndEmpty: true,
-			classDate: new Date(),
-		};
-	}
-	componentDidMount() {
-		//loading
-	}
+    this.state = {
+      isRecur: false,
+      selectedDays: [],
+      classObj: { start_time: "", end_time: "",start_date : null },
+      image: null,
+      isCompleted: false
+    };
+  }
 
-	renderBtn = () => {
-		if (this.state.isRecur) {
-			if (
-				this.state.selectedDays.length === 0 ||
-				this.state.isTimeStartEmpty ||
-				this.state.isTimeEndEmpty
-			) {
-				return (
-					<button type='submit' className='idle-btn fw-600 ml-16'>
-						Continue
-					</button>
-				);
-			} else
-				return (
-					<Link to='/manager/set-date-time'>
-						<button type='submit' className='primary-btn'>
-							Continue
-						</button>
-					</Link>
-				);
-		} else {
-			if (
-				!this.state.classDate ||
-				this.state.isTimeStartEmpty ||
-				this.state.isTimeEndEmpty
-			) {
-				return (
-					<button type='submit' className='idle-btn fw-600 ml-16'>
-						Continue
-					</button>
-				);
-			} else
-				return (
-					<Link to='/manager/set-date-time'>
-						<button type='submit' className='primary-btn'>
-							Continue
-						</button>
-					</Link>
-				);
-		}
-	};
+  componentDidMount() {
+    const classObject = JSON.parse(getItem("class") || "null");
+    if (classObject) {
+      this.setState({
+        classObj: classObject,
+      });
+    }
+    const img = JSON.parse(getItem("image") || "null");
+    if (img) {
+      this.setState({
+        image: img,
+      });
+    }
+  }
 
-	isRecurChanged = () => {
-		let temp = this.state.selectedDays;
-		this.setState({
-			selectedDays: temp,
-			isRecur: !this.state.isRecur,
-		});
-	};
+  valueChangedTimeEnd = (e: any) => {
+    let classTemp = this.state.classObj;
+    classTemp.end_time = e.target.value;
+    this.setState({
+      classObj: classTemp,
+    });
+  };
 
+  valueChangedTimeStart = (e: any) => {
+    let classTemp = this.state.classObj;
+    classTemp.start_time = e.target.value;
+    this.setState({
+      classObj: classTemp,
+    });
+  };
 
-	handleChange = (day:string) => {
-    console.log("clicked")
-		let temp = this.state.selectedDays;
-		let index = temp.findIndex((d) => d === day);
-		if (index > -1) {
-			temp.splice(index, 1);
-		} else {
-			temp.push(day);
-		}
-		this.setState({
-			selectedDays: temp,
-		});
-		console.log("days", this.state.selectedDays);
-	};
+  renderBtn = () => {
+    if (this.state.isRecur) {
+      if (
+        this.state.selectedDays.length === 0 ||
+        this.state.classObj.start_time === "" ||
+        this.state.classObj.end_time === ""
+      ) {
+        return (
+          <button type="submit" className="idle-btn fw-600 ml-16">
+            Continue
+          </button>
+        );
+      } else
+        return (
+          <button type="submit" className="primary-btn" onClick={this.submit}>
+            Continue
+          </button>
+        );
+    } else if (!this.state.isRecur) {
+      if (
+        !this.state.classObj.start_date 
+        // this.state.classObj.start_time === "" ||
+        // this.state.classObj.end_time === ""
+      ) {
+        return (
+          <button type="submit" className="idle-btn fw-600 ml-16">
+            Continue
+          </button>
+        );
+      } else
+        return (
+          <button type="submit" className="primary-btn" onClick={this.submit}>
+            Continue
+          </button>
+        );
+    }
+  };
 
-
-	renderDay = (day: string) => {
+  isRecurChanged = () => {
     let temp = this.state.selectedDays;
-		let index = temp.findIndex((d) => d === day);
-		if (index > -1) {
-			return (
-				<div
-					style={{
-						width: 40,
-						height: 40,
-						backgroundColor: "var(--primary)",
-						color: "#fff",
-						borderRadius: "50%",
-						padding: "5px",
-						textAlign: "center",
-						marginRight: 8,
-						cursor: "pointer",
-					}}
-					onClick={() => this.handleChange(day)}
-				>
-					{day}
-				</div>
-			);
-		} else {
-			return (
-				<div
-					style={{
-						width: 40,
-						height: 40,
-						backgroundColor: "white",
-						color: "#1A1A1A",
-						borderRadius: "50%",
-						padding: "5px",
-						textAlign: "center",
-						marginRight: 8,
-            cursor:'pointer'
-					}}
-					onClick={() => this.handleChange(day)}
-				>
-					{day}
-				</div>
-			);
-		}
-	};
+    this.setState({
+      selectedDays: temp,
+      isRecur: !this.state.isRecur,
+    });
+	console.log('recur',this.state.isRecur)
 
-	renderByIsRecur = () => {
-		if (!this.state.isRecur) {
-			return (
-				<div className='mb-32'>
-					<span className='f-12 mb-8 flex-column'>Days</span>
-					<div className='justify-start'>
-						{daysArray.map((day) => this.renderDay(day))}
-					</div>
-				</div>
-			);
-		} else {
-			return (
-				<div className='mb-32'>
-					<LocalizationProvider dateAdapter={AdapterDateFns}>
-						<DatePicker
-							label='Class Date'
-							value={this.state.classDate}
-							onChange={(newValue) => {
-								this.setState({
-									classDate: newValue,
-								});
-							}}
-							renderInput={(params) => <TextField {...params} />}
-						/>
-					</LocalizationProvider>
-				</div>
-			);
-		}
-	};
+  };
 
-	render() {
-		const {
-			isRecur,
-			selectedDays,
-			isTimeStartEmpty,
-			isTimeEndEmpty,
-			classDate,
-		} = this.state;
-		return (
-			<>
-				<div className='wrapper'>
-					<div className='primary f-16 project-header'>
-						<span>My Report Cards</span>
-					</div>
-					<div className='container-cus'>
-						<div className='content'>
-							<div className='f-14 mb-32'>
-								<Link to='/admin/welcome' style={{ textDecoration: "none" }}>
-									<ArrowBackIcon
-										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-									></ArrowBackIcon>
-									<span>Back</span>
-								</Link>
-							</div>
-							<div className='mb-16 flex'>
-								<img
-									src={"/assets/icons/logo.png"}
-									alt='right-arrow'
-									className='item-icon'
-								/>
-								<span className='f-16 '>
-									Pro Youth Morning (Dorphin swimming school)
-								</span>
-							</div>
-							<div className='hr mb-16'></div>
-							<div className='f-32 fw-500 mb-16'>
-								<span>Set date and time.</span>
-							</div>
-							<div className='f-16 mb-32 fw-400'>
-								<span>Create a recurring class or a one-time class.</span>
-							</div>
-							<div className='mb-32'>
-								<Stack direction='row' spacing={1} alignItems='center'>
-									<AntSwitch
-										defaultChecked
-										inputProps={{ "aria-label": "ant design" }}
-										value={isRecur}
-										onChange={this.isRecurChanged}
-									/>
-									<Typography className='f-16'>
-										Set as reccuring class
-									</Typography>
-								</Stack>
-							</div>
-							{this.renderByIsRecur()}
+  handleChange = (day: any) => {
+    let temp = this.state.selectedDays;
+    let index = temp.findIndex((d: any) => d === day.value);
+    if (index > -1) {
+      temp.splice(index, 1);
+    } else {
+      temp.push(day.value);
+    }
+    this.setState({
+      selectedDays: temp,
+    });
+  };
 
-							<div className='row mb-32'>
-								<div className='col-6'>
-									<TextField
-										id='time'
-										label='Time Start'
-										type='time'
-										defaultValue='09:00'
-										InputLabelProps={{
-											shrink: true,
-										}}
-										inputProps={{
-											step: 300, // 5 min
-										}}
-										sx={{ width: 208, height: 80 }}
-									/>
-								</div>
-								<div className='col-6'>
-									<TextField
-										id='time'
-										label='Time End'
-										type='time'
-										defaultValue='10:00'
-										InputLabelProps={{
-											shrink: true,
-										}}
-										inputProps={{
-											step: 300, // 5 min
-										}}
-										sx={{ width: 208, height: 80 }}
-									/>
-								</div>
-							</div>
+  renderDay = (day: any) => {
+    let temp = this.state.selectedDays;
+    let index = temp.findIndex((d: any) => d === day.value);
+    if (index > -1) {
+      return (
+        <div
+          style={{
+            width: 40,
+            height: 40,
+            backgroundColor: "var(--primary)",
+            color: "#fff",
+            borderRadius: "50%",
+            padding: "8px",
+            textAlign: "center",
+            marginRight: 8,
+            cursor: "pointer",
+          }}
+          onClick={() => this.handleChange(day)}
+        >
+          {day.text}
+        </div>
+      );
+    } else {
+      return (
+        <div
+          style={{
+            width: 40,
+            height: 40,
+            backgroundColor: "white",
+            color: "#1A1A1A",
+            borderRadius: "50%",
+            padding: "8px",
+            textAlign: "center",
+            marginRight: 8,
+            cursor: "pointer",
+          }}
+          onClick={() => this.handleChange(day)}
+        >
+          {day.text}
+        </div>
+      );
+    }
+  };
 
-							<div className='right'>
-								<span className='secondary'>2 of 4</span>
-								{this.renderBtn()}
-							</div>
-						</div>
-					</div>
-				</div>
-			</>
-		);
-	}
+  renderByIsRecur = () => {
+    if (!this.state.isRecur) {
+      return (
+        <div className="mb-32">
+          <span className="f-12 mb-8 flex-column">Days</span>
+          <div className="justify-start">
+            {daysArray.map((day) => this.renderDay(day))}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="mb-32">
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Class Date"
+              value={this.state.classObj.start_date}
+              onChange={(newValue) => {
+				let temp = this.state.classObj;
+				temp.start_date = newValue;
+                this.setState({
+					classObj : temp,
+                });
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
+        </div>
+      );
+    }
+  };
+
+  isValid = () => {
+    if (this.state.isRecur) {
+      if (
+        this.state.selectedDays.length === 0 ||
+        this.state.classObj.start_time === "" ||
+        this.state.classObj.end_time === ""
+      )
+        return false;
+      else return true;
+    } else {
+      if (
+		!this.state.classObj.start_date ||
+        this.state.classObj.start_time === "" ||
+        this.state.classObj.end_time === ""
+      )
+        return false;
+      else return true;
+    }
+  };
+
+  submit = async () => {
+
+      const formData = new FormData();
+      formData.append("name", this.state.classObj.name);
+      formData.append("school_id", this.state.classObj.school_id);
+      formData.append("type", this.state.isRecur ? "daily" : "one-day");
+      formData.append("start_time", this.state.classObj.start_time);
+      formData.append("end_time", this.state.classObj.end_time);
+      formData.append("open_days", this.state.selectedDays);
+      formData.append("start_date", this.state.classObj.start_date);
+
+      formData.append("logo", this.state.image.raw);
+
+	  
+	  if (this.isValid()) {
+
+       let url = 'school/'+ this.state.classObj.school_id + '/class';
+	   if (this.state.classObj.id < 0) {
+        await this.props.postClass(formData,url);
+        if (this.props.classes.result)
+        setItemWithObject("class", this.props.classes.result.data);
+        this.setState({
+          isCompleted: true,
+        });
+      } else {
+        await this.props.postClass(formData,url, this.state.classObj.id);
+        if (this.props.classes.result)
+          setItemWithObject("class", this.props.classes.result.data);
+        this.setState({
+          isCompleted: true,
+        });
+    }
+}
+  };
+
+  render() {
+    const {
+      isRecur,classObj
+    } = this.state;
+    return (
+      <>
+        <div className="wrapper">
+          {this.state.isCompleted && (
+            <Navigate to="/manager/invite-coach" replace={true} />
+          )}
+          <div className="primary f-16 project-header">
+            <span>My Report Cards</span>
+          </div>
+          <div className="container-cus">
+            <div className="content">
+              <div className="f-14 mb-32">
+                <Link to="/manager/add-class" style={{ textDecoration: "none" }}>
+                  <ArrowBackIcon
+                    sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+                  ></ArrowBackIcon>
+                  <span>Back</span>
+                </Link>
+              </div>
+              <div className="mb-16 flex">
+                <img
+                  src={"/assets/icons/logo.png"}
+                  alt="right-arrow"
+                  className="item-icon"
+                />
+                <span className="f-16 ">
+                  Pro Youth Morning (Dorphin swimming school)
+                </span>
+              </div>
+              <div className="hr mb-16"></div>
+              <div className="f-32 fw-500 mb-16">
+                <span>Set date and time.</span>
+              </div>
+              <div className="f-16 mb-32 fw-400">
+                <span>Create a recurring class or a one-time class.</span>
+              </div>
+              <div className="mb-32">
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <AntSwitch
+                    defaultChecked
+                    inputProps={{ "aria-label": "ant design" }}
+                    value={isRecur}
+                    onChange={this.isRecurChanged}
+                  />
+                  <Typography className="f-16">
+                    Set as reccuring class
+                  </Typography>
+                </Stack>
+              </div>
+              {this.renderByIsRecur()}
+
+              <div className="row mb-32">
+                <div className="col-6">
+                  <TextField
+                    id="time"
+                    label="Time Start"
+                    type="time"
+                    value={classObj.start_time}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      step: 300, // 5 min
+                    }}
+                    sx={{ width: 208, height: 80 }}
+                    onChange={this.valueChangedTimeStart}
+                  />
+                </div>
+                <div className="col-6">
+                  <TextField
+                    id="time"
+                    label="Time End"
+                    type="time"
+                    value={classObj.end_time}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      step: 300, // 5 min
+                    }}
+                    sx={{ width: 208, height: 80 }}
+                    onChange={this.valueChangedTimeEnd}
+                  />
+                </div>
+              </div>
+
+              <div className="right">
+                <span className="secondary">2 of 4</span>
+                {this.renderBtn()}
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 }
 
-export default SetDateTime;
+const mapStateToProps = ({
+  classes,
+}: StoreState): {
+  classes: any;
+} => {
+  return {
+    classes,
+  };
+};
+
+export default connect(mapStateToProps, { postClass, putClass })(SetDateTime);

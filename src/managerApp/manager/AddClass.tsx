@@ -6,13 +6,17 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { Link, Navigate } from "react-router-dom";
 import InputFormAtom from "../../atoms/InputFormAtom";
+import { getItem, setItemWithObject } from "../../auth/LocalStorage";
 
 interface IStates {
+  id : number;
   logo: string;
   isClassNameEmpty: boolean;
   className: string;
   classNameMsg: string;
-  isCompleted : boolean
+  isCompleted : boolean;
+  image : any;
+  schoolId : any;
 }
 
 class AddClass extends React.Component<IPageProp, IStates> {
@@ -20,19 +24,59 @@ class AddClass extends React.Component<IPageProp, IStates> {
     super(props);
 
     this.state = {
+      id : -1,
       logo: "",
       isClassNameEmpty: true,
       className: "",
       classNameMsg: "",
       isCompleted : false,
+      image: { preview: "", raw: "" },
+      schoolId : 1,
     };
   }
+
   componentDidMount() {
-    //loading
+    const user = JSON.parse(getItem("authUser") || "null");
+    if(user && user.result) {
+       this.setState({
+        schoolId : user.result.data.assign_school[0].id
+       });
+    }
   }
 
+  isValid = () => {
+    if (this.state.className.length === 0 || this.state.logo === "") return false;
+    else return true;
+  };
+
+  submit = async () => {
+    if (this.isValid()) {
+      await setItemWithObject("class", {
+        id: -1,
+        created_by: null,
+        created_at: new Date(),
+        updated_at: new Date(),
+        deleted_at: new Date(),
+        name: this.state.className,
+        school_id : this.state.schoolId,
+        type: '',
+        open_days: [],
+        start_time: '',
+        end_time: '',
+        start_date: null,
+        logo: '',
+        assign_user: [],
+        studnetCount: 0,
+      });
+      await setItemWithObject('image',this.state.image);
+      this.setState({
+        isCompleted : true
+      })
+    }
+  };
+
   renderBtn = () => {
-    if (this.state.isClassNameEmpty) {
+    if (!this.isValid()) {
       return (
         <button type="submit" className="idle-btn fw-600 ml-16">
           Continue
@@ -42,17 +86,83 @@ class AddClass extends React.Component<IPageProp, IStates> {
       return (
         <>
           {this.state.isCompleted && (
-            <Navigate to="/admin/welcome" replace={true} />
+            <Navigate to="/manager/set-date-time" replace={true} />
           )}
-          <button type="submit" className="primary-btn">
+          <button type="submit" className="primary-btn" onClick={this.submit}>
             Continue
           </button>
         </>
       );
   };
 
+  renderImageUpload = () => {
+    return (
+      <div>
+        <label htmlFor="upload-button">
+          {this.state.image.preview || this.state.logo !== '' ? (
+            <>
+              <img
+                src={this.state.id === -1? this.state.image.preview : "http://localhost:3000/api/" + this.state.logo}
+                alt="preview"
+                className="preview-icon cursor"
+              />
+              <span
+                className="primary f-14 cursor"
+                style={{ marginLeft: "18px" }}
+              >
+                &nbsp; Change Image
+              </span>
+            </>
+          ) : (
+            <>
+              <>
+                <img
+                  id="logo"
+                  src="../../../assets/icons/upload.png"
+                  alt="upload"
+                  className="big-icon cursor"
+                />
+                <span
+                  className="primary f-14 cursor"
+                  style={{ marginLeft: "18px" }}
+                >
+                  &nbsp; Upload Image
+                </span>
+              </>
+            </>
+          )}
+        </label>
+        <input
+          type="file"
+          id="upload-button"
+          style={{ display: "none" }}
+          onChange={this.handleChange}
+        />
+      </div>
+    );
+  };
+
+  handleChange = (e: any) => {
+    var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+    if (!allowedExtensions.exec(e.target.files[0].name)) {
+      alert("Invalid file type");
+    } else {
+      if (e.target.files.length) {
+        let temp = this.state.image;
+        temp.preview = URL.createObjectURL(e.target.files[0]);
+        temp.raw = e.target.files[0];
+        temp.fileName = e.target.files[0].name;
+        this.setState({
+          image: temp,
+          logo: temp.raw,
+        });
+      }
+    }
+  };
+
+
   render() {
-    const { logo, isClassNameEmpty, className, classNameMsg } = this.state;
+    const { isClassNameEmpty, className, classNameMsg } = this.state;
 
     return (
       <>
@@ -60,10 +170,10 @@ class AddClass extends React.Component<IPageProp, IStates> {
           <div className="primary f-16 project-header">
             <span>My Report Cards</span>
           </div>
-          <div className="container">
+          <div className="container-cus">
             <div className="content col-6 col-md-6 col-sm-12">
               <div className="f-14 mb-32">
-                <Link to="/admin/welcome" style={{ textDecoration: "none" }}>
+                <Link to="/manager/dashboard" style={{ textDecoration: "none" }}>
                   <ArrowBackIcon
                     sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
                   ></ArrowBackIcon>
@@ -88,21 +198,8 @@ class AddClass extends React.Component<IPageProp, IStates> {
                 </span>
               </div>
               <div className="mb-16 align-center">
-                <div className="flex-column">
-                  <span className="f-12 fw-400 mb-16">
-                    Class Logo (Optional)
-                  </span>
-                  <img
-                    src="../../../assets/icons/upload.png"
-                    alt="upload"
-                    className="big-icon"
-                  />
-                </div>
+              {this.renderImageUpload()}
 
-                <span className="primary f-14" style={{ marginLeft: "18px" }}>
-                  {" "}
-                  &nbsp; Upload Image
-                </span>
               </div>
               <div className="fw-400 mb-16 f-12">
                 <InputFormAtom
