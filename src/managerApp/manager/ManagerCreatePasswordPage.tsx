@@ -204,7 +204,7 @@ class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
 					<span>My Report Cards</span>
 				</div>
 
-				<div className='container'>
+				<div className='container-cus'>
 					<div className='content'>
 						<div className='title mb-32'>{this.renderTitle()}</div>
 						<div className='mb-32'>

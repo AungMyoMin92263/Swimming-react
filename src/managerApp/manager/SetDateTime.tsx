@@ -239,7 +239,7 @@ class SetDateTime extends React.Component<IPageProp, IStates> {
 					<div className='primary f-16 project-header'>
 						<span>My Report Cards</span>
 					</div>
-					<div className='container'>
+					<div className='container-cus'>
 						<div className='content'>
 							<div className='f-14 mb-32'>
 								<Link to='/admin/welcome' style={{ textDecoration: "none" }}>

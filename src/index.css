@@ -67,7 +67,7 @@ body {
   height: auto;
 }
 
-.container {
+.container-cus {
   padding: 16px 12px;
   box-sizing: border-box;
   overflow: hidden;
@@ -449,7 +449,7 @@ body {
     height: 405px;
   }
 
-  .container {
+  .container-cus {
     padding: 12px;
   }
 }

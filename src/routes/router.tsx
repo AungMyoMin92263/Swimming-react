@@ -43,7 +43,8 @@ import StudentDashboardPage from "../studentApp/student/StudentDashboard";
 import CoachLoginPage from "../coachApp/coach/CoachLogin";
 import CoachWelcomePage from "../coachApp/coach/CoachWelcome";
 import ManagerSideBar from "../Layouts/ManagerMenuSideBar";
-import FooterMobileMenu from "../Layouts/FooterMobile";
+import FooterMobileMenu from "../Layouts/footerMobile";
+import TestingComponent from "./TestingComponent";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -51,6 +52,19 @@ const routes = [
 	{
 		path: "/admin",
 		child: [
+			{
+				path: "testing-layout",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<TestingComponent />
+					</>
+				),
+				footer: (props:any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+				
+			},
 			{
 				path: "recover-password",
 				sideBar: (props: any) => <></>,

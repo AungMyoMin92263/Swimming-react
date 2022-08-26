@@ -38,7 +38,7 @@ class InviteCoachPage extends React.Component<IPageProp, IStates> {
 					<div className='primary f-16 project-header'>
 						<span>My Report Cards</span>
 					</div>
-					<div className='container'>
+					<div className='container-cus'>
 						<div className='content col-lg-6'>
 							<div className='f-14 mb-32'>
 								<Link to='/admin/add-school' style={{ textDecoration: "none" }}>

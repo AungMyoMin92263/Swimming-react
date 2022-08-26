@@ -1,5 +1,5 @@
 import { IPageProp } from "../pagePropsInterface";
-import './MenuBar.css';
+import './menuBar.css';
 
 import PoolIcon from '@mui/icons-material/Pool';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';

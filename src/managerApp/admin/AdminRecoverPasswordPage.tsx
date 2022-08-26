@@ -117,7 +117,7 @@ class AdminRecoverPasswordPage extends React.Component<IProps, IStates> {
 					<span>My Report Cards</span>
 				</div>
 
-				<div className='container'>
+				<div className='container-cus'>
 					<div className='content col-lg-6 col-md-8 col-12'>
 						<div className='title mb-8'>
 							<div className='title mb-3'>{this.renderTitle()}</div>
