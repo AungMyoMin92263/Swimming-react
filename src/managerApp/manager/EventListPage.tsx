@@ -6,7 +6,7 @@ import "../admin/AdminDashboard.css";
 import "./ManagerDashboard.css";
 import AddIcon from "@mui/icons-material/Add";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
-import { School } from "../../interfaces/School";
+import { School } from "../../stores/model/school";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { signOut, signIn } from "../../stores/actions";

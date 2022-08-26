@@ -5,7 +5,8 @@ import "./AdminDashboard.css";
 import "../manager/ManagerDashboard.css";
 
 import AddIcon from "@mui/icons-material/Add";
-import { School } from "../../interfaces/School";
+import { School } from "../../stores/model/school";
+
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { signIn } from "../../stores/actions";

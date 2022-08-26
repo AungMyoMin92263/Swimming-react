@@ -1,6 +1,7 @@
 import { SignInAction, SignOutAction } from "./auth-action";
 import { getSchoolsAction,createSchoolAction,editSchoolAction,deleteSchoolAction,inviteManagerAction} from './school-action';
 import { SelectedMenuAction } from './menu-action';
+import { createClassAction, deleteClassAction, editClassAction, getClassAction, inviteCoachAction, inviteStudentAction } from "./class-action";
 
 export enum ActionTypes {
   signIn,
@@ -14,6 +15,14 @@ export enum ActionTypes {
 
   inviteManager,
   selectedMenu,
+
+  getClass,
+  createClass,
+  editClass,
+  deleteClass,
+
+  inviteStudent,
+  inviteCoach
 }
 
 export type Action = SignInAction
@@ -24,3 +33,9 @@ export type Action = SignInAction
   | deleteSchoolAction
   | inviteManagerAction
   | SelectedMenuAction
+  | getClassAction 
+  | createClassAction 
+  | editClassAction 
+  | deleteClassAction
+  | inviteStudentAction
+  | inviteCoachAction

@@ -31,6 +31,7 @@ import AdminPeopleListPage from "../managerApp/admin/PeopleListPage";
 import AssignStudentPage from "../managerApp/manager/AssignStudent";
 import EventListPage from "../managerApp/manager/EventListPage";
 import PeopleListPage from "../managerApp/manager/PeopleListPage";
+import ManagerLoginPage from "../managerApp/manager/ManagerLogin";
 
 //student
 import StudentLoginPage from "../studentApp/student/StudentLogin";
@@ -205,7 +206,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<AdminLoginPage />
+						<ManagerLoginPage />
 					</>
 				),
 				footer: (props:any) => <></>,
@@ -221,7 +222,7 @@ const routes = [
 				),
 				main: (props: any) => (
 					<>
-						<ManagerDashboardPage />
+						<ManagerDashboardPage {...props}/>
 					</>
 				),
 				footer: (props:any) => <></>,

@@ -4,7 +4,8 @@ import React from "react";
 import "./AdminDashboard.css";
 import AddIcon from "@mui/icons-material/Add";
 
-import { School } from "../../interfaces/School";
+import { School } from "../../stores/model/school";
+
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 import { getAllSchools } from "../../stores/actions/school-action";

@@ -7,13 +7,6 @@
   --white: #FFF;
 }
 
-/* .menu-bar .menu-list {
-  display: flex;
-  height: 100%;
-  align-items: center;
-  justify-content: space-around;
-} */
-
 .menu-bar {
   display: flex;
   padding: 0px;
@@ -50,4 +43,12 @@
 
 .menu-item.active {
   color: var(--primary);
+}
+
+
+
+@media screen and (max-width: 374px) {
+  .menu-bar {
+    width : 100%;
+  }
 }

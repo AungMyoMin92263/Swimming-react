@@ -4,14 +4,11 @@ import React from "react";
 import AddIcon from "@mui/icons-material/Add";
 
 import { Link } from "react-router-dom";
-import InputFormAtom from "../../atoms/InputFormAtom";
-import { School } from "../../interfaces/School";
+import { School } from "../../stores/model/school";
+
 import { connect } from "react-redux";
 import { SchoolInterface } from "../../stores/model/school-interface";
 import { StoreState } from "../../stores/reducers";
-import { getItem } from "../../auth/LocalStorage";
-
-
 interface IStates {
 	schools: School[];
 	name:string;

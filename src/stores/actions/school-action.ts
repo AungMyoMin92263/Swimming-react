@@ -41,6 +41,7 @@ export interface getSchoolsAction {
 }
 
 export const getAllSchools = () => {
+  refreshToken();
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.get<School>("schools", option);
@@ -68,6 +69,7 @@ export interface createSchoolAction {
 }
 
 export const postSchool = (school : SchoolInterface) => {
+  refreshToken();
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.post<School>(
@@ -97,6 +99,7 @@ export interface editSchoolAction {
 }
 
 export const putSchool = (school: SchoolInterface, id: number) => {
+  refreshToken();
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.put<School>(
@@ -127,6 +130,7 @@ export interface deleteSchoolAction {
 }
 
 export const deleteSchoolObj = (id: number) => {
+  refreshToken();
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.delete<School>("schools/" + id, option);
@@ -153,6 +157,7 @@ export interface inviteManagerAction {
 }
 
 export const inviteManager = (emails : any) => {
+  refreshToken();
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.post<School>(

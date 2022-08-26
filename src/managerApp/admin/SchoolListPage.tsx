@@ -3,7 +3,8 @@ import React from "react";
 // import csss
 import styles from "./../../css/pages.module.css";
 
-import { School } from "../../interfaces/School";
+import { School } from "../../stores/model/school";
+
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { signOut, signIn } from "../../stores/actions";
