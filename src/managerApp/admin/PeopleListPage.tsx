@@ -38,7 +38,7 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 	render() {
 		return (
 			<>
-				<div className='container'>
+				<div className='container-cus'>
 					<div className='dashboard'>
 						{/* DASHBOARD HEADER */}
 						<div className='dashboard-header'>

@@ -1,0 +1,16 @@
+.list-box{
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.list-box-title{
+  font-size: 16px;
+  color: #848484;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ccc;
+}
+.list-footer{
+  color: var(--primary);
+  text-align: center;
+  padding: 15px;
+  cursor: pointer;
+}

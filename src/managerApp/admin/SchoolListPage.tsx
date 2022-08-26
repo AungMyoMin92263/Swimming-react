@@ -36,7 +36,7 @@ class SchoolListPage extends React.Component<IProps, IStates> {
 	render() {
 		return (
 			<>
-				<div className='container'>
+				<div className='container-cus'>
 					<div className='content-dashboard'>
 						<div className='right-div mb-16'>
 							<div className='email-div'>
