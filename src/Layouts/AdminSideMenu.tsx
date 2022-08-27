@@ -3,7 +3,7 @@ import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined
 import PoolIcon from "@mui/icons-material/Pool";
 import SupervisedUserCircleOutlinedIcon from "@mui/icons-material/SupervisedUserCircleOutlined";
 
-import "./MenuSideBar.css";
+import "./menuSideBar.css";
 
 const SideBar = (props: IPageProp) => {
   console.log(props.history.location);
