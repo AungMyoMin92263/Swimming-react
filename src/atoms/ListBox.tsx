@@ -4,6 +4,7 @@ export interface IListBoxUI {
   title?: string,
   children?: JSX.Element,
   more?: boolean
+  moreText?: string
   callback: Function
 }
 
@@ -18,7 +19,7 @@ const ListBoxUI = (props: IListBoxUI) => {
       </div>
       {props.more ?
         <div className="list-footer" onClick={() => props.callback()}>
-          <label >View All</label>
+          <label >{props.moreText || `View All`}</label>
         </div>
         :
         <></>

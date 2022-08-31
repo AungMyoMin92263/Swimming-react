@@ -19,6 +19,22 @@ export const authReducers = (
         userInfo: user,
         token: user.token
       };
+    case ActionTypes.signUp:
+      return {
+        ...state,
+        isSignedUp:true,
+      }
+    case ActionTypes.changePwd:
+      return {
+        ...state,
+        isSignedUp: true,
+      }
+    case ActionTypes.recoverPwd:
+      const recoverUser = action.payload as IUser
+      return{
+        ...state,
+        userInfo: recoverUser,
+      }
     case ActionTypes.signOut:
       return {
         ...state,
@@ -37,3 +53,5 @@ export const authReducers = (
       return state;
   }
 };
+
+

@@ -33,7 +33,12 @@
 
 td {
     height: 50px;
-    width: 50px;
+    width: auto;
     text-align: start;
-        vertical-align: middle;
+    vertical-align: middle;
+}
+
+.emailInitialIcon{
+    display: flex;
+    flex-direction: row;
 }

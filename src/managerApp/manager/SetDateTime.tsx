@@ -17,6 +17,7 @@ import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
 import { postClass, putClass } from "../../stores/actions/class-action";
+import placeholder from "./../../assets/images/place-holder.png";
 
 interface IStates {
   isRecur: boolean;
@@ -24,6 +25,7 @@ interface IStates {
   classObj: any;
   image: any;
   isCompleted: boolean;
+  school_name : string;
 }
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
@@ -92,9 +94,10 @@ class SetDateTime extends React.Component<IProps, IStates> {
     this.state = {
       isRecur: false,
       selectedDays: [],
-      classObj: { start_time: "", end_time: "",start_date : null },
+      classObj: { start_time: "", end_time: "",start_date : new Date() },
       image: null,
-      isCompleted: false
+      isCompleted: false,
+      school_name : '',
     };
   }
 
@@ -110,6 +113,13 @@ class SetDateTime extends React.Component<IProps, IStates> {
       this.setState({
         image: img,
       });
+    }
+
+    const user = JSON.parse(getItem("authUser") || "null");
+    if(user && user.userInfo) {
+       this.setState({
+        school_name : user.userInfo.data.assign_school[0].school.name,
+       });
     }
   }
 
@@ -130,6 +140,10 @@ class SetDateTime extends React.Component<IProps, IStates> {
   };
 
   renderBtn = () => {
+    console.log(this.state.isRecur);
+    console.log(this.state.selectedDays.length);
+    console.log(this.state.classObj.start_time);
+    console.log(this.state.classObj.start_time);
     if (this.state.isRecur) {
       if (
         this.state.selectedDays.length === 0 ||
@@ -235,7 +249,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
   };
 
   renderByIsRecur = () => {
-    if (!this.state.isRecur) {
+    if (this.state.isRecur) {
       return (
         <div className="mb-32">
           <span className="f-12 mb-8 flex-column">Days</span>
@@ -287,43 +301,48 @@ class SetDateTime extends React.Component<IProps, IStates> {
   };
 
   submit = async () => {
+		const formData = new FormData();
+		formData.append("name", this.state.classObj.name);
+		formData.append("school_id", this.state.classObj.school_id);
+		formData.append("type", this.state.isRecur ? "daily" : "one-day");
+		formData.append("start_time", this.state.classObj.start_time);
+		formData.append("end_time", this.state.classObj.end_time);
+		formData.append("open_days", this.state.selectedDays);
+		// formData.append("start_date", this.state.classObj.start_date);
+		formData.append(
+			"start_date",
+			this.state.classObj.start_date
+				? this.state.classObj.start_date.toISOString()
+				: "2022-09-30T16:40:59Z"
+		);
 
-      const formData = new FormData();
-      formData.append("name", this.state.classObj.name);
-      formData.append("school_id", this.state.classObj.school_id);
-      formData.append("type", this.state.isRecur ? "daily" : "one-day");
-      formData.append("start_time", this.state.classObj.start_time);
-      formData.append("end_time", this.state.classObj.end_time);
-      formData.append("open_days", this.state.selectedDays);
-      formData.append("start_date", this.state.classObj.start_date);
+		formData.append("logo", this.state.image.raw);
 
-      formData.append("logo", this.state.image.raw);
-
-	  
-	  if (this.isValid()) {
-
-       let url = 'school/'+ this.state.classObj.school_id + '/class';
-	   if (this.state.classObj.id < 0) {
-        await this.props.postClass(formData,url);
-        if (this.props.classes.result)
-        setItemWithObject("class", this.props.classes.result.data);
-        this.setState({
-          isCompleted: true,
-        });
-      } else {
-        await this.props.postClass(formData,url, this.state.classObj.id);
-        if (this.props.classes.result)
-          setItemWithObject("class", this.props.classes.result.data);
-        this.setState({
-          isCompleted: true,
-        });
-    }
-}
-  };
+		if (this.isValid()) {
+			let url = "school/" + this.state.classObj.school_id + "/class";
+			if (this.state.classObj.id < 0) {
+				await this.props.postClass(formData, url);
+				if (this.props.classes.result && this.props.classes.result.data) {
+					setItemWithObject("class", this.props.classes.result.data);
+					this.setState({
+						isCompleted: true,
+					});
+				}
+			} else {
+				await this.props.putClass(formData, url, this.state.classObj.id);
+				if (this.props.classes.result && this.props.classes.result.data) {
+					setItemWithObject("class", this.props.classes.result.data);
+					this.setState({
+						isCompleted: true,
+					});
+				}
+			}
+		}
+	};
 
   render() {
     const {
-      isRecur,classObj
+      isRecur,classObj,  school_name
     } = this.state;
     return (
       <>
@@ -344,14 +363,18 @@ class SetDateTime extends React.Component<IProps, IStates> {
                   <span>Back</span>
                 </Link>
               </div>
-              <div className="mb-16 flex">
-                <img
-                  src={"/assets/icons/logo.png"}
-                  alt="right-arrow"
-                  className="item-icon"
+              <div className="mb-16 align-center">
+                 <img
+                      src={
+                        classObj.logo
+                          ? process.env.REACT_APP_API_ENDPOINT + "/" + classObj.logo
+                          : placeholder
+                      }
+                      alt="logo"
+                      className={`${classObj.logo? "item-icon" : "w-48"}`}
                 />
                 <span className="f-16 ">
-                  Pro Youth Morning (Dorphin swimming school)
+                 {classObj.name} ({school_name})
                 </span>
               </div>
               <div className="hr mb-16"></div>
@@ -364,7 +387,6 @@ class SetDateTime extends React.Component<IProps, IStates> {
               <div className="mb-32">
                 <Stack direction="row" spacing={1} alignItems="center">
                   <AntSwitch
-                    defaultChecked
                     inputProps={{ "aria-label": "ant design" }}
                     value={isRecur}
                     onChange={this.isRecurChanged}

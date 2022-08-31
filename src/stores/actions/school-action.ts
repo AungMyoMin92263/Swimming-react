@@ -10,10 +10,10 @@ var token = '';
 var option: AxiosRequestConfig;
 var optionImage: AxiosRequestConfig;
 
-export const refreshToken = () => {
-  const authUser = JSON.parse(getItem("authUser") || "null");
+export const refreshToken = (token=null) => {
+  if (token===null) {const authUser = JSON.parse(getItem("authUser") || "null");
   if (authUser && authUser.userInfo) {
-  token = authUser.userInfo.data.token;
+  token = authUser.userInfo.data.token;}
   console.log('token',token)
 
   option = {
@@ -32,6 +32,7 @@ export const refreshToken = () => {
     },
   };
 }
+  return async (dispatch: Dispatch) => {}
 }
 
 
@@ -82,6 +83,7 @@ export const postSchool = (school : SchoolInterface) => {
       });
     } catch (err) {
       if (err instanceof Error) {
+        
         dispatch<createSchoolAction>({
           type: ActionTypes.getError,
           payload: err.message,
@@ -168,11 +170,12 @@ export const inviteManager = (emails : any) => {
         type: ActionTypes.inviteManager,
         payload: response,
       });
-    } catch (err) {
-      if (err instanceof Error) {
+    } catch (err: any) {
+      console.log("Error", err.response)
+      if (err) {
         dispatch<inviteManagerAction>({
           type: ActionTypes.getError,
-          payload: err.message,
+          payload: err.response.data,
         });
       } else {
         console.log("Unexpected error", err);

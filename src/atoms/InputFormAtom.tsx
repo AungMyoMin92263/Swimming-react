@@ -78,7 +78,6 @@ class InputFormAtom extends React.Component<IProps, IStates>{
     render() {
         const {
             label,
-            warning,
             showWarning,
             id,
             type,

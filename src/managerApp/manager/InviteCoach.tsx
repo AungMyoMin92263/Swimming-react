@@ -6,82 +6,89 @@ import { inviteCoach } from "../../stores/actions/class-action";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { Link, Navigate } from "react-router-dom";
-import { removeItem } from "../../auth/LocalStorage";
+import { getItem, removeItem } from "../../auth/LocalStorage";
 import TagInput from "../../components/TagInput";
+import placeholder from "./../../assets/images/place-holder.png";
 
 interface IStates {
-	emails: string[];
-	isCompleted: boolean;
+  emails: string[];
+  isCompleted: boolean;
+  school_name : string;
 }
 
 interface IProps {
-	emails: string[];
-	classes : any;
-	inviteCoach : Function;
+  emails: string[];
+  classes: any;
+  inviteCoach: Function;
 }
 class InviteCoachPage extends React.Component<IProps, IStates> {
   constructor(props: any) {
     super(props);
 
     this.state = {
-      emails : [],
-	  isCompleted : false
+      emails: [],
+      isCompleted: false,
+	  school_name : ''
     };
   }
   componentDidMount() {
-    //loading
+    const user = JSON.parse(getItem("authUser") || "null");
+    if(user && user.userInfo) {
+       this.setState({
+        school_name : user.userInfo.data.assign_school[0].school.name,
+       });
+    }
   }
 
   handleChange = (tags: string[]) => {
-	this.setState({
-		emails: tags,
-	});
-};
+    this.setState({
+      emails: tags,
+    });
+  };
 
-isValid = () => {
-	if (this.state.emails.length === 0) return false;
-	else return true;
-};
+  isValid = () => {
+    if (this.state.emails.length === 0) return false;
+    else return true;
+  };
 
   submit = async () => {
-	if (this.isValid()) {
-		if(this.props.classes.result){
-		await this.props.inviteCoach({
-			user_email: this.state.emails,
-			class_id: this.props.classes.result.data.id,
-		});
+    if (this.isValid()) {
+      if (this.props.classes.result) {
+        await this.props.inviteCoach({
+          user_email: this.state.emails,
+          class_id: this.props.classes.result.data.id,
+        });
 
-		this.setState({
-			isCompleted: true,
-		});
-		removeItem('class');
-		}
-	}
-};
+        this.setState({
+          isCompleted: true,
+        });
+      }
+    }
+  };
 
-renderBtn = () => {
-	if (!this.isValid()) {
-		return (
-			<button type='submit' className='idle-btn fw-600 ml-16'>
-				Done
-			</button>
-		);
-	} else
-		return (
-			<>
-				{this.state.isCompleted && (
-					<Navigate to='/manager/invite-student' replace={true} />
-				)}
-				<button
-					type='submit'
-					className='primary-btn fw-600 ml-16'
-					onClick={this.submit}
-				>
-					Done
-				</button>
-			</>
-		);
-}
+  renderBtn = () => {
+    if (!this.isValid()) {
+      return (
+        <button type="submit" className="idle-btn fw-600 ml-16">
+          Done
+        </button>
+      );
+    } else
+      return (
+        <>
+          {this.state.isCompleted && (
+            <Navigate to="/manager/invite-student" replace={true} />
+          )}
+          <button
+            type="submit"
+            className="primary-btn fw-600 ml-16"
+            onClick={this.submit}
+          >
+            Done
+          </button>
+        </>
+      );
+  };
 
   render() {
     return (
@@ -93,7 +100,10 @@ renderBtn = () => {
 					<div className='container-cus'>
 						<div className='content col-lg-6'>
 							<div className='f-14 mb-32'>
-								<Link to='/admin/add-school' style={{ textDecoration: "none" }}>
+								<Link
+									to='/manager/set-date-time'
+									style={{ textDecoration: "none" }}
+								>
 									<ArrowBackIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 									></ArrowBackIcon>
@@ -101,24 +111,41 @@ renderBtn = () => {
 								</Link>
 							</div>
 
-							<div className='mb-16 flex'>
+							<div className='mb-16 align-center'>
 								<img
-									src={"/assets/icons/logo.png"}
-									alt='right-arrow'
-									className='item-icon'
+									src={
+										this.props.classes.result &&
+										this.props.classes.result.data.logo
+											? process.env.REACT_APP_API_ENDPOINT +
+											  "/" +
+											  this.props.classes.result.data.logo
+											: placeholder
+									}
+									alt='logo'
+									className={`${
+										this.props.classes.result &&
+										this.props.classes.result.data.logo
+											? "item-icon"
+											: "w-48"
+									}`}
 								/>
 								<span className='f-16'>
-									Dolphin Swimming School
+									{this.props.classes.result &&
+										this.props.classes.result.data.name}{" "}
+									({this.state.school_name})
 								</span>
 							</div>
 							<div className='hr mb-32'></div>
 							<div className='f-32 fw-500'>
 								<span>Invite a Coach.</span>
 							</div>
-							<div className='f-16 mb-16'>
+							<div className='f-16 mb-32'>
 								<span>Invite a coach to your class.</span>
 							</div>
 
+							<div className='f-12'>
+								<span>Coach(es)</span>
+							</div>
 							<div className='fw-400 mb-16'>
 								<TagInput
 									onInputChange={this.handleChange}
@@ -143,15 +170,13 @@ renderBtn = () => {
 }
 
 const mapStateToProps = ({
-	classes,
+  classes,
 }: StoreState): {
-	classes: any;
+  classes: any;
 } => {
-	return {
-		classes,
-	};
+  return {
+    classes,
+  };
 };
 
-export default connect(mapStateToProps, { inviteCoach })(
-	InviteCoachPage
-);
+export default connect(mapStateToProps, { inviteCoach })(InviteCoachPage);

@@ -12,6 +12,7 @@
 body {
   font-family: "Work Sans";
   font-style: normal;
+  text-decoration: none;
 }
 
 .app-layout {
@@ -53,6 +54,7 @@ body {
   background-color: var(--bg-color);
   color: var(--font-color);
   height: calc(100vh - 65px);
+  overflow-y: auto;
 }
 
 .content-mobile {
@@ -245,6 +247,10 @@ body {
   margin-right: 16px;
 }
 
+.mr-24 {
+  margin-right: 24px;
+}
+
 .mb-8 {
   margin-bottom: 16px;
 }
@@ -319,7 +325,6 @@ body {
   align-items: center;
   padding: 8px 24px 8px 8px;
   gap: 12px;
-  width: 214px;
   background: #FFFFFF;
   border: 1px solid #E5E5E5;
   border-radius: 40px;
@@ -487,6 +492,7 @@ td {
     background-color: var(--bg-color);
     color: var(--font-color);
     height: 100vh;
+    overflow-y: auto;
     display: flex;
     align-items: center;
     justify-content: center;

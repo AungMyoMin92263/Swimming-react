@@ -7,16 +7,18 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link, Navigate } from "react-router-dom";
 import InputFormAtom from "../../atoms/InputFormAtom";
 import { getItem, setItemWithObject } from "../../auth/LocalStorage";
-
+import placeholder from "./../../assets/images/place-holder.png";
 interface IStates {
   id : number;
   logo: string;
   isClassNameEmpty: boolean;
-  className: string;
+  name: string;
   classNameMsg: string;
   isCompleted : boolean;
   image : any;
   schoolId : any;
+  school_name : string;
+  school_logo : string;
 }
 
 class AddClass extends React.Component<IPageProp, IStates> {
@@ -27,47 +29,61 @@ class AddClass extends React.Component<IPageProp, IStates> {
       id : -1,
       logo: "",
       isClassNameEmpty: true,
-      className: "",
+      name: "",
       classNameMsg: "",
       isCompleted : false,
       image: { preview: "", raw: "" },
-      schoolId : 1,
+      schoolId : -1,
+      school_name : '',
+      school_logo : '',
     };
   }
 
   componentDidMount() {
     const user = JSON.parse(getItem("authUser") || "null");
-    if(user && user.result) {
+    if(user && user.userInfo) {
        this.setState({
-        schoolId : user.result.data.assign_school[0].id
+        schoolId : user.userInfo.data.assign_school[0].school.id,
+        school_name : user.userInfo.data.assign_school[0].school.name,
+        school_logo :  user.userInfo.data.assign_school[0].school.logo,
        });
     }
+
+    let classs = JSON.parse(getItem("class") || "null");
+    if (classs) {
+			this.setState({
+				logo: classs.logo,
+				id: classs.id,
+				name: classs.name,
+			});
+		}
   }
 
   isValid = () => {
-    if (this.state.className.length === 0 || this.state.logo === "") return false;
+    if (this.state.name.length === 0 || this.state.logo === "") return false;
     else return true;
   };
 
   submit = async () => {
     if (this.isValid()) {
       await setItemWithObject("class", {
-        id: -1,
-        created_by: null,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted_at: new Date(),
-        name: this.state.className,
-        school_id : this.state.schoolId,
-        type: '',
-        open_days: [],
-        start_time: '',
-        end_time: '',
-        start_date: null,
-        logo: '',
-        assign_user: [],
-        studnetCount: 0,
-      });
+				id: -1,
+				created_by: null,
+				created_at: new Date(),
+				updated_at: new Date(),
+				deleted_at: new Date(),
+				name: this.state.name,
+				school_id: this.state.schoolId,
+				school_name: this.state.school_name,
+				type: "",
+				open_days: [],
+				start_time: "",
+				end_time: "",
+				start_date: null,
+				logo: "",
+				assign_user: [],
+				studnetCount: 0,
+			});
       await setItemWithObject('image',this.state.image);
       this.setState({
         isCompleted : true
@@ -102,7 +118,7 @@ class AddClass extends React.Component<IPageProp, IStates> {
           {this.state.image.preview || this.state.logo !== '' ? (
             <>
               <img
-                src={this.state.id === -1? this.state.image.preview : "http://localhost:3000/api/" + this.state.logo}
+                src={this.state.id === -1? this.state.image.preview : (this.state.logo ? process.env.REACT_APP_API_ENDPOINT + "/" + this.state.logo : placeholder)}
                 alt="preview"
                 className="preview-icon cursor"
               />
@@ -162,7 +178,7 @@ class AddClass extends React.Component<IPageProp, IStates> {
 
 
   render() {
-    const { isClassNameEmpty, className, classNameMsg } = this.state;
+    const { name , school_name, school_logo} = this.state;
 
     return (
       <>
@@ -180,13 +196,17 @@ class AddClass extends React.Component<IPageProp, IStates> {
                   <span>Back</span>
                 </Link>
               </div>
-              <div className="mb-16 flex">
-                <img
-                  src={"/assets/icons/logo.png"}
-                  alt="right-arrow"
-                  className="item-icon"
-                />
-                <span className="f-16">Dolphin Swimming School</span>
+              <div className="mb-16 align-center">
+                  <img
+                      src={
+                        school_logo
+                          ? process.env.REACT_APP_API_ENDPOINT + "/" + school_logo
+                          : placeholder
+                      }
+                      alt="logo"
+                      className={`${school_logo? "item-icon" : "w-48"}`}
+                    />
+                <span className="f-16">{school_name}</span>
               </div>
               <div className="hr mb-16"></div>
               <div className="f-32 fw-500">
@@ -205,18 +225,18 @@ class AddClass extends React.Component<IPageProp, IStates> {
                 <InputFormAtom
                   label="Class Name"
                   placeholder={"Enter name of class"}
-                  warning={classNameMsg}
+                  warning={''}
                   type="text"
-                  showWarning={isClassNameEmpty}
+                  showWarning={false}
                   isDropdown={false}
                   callback={(value: string) => {
                     this.setState({
-                      className: value,
+                      name: value,
                     });
                   }}
                   id="addClassName"
                   name="addClassName"
-                  value={className}
+                  value={name}
                   required={true}
                   maxLength={200}
                   className=""

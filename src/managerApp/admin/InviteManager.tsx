@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { StoreState } from "../../stores/reducers";
 import { SchoolInterface } from "../../stores/model/school-interface";
 import { inviteManager } from "../../stores/actions/school-action";
-import { postSchool } from "../../stores/actions/school-action";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -20,7 +19,6 @@ interface IProps {
 	emails: string[];
 	schools: any;
 	inviteManager: Function;
-	postSchool: Function;
 }
 
 class InviteManagerPage extends React.Component<IProps, IStates> {
@@ -51,18 +49,22 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 	
 	submit = async () => {
 		if (this.isValid()) {
-			if(this.props.schools.result){
-			await this.props.inviteManager({
-				user_email: this.state.emails,
-				schoold_id: this.props.schools.result.data.id,
-			});
+			if (this.props.schools.result) {
+				await this.props.inviteManager({
+					user_email: this.state.emails,
+					schoold_id: this.props.schools.result.data.id,
+				});
 
-			this.setState({
-				isCompleted: true,
-			});
-			removeItem('school');
+				if (!this.props.schools.error) {
+					this.setState({
+						isCompleted: true,
+					});
+					removeItem("school");
+				}
 			}
-		}
+			}
+
+			
 	};
 
 	renderBtn = () => {
@@ -107,18 +109,36 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 								</Link>
 							</div>
 
-							<div className='mb-16 flex'>
-								<img src={ this.props.schools.result? "http://localhost:3000/api/" + this.props.schools.result.data.logo : placeholder } alt='logo' id='logo' 
-								 className={`${this.props.schools.result? "item-icon" : "w-48"}`}/>
+							<div className='mb-16 align-center'>
+								<img
+									src={
+										this.props.schools.result
+											? process.env.REACT_APP_API_ENDPOINT +
+											  "/" +
+											  this.props.schools.result.data.logo
+											: placeholder
+									}
+									alt='logo'
+									id='logo'
+									className={`${
+										this.props.schools.result ? "item-icon" : "w-48"
+									}`}
+								/>
 
-								<span className='f-16'>{this.props.schools.result && this.props.schools.result.data.name}</span>
+								<span className='f-16'>
+									{this.props.schools.result &&
+										this.props.schools.result.data.name}
+								</span>
 							</div>
 							<div className='hr mb-32'></div>
 							<div className='f-32 fw-500'>
 								<span>Invite a Manager.</span>
 							</div>
-							<div className='f-16 mb-16'>
+							<div className='f-16 mb-32'>
 								<span>Invite a manager to help you run your operations.</span>
+							</div>
+							<div className='f-12'>
+								<span>School Manager(s)</span>
 							</div>
 							<div className='fw-400 mb-16'>
 								<TagInput
@@ -130,7 +150,11 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 									}}
 								/>
 							</div>
-							{/* {this.isValid() && <p className='text-danger'>At least on manager invite</p>} */}
+							{this.props.schools.error && (
+								<p className='text-danger'>
+									{this.props.schools.error.message[0]}
+								</p>
+							)}
 							<div className='right flex-center'>
 								<span className='secondary'>2 of 2</span>
 								{this.renderBtn()}
@@ -153,6 +177,6 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { inviteManager, postSchool })(
+export default connect(mapStateToProps, { inviteManager })(
 	InviteManagerPage
 );

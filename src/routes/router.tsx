@@ -29,15 +29,17 @@ import AdminChangePasswordPage from "../managerApp/admin/AdminChangePasswordPage
 import AdminPeopleListPage from "../managerApp/admin/PeopleListPage";
 
 import AssignStudentPage from "../managerApp/manager/AssignStudent";
-import EventListPage from "../managerApp/manager/EventListPage";
+import EventList from "../managerApp/manager/EventList";
 import PeopleListPage from "../managerApp/manager/PeopleListPage";
 import ManagerLoginPage from "../managerApp/manager/ManagerLogin";
 
 //student
 import StudentLoginPage from "../studentApp/student/StudentLogin";
-import AddEventPage from "../managerApp/manager/AddEventPage";
+import AddEvent from "../managerApp/manager/AddEvent";
 import StudentWelcomePage from "../studentApp/student/StudentWelcome";
 import StudentDashboardPage from "../studentApp/student/StudentDashboard";
+import StudentClassesPage from "../studentApp/student/StudentClasses";
+import StudentEventsPage from "../studentApp/student/StudentEvents";
 
 //coach
 import CoachLoginPage from "../coachApp/coach/CoachLogin";
@@ -45,6 +47,8 @@ import CoachWelcomePage from "../coachApp/coach/CoachWelcome";
 import ManagerSideBar from "../Layouts/ManagerMenuSideBar";
 import FooterMobileMenu from "../Layouts/footerMobile";
 import TestingComponent from "./TestingComponent";
+import InviteStudentEvent from "../managerApp/manager/InviteStudentEvent";
+import ManagerChangePassword from "../managerApp/manager/ManagerChangePassword";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -60,10 +64,9 @@ const routes = [
 						<TestingComponent />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: false,
-				
 			},
 			{
 				path: "recover-password",
@@ -73,7 +76,7 @@ const routes = [
 						<AdminRecoverPasswordPage />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: false,
 			},
@@ -82,10 +85,10 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<AdminChangePasswordPage />
+						<AdminChangePasswordPage {...props}/>
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: false,
 			},
@@ -94,10 +97,10 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<AdminLoginPage />
+						<AdminLoginPage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: false,
 			},
@@ -109,7 +112,7 @@ const routes = [
 						<AdminWelcomePage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: false,
 			},
@@ -125,7 +128,7 @@ const routes = [
 						<AdminDashboardPage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: true,
 				isMobileFooter: false,
 			},
@@ -138,7 +141,7 @@ const routes = [
 						<AddSchoolPage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: false,
 			},
@@ -151,7 +154,7 @@ const routes = [
 						<InviteManagerPage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: false,
 			},
@@ -163,7 +166,7 @@ const routes = [
 						<AddMoreSchoolPage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: false,
 			},
@@ -180,7 +183,7 @@ const routes = [
 						<AdminEventListPage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: true,
 			},
 			{
@@ -195,7 +198,7 @@ const routes = [
 						<AdminPeopleListPage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: true,
 			},
 		],
@@ -211,7 +214,19 @@ const routes = [
 						<ManagerCreatePasswordPage />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "change-password",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ManagerChangePassword {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: false,
 			},
@@ -223,7 +238,7 @@ const routes = [
 						<ManagerLoginPage />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: false,
 			},
@@ -236,43 +251,35 @@ const routes = [
 				),
 				main: (props: any) => (
 					<>
-						<ManagerDashboardPage {...props}/>
+						<ManagerDashboardPage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: true,
 				isMobileFooter: false,
 			},
 			{
 				path: "add-class",
-				sideBar: (props: any) => (
-					<>
-						<ManagerSideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AddClass {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
-				isSideBar: true,
+				footer: (props: any) => <></>,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
 				path: "set-date-time",
-				sideBar: (props: any) => (
-					<>
-						<ManagerSideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<SetDateTime {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
-				isSideBar: true,
+				footer: (props: any) => <></>,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
@@ -283,7 +290,7 @@ const routes = [
 						<InviteCoachPage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: false,
 			},
@@ -295,7 +302,7 @@ const routes = [
 						<InviteStudentPage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: false,
 			},
@@ -307,7 +314,7 @@ const routes = [
 						<InvitedStudentSummaryPage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: false,
 			},
@@ -320,41 +327,33 @@ const routes = [
 				),
 				main: (props: any) => (
 					<>
-						<EventListPage {...props} />
+						<EventList {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: true,
 			},
 			{
 				path: "add-event",
-				sideBar: (props: any) => (
-					<>
-						<ManagerSideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<AddEventPage {...props} />
+						<AddEvent {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
-				isSideBar: true,
+				footer: (props: any) => <></>,
+				isSideBar: false,
 			},
 			{
 				path: "assign-student",
-				sideBar: (props: any) => {
-					<>
-						<ManagerSideBar {...props} />
-					</>;
-				},
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AssignStudentPage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
-				isSideBar: true,
+				footer: (props: any) => <></>,
+				isSideBar: false,
 			},
 			{
 				path: "people-list",
@@ -368,8 +367,20 @@ const routes = [
 						<PeopleListPage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: true,
+			},
+			{
+				path: "invite-student-event",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<InviteStudentEvent {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
 			},
 		],
 	},
@@ -381,10 +392,10 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<ManagerCreatePasswordPage />
+						<ManagerCreatePasswordPage {...props} />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: true,
 			},
@@ -396,7 +407,7 @@ const routes = [
 						<StudentLoginPage />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: true,
 			},
@@ -408,7 +419,7 @@ const routes = [
 						<StudentWelcomePage />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: true,
 			},
@@ -418,6 +429,38 @@ const routes = [
 				main: (props: any) => (
 					<>
 						<StudentDashboardPage />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "classes",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentClassesPage />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "events",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentEventsPage />
 					</>
 				),
 				footer: (props: any) => (
@@ -441,7 +484,7 @@ const routes = [
 						<ManagerCreatePasswordPage />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: true,
 			},
@@ -453,7 +496,7 @@ const routes = [
 						<CoachLoginPage />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: true,
 			},
@@ -465,7 +508,7 @@ const routes = [
 						<CoachWelcomePage />
 					</>
 				),
-				footer: (props:any) => <></>,
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: true,
 			},

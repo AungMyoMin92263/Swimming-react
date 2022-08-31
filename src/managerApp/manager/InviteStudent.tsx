@@ -8,6 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Link, Navigate } from "react-router-dom";
 import InputFormAtom from "../../atoms/InputFormAtom";
 import { getItem, removeItem, setItemWithObject } from "../../auth/LocalStorage";
+import placeholder from "./../../assets/images/place-holder.png";
 
 interface StudentViewModel {
   studentName: string;
@@ -30,13 +31,15 @@ interface StudentViewModel {
 }
 
 interface IStates {
-  emails: string[];
-  isCompleted: boolean;
-  students: StudentViewModel[];
-  studentNameMsg: string;
-  parentNameMsg: string;
-  studentEmailMsg: string;
-  parentEmailMsg: string;
+	emails: string[];
+	isCompleted: boolean;
+	students: StudentViewModel[];
+	studentNameMsg: string;
+	parentNameMsg: string;
+	studentEmailMsg: string;
+	parentEmailMsg: string;
+	school_name: string;
+	classObj : any;
 }
 
 interface IProps {
@@ -50,37 +53,51 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
     super(props);
 
     this.state = {
-      emails: [],
-      isCompleted: false,
-      students: [
-        {
-          studentName: "",
-          isStudentNameValid: true,
-          isStudentNameEmpty: false,
-          studentNameMsg: "",
-          parentName: "",
-          isParentNameValid: true,
-          isParentNameEmpty: false,
-          parentNameMsg: "",
+			emails: [],
+			isCompleted: false,
+			students: [
+				{
+					studentName: "",
+					isStudentNameValid: true,
+					isStudentNameEmpty: false,
+					studentNameMsg: "",
+					parentName: "",
+					isParentNameValid: true,
+					isParentNameEmpty: false,
+					parentNameMsg: "",
 
-          studentEmail: "",
-          isStudentEmailValid: true,
-          isStudentEmailEmpty: false,
-          studentEmailMsg: "",
-          parentEmail: "",
-          isParentEmailValid: true,
-          isParentEmailEmpty: false,
-          parentEmailMsg: "",
-        },
-      ],
-      studentNameMsg: "",
-      parentNameMsg: "",
-      studentEmailMsg: "",
-      parentEmailMsg: "",
-    };
+					studentEmail: "",
+					isStudentEmailValid: true,
+					isStudentEmailEmpty: false,
+					studentEmailMsg: "",
+					parentEmail: "",
+					isParentEmailValid: true,
+					isParentEmailEmpty: false,
+					parentEmailMsg: "",
+				},
+			],
+			studentNameMsg: "",
+			parentNameMsg: "",
+			studentEmailMsg: "",
+			parentEmailMsg: "",
+			school_name: "",
+			classObj : null,
+		};
   }
   componentDidMount() {
-    //loading
+    const user = JSON.parse(getItem("authUser") || "null");
+    if(user && user.userInfo) {
+       this.setState({
+        school_name : user.userInfo.data.assign_school[0].school.name,
+       });
+    }
+
+    const classObject = JSON.parse(getItem("class") || "null");
+		if (classObject) {
+			this.setState({
+				classObj: classObject,
+			});
+		}
   }
 
   addStudent = () => {
@@ -110,12 +127,14 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
   };
 
   isValid = () => {
-    if (this.state.students.length === 0) return false;
-    else return true;
+    return true;
+    // if (this.state.students.length > 1) return true;
+    // else return false;
   };
 
   submit = async () => {
     if (this.isValid()) {
+      console.log("submit", this.props.classes.result);
       let temp = this.state.emails;
       for(let i = 0;i < this.state.students.length;i++){
         temp.push(this.state.students[i].studentEmail);
@@ -123,23 +142,22 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
       await this.setState({
         emails: temp,
       });
-      if (this.props.classes.result) {
-        await this.props.inviteStudent({
-          user_email: this.state.emails,
-          class_id: this.props.classes.result.data.id,
-        });
+      if (this.state.classObj) {
+				await this.props.inviteStudent({
+					user_email: this.state.emails,
+					class_id: this.state.classObj.id,
+				});
 
-        this.setState({
-          isCompleted: true,
-        });
+				this.setState({
+					isCompleted: true,
+				});
 
-        const student = JSON.parse(getItem("students") || "null");
-        if (student) {
-          setItemWithObject("students", student.concat(this.state.students));
-        }else setItemWithObject("students", this.state.students);
+				const student = JSON.parse(getItem("students") || "null");
+				if (student) {
+					setItemWithObject("students", student.concat(this.state.students));
+				} else setItemWithObject("students", this.state.students);
 
-        removeItem("class");
-      }
+			}
     }
   };
 
@@ -174,6 +192,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
       parentNameMsg,
       studentEmailMsg,
       parentEmailMsg,
+      school_name
     } = this.state;
     return (
       <>
@@ -184,7 +203,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
           <div className="container-cus">
             <div className="content col-lg-6">
               <div className="f-14 mb-32">
-                <Link to="/admin/add-school" style={{ textDecoration: "none" }}>
+                <Link to="/manager/invite-coach" style={{ textDecoration: "none" }}>
                   <ArrowBackIcon
                     sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
                   ></ArrowBackIcon>
@@ -192,13 +211,21 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
                 </Link>
               </div>
 
-              <div className="mb-16 flex">
-                <img
-                  src={"/assets/icons/logo.png"}
-                  alt="right-arrow"
-                  className="item-icon"
+              <div className="mb-16 align-center">
+                 <img
+                  src={
+                    this.props.classes.result && this.props.classes.result.data.logo
+                      ? process.env.REACT_APP_API_ENDPOINT +
+                        "/" +
+                        this.props.classes.result.data.logo
+                      : placeholder
+                  }
+                  alt="logo"
+                  className={`${
+                    this.props.classes.result &&  this.props.classes.result.data.logo ? "item-icon" : "w-48"
+                  }`}
                 />
-                <span className="f-16">Dolphin Swimming School</span>
+                <span className="f-16">{ this.props.classes.result &&  this.props.classes.result.data.name } ({school_name})</span>
               </div>
               <div className="hr mb-32"></div>
               <div className="f-32 fw-500">

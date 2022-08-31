@@ -6,10 +6,7 @@ const TagInput = (props: any) => {
 
     useEffect(() => {
       props.callback(tags);
-    
-      return () => {
-        
-      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tags])
     
 

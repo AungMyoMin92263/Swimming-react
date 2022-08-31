@@ -79,6 +79,9 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 
 		this.callback();
 	};
+	componentDidMount = () =>{
+		console.log("ENV",process.env)
+	}
 
 	callback = async () => {
 		const { email, password }: IStates = this.state;

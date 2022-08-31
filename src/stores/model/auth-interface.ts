@@ -14,3 +14,14 @@ export interface APIResInterface {
   data?: any
   error?: any
 }
+
+export interface SignUpInterface {
+  email?: string;
+  password?: string;
+  token?: string;
+}
+
+export interface SignedUpInterface {
+  isSignedUp?: boolean | null;
+  error?: any
+}

@@ -1,11 +1,15 @@
-import { SignInAction, SignOutAction } from "./auth-action";
+import { SignUpAction, SignInAction, SignOutAction, RecoverPasswordAction, ChangePasswordAction } from "./auth-action";
 import { getSchoolsAction,createSchoolAction,editSchoolAction,deleteSchoolAction,inviteManagerAction} from './school-action';
 import { SelectedMenuAction } from './menu-action';
 import { createClassAction, deleteClassAction, editClassAction, getClassAction, inviteCoachAction, inviteStudentAction } from "./class-action";
+import { getEventAction , createEventAction , editEventAction ,deleteEventAction , inviteEventAction} from "./event-action";
 
 export enum ActionTypes {
+  signUp,
   signIn,
   signOut,
+  recoverPwd,
+  changePwd,
   getError,
 
   getSchools,
@@ -22,11 +26,21 @@ export enum ActionTypes {
   deleteClass,
 
   inviteStudent,
-  inviteCoach
+  inviteCoach,
+
+  getEvent,
+  createEvent,
+  editEvent,
+  deleteEvent,
+
+  inviteEvent,
 }
 
-export type Action = SignInAction
+export type Action = SignUpAction
+  |SignInAction
   | SignOutAction 
+  | RecoverPasswordAction
+  | ChangePasswordAction
   | getSchoolsAction 
   | createSchoolAction 
   | editSchoolAction 
@@ -39,3 +53,8 @@ export type Action = SignInAction
   | deleteClassAction
   | inviteStudentAction
   | inviteCoachAction
+  | getEventAction 
+  | createEventAction 
+  | editEventAction 
+  | deleteEventAction
+  | inviteEventAction

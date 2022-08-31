@@ -101,7 +101,7 @@ export const putClass = (classe: ClassInterface, url : string, id: number) => {
   return async (dispatch: Dispatch) => {
     try {
       const response = await apiServer.put<Class>(
-        url + id,
+        url + '/' + id,
         classe,
         option
       );

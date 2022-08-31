@@ -64,7 +64,7 @@ class AddMoreSchoolPage extends React.Component<IProps, IStates> {
 								<img
 									src={
 										this.props.schools.result
-											? "http://localhost:3000/api/" +
+											? process.env.REACT_APP_API_ENDPOINT + "/"+
 											  this.props.schools.result.data.logo
 											: "../../../assets/icons/logo.png"
 									}
@@ -77,14 +77,6 @@ class AddMoreSchoolPage extends React.Component<IProps, IStates> {
 										: ""}
 								</span>
 							</div>
-							{/* <div className='mb-16 flex'>
-								<img
-									src={"/assets/icons/logo.png"}
-									alt='right-arrow'
-									className='item-icon'
-								/>
-								<span className='f-16'>{school && school.name}</span>
-							</div> */}
 							<div className='hr mb-16'></div>
 							<Link to='/admin/add-school' style={{ textDecoration: "none" }}>
 								<div className='mb-16 align-center'>

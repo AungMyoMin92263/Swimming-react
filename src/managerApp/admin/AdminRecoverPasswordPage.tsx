@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import InputFormAtom from "../../atoms/InputFormAtom";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
-import { signIn } from "../../stores/actions";
-import { Link, Navigate } from "react-router-dom";
+import {recoverPassword} from "../../stores/actions/auth-action"
+import { Link } from "react-router-dom";
 
 interface IStates {
 	isCompleted: boolean;
@@ -14,7 +14,7 @@ interface IStates {
 	emailMsg: string;
 }
 interface UserSignInPage {
-	signIn: Function;
+	recoverPassword: Function;
 	authUser: AuthInterface;
 }
 
@@ -64,7 +64,7 @@ class AdminRecoverPasswordPage extends React.Component<IProps, IStates> {
 			isCompleted: true,
 		});
 		const { email }: IStates = this.state;
-		this.props.signIn({ email: email });
+		this.props.recoverPassword({ email: email });
 	};
 
 	validateEmail = (email: string) => {
@@ -107,7 +107,7 @@ class AdminRecoverPasswordPage extends React.Component<IProps, IStates> {
 
 	render(): React.ReactNode {
 		const { email, emailMsg, isEmailEmpty, isEmailValid, isCompleted} = this.state;
-		let { authUser } = this.props;
+		// let { authUser } = this.props;
 		return (
 			<div className='wrapper'>
 				{/* {this.state.isCompleted && (
@@ -185,4 +185,6 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { signIn })(AdminRecoverPasswordPage);
+export default connect(mapStateToProps, { recoverPassword })(
+	AdminRecoverPasswordPage
+);

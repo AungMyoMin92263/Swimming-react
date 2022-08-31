@@ -1,17 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
 import InputFormAtom from "../../atoms/InputFormAtom";
-import {
-	AuthInterface,
-	SignedUpInterface,
-} from "../../stores/model/auth-interface";
+import { AuthInterface, SignedUpInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
-import { signUp } from "../../stores/actions";
+import { changePwd } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
 
 interface IStates {
-	signUptoken: string | null;
 	email: string | null;
+	signUptoken: string | null;
 	isReEnter: boolean;
 	firstPassword: string;
 	secondPassword: string;
@@ -21,20 +18,20 @@ interface IStates {
 	passwordMatchMsg: string;
 	isCompleted: boolean;
 }
-interface UserSignUpPage {
-	signUp: Function;
+interface ManagerChangePasswordPage {
+	changePwd: Function;
 	signedUpUser: SignedUpInterface;
 }
 
-type IProps = UserSignUpPage;
+type IProps = ManagerChangePasswordPage;
 
-class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
+class ManagerChangePassword extends React.Component<IProps, IStates> {
 	constructor(props: IProps) {
 		super(props);
 		console.log("props", props);
 		this.state = {
-			signUptoken:'',
-			email:'',
+			email: "",
+			signUptoken:"",
 			isReEnter: false,
 			firstPassword: "",
 			secondPassword: "",
@@ -45,7 +42,7 @@ class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
 			isCompleted: false,
 		};
 	}
-	componentDidMount = () =>{
+	componentDidMount = () => {
 		const params = new URLSearchParams(window.location.search);
 		const email = params.get("email");
 		const signUptoken = params.get("token");
@@ -53,8 +50,8 @@ class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
 			email: email,
 			signUptoken: signUptoken,
 		});
-		console.log(email, signUptoken)
-	}
+		console.log(email, signUptoken);
+	};
 
 	submit = () => {
 		if (!this.state.isReEnter) {
@@ -114,9 +111,9 @@ class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
 	callback = async () => {
 		console.log("Call back", this.state.isCompleted);
 		const { email, secondPassword, signUptoken }: IStates = this.state;
-		await this.props.signUp({
-			name: email,
-			sign_token: signUptoken,
+		await this.props.changePwd({
+			email: email,
+			token: signUptoken,
 			password: secondPassword,
 		});
 		if (this.props.signedUpUser.isSignedUp) {
@@ -191,9 +188,9 @@ class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
 		if (this.state.isReEnter) {
 			return <span>Re-enter Password</span>;
 		} else if (!this.state.isCompleted) {
-			return <span>Create Password</span>;
+			return <span>Change Password</span>;
 		} else {
-			return <span>Your account has been created!</span>;
+			return <span>Password has been changed!</span>;
 		}
 	};
 
@@ -225,12 +222,12 @@ class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
 	render(): React.ReactNode {
 		const {
 			email,
-			firstPassword,
-			secondPassword,
-			isReEnter,
-			isFirstPasswordEmpty,
-			isSecondPasswordEmpty,
-			passwordMsg,
+			// firstPassword,
+			// secondPassword,
+			// isReEnter,
+			// isFirstPasswordEmpty,
+			// isSecondPasswordEmpty,
+			// passwordMsg,
 			isCompleted,
 		} = this.state;
 		let { signedUpUser } = this.props;
@@ -247,7 +244,9 @@ class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
 							{!isCompleted ? (
 								<span className='emailWrapper fw-500 f-14'>{email}</span>
 							) : (
-								<span className='fw-400 f-16'>Welcome to My Report Cards!</span>
+								<span className='fw-400 f-16'>
+									Log in to continue using My Report Cards.
+								</span>
 							)}
 						</div>
 						<div className='mb-32'>{this.renderPasswordInput()}</div>
@@ -276,4 +275,4 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { signUp })(ManagerCreatePasswordPage);
+export default connect(mapStateToProps, { changePwd })(ManagerChangePassword);

@@ -20,7 +20,7 @@ interface IProps {
   authUser: AuthInterface;
 }
 
-class StudentDashboardPage extends React.Component<IProps, IStates> {
+class StudentEventsPage extends React.Component<IProps, IStates> {
   constructor(props: any) {
     super(props);
 
@@ -44,60 +44,83 @@ class StudentDashboardPage extends React.Component<IProps, IStates> {
     };
 
     let item2: IListItem = {
-      text: "Junior Splash",
+      text: "Dolphin Swimming School Swim Meet",
       callback: () => console.log("log click item"),
       icon: <></>,
       secondryText: true,
-      isBigIcon: false,
+    };
+
+    let item3 : IListItem = {
+      text: " 100m Freestyle",
+      callback: () => console.log("log click item"),
+      icon: <></>,
+      secondryText: true,
     };
     return (
       <>
         <div className="wrapper-mobile">
           <div className="content-mobile col-sm-12">
             <div className="f-32 fw-500 mt-16 mb-32">
-              <span> Hello, Azlan</span>
+              <span> Events </span>
             </div>
             <div className="mb-8">
-              <ListBoxUI title="Today, 6 July" callback={() => {}} more={false}>
-                <>
-                  <ListItem {...item}>
-                    {/* isBig */}
-                    <div className="second-text ">
-                      <WatchLaterIcon />
-                      <label>5:30 PM</label>
-                    </div>
-                  </ListItem>
-                </>
-              </ListBoxUI>
-            </div>
-
             <ListBoxUI
               title="Upcoming Competitons"
               callback={() => {}}
-              more={true}
-              moreText="View Events"
+              more={false}
             >
               <>
                 <ListItem {...item2}>
                   {/* isBig */}
                   <div className="second-text ">
-                    <label>Male 9-10 100 Freestyle</label>
-                  </div>
-                </ListItem>
-                <ListItem {...item2}>
-                  {/* isBig */}
-                  <div className="second-text ">
-                    <label>Male 9-10 100 Freestyle</label>
-                  </div>
-                </ListItem>
-                <ListItem {...item2}>
-                  {/* isBig */}
-                  <div className="second-text ">
-                    <label>Male 9-10 100 Freestyle</label>
+                  <WatchLaterIcon />
+                    <label>27 Jul 2022</label>
                   </div>
                 </ListItem>
               </>
             </ListBoxUI>
+            </div>
+
+            <div className="mb-8">
+            <ListBoxUI
+              title="My Events"
+              callback={() => {}}
+              more={false}
+            >
+              <>
+                <ListItem {...item3}>
+                  {/* isBig */}
+                  <div className="second-text ">
+                    <label>Male 9-10 y/o</label>
+                  </div>
+                </ListItem>
+                <ListItem {...item3}>
+                  {/* isBig */}
+                  <div className="second-text ">
+                    <label>Male 9-10 y/o</label>
+                  </div>
+                </ListItem>
+                <ListItem {...item3}>
+                  {/* isBig */}
+                  <div className="second-text ">
+                    <label>Male 9-10 y/o</label>
+                  </div>
+                </ListItem>
+                <ListItem {...item3}>
+                  {/* isBig */}
+                  <div className="second-text ">
+                    <label>Male 9-10 y/o</label>
+                  </div>
+                </ListItem>
+                <ListItem {...item3}>
+                  {/* isBig */}
+                  <div className="second-text ">
+                    <label>Male 9-10 y/o</label>
+                  </div>
+                </ListItem>
+              </>
+            </ListBoxUI>
+            </div>
           </div>
         </div>
       </>
@@ -115,4 +138,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, {})(StudentDashboardPage);
+export default connect(mapStateToProps, {})(StudentEventsPage);

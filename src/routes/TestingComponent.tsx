@@ -2,6 +2,8 @@ import React from "react";
 import ListItem, { IListItem } from "../atoms/ListItem";
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import ListBoxUI from "../atoms/ListBox";
+import ProfileContainer, { IProfile } from "../atoms/ProfileContainer";
+import BestScoreBox from "../atoms/BestScoreBox";
 class TestingComponent extends React.Component {
 
   render() {
@@ -14,8 +16,15 @@ class TestingComponent extends React.Component {
       // isBigIcon: true
 
     }
+    let profile: IProfile = {
+      title: 'Hello World',
+      isLogo: true,
+      display_item: [
+        { title: "Age", value: '28' }
+      ]
+    }
     return (
-      <div className="container-cus">
+      <div className="container">
         <ListBoxUI title="Today, 6Jun" callback={() => { }} more={true}>
           <>
             <ListItem {...item} >
@@ -41,6 +50,10 @@ class TestingComponent extends React.Component {
             </ListItem>
           </>
         </ListBoxUI>
+        <ListBoxUI title="You" callback={() => { }} more={true} moreText="View Profile">
+          <BestScoreBox score="63.22" title="Personal Best" scoreDate="6 July 2022" />
+        </ListBoxUI>
+        <ProfileContainer {...profile}></ProfileContainer>
       </div>
     )
   }

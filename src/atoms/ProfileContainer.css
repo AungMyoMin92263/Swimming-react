@@ -1,0 +1,33 @@
+.profile-group {}
+
+.profile-logo {
+  margin-top: 15px;
+  width: 80px;
+  height: 80px;
+  border-radius: 100%;
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  background-color: red;
+}
+
+.profile-tile {
+  font-weight: bold;
+  color: #1A1A1A;
+  margin: 15px 0px;
+}
+
+.item-text {
+  font-size: 14px;
+  color: #808080;
+}
+
+.item-value {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1A1A1A;
+  margin: 0px;
+  margin-top: 5px;
+}
