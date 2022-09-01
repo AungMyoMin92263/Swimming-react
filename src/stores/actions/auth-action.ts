@@ -80,7 +80,7 @@ export const signIn = (signInInfo: SignInInterface) => {
     // let response: APIResInterface = { error: null, data: null }
     try {
       const response = await apiServer.post<IUser>(
-        'users/login', signInInfo
+        '/users/login', signInInfo
       );
       dispatch<SignInAction>({
         type: ActionTypes.signIn,
