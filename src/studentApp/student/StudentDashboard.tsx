@@ -3,11 +3,6 @@ import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
-// icon
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { Link } from "react-router-dom";
-
 import ListBoxUI from "../../atoms/ListBox";
 import ListItem, { IListItem } from "../../atoms/ListItem";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
@@ -46,8 +41,9 @@ class StudentDashboardPage extends React.Component<IProps, IStates> {
     let item2: IListItem = {
       text: "Junior Splash",
       callback: () => console.log("log click item"),
+      smallText: "Male 9-10 100 Freestyle",
       icon: <></>,
-      secondryText: true,
+      secondryText: false,
       isBigIcon: false,
     };
     return (
@@ -79,22 +75,13 @@ class StudentDashboardPage extends React.Component<IProps, IStates> {
             >
               <>
                 <ListItem {...item2}>
-                  {/* isBig */}
-                  <div className="second-text ">
-                    <label>Male 9-10 100 Freestyle</label>
-                  </div>
+                  <></>
                 </ListItem>
                 <ListItem {...item2}>
-                  {/* isBig */}
-                  <div className="second-text ">
-                    <label>Male 9-10 100 Freestyle</label>
-                  </div>
+                  <></>
                 </ListItem>
                 <ListItem {...item2}>
-                  {/* isBig */}
-                  <div className="second-text ">
-                    <label>Male 9-10 100 Freestyle</label>
-                  </div>
+                  <></>
                 </ListItem>
               </>
             </ListBoxUI>

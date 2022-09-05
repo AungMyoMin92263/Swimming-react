@@ -6,9 +6,13 @@
   gap: 10px;
   justify-content: center;
 }
+.cus-badge>img{
+  width: 50;
+  margin-top: 16px;
+}
 
 .badge-title{
-  width: 45px;
+  width: 50px;
   font-size: 12px;
   word-wrap: break-word;
   color: #808080;

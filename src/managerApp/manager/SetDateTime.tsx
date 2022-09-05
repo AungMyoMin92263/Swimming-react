@@ -16,16 +16,15 @@ import { getItem, setItemWithObject } from "../../auth/LocalStorage";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
-import { postClass, putClass } from "../../stores/actions/class-action";
+import { getClassObject, postClass, putClass } from "../../stores/actions/class-action";
 import placeholder from "./../../assets/images/place-holder.png";
 
 interface IStates {
   isRecur: boolean;
   selectedDays: any;
   classObj: any;
-  image: any;
   isCompleted: boolean;
-  school_name : string;
+  school_name: string;
 }
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
@@ -86,6 +85,7 @@ interface IProps {
   classes: any;
   postClass: Function;
   putClass: Function;
+  getClassObject : Function;
 }
 class SetDateTime extends React.Component<IProps, IStates> {
   constructor(props: any) {
@@ -93,11 +93,10 @@ class SetDateTime extends React.Component<IProps, IStates> {
 
     this.state = {
       isRecur: false,
-      selectedDays: [],
-      classObj: { start_time: "", end_time: "",start_date : new Date() },
-      image: null,
+      selectedDays: ['mon'],
+      classObj: { start_time: "", end_time: "", start_date: new Date() },
       isCompleted: false,
-      school_name : '',
+      school_name: "",
     };
   }
 
@@ -108,18 +107,13 @@ class SetDateTime extends React.Component<IProps, IStates> {
         classObj: classObject,
       });
     }
-    const img = JSON.parse(getItem("image") || "null");
-    if (img) {
-      this.setState({
-        image: img,
-      });
-    }
 
     const user = JSON.parse(getItem("authUser") || "null");
-    if(user && user.userInfo) {
-       this.setState({
-        school_name : user.userInfo.data.assign_school[0].school.name,
-       });
+    if (user && user.userInfo && user.userInfo.data.assign_school.length > 0) {
+
+      this.setState({
+        school_name: user.userInfo.data.assign_school[0].school.name,
+      });
     }
   }
 
@@ -163,7 +157,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
         );
     } else if (!this.state.isRecur) {
       if (
-        !this.state.classObj.start_date 
+        !this.state.classObj.start_date
         // this.state.classObj.start_time === "" ||
         // this.state.classObj.end_time === ""
       ) {
@@ -187,8 +181,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
       selectedDays: temp,
       isRecur: !this.state.isRecur,
     });
-	console.log('recur',this.state.isRecur)
-
+    console.log("recur", this.state.isRecur);
   };
 
   handleChange = (day: any) => {
@@ -266,10 +259,10 @@ class SetDateTime extends React.Component<IProps, IStates> {
               label="Class Date"
               value={this.state.classObj.start_date}
               onChange={(newValue) => {
-				let temp = this.state.classObj;
-				temp.start_date = newValue;
+                let temp = this.state.classObj;
+                temp.start_date = newValue;
                 this.setState({
-					classObj : temp,
+                  classObj: temp,
                 });
               }}
               renderInput={(params) => <TextField {...params} />}
@@ -291,7 +284,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
       else return true;
     } else {
       if (
-		!this.state.classObj.start_date ||
+        !this.state.classObj.start_date ||
         this.state.classObj.start_time === "" ||
         this.state.classObj.end_time === ""
       )
@@ -301,49 +294,30 @@ class SetDateTime extends React.Component<IProps, IStates> {
   };
 
   submit = async () => {
-		const formData = new FormData();
-		formData.append("name", this.state.classObj.name);
-		formData.append("school_id", this.state.classObj.school_id);
-		formData.append("type", this.state.isRecur ? "daily" : "one-day");
-		formData.append("start_time", this.state.classObj.start_time);
-		formData.append("end_time", this.state.classObj.end_time);
-		formData.append("open_days", this.state.selectedDays);
-		// formData.append("start_date", this.state.classObj.start_date);
-		formData.append(
-			"start_date",
-			this.state.classObj.start_date
-				? this.state.classObj.start_date.toISOString()
-				: "2022-09-30T16:40:59Z"
-		);
+    const formData = new FormData();
+    formData.append("name", this.state.classObj.name);
+    formData.append("school_id", this.state.classObj.school_id);
+    formData.append("type", this.state.isRecur ? "daily" : "one-day");
+    formData.append("start_time", this.state.classObj.start_time);
+    formData.append("end_time", this.state.classObj.end_time);
+    formData.append("open_days", this.state.selectedDays);
+    formData.append("start_date", this.state.classObj.start_date);
+    formData.append("logo", this.state.classObj.logo);
 
-		formData.append("logo", this.state.image.raw);
-
-		if (this.isValid()) {
-			let url = "school/" + this.state.classObj.school_id + "/class";
-			if (this.state.classObj.id < 0) {
-				await this.props.postClass(formData, url);
-				if (this.props.classes.result && this.props.classes.result.data) {
-					setItemWithObject("class", this.props.classes.result.data);
-					this.setState({
-						isCompleted: true,
-					});
-				}
-			} else {
-				await this.props.putClass(formData, url, this.state.classObj.id);
-				if (this.props.classes.result && this.props.classes.result.data) {
-					setItemWithObject("class", this.props.classes.result.data);
-					this.setState({
-						isCompleted: true,
-					});
-				}
-			}
-		}
-	};
+    if (this.isValid()) {
+      let url = "school/" + this.state.classObj.school_id + "/class";
+      await this.props.putClass(formData, url, this.state.classObj.id);
+      if (this.props.classes.result && this.props.classes.result.data) {
+        setItemWithObject("class", this.props.classes.result.data);
+        this.setState({
+          isCompleted: true,
+        });
+      }
+    }
+  };
 
   render() {
-    const {
-      isRecur,classObj,  school_name
-    } = this.state;
+    const { isRecur, classObj, school_name } = this.state;
     return (
       <>
         <div className="wrapper">
@@ -356,7 +330,10 @@ class SetDateTime extends React.Component<IProps, IStates> {
           <div className="container-cus">
             <div className="content">
               <div className="f-14 mb-32">
-                <Link to="/manager/add-class" style={{ textDecoration: "none" }}>
+                <Link
+                  to="/manager/add-class"
+                  style={{ textDecoration: "none" }}
+                >
                   <ArrowBackIcon
                     sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
                   ></ArrowBackIcon>
@@ -364,17 +341,17 @@ class SetDateTime extends React.Component<IProps, IStates> {
                 </Link>
               </div>
               <div className="mb-16 align-center">
-                 <img
-                      src={
-                        classObj.logo
-                          ? process.env.REACT_APP_API_ENDPOINT + "/" + classObj.logo
-                          : placeholder
-                      }
-                      alt="logo"
-                      className={`${classObj.logo? "item-icon" : "w-48"}`}
+                <img
+                  src={
+                    classObj.logo
+                      ? process.env.REACT_APP_API_ENDPOINT + "/" + classObj.logo
+                      : placeholder
+                  }
+                  alt="logo"
+                  className={`${classObj.logo ? "item-icon" : "w-48"}`}
                 />
                 <span className="f-16 ">
-                 {classObj.name} ({school_name})
+                  {classObj.name} ({school_name})
                 </span>
               </div>
               <div className="hr mb-16"></div>
@@ -455,4 +432,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { postClass, putClass })(SetDateTime);
+export default connect(mapStateToProps, { postClass, putClass,getClassObject })(SetDateTime);

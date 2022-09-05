@@ -88,7 +88,7 @@ export const signIn = (signInInfo: SignInInterface) => {
       });
     } catch (err: any) {
       if (err) {
-        console.log(err.response.data.message)
+        console.log("Error message",err.response.data.message)
         // ✅ TypeScript knows err is Error
         dispatch<SignInAction>({
           type: ActionTypes.getError,

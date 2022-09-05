@@ -15,7 +15,7 @@ interface IProps {
   authUser: AuthInterface;
 }
 
-class StudentEventsPage extends React.Component<IProps, IStates> {
+class StudentMePage extends React.Component<IProps, IStates> {
   constructor(props: any) {
     super(props);
 
@@ -29,67 +29,69 @@ class StudentEventsPage extends React.Component<IProps, IStates> {
   }
 
   render() {
+    let item: IListItem = {
+      text: "Pro Youth Evening Class",
+      callback: () => console.log("log click item"),
+      smallText: "",
+      icon: <img src={"/assets/icons/logo.png"} className="logo-icon" />,
+      secondryText: true,
+      isBigIcon: false,
+    };
+
     let item2: IListItem = {
-      text: "Dolphin Swimming School Swim Meet",
+      text: "Junior Splash",
       callback: () => console.log("log click item"),
       icon: <></>,
       secondryText: true,
-    };
-
-    let item3: IListItem = {
-      text: "100m Freestyle",
-      callback: () => console.log("log click item"),
-      smallText: "Male 9-10 y/o",
-      icon: <></>,
-      secondryText: false,
       isBigIcon: false,
     };
+
     return (
       <>
         <div className="wrapper-mobile">
           <div className="content-mobile col-sm-12">
             <div className="f-32 fw-500 mt-16 mb-32">
-              <span> Events </span>
+              <span> Hello, Azlan </span>
             </div>
+            <div className="mb-8">
+              <ListBoxUI title="Today, 6 July" callback={() => {}} more={false}>
+                <>
+                  <ListItem {...item}>
+                    {/* isBig */}
+                    <div className="second-text ">
+                      <WatchLaterIcon />
+                      <label>5:30 PM</label>
+                    </div>
+                  </ListItem>
+                </>
+              </ListBoxUI>
+            </div>
+
             <div className="mb-8">
             <ListBoxUI
               title="Upcoming Competitons"
               callback={() => {}}
-              more={false}
+              more={true}
+              moreText="View Events"
             >
               <>
                 <ListItem {...item2}>
                   {/* isBig */}
                   <div className="second-text ">
-                  <WatchLaterIcon />
-                    <label>27 Jul 2022</label>
+                    <label>Male 9-10 100 Freestyle</label>
                   </div>
                 </ListItem>
-              </>
-            </ListBoxUI>
-            </div>
-
-            <div className="mb-8">
-            <ListBoxUI
-              title="My Events"
-              callback={() => {}}
-              more={false}
-            >
-              <>
-                <ListItem {...item3}>
-                  <></>
+                <ListItem {...item2}>
+                  {/* isBig */}
+                  <div className="second-text ">
+                    <label>Male 9-10 100 Freestyle</label>
+                  </div>
                 </ListItem>
-                <ListItem {...item3}>
-                  <></>
-                </ListItem>
-                <ListItem {...item3}>
-                  <></>
-                </ListItem>
-                <ListItem {...item3}>
-                  <></>
-                </ListItem>
-                <ListItem {...item3}>
-                  <></>
+                <ListItem {...item2}>
+                  {/* isBig */}
+                  <div className="second-text ">
+                    <label>Male 9-10 100 Freestyle</label>
+                  </div>
                 </ListItem>
               </>
             </ListBoxUI>
@@ -111,4 +113,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, {})(StudentEventsPage);
+export default connect(mapStateToProps, {})(StudentMePage);

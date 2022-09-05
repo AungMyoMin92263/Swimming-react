@@ -21,7 +21,7 @@ const ProfileContainer = (props: IProfile) => {
           {props.logo ? <img src={"testing"} /> : firstLetter} 
         </div> : <></>
       }
-      <h1 className="profile-tile">{props.title}</h1>
+      <div className="profile-tile">{props.title}</div>
       <div className="gird">
         <div className="row">
           {props.display_item.map((item,index) => {

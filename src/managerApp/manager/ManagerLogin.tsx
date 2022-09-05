@@ -22,9 +22,9 @@ interface IStates {
 interface UserSignInPage {
 	signIn: Function;
 	authUser: AuthInterface;
-	refreshToken : Function;
-	getAllSchools: Function;
-	schoolList: any;
+	// refreshToken: Function;
+	// getClasses: Function;
+	// schoolList: any;
 }
 
 type IProps = UserSignInPage;
@@ -87,15 +87,16 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 		const { email, password }: IStates = this.state;
 
 		await this.props.signIn({ email : email,password : password});		
-		await setItemWithObject("authUser", this.props.authUser);
-		this.props.refreshToken();
-		await this.props.getAllSchools();
-		if(this.props.authUser.isSignedIn){
-		this.setState({
-			isNewUser : this.props.schoolList.result && this.props.schoolList.result.length > 0 ? 'f' : 't'
-		});
-		}
-		console.log('isNewUser',this.state.isNewUser)
+		setItemWithObject("authUser", this.props.authUser);
+		
+		// if(this.props.authUser.isSignedIn){
+		// 	this.props.refreshToken();
+		// 	await this.props.getClasses();
+		// this.setState({
+		// 	isNewUser : this.props.schoolList.result && this.props.schoolList.result.length > 0 ? 'f' : 't'
+		// });
+		// }
+		// console.log('isNewUser',this.state.isNewUser)
 
 	};
 
@@ -181,7 +182,7 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 						</div>
 						{authUser.error && <p className='text-danger'>{authUser.error}</p>}
 						<div className='form-footer'>
-							<Link to='/admin/recover-password'>
+							<Link to='/manager/recover-password'>
 								<span>Forgot password?</span>
 							</Link>
 
@@ -212,4 +213,6 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { signIn,refreshToken,getAllSchools })(ManagerLoginPage);
+export default connect(mapStateToProps, { signIn })(
+	ManagerLoginPage
+);

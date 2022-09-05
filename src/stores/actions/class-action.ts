@@ -61,6 +61,33 @@ export const getAllclasses =  (url : string) => {
   };
 };
 
+export interface getClassObjAction {
+  type: ActionTypes.getClassObj | ActionTypes.getError;
+  payload: Class | any;
+}
+
+export const getClassObject =  (url : string) => {
+  refreshTokenClass();
+  return async (dispatch: Dispatch) => {
+    try {
+      const response = await apiServer.get<Class>(url, option);
+      dispatch<getClassObjAction>({
+        type: ActionTypes.getClassObj,
+        payload: response.data,
+      });
+    } catch (err) {
+      if (err instanceof Error) {
+        dispatch<getClassObjAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};
+
 export interface createClassAction {
   type: ActionTypes.createClass | ActionTypes.getError;
   payload: Class | any;
@@ -103,7 +130,7 @@ export const putClass = (classe: ClassInterface, url : string, id: number) => {
       const response = await apiServer.put<Class>(
         url + '/' + id,
         classe,
-        option
+        optionImage
       );
       dispatch<editClassAction>({
         type: ActionTypes.editClass,

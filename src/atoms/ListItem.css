@@ -1,3 +1,4 @@
+
 :root {
   --primary: #0070F8;
   --secondary: #808080;
@@ -7,8 +8,8 @@
   --white: #FFF;
 }
 
-
-.card-list-item {
+.card-list-item,
+.comment-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -16,11 +17,17 @@
   border-bottom: 1px solid #cccccc;
   /* border-top: 0px; */
 }
-.pointer{
+
+.pointer {
   cursor: pointer;
 }
-.item-text {
+
+.item-text,
+.message-area {
   flex: 1;
+}
+.message-area{
+  padding: 0px 15px;
 }
 
 .item-icon {
@@ -28,24 +35,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--primary);
 }
-.item-icon>svg{
+
+.item-icon>svg {
   font-size: 14px;
 }
 
-.main-text{
+.main-text {
   display: flex;
   align-items: center;
 }
-.text-icon{
+
+.text-icon {
   width: 35px;
   height: 35px;
   margin: 0px 15px;
 }
-.text-icon>*{
+
+.text-icon>* {
   width: 100%;
 }
-.text-icon.isBig{
+
+.text-icon.isBig {
   width: 50px;
   height: 50px;
 }
@@ -66,13 +78,31 @@
 .second-text.isBig{
   padding-left: 78px;
 }
-.second-text{
+
+.second-text {
   display: flex;
   gap: 10px;
   align-items: center;
   padding-left: 63px;
 }
-.radio-container{
+
+.cmd-second-text {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+  color: #848484;
+  font-weight: normal;
+  padding-top: 10px;
+}
+.cmd-second-text>img{
+  width: 30px;
+}
+.cmd-second-text>svg{
+  font-size: 16px;
+}
+
+.radio-container {
   display: block;
   position: relative;
   cursor: pointer;
@@ -83,6 +113,7 @@
   height: 25px;
   user-select: none;
 }
+
 /* Hide the browser's default checkbox */
 .radio-container input.checkbox {
   position: absolute;

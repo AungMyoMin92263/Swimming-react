@@ -86,7 +86,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
   }
   componentDidMount() {
     const user = JSON.parse(getItem("authUser") || "null");
-    if(user && user.userInfo) {
+    if(user && user.userInfo && user.userInfo.data.assign_school.length > 0) {
        this.setState({
         school_name : user.userInfo.data.assign_school[0].school.name,
        });

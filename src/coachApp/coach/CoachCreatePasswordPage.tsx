@@ -1,12 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
 import InputFormAtom from "../../atoms/InputFormAtom";
-import { AuthInterface } from "../../stores/model/auth-interface";
+import {
+	AuthInterface,
+	SignedUpInterface,
+} from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
-import { signIn } from "../../stores/actions";
+import { signUp } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
 
 interface IStates {
+	signUptoken: string | null;
+	email: string | null;
 	isReEnter: boolean;
 	firstPassword: string;
 	secondPassword: string;
@@ -16,18 +21,20 @@ interface IStates {
 	passwordMatchMsg: string;
 	isCompleted: boolean;
 }
-interface UserSignInPage {
-	signIn: Function;
-	authUser: AuthInterface;
+interface CoachCreatePasswordPage {
+	signUp: Function;
+	signedUpUser: SignedUpInterface;
 }
 
-type IProps = UserSignInPage;
+type IProps = CoachCreatePasswordPage;
 
-class AdminChangePasswordPage extends React.Component<IProps, IStates> {
+class CoachCreatePasswordPage extends React.Component<IProps, IStates> {
 	constructor(props: IProps) {
 		super(props);
 		console.log("props", props);
 		this.state = {
+			signUptoken: "",
+			email: "",
 			isReEnter: false,
 			firstPassword: "",
 			secondPassword: "",
@@ -38,6 +45,16 @@ class AdminChangePasswordPage extends React.Component<IProps, IStates> {
 			isCompleted: false,
 		};
 	}
+	componentDidMount = () => {
+		const params = new URLSearchParams(window.location.search);
+		const email = params.get("email");
+		const signUptoken = params.get("token");
+		this.setState({
+			email: email,
+			signUptoken: signUptoken,
+		});
+		console.log(email, signUptoken);
+	};
 
 	submit = () => {
 		if (!this.state.isReEnter) {
@@ -86,18 +103,32 @@ class AdminChangePasswordPage extends React.Component<IProps, IStates> {
 				secondPassword: "",
 			});
 		} else {
+			this.callback();
+		}
+	};
+
+	callback = async () => {
+		console.log("Call back", this.state.isCompleted);
+		const { email, secondPassword, signUptoken }: IStates = this.state;
+		await this.props.signUp({
+			name: email,
+			sign_token: signUptoken,
+			password: secondPassword,
+		});
+		if (this.props.signedUpUser.isSignedUp) {
 			this.setState({
 				isReEnter: false,
 				isCompleted: true,
 			});
+		} else {
+			this.setState({
+				isSecondPasswordEmpty: false,
+				isFirstPasswordEmpty: false,
+				isReEnter: false,
+				firstPassword: "",
+				secondPassword: "",
+			});
 		}
-		this.callback();
-	};
-
-	callback = () => {
-		console.log("Call back", this.state.isCompleted);
-		// const { email, password }: IStates = this.state;
-		// this.props.signIn({ email: email, password: password });
 	};
 
 	renderPasswordInput = () => {
@@ -155,16 +186,16 @@ class AdminChangePasswordPage extends React.Component<IProps, IStates> {
 		if (this.state.isReEnter) {
 			return <span>Re-enter Password</span>;
 		} else if (!this.state.isCompleted) {
-			return <span>Change Password</span>;
+			return <span>Create Password</span>;
 		} else {
-			return <span>Password has been created!</span>;
+			return <span>Your account has been created!</span>;
 		}
 	};
 
 	renderBtn = () => {
 		if (this.state.isCompleted) {
 			return (
-				<Link to='/manager/login'>
+				<Link to='/coach/login'>
 					<button
 						type='submit'
 						className='primary-btn'
@@ -188,6 +219,7 @@ class AdminChangePasswordPage extends React.Component<IProps, IStates> {
 	};
 	render(): React.ReactNode {
 		const {
+			email,
 			firstPassword,
 			secondPassword,
 			isReEnter,
@@ -196,10 +228,9 @@ class AdminChangePasswordPage extends React.Component<IProps, IStates> {
 			passwordMsg,
 			isCompleted,
 		} = this.state;
-		let { authUser } = this.props;
+		let { signedUpUser } = this.props;
 		return (
 			<div className='wrapper'>
-				{authUser.isSignedIn && <Navigate to='/admin/welcome' replace={true} />}
 				<div className='primary f-16 project-header'>
 					<span>My Report Cards</span>
 				</div>
@@ -209,17 +240,16 @@ class AdminChangePasswordPage extends React.Component<IProps, IStates> {
 						<div className='title mb-32'>{this.renderTitle()}</div>
 						<div className='mb-32'>
 							{!isCompleted ? (
-								<span className='emailWrapper fw-500 f-14'>
-									azlan@gmail.com
-								</span>
+								<span className='emailWrapper fw-500 f-14'>{email}</span>
 							) : (
-								<span className='fw-400 f-16'>
-									Log in to continue using My Report Cards.
-								</span>
+								<span className='fw-400 f-16'>Welcome to My Report Cards!</span>
 							)}
 						</div>
 						<div className='mb-32'>{this.renderPasswordInput()}</div>
 						{<p className='text-danger'>{this.state.passwordMatchMsg}</p>}
+						{signedUpUser.error && (
+							<p className='text-danger'>{signedUpUser.error}</p>
+						)}
 						<div className='form-footer'>
 							<span></span>
 							{this.renderBtn()}
@@ -232,13 +262,13 @@ class AdminChangePasswordPage extends React.Component<IProps, IStates> {
 }
 
 const mapStateToProps = ({
-	authUser,
+	signedUpUser,
 }: StoreState): {
-	authUser: AuthInterface,
+	signedUpUser: SignedUpInterface;
 } => {
 	return {
-		authUser,
+		signedUpUser,
 	};
 };
 
-export default connect(mapStateToProps, { signIn })(AdminChangePasswordPage);
+export default connect(mapStateToProps, { signUp })(CoachCreatePasswordPage);

@@ -1,6 +1,8 @@
 import React from "react";
-import { IPageProp } from "../../pagePropsInterface";
+import { StoreState } from "../../stores/reducers";
+import { connect } from "react-redux";
 
+import { postClass, putClass } from "../../stores/actions/class-action";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -9,10 +11,8 @@ import InputFormAtom from "../../atoms/InputFormAtom";
 import { getItem, setItemWithObject } from "../../auth/LocalStorage";
 import placeholder from "./../../assets/images/place-holder.png";
 interface IStates {
-  id : number;
-  logo: string;
+  classObj: any;
   isClassNameEmpty: boolean;
-  name: string;
   classNameMsg: string;
   isCompleted : boolean;
   image : any;
@@ -20,16 +20,36 @@ interface IStates {
   school_name : string;
   school_logo : string;
 }
+interface IProps {
+  classes: any;
+  postClass: Function;
+  putClass: Function;
+}
 
-class AddClass extends React.Component<IPageProp, IStates> {
+class AddClass extends React.Component<IProps, IStates> {
   constructor(props: any) {
     super(props);
 
     this.state = {
-      id : -1,
-      logo: "",
+      classObj: {
+				id: -1,
+				created_by: null,
+				created_at: new Date(),
+				updated_at: new Date(),
+				deleted_at: new Date(),
+				name: '',
+				school_id: null,
+				school_name: '',
+				type: "daily",
+				open_days: ['mon'],
+				start_time: "09:00",
+				end_time: "10:00",
+				start_date: null,
+				logo: "",
+				assign_user: [],
+				studnetCount: 0,
+			},
       isClassNameEmpty: true,
-      name: "",
       classNameMsg: "",
       isCompleted : false,
       image: { preview: "", raw: "" },
@@ -41,7 +61,7 @@ class AddClass extends React.Component<IPageProp, IStates> {
 
   componentDidMount() {
     const user = JSON.parse(getItem("authUser") || "null");
-    if(user && user.userInfo) {
+    if(user && user.userInfo && user.userInfo.data.assign_school.length > 0) {
        this.setState({
         schoolId : user.userInfo.data.assign_school[0].school.id,
         school_name : user.userInfo.data.assign_school[0].school.name,
@@ -49,47 +69,86 @@ class AddClass extends React.Component<IPageProp, IStates> {
        });
     }
 
-    let classs = JSON.parse(getItem("class") || "null");
-    if (classs) {
-			this.setState({
-				logo: classs.logo,
-				id: classs.id,
-				name: classs.name,
-			});
-		}
+    const classObject = JSON.parse(getItem("class") || "null");
+    if (classObject) {
+      this.setState({
+        classObj: classObject,
+      });
+    }
   }
 
   isValid = () => {
-    if (this.state.name.length === 0 || this.state.logo === "") return false;
+    if (this.state.classObj.name.length === 0 || 
+      (this.state.image.raw === "" && this.state.classObj.logo)) return false;
     else return true;
   };
 
   submit = async () => {
-    if (this.isValid()) {
-      await setItemWithObject("class", {
-				id: -1,
-				created_by: null,
-				created_at: new Date(),
-				updated_at: new Date(),
-				deleted_at: new Date(),
-				name: this.state.name,
-				school_id: this.state.schoolId,
-				school_name: this.state.school_name,
-				type: "",
-				open_days: [],
-				start_time: "",
-				end_time: "",
-				start_date: null,
-				logo: "",
-				assign_user: [],
-				studnetCount: 0,
-			});
-      await setItemWithObject('image',this.state.image);
-      this.setState({
-        isCompleted : true
-      })
-    }
-  };
+		const formData = new FormData();
+		formData.append("name", this.state.classObj.name);
+		formData.append("school_id", this.state.schoolId);
+		formData.append("type", this.state.classObj.type);
+		formData.append("start_time", this.state.classObj.start_time);
+		formData.append("end_time", this.state.classObj.end_time);
+		formData.append("open_days", this.state.classObj.open_days);
+		// formData.append("start_date", this.state.classObj.start_date);
+		formData.append(
+			"start_date",
+			this.state.classObj.start_date
+				? this.state.classObj.start_date.toISOString()
+				: "2022-09-30T16:40:59Z"
+		);
+
+		formData.append("logo", this.state.image.raw);
+
+		if (this.isValid()) {
+			let url = "school/" + this.state.schoolId + "/class";
+			if (this.state.classObj.id < 0) {
+				await this.props.postClass(formData, url);
+				if (this.props.classes.result && this.props.classes.result.data) {
+					setItemWithObject("class", this.props.classes.result.data);
+					this.setState({
+						isCompleted: true,
+					});
+				}
+			} else {
+				await this.props.putClass(formData, url, this.state.classObj.id);
+				if (this.props.classes.result && this.props.classes.result.data) {
+					setItemWithObject("class", this.props.classes.result.data);
+					this.setState({
+						isCompleted: true,
+					});
+				}
+			}
+		}
+	};
+
+  // submit = async () => {
+  //   if (this.isValid()) {
+  //     await setItemWithObject("class", {
+	// 			id: -1,
+	// 			created_by: null,
+	// 			created_at: new Date(),
+	// 			updated_at: new Date(),
+	// 			deleted_at: new Date(),
+	// 			name: this.state.name,
+	// 			school_id: this.state.schoolId,
+	// 			school_name: this.state.school_name,
+	// 			type: "",
+	// 			open_days: [],
+	// 			start_time: "",
+	// 			end_time: "",
+	// 			start_date: null,
+	// 			logo: "",
+	// 			assign_user: [],
+	// 			studnetCount: 0,
+	// 		});
+  //     await setItemWithObject('image',this.state.image);
+  //     this.setState({
+  //       isCompleted : true
+  //     })
+  //   }
+  // };
 
   renderBtn = () => {
     if (!this.isValid()) {
@@ -115,10 +174,10 @@ class AddClass extends React.Component<IPageProp, IStates> {
     return (
       <div>
         <label htmlFor="upload-button">
-          {this.state.image.preview || this.state.logo !== '' ? (
+          {this.state.image.preview || this.state.classObj.logo !== '' ? (
             <>
               <img
-                src={this.state.id === -1? this.state.image.preview : (this.state.logo ? process.env.REACT_APP_API_ENDPOINT + "/" + this.state.logo : placeholder)}
+                src={this.state.classObj.id === -1? this.state.image.preview : (this.state.classObj.logo ? process.env.REACT_APP_API_ENDPOINT + "/" + this.state.classObj.logo : placeholder)}
                 alt="preview"
                 className="preview-icon cursor"
               />
@@ -170,7 +229,6 @@ class AddClass extends React.Component<IPageProp, IStates> {
         temp.fileName = e.target.files[0].name;
         this.setState({
           image: temp,
-          logo: temp.raw,
         });
       }
     }
@@ -178,7 +236,7 @@ class AddClass extends React.Component<IPageProp, IStates> {
 
 
   render() {
-    const { name , school_name, school_logo} = this.state;
+    const { classObj , school_name, school_logo} = this.state;
 
     return (
       <>
@@ -230,13 +288,15 @@ class AddClass extends React.Component<IPageProp, IStates> {
                   showWarning={false}
                   isDropdown={false}
                   callback={(value: string) => {
+                    let temp = this.state.classObj;
+                    temp.name = value;
                     this.setState({
-                      name: value,
+                      classObj : temp,
                     });
                   }}
                   id="addClassName"
                   name="addClassName"
-                  value={name}
+                  value={classObj.name}
                   required={true}
                   maxLength={200}
                   className=""
@@ -261,4 +321,14 @@ class AddClass extends React.Component<IPageProp, IStates> {
   }
 }
 
-export default AddClass;
+const mapStateToProps = ({
+  classes,
+}: StoreState): {
+  classes: any;
+} => {
+  return {
+    classes,
+  };
+};
+
+export default connect(mapStateToProps, { postClass, putClass })(AddClass);

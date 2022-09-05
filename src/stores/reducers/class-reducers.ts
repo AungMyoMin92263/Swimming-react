@@ -15,6 +15,13 @@ export const classReducers = (
         error: null,
       };
 
+      case ActionTypes.getClassObj:
+        return {
+          ...state,
+          result: action.payload,
+          error: null,
+        };
+
     case ActionTypes.createClass:
       return {
         ...state,

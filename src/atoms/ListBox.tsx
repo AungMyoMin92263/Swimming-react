@@ -4,8 +4,12 @@ export interface IListBoxUI {
   title?: string,
   children?: JSX.Element,
   more?: boolean
+  more2?: boolean
   moreText?: string
-  callback: Function
+  moreText2?: boolean,
+  callback?: Function
+  callback2?: Function
+  noBtn?: boolean
 }
 
 const ListBoxUI = (props: IListBoxUI) => {
@@ -17,13 +21,27 @@ const ListBoxUI = (props: IListBoxUI) => {
       <div className="list-body">
         {props.children}
       </div>
-      {props.more ?
-        <div className="list-footer" onClick={() => props.callback()}>
-          <label >{props.moreText || `View All`}</label>
-        </div>
-        :
-        <></>
-      }
+      {props.noBtn ? <></> : <div className="list-footer" >
+        {props.more ?
+          <label className='box-btn' onClick={() => {
+            if (props.callback) {
+              props.callback()
+            }
+          }}>{props.moreText || `View All`}</label>
+          :
+          <></>
+        }
+        {props.more2 ?
+          <label className='box-btn' onClick={() => {
+            if (props.callback2) {
+              props.callback2()
+            }
+          }}>{props.moreText2 || `Add`}</label>
+          :
+          <></>
+        }
+      </div>}
+
     </div>
   )
 }

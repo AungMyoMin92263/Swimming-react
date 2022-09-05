@@ -1,0 +1,59 @@
+.class-detail-body {
+    border-radius: 8px;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.class-daily {
+    display: flex;
+}
+
+.class-detail {
+    height: 200px;
+
+}
+
+.class-detail-content {
+    padding: 24px;
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    border-radius: 8px;
+    height: 160px;
+
+}
+
+.class-detail-date-time {
+    display: flex;
+    flex-direction: row;
+    height: 50%;
+
+}
+
+.class-detail-date-div {
+    
+    display: flex;
+    flex-direction: column;
+}
+
+.coach-no-students {
+    display: flex;
+}
+
+
+.class-attendance-body{
+    padding-bottom: 24px;
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    border-radius: 8px;
+
+}
+
+.class-attendance-content{
+    height: 72px;
+    border-bottom: 1px solid #cccccc;
+}
+
+.plus{
+    width: 40px;
+    height: 40px;
+}

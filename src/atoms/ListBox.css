@@ -9,10 +9,17 @@
   border-bottom: 1px solid #E5E5E5;
   font-weight: 500;
 }
-.list-footer{
+
+.list-footer {
   color: var(--primary);
   text-align: center;
   padding: 15px;
-  cursor: pointer;
   border-top: 1px solid #E5E5E5;
+  display: flex;
+  width: 100%;
+}
+
+.box-btn {
+  flex: 1;
+  cursor: pointer;
 }

@@ -11,70 +11,103 @@ import { Class } from "../../stores/model/class";
 import { getItem } from "../../auth/LocalStorage";
 import { InitialIcon } from "../../atoms/InitialIcon";
 import placeholder from "./../../assets/images/place-holder.png";
-
+import SearchIcon from "@mui/icons-material/Search";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 interface IStates {
-  classes: Class[];
-  email: string;
-  logo: string;
-  school_name : string;
+	classes: Class[];
+	email: string;
+	logo: string;
+	school_name: string;
 }
 interface ManagerDashboardPage {
-  getAllclasses: Function;
-  classList: any;
+	getAllclasses: Function;
+	classList: any;
 }
 
 type IProps = ManagerDashboardPage;
 
 class ManagerDashboardPage extends React.Component<IProps, IStates> {
-  constructor(props: any) {
-    super(props);
+	constructor(props: any) {
+		super(props);
 
-    this.state = {
-      classes: [],
-      email: "",
-      logo: "",
-      school_name : '',
-    };
-  }
+		this.state = {
+			classes: [],
+			email: "",
+			logo: "",
+			school_name: "",
+		};
+	}
 
-  componentDidMount() {
-    const user = JSON.parse(getItem("authUser") || "null");
-    console.log(user.userInfo);
-    if (user && user.userInfo) {
+	componentDidMount() {
+		const user = JSON.parse(getItem("authUser") || "null");
+		console.log(user.userInfo);
+		if (user && user.userInfo) {
 			this.setState({
 				email: user.userInfo.data.email,
-				logo: user.userInfo.data.assign_school.length > 0 ? user.userInfo.data
-					.assign_school[0].school.logo: '',
-				school_name: user.userInfo.data.assign_school.length > 0 ? user.userInfo.data.assign_school[0].school.name: '',
+				logo:
+					user.userInfo.data.assign_school.length > 0
+						? user.userInfo.data.assign_school[0].school.logo
+						: "",
+				school_name:
+					user.userInfo.data.assign_school.length > 0
+						? user.userInfo.data.assign_school[0].school.name
+						: "",
 			});
 		}
-    this.getClasses();
-  }
+		this.getClasses();
+	}
 
-  getClasses = async () => {
-    let url = "";
-    const user = JSON.parse(getItem("authUser") || "null");
-    if (user && user.userInfo) {
-      url =
-        "school/" + user.userInfo.data.assign_school[0].school.id + "/class";
-      this.props.getAllclasses(url);
-    }
-  };
+	getClasses = async () => {
+		let url = "";
+		const user = JSON.parse(getItem("authUser") || "null");
+		if (user && user.userInfo) {
+			url =
+				"school/" + user.userInfo.data.assign_school[0].school.id + "/class";
+			this.props.getAllclasses(url);
+		}
+	};
 
-  renderBody = () => {
-    let classes = this.props.classList.result;
-    console.log("classes", classes)
-    if (classes && classes.length > 0) {
-      return (
+	renderBody = () => {
+		let classes = this.props.classList.result;
+		console.log("classes", classes);
+		if (classes && classes.length > 0) {
+			return (
 				<div className='dashboard-body'>
 					<div className='tableBody'>
+						<div className='tableSearch'>
+							<div className='textArea'>
+								<div className='dash-search-div'>
+									<div className='dash-search-icon-div'>
+										<SearchIcon
+											sx={{ color: "#808080", fontSize: 16, mr: 0.5 }}
+										/>
+									</div>
+									<input
+										className='dash-input-div'
+										placeholder='Search by class, date/time or coach(es)'
+									/>
+								</div>
+								<div className='dash-filter-div'>
+									<FilterListIcon
+										sx={{
+											color: "#0070F8",
+											fontSize: 18,
+											fontWeight: 500,
+											mr: 0.5,
+										}}
+									/>
+									Filter
+								</div>
+							</div>
+						</div>
 						<table className='table'>
 							<thead>
 								<tr>
 									<th className='col-1'></th>
-									<th className='col-5'>CLASS</th>
+									<th className='col-3'>CLASS</th>
 									<th className='col-3'>NEXT DATE/TIME</th>
-									<th className='col-3'>COACH</th>
+									<th className='col-2'>COACH</th>
 									<th className='col-3'>NO. STUDENTS</th>
 								</tr>
 							</thead>
@@ -98,7 +131,9 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
 												/>
 											</td>
 											<td>{classe.name}</td>
-											<td>{classe.start_date} {classe.start_time}</td>
+											<td>
+												{classe.start_date} {classe.start_time}
+											</td>
 											<td className='emailInitialIcon'>
 												{classe.assign_user.map((user: any) =>
 													user.type === "coache" ? (
@@ -118,7 +153,12 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
                             /> */}
 											</td>
 
-											<td>0</td>
+											<td>
+												<div className='flex justify-space-around'>
+													<span>0</span>
+													<MoreVertIcon />
+												</div>
+											</td>
 										</tr>
 									))}
 							</tbody>
@@ -126,107 +166,107 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
 					</div>
 				</div>
 			);
-    } else {
-      return (
-        <div className="dashboard-body">
-          {/* Start Add school */}
-          <div className="createClass flex-center">
-            <div className="body">
-              <div className="plus-icon mt-16">
-                <img src="../../../assets/icons/plus-round.png" alt="plus" />
-              </div>
-              <div className="text f-16 mt-16">
-                <span>Create a class to add students, parents and coaches</span>
-              </div>
-              <div className="flex-center mt-16">
-                <Link to="/manager/add-class">
-                  <button
-                    type="submit"
-                    className="primary-btn"
-                    // style={{ width: "140px" }}
-                  >
-                    <span>Create Class</span>
-                    <AddIcon
-                      sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
-                    ></AddIcon>
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-  };
+		} else {
+			return (
+				<div className='dashboard-body'>
+					{/* Start Add school */}
+					<div className='createClass flex-center'>
+						<div className='body'>
+							<div className='plus-icon mt-16'>
+								<img src='../../../assets/icons/plus-round.png' alt='plus' />
+							</div>
+							<div className='text f-16 mt-16'>
+								<span>Create a class to add students, parents and coaches</span>
+							</div>
+							<div className='flex-center mt-16'>
+								<Link to='/manager/add-class'>
+									<button
+										type='submit'
+										className='primary-btn'
+										// style={{ width: "140px" }}
+									>
+										<span>Create Class</span>
+										<AddIcon
+											sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
+										></AddIcon>
+									</button>
+								</Link>
+							</div>
+						</div>
+					</div>
+				</div>
+			);
+		}
+	};
 
-  render() {
-    const { email, logo, school_name } = this.state;
+	render() {
+		const { email, logo, school_name } = this.state;
 
-    return (
-      <>
-        <div className="container-cus">
-          <div className="dashboard">
-            {/* DASHBOARD HEADER */}
-            <div className="dashboard-header">
-              <div className="justify-end">
-                <div className="email-div">
-                  <InitialIcon initials={email.substr(0, 1).toUpperCase()} />
-                  <span>{email} </span>
-                </div>
-              </div>
-              <div className="row justify-center">
-                <div className="col-8 col-md-8 justify-start align-center">
-                  <div className="mr-16">
-                    <img
-                      src={
-                        logo
-                          ? process.env.REACT_APP_API_ENDPOINT + "/" + logo
-                          : placeholder
-                      }
-                      alt="logo"
-                      className="item-icon"
-                    />
-                  </div>
+		return (
+			<>
+				<div className='container-cus'>
+					<div className='dashboard'>
+						{/* DASHBOARD HEADER */}
+						<div className='dashboard-header'>
+							<div className='justify-end'>
+								<div className='email-div'>
+									<InitialIcon initials={email.substr(0, 1).toUpperCase()} />
+									<span>{email} </span>
+								</div>
+							</div>
+							<div className='justify-center'>
+								<div className='col-8 col-md-8 justify-start align-center'>
+									<div className='mr-16'>
+										<img
+											src={
+												logo
+													? process.env.REACT_APP_API_ENDPOINT + "/" + logo
+													: placeholder
+											}
+											alt='logo'
+											className='big-logo'
+										/>
+									</div>
 
-                  <div className="f-40 fw-500">
-                    <span>{school_name}</span>
-                  </div>
-                </div>
-                <div className="col-4 col-md-4 justify-end">
-                  <Link to="/manager/add-class">
-                    <button
-                      type="submit"
-                      className="primary-btn"
-                      // style={{ width: "140px" }}
-                    >
-                      Create Class
-                      <AddIcon
-                        sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
-                      ></AddIcon>
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </div>
+									<div className='f-40 fw-500'>
+										<span>{school_name}</span>
+									</div>
+								</div>
+								<div className='col-4 col-md-4 justify-end'>
+									<Link to='/manager/add-class'>
+										<button
+											type='submit'
+											className='primary-btn'
+											// style={{ width: "140px" }}
+										>
+											Create Class
+											<AddIcon
+												sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
+											></AddIcon>
+										</button>
+									</Link>
+								</div>
+							</div>
+						</div>
 
-            {this.renderBody()}
-          </div>
-        </div>
-      </>
-    );
-  }
+						{this.renderBody()}
+					</div>
+				</div>
+			</>
+		);
+	}
 }
 
 const mapStateToProps = ({
-  classList,
+	classList,
 }: StoreState): {
-  classList: any;
+	classList: any;
 } => {
-  return {
-    classList,
-  };
+	return {
+		classList,
+	};
 };
 
 export default connect(mapStateToProps, { getAllclasses })(
-  ManagerDashboardPage
+	ManagerDashboardPage
 );

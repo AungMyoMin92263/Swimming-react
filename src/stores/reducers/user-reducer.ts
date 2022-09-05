@@ -46,6 +46,7 @@ export const authReducers = (
     case ActionTypes.getError:
       return {
         ...state,
+        isSignedIn: false,
         error: action.payload,
       };
 
