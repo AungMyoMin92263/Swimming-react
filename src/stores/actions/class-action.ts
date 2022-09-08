@@ -195,11 +195,11 @@ export const inviteStudent = (emails : any) => {
         type: ActionTypes.inviteStudent,
         payload: response,
       });
-    } catch (err) {
-      if (err instanceof Error) {
+    } catch (err:any) {
+      if (err) {
         dispatch<inviteStudentAction>({
           type: ActionTypes.getError,
-          payload: err.message,
+          payload: err.response.data.message[0],
         });
       } else {
         console.log("Unexpected error", err);

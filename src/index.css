@@ -15,9 +15,9 @@ body {
   text-decoration: none;
 }
 
-.app-layout {
+/* .app-layout {
   background-color: #F5F5F5;
-}
+} */
 
 .main-layout {
   display: flex;
@@ -38,12 +38,11 @@ body {
 .main-body {
   width: 100%;
   flex: 1;
-  background: #F5F5F5;
 }
 
 .wrapper {
   padding: 40px 48px;
-  background-color: var(--bg-color);
+  /* background-color: var(--bg-color); */
   color: var(--font-color);
   display: flex;
   flex-direction: column;
@@ -76,7 +75,6 @@ body {
 .container-cus {
   padding: 16px 12px;
   box-sizing: border-box;
-  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -500,9 +498,9 @@ body {
   background-color: #FFF;
 }
 
-.row>*{
+/* .row>*{
   padding: 0px !important;
-}
+} */
 
 .big-logo{
   width: 80px;

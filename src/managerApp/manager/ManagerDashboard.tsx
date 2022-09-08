@@ -42,7 +42,7 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
 	componentDidMount() {
 		const user = JSON.parse(getItem("authUser") || "null");
 		console.log(user.userInfo);
-		if (user && user.userInfo) {
+		if (user && user.userInfo && user.userInfo.data.assign_school && user.userInfo.data.assign_school.length > 0) {
 			this.setState({
 				email: user.userInfo.data.email,
 				logo:
@@ -61,7 +61,7 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
 	getClasses = async () => {
 		let url = "";
 		const user = JSON.parse(getItem("authUser") || "null");
-		if (user && user.userInfo) {
+		if (user && user.userInfo && user.userInfo.data.assign_school && user.userInfo.data.assign_school.length > 0) {
 			url =
 				"school/" + user.userInfo.data.assign_school[0].school.id + "/class";
 			this.props.getAllclasses(url);

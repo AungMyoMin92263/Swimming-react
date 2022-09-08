@@ -61,7 +61,7 @@ class AddEvent extends React.Component<IProps, IStates> {
   }
   componentDidMount() {
     const user = JSON.parse(getItem("authUser") || "null");
-    if (user && user.userInfo) {
+    if (user && user.userInfo && user.userInfo.data.assign_school && user.userInfo.data.assign_school.length > 0) {
       this.setState({
         schoolId: user.userInfo.data.assign_school[0].school.id,
       });
