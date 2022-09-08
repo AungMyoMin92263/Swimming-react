@@ -186,7 +186,7 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
           <div className="container-cus">
             <div className="content col-6 col-md-6 col-sm-12">
               <div className="f-14 mb-16">
-                <Link to="/admin/welcome" style={{ textDecoration: "none" }}>
+                <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
                   <ArrowBackIcon
                     sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
                   ></ArrowBackIcon>

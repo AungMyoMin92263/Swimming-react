@@ -49,7 +49,7 @@ class CoachWelcomePage extends React.Component<IProps, IStates> {
 						<div>
 							<div className='flex-center'>
 								<Link
-									to='/coach/dashboard'
+									to='/coache/dashboard'
 									style={{ textDecoration: "none" }}
 								>
 									<button type='submit' className='primary-btn mobile-btn'>

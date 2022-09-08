@@ -64,37 +64,7 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 						</div>
 						{/* DASHBOARD BODY */}
 						<div className='dashboard-body'>
-							{/* Start Add school */}
-							<div className='createClass flex-center'>
-								<div className='body'>
-									<div className='plus-icon mt-16'>
-										<img
-											src='../../../assets/icons/plus-round.png'
-											alt='plus'
-										/>
-										{/* <ControlPointIcon
-                      sx={{ color: "#808080", fontSize: 58 }}
-                    ></ControlPointIcon> */}
-									</div>
-									<div className='text f-16 mt-16'>
-										Create an event to assign to students.
-									</div>
-									<div className='flex-center mt-16'>
-										<Link to="/manager/add-event" style={{ textDecoration : 'none'}}>
-											<button
-												type='submit'
-												className='primary-btn'
-												// style={{ width: "140px" }}
-											>
-												Create People
-												<AddIcon
-													sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
-												></AddIcon>
-											</button>
-										</Link>
-									</div>
-								</div>
-							</div>
+							
 						</div>
 					</div>
 				</div>

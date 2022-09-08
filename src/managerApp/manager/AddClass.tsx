@@ -78,8 +78,8 @@ class AddClass extends React.Component<IProps, IStates> {
   }
 
   isValid = () => {
-    if (this.state.classObj.name.length === 0 || 
-      (this.state.image.raw === "" && this.state.classObj.logo)) return false;
+    if (this.state.classObj.name === "" || 
+      (this.state.image.raw === "" && this.state.classObj.logo === '')) return false;
     else return true;
   };
 
@@ -95,8 +95,8 @@ class AddClass extends React.Component<IProps, IStates> {
 		formData.append(
 			"start_date",
 			this.state.classObj.start_date
-				? this.state.classObj.start_date.toISOString()
-				: "2022-09-30T16:40:59Z"
+				? this.state.classObj.start_date
+				: new Date().toISOString()
 		);
 
 		formData.append("logo", this.state.image.raw);

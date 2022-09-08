@@ -7,20 +7,21 @@ import { connect } from "react-redux";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { IListItem } from "../../atoms/ListItem";
 import InputFormAtom from "../../atoms/InputFormAtom";
+import { Link, Navigate } from "react-router-dom";
 
 interface IStates {
   id: number;
   image: any;
   logo: string;
   name: string;
-	isNameValid: boolean;
-	isNameEmpty: boolean;
+  isNameValid: boolean;
+  isNameEmpty: boolean;
   NameMsg: string;
-  description : string;
-	DesMsg: string;
-  isDesValid : boolean,
-	isDesEmpty : boolean,
-
+  description: string;
+  DesMsg: string;
+  isDesValid: boolean;
+  isDesEmpty: boolean;
+  goBadges : boolean;
 }
 
 interface IProps {
@@ -35,14 +36,15 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
       id: -1,
       image: { preview: "", raw: "" },
       logo: "",
-      name: '',
-	isNameValid: true,
-	isNameEmpty: false,
-  NameMsg: '',
-  description : '',
-	DesMsg: '',
-  isDesValid: true,
-	isDesEmpty: false,
+      name: "",
+      isNameValid: true,
+      isNameEmpty: false,
+      NameMsg: "",
+      description: "",
+      DesMsg: "",
+      isDesValid: true,
+      isDesEmpty: false,
+      goBadges : false
     };
   }
   componentDidMount() {
@@ -73,42 +75,17 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
     return (
       <div>
         <label htmlFor="upload-button">
-          {this.state.image.preview || this.state.logo !== "" ? (
-            <>
-              <img
-                src={
-                  this.state.id === -1
-                    ? this.state.image.preview
-                    : "http://localhost:3000/api/" + this.state.logo
-                }
+        <img
+                src={"/assets/icons/logo.png"}
                 alt="preview"
                 className="preview-icon cursor"
               />
-              <span
+              <Link to="/coache/edit-icon">
+              <div
                 className="primary f-14 cursor"
-                style={{ marginLeft: "18px" }}
               >
-                &nbsp; Tap to edit Icon
-              </span>
-            </>
-          ) : (
-            <>
-              <>
-                <img
-                  id="logo"
-                  src="../../../assets/icons/upload.png"
-                  alt="upload"
-                  className="big-icon cursor mb-16"
-                />
-                <div
-                  className="primary f-14 cursor"
-                  style={{ marginLeft: "18px" }}
-                >
-                  &nbsp; Upload Image
-                </div>
-              </>
-            </>
-          )}
+                Tap to edit Icon
+              </div></Link>
         </label>
         <input
           type="file"
@@ -131,29 +108,34 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
     };
 
     const {
-			id ,
+      id,
       image,
       logo,
       name,
-	isNameValid,
-	isNameEmpty,
-  NameMsg, 
-  description,
-	DesMsg,
-  isDesValid,
-	isDesEmpty,
-		} = this.state;
+      isNameValid,
+      isNameEmpty,
+      NameMsg,
+      description,
+      DesMsg,
+      isDesValid,
+      isDesEmpty,
+      goBadges
+    } = this.state;
 
     return (
       <>
         <div className="wrapper-mobile">
+        {goBadges && <Navigate to="/coache/badge-list" replace={true} />}
+
           <div className="content-mobile col-sm-12">
             <div className="mb-32">
-              <button type="submit" className="back-btn">
-                <ArrowBackIcon
-                  sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-                ></ArrowBackIcon>
-              </button>
+              <Link to="/coache/badge-list">
+                <button type="submit" className="back-btn">
+                  <ArrowBackIcon
+                    sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+                  ></ArrowBackIcon>
+                </button>
+              </Link>
             </div>
             <div className="f-32 fw-500 mt-16 mb-32" style={{ width: "247px" }}>
               <span>Create Badge</span>
@@ -165,71 +147,74 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
               <div className="mb-32">{this.renderImageUpload()}</div>
             </div>
             <div className="f-12 fw-500 mb-16">
-                <span>Badge Colour</span>
-              </div>
+              <span>Badge Colour</span>
+            </div>
             <div className="align-center mb-16">
               <button className="mr-16 badge-color"></button>
-              <button className="mr-16 badge-color"></button>
-              <button className="mr-16 badge-color"></button>
-              <button className="mr-16 badge-color"></button>
-              <button className="mr-16 badge-color"></button>
+              <button className="mr-16 badge-color" style={{ backgroundColor : '#0070F8'}}></button>
+              <button className="mr-16 badge-color" style={{ backgroundColor : '#E6F1FE'}}></button>
+              <button className="mr-16 badge-color" style={{ backgroundColor : '#FAEFEF'}}></button>
+              <button className="mr-16 badge-color" style={{ backgroundColor : '#C95D63'}}></button>
             </div>
-            <div className='mb-16'>
-							<InputFormAtom
-								label='Badge Name'
-								placeholder={"Enter badge name"}
-								warning={NameMsg}
-								type='text'
-								showWarning={isNameEmpty || !isNameValid}
-								isDropdown={false}
-								callback={(value: string) => {
-									this.setState({
-										name: value,
-									});
-								}}
-								id='badgeName'
-								name='badgeName'
-								value={name}
-								required={true}
-								maxLength={200}
-								className=''
-								clickCallback={() => {}}
-								focusCallback={() => {
-									this.setState({
-										isNameEmpty: false,
-										isNameValid: true,
-									});
-								}}
-							/>
-						</div>
-            <div className='mb-16'>
-							<InputFormAtom
-								label='Badge Description'
-								placeholder={"Enter badge description or criteria"}
-								warning={DesMsg}
-								type='text'
-								showWarning={isDesEmpty || !isDesValid}
-								isDropdown={false}
-								callback={(value: string) => {
-									this.setState({
-										description: value,
-									});
-								}}
-								id='description'
-								name='description'
-								value={description}
-								required={true}
-								maxLength={200}
-								className=''
-								clickCallback={() => {}}
-								focusCallback={() => {
-									this.setState({
-										isDesEmpty: false,
-										isDesValid: true,
-									});
-								}}
-							/>
-						</div>
+            <div className="mb-16">
+              <InputFormAtom
+                label="Badge Name"
+                placeholder={"Enter badge name"}
+                warning={NameMsg}
+                type="text"
+                showWarning={isNameEmpty || !isNameValid}
+                isDropdown={false}
+                callback={(value: string) => {
+                  this.setState({
+                    name: value,
+                  });
+                }}
+                id="badgeName"
+                name="badgeName"
+                value={name}
+                required={true}
+                maxLength={200}
+                className=""
+                clickCallback={() => {}}
+                focusCallback={() => {
+                  this.setState({
+                    isNameEmpty: false,
+                    isNameValid: true,
+                  });
+                }}
+              />
+            </div>
+            <div className="mb-16">
+              <InputFormAtom
+                label="Badge Description"
+                placeholder={"Enter badge description or criteria"}
+                warning={DesMsg}
+                type="text"
+                showWarning={isDesEmpty || !isDesValid}
+                isDropdown={false}
+                callback={(value: string) => {
+                  this.setState({
+                    description: value,
+                  });
+                }}
+                id="description"
+                name="description"
+                value={description}
+                required={true}
+                maxLength={200}
+                className=""
+                clickCallback={() => {}}
+                focusCallback={() => {
+                  this.setState({
+                    isDesEmpty: false,
+                    isDesValid: true,
+                  });
+                }}
+              />
+            </div>
+            <button type="submit" className="btn btn-primary right w-100" onClick={()=> this.setState({ goBadges : true})}>
+              Done
+            </button>
           </div>
         </div>
       </>

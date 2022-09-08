@@ -105,7 +105,7 @@ class AdminEventListPage extends React.Component<IProps, IStates> {
 										Create an event to assign to students.
 									</div>
 									<div className='flex-center mt-16'>
-										<Link to="/manager/add-event" style={{ textDecoration : 'none'}}>
+										<Link to="/admin/event-list" style={{ textDecoration : 'none'}}>
 											<button
 												type='submit'
 												className='primary-btn'

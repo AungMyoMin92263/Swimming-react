@@ -5,21 +5,11 @@ import { connect } from "react-redux";
 
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import InputFormAtom from "../../atoms/InputFormAtom";
 import { IListItem } from "../../atoms/ListItem";
+import { Link, Navigate } from "react-router-dom";
 
 interface IStates {
-  id: number;
-  image: any;
-  logo: string;
-  name: string;
-  isNameValid: boolean;
-  isNameEmpty: boolean;
-  NameMsg: string;
-  description: string;
-  DesMsg: string;
-  isDesValid: boolean;
-  isDesEmpty: boolean;
+  goCreateBadge : boolean;
 }
 
 interface IProps {
@@ -31,17 +21,7 @@ class CoachEditIconPage extends React.Component<IProps, IStates> {
     super(props);
 
     this.state = {
-      id: -1,
-      image: { preview: "", raw: "" },
-      logo: "",
-      name: "",
-      isNameValid: true,
-      isNameEmpty: false,
-      NameMsg: "",
-      description: "",
-      DesMsg: "",
-      isDesValid: true,
-      isDesEmpty: false,
+      goCreateBadge : false
     };
   }
   componentDidMount() {
@@ -60,29 +40,22 @@ class CoachEditIconPage extends React.Component<IProps, IStates> {
     };
 
     const {
-      id,
-      image,
-      logo,
-      name,
-      isNameValid,
-      isNameEmpty,
-      NameMsg,
-      description,
-      DesMsg,
-      isDesValid,
-      isDesEmpty,
+      goCreateBadge
     } = this.state;
 
     return (
       <>
         <div className="wrapper-mobile">
+        {goCreateBadge && <Navigate to="/coache/create-badge" replace={true} />}
+
           <div className="content-mobile col-sm-12">
             <div className="mb-32">
+              <Link to="/coache/create-badge">
               <button type="submit" className="back-btn">
                 <ArrowBackIcon
                   sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
                 ></ArrowBackIcon>
-              </button>
+              </button></Link>
             </div>
             <div className="f-32 fw-500 mt-16 mb-32" style={{ width: "247px" }}>
               <span>Edit Icon</span>
@@ -139,7 +112,7 @@ class CoachEditIconPage extends React.Component<IProps, IStates> {
                   className="edit-icon m-8"
                 />
               </div>
-              <button type="submit" className="btn btn-primary right w-100">
+              <button type="submit" className="btn btn-primary right w-100" onClick={()=> this.setState({ goCreateBadge : true })}>
                 Done
               </button>
           </div>

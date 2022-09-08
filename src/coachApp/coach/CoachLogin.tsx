@@ -97,7 +97,7 @@ class CoachLoginPage extends React.Component<IProps, IStates> {
       <div className="wrapper-mobile">
         <div className="content-mobile center col-sm-12">
           {authUser.isSignedIn && (
-            <Navigate to="/coach/welcome" replace={true} />
+            <Navigate to="/coache/welcome" replace={true} />
           )}
           <div className="primary f-16 fw-500 m-32">
             <span>My Report Cards</span>
@@ -159,7 +159,7 @@ class CoachLoginPage extends React.Component<IProps, IStates> {
 
           <div className="center mb-16">
             <Link
-              to="/admin/recover-password"
+              to="/coache/recover-password"
               style={{ textDecoration: "none" }}
             >
               <span className="f-14 primary">Forgot password?</span>

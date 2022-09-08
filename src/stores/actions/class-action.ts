@@ -25,7 +25,7 @@ export const refreshTokenClass = () => {
   optionImage = {
     headers: {
       "Content-Type": "multipart/form-data",
-      'Accept': "application/json",
+      'Accept': "multipart/form-data",
       'type': "formData",
       Authorization: `Bearer ${token}`,
     },
@@ -136,8 +136,8 @@ export const putClass = (classe: ClassInterface, url : string, id: number) => {
         type: ActionTypes.editClass,
         payload: response,
       });
-    } catch (err) {
-      if (err instanceof Error) {
+    } catch (err: any) {
+      if (err ) {
         dispatch<editClassAction>({
           type: ActionTypes.getError,
           payload: err.message,

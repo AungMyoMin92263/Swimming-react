@@ -65,6 +65,7 @@ import CoachBadgeSentPage from "../coachApp/coach/CoachBadgeSent";
 
 //testing
 import TestingComponent from "./TestingComponent";
+import CoacheDashboardPage from "../coachApp/coach/CoacheDashboardPage";
 
 
 const windowHistory = createBrowserHistory({ window });
@@ -485,7 +486,7 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
-				path: "classes",
+				path: "class-list",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
@@ -501,7 +502,7 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
-				path: "events",
+				path: "event-list",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
@@ -599,7 +600,7 @@ const routes = [
 		],
 	},
 	{
-		path: "/coach",
+		path: "/coache",
 		child: [
 			{
 				path: "create-password",
@@ -642,7 +643,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<StudentDashboardPage />
+						<CoacheDashboardPage {...props}/>
 					</>
 				),
 				footer: (props: any) => (
@@ -739,6 +740,38 @@ const routes = [
 				main: (props: any) => (
 					<>
 						<CoachBadgeSentPage />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "class-list",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentClassesPage />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "event-list",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentEventsPage />
 					</>
 				),
 				footer: (props: any) => (

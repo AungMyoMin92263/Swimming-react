@@ -55,6 +55,8 @@ body {
   color: var(--font-color);
   height: calc(100vh - 65px);
   overflow-y: auto;
+  display: flex;
+  justify-content: center;
 }
 
 .content-mobile {
@@ -476,12 +478,17 @@ body {
   border-radius: 50%;
 }
 .file-upload{
-  height: 100px;
-  width: 100%;
+  height: 135px;
+  max-width: 100%;
   color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.daily-programme-image{
+  height: 135px;
+  width: auto;
 }
 
 .back-btn {
@@ -585,8 +592,8 @@ width: 56px;
 height: 56px;
 
 background: #002D63;
-border: 2px solid #FFFFFF;
-border-radius: 80px;
+border: 2px solid #dee2e6;
+border-radius: 50%;
 }
 
 .edit-icon{
@@ -599,4 +606,9 @@ border-radius: 80px;
   width : 120px;
   height : 120px;
   border-radius: 50%;
+}
+
+.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
 }

@@ -195,7 +195,7 @@ class CoachCreatePasswordPage extends React.Component<IProps, IStates> {
 	renderBtn = () => {
 		if (this.state.isCompleted) {
 			return (
-				<Link to='/coach/login'>
+				<Link to='/coache/login'>
 					<button
 						type='submit'
 						className='primary-btn'

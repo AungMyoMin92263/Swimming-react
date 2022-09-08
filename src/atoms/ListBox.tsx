@@ -6,7 +6,7 @@ export interface IListBoxUI {
   more?: boolean
   more2?: boolean
   moreText?: string
-  moreText2?: boolean,
+  moreText2?: string,
   callback?: Function
   callback2?: Function
   noBtn?: boolean

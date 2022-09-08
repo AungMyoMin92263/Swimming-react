@@ -32,6 +32,7 @@ interface StudentViewModel {
 
 interface IStates {
 	emails: string[];
+  student: any[];
 	isCompleted: boolean;
 	students: StudentViewModel[];
 	studentNameMsg: string;
@@ -54,6 +55,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
 
     this.state = {
 			emails: [],
+      student : [],
 			isCompleted: false,
 			students: [
 				{
@@ -134,17 +136,28 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
 
   submit = async () => {
     if (this.isValid()) {
-      console.log("submit", this.props.classes.result);
       let temp = this.state.emails;
+      let tempStu = this.state.student;
       for(let i = 0;i < this.state.students.length;i++){
         temp.push(this.state.students[i].studentEmail);
+        tempStu.push(
+          {
+            "name": this.state.students[i].studentName,
+            "email": this.state.students[i].studentEmail,
+            "parent_name": this.state.students[i].parentName,
+            "parent_email": this.state.students[i].parentEmail,
+            "avatar": null
+          }
+        );
       }
       await this.setState({
         emails: temp,
+        student : tempStu,
       });
       if (this.state.classObj) {
 				await this.props.inviteStudent({
 					user_email: this.state.emails,
+          student : this.state.student,
 					class_id: this.state.classObj.id,
 				});
 
@@ -156,7 +169,6 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
 				if (student) {
 					setItemWithObject("students", student.concat(this.state.students));
 				} else setItemWithObject("students", this.state.students);
-
 			}
     }
   };

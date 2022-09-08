@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import ListBoxUI from "../../atoms/ListBox";
 import ListItem, { IListItem } from "../../atoms/ListItem";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
+import { getItem } from "../../auth/LocalStorage";
 
 interface IStates {
   step: number;
@@ -24,7 +25,13 @@ class StudentDashboardPage extends React.Component<IProps, IStates> {
     };
   }
   componentDidMount() {
-    console.log("authUser", this.props.authUser);
+  const user = JSON.parse(getItem("authUser") || "null");
+  console.log(this.props.authUser)
+   if (user && user.userInfo) {
+			this.setState({
+				
+			});
+		}
     //loading
   }
 
@@ -51,7 +58,7 @@ class StudentDashboardPage extends React.Component<IProps, IStates> {
         <div className="wrapper-mobile">
           <div className="content-mobile col-sm-12">
             <div className="f-32 fw-500 mt-16 mb-32">
-              <span> Hello, Azlan</span>
+              <span> Hello, </span> 
             </div>
             <div className="mb-8">
               <ListBoxUI title="Today, 6 July" callback={() => {}} more={false}>
