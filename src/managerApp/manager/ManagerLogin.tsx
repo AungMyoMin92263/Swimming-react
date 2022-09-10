@@ -6,8 +6,6 @@ import { StoreState } from "../../stores/reducers";
 import { signIn } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
 import { setItemWithObject } from "../../auth/LocalStorage";
-import { refreshToken } from "../../stores/actions/school-action";
-import { getAllSchools } from "../../stores/actions/school-action";
 
 interface IStates {
 	email: string;
@@ -86,7 +84,7 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 	callback = async () => {
 		const { email, password }: IStates = this.state;
 
-		await this.props.signIn({ email : email,password : password});		
+		await this.props.signIn({ email : email,role : 'manager',password : password});		
 		setItemWithObject("authUser", this.props.authUser);
 		
 		// if(this.props.authUser.isSignedIn){

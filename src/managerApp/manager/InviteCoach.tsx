@@ -11,91 +11,110 @@ import TagInput from "../../components/TagInput";
 import placeholder from "./../../assets/images/place-holder.png";
 
 interface IStates {
-  emails: string[];
-  isCompleted: boolean;
-  school_name : string;
+	emails: string[];
+	isCompleted: boolean;
+	school_name: string;
+	errorMsg: string;
+	classObj: any;
 }
 
 interface IProps {
-  emails: string[];
-  classes: any;
-  inviteCoach: Function;
+	emails: string[];
+	classes: any;
+	inviteCoach: Function;
 }
 class InviteCoachPage extends React.Component<IProps, IStates> {
-  constructor(props: any) {
-    super(props);
+	constructor(props: any) {
+		super(props);
 
-    this.state = {
-      emails: [],
-      isCompleted: false,
-	  school_name : ''
-    };
-  }
-  componentDidMount() {
-    const user = JSON.parse(getItem("authUser") || "null");
-    if(user && user.userInfo && user.userInfo.data.assign_school.length > 0) {
-       this.setState({
-        school_name : user.userInfo.data.assign_school[0].school.name,
-       });
-    }
-  }
+		this.state = {
+			emails: [],
+			isCompleted: false,
+			school_name: "",
+			errorMsg: "",
+			classObj: null,
+		};
+	}
+	componentDidMount() {
+		const user = JSON.parse(getItem("authUser") || "null");
+		if (user && user.userInfo && user.userInfo.data.assign_school.length > 0) {
+			this.setState({
+				school_name: user.userInfo.data.assign_school[0].school.name,
+			});
+		}
+		const classObject = JSON.parse(getItem("class") || "null");
+		this.setState({
+			classObj: classObject,
+		});
+	}
 
-  handleChange = (tags: string[]) => {
-    this.setState({
-      emails: tags,
-    });
-  };
+	handleChange = (tags: string[]) => {
+		this.setState({
+			emails: tags,
+		});
+	};
 
-  isValid = () => {
-    if (this.state.emails.length === 0) return false;
-    else return true;
-  };
+	isValid = () => {
+		if (this.state.emails.length === 0) return false;
+		else return true;
+	};
 
-  submit = async () => {
-    if (this.isValid()) {
-      if (this.props.classes.result) {
-        await this.props.inviteCoach({
-          user_email: this.state.emails,
-          class_id: this.props.classes.result.data.id,
-        });
+	submit = async () => {
+		console.log("Clicked")
+		if (this.isValid()) {
+			if (this.state.classObj) {
+				await this.props.inviteCoach({
+					user_email: this.state.emails,
+					class_id: this.state.classObj.id,
+				});
 
-        this.setState({
-          isCompleted: true,
-        });
-      }
-    }
-  };
+				if (this.props.classes.error) {
+					this.setState({
+						isCompleted: false,
+						errorMsg: this.props.classes.error,
+					});
+				} else {
+					this.setState({
+						isCompleted: true,
+					});
+				}
+			}
+		}
+	};
 
-  renderBtn = () => {
-    if (!this.isValid()) {
-      return (
-        <button type="submit" className="idle-btn fw-600 ml-16">
-          Done
-        </button>
-      );
-    } else
-      return (
-        <>
-          {this.state.isCompleted && (
-            <Navigate to="/manager/invite-student" replace={true} />
-          )}
-          <button
-            type="submit"
-            className="primary-btn fw-600 ml-16"
-            onClick={this.submit}
-          >
-            Done
-          </button>
-        </>
-      );
-  };
+	renderBtn = () => {
+		if (!this.isValid()) {
+			return (
+				<button type='submit' className='idle-btn fw-600 ml-16'>
+					Done
+				</button>
+			);
+		} else
+			return (
+				<>
+					{this.state.isCompleted && (
+						<Navigate to='/manager/invite-student' replace={true} />
+					)}
+					<button
+						type='submit'
+						className='primary-btn fw-600 ml-16'
+						onClick={this.submit}
+					>
+						Done
+					</button>
+				</>
+			);
+	};
 
-  render() {
-    return (
+	render() {
+		const { errorMsg, classObj } = this.state;
+		return (
 			<>
 				<div className='wrapper'>
 					<div className='primary f-16 project-header'>
-						<span>My Report Cards</span>
+						<Link to='/manager/dashboard'>
+							<span>My Report Cards</span>
+						</Link>
 					</div>
 					<div className='container-cus'>
 						<div className='content col-lg-6'>
@@ -114,25 +133,17 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
 							<div className='mb-16 align-center'>
 								<img
 									src={
-										this.props.classes.result &&
-										this.props.classes.result.data.logo
-											? process.env.REACT_APP_API_ENDPOINT +
-											  "/" +
-											  this.props.classes.result.data.logo
+										classObj && classObj.logo
+											? process.env.REACT_APP_API_ENDPOINT + "/" + classObj.logo
 											: placeholder
 									}
 									alt='logo'
 									className={`${
-										this.props.classes.result &&
-										this.props.classes.result.data.logo
-											? "item-icon"
-											: "w-48"
+										classObj && classObj.logo ? "item-icon" : "w-48"
 									}`}
 								/>
 								<span className='f-16'>
-									{this.props.classes.result &&
-										this.props.classes.result.data.name}{" "}
-									({this.state.school_name})
+									{classObj && classObj.name} ({this.state.school_name})
 								</span>
 							</div>
 							<div className='hr mb-32'></div>
@@ -157,8 +168,10 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
 								/>
 							</div>
 							{/* {this.isValid() && <p className='text-danger'>At least on manager invite</p>} */}
-							<div className='right flex-center'>
-								<span className='secondary'>3 of 4</span>
+							<div>{errorMsg && <p className='text-danger'>{errorMsg}</p>}</div>
+
+							<div className='right flex align-center'>
+								<span className='secondary mr-16'>3 of 4</span>
 								{this.renderBtn()}
 							</div>
 						</div>
@@ -166,17 +179,17 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
 				</div>
 			</>
 		);
-  }
+	}
 }
 
 const mapStateToProps = ({
-  classes,
+	classes,
 }: StoreState): {
-  classes: any;
+	classes: any;
 } => {
-  return {
-    classes,
-  };
+	return {
+		classes,
+	};
 };
 
 export default connect(mapStateToProps, { inviteCoach })(InviteCoachPage);

@@ -9,78 +9,165 @@ import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import { School } from "../../stores/model/school";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
-import { signOut, signIn } from "../../stores/actions";
+import { signIn, signOut, getAllUsers } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
-
+import { InitialIcon } from "../../atoms/InitialIcon";
+import { getItem, removeItem } from "../../auth/LocalStorage";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 interface IStates {
-	schools: School[];
+  schools: School[];
+  email: string;
+  dropdown: boolean;
+  isLogout: boolean;
+  users: any[];
 }
 interface UserSignInPage {
-	signIn: Function;
-	authUser: AuthInterface;
+  signIn: Function;
+  authUser: AuthInterface;
+  signOut: Function;
+  getAllUsers : Function;
+  users: any;
 }
 
 type IProps = UserSignInPage;
 
 class PeopleListPage extends React.Component<IProps, IStates> {
-	constructor(props: any) {
-		super(props);
+  constructor(props: any) {
+    super(props);
 
-		this.state = {
-			schools: [],
-		};
-	}
+    this.state = {
+      schools: [],
+      email: "",
+      dropdown: false,
+      isLogout: false,
+      users : []
+    };
+  }
 
-	componentDidMount() {
-		//loading
-	}
+  componentDidMount() {
+    //loading
+    const user = JSON.parse(getItem("authUser") || "null");
+    if (user && user.userInfo) {
+      this.setState({
+        email: user.userInfo.data.email,
+      });
+    }
+    this.getUsers();
+  }
 
-	render() {
-		return (
-			<>
-				<div className='container-cus'>
-					<div className='dashboard'>
-						{/* DASHBOARD HEADER */}
-						<div className='dashboard-header'>
-							<div className='justify-end'>
-								<div className='email-div'>
-									<img
-										src='../../../assets/icons/alpha.png'
-										alt='alpha'
-										className='icon'
-									/>
-									<span>Leon@gmail.com </span>
-								</div>
-							</div>
-							<div className='row justify-center'>
-								<div className='col-9 col-md-12 justify-start align-center'>
+  getUsers = async () => {
+    await this.props.getAllUsers();
+    this.setState({
+      users : this.props.users.result
+    })
+  };
 
-									<div className='f-40 fw-500'>
-										<span>People</span>
-									</div>
-								</div>
-							</div>
-						</div>
-						{/* DASHBOARD BODY */}
-						<div className='dashboard-body'>
-							
-						</div>
-					</div>
-				</div>
-			</>
-		);
-	}
+  toggleOpen = () => {
+    let dropdownVal = !this.state.dropdown;
+    this.setState({
+      dropdown: dropdownVal,
+    });
+  };
+
+  logout = async () => {
+    await this.props.signOut();
+    removeItem("authUser");
+    removeItem("class");
+    this.setState({
+      isLogout: true,
+    });
+  };
+
+  render() {
+    const { email, dropdown, isLogout,users } = this.state;
+    return (
+      <>
+        <div className="container-cus">
+          {isLogout && <Navigate to="/manager/login" replace={true} />}
+
+          <div className="dashboard">
+            {/* DASHBOARD HEADER */}
+            <div className="dashboard-header">
+              <div className="justify-end">
+                <div className="dropdown">
+                  <div className="email-div cursor" onClick={this.toggleOpen}>
+                    <InitialIcon initials={email.substr(0, 1).toUpperCase()} />
+                    <span>{email} </span>
+                  </div>
+                  <div
+                    className={`dropdown-menu dropdown-menu-right ${
+                      dropdown ? "show" : ""
+                    }`}
+                    aria-labelledby="dropdownMenuButton"
+                  >
+                    <div className="dropdown-item cursor" onClick={this.logout}>
+                      <LogoutOutlinedIcon
+                        sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
+                      ></LogoutOutlinedIcon>
+                      <span>Logout</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row justify-center">
+                <div className="col-9 col-md-12 justify-start align-center">
+                  <div className="f-40 fw-500">
+                    <span>People</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* DASHBOARD BODY */}
+            <div className="dashboard-body">
+              <div className="tableBody">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th className="col-1"></th>
+                      <th className="col-5">Name</th>
+                      <th className="col-3">Class</th>
+                      <th className="col-3">Role</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users &&
+                      users.length > 0 &&
+                      users.map((user: any, index: any) => (
+                        <tr>
+                          <td>
+                            <InitialIcon
+                              initials={user.email.substr(0, 1).toUpperCase()}
+                            />
+                          </td>
+                          <td>{user.name}</td>
+                          <td>
+                            <span>Pro Youth Morning</span>
+                          </td>
+                          <td>
+                              <span>{user.role}</span>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 }
 
 const mapStateToProps = ({
-	authUser,
+  authUser,users
 }: StoreState): {
-	authUser: AuthInterface;
+  authUser: AuthInterface;users : any;
 } => {
-	return {
-		authUser,
-	};
+  return {
+    authUser,users
+  };
 };
 
-export default connect(mapStateToProps, { signIn })(PeopleListPage);
+export default connect(mapStateToProps, { signIn, signOut,getAllUsers })(PeopleListPage);

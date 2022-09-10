@@ -84,60 +84,58 @@ class AssignStudentPage extends React.Component<IProps, IStates> {
 
   render() {
     return (
-      <>
-        <div className="wrapper">
-          <div className="primary f-16 project-header">
-            <span>My Report Cards</span>
-          </div>
-          <div className="container-cus">
-            <div className="content col-lg-6">
-              <div className="f-14 mb-32">
-                <Link to="/admin/add-school" style={{ textDecoration: "none" }}>
-                  <ArrowBackIcon
-                    sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-                  ></ArrowBackIcon>
-                  <span>Back</span>
-                </Link>
-              </div>
+			<>
+				<div className='wrapper'>
+					<div className='primary f-16 project-header'>
+						<span>My Report Cards</span>
+					</div>
+					<div className='container-cus'>
+						<div className='content col-lg-6'>
+							<div className='f-14 mb-32'>
+								<Link to='/manager/add-event' style={{ textDecoration: "none" }}>
+									<ArrowBackIcon
+										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+									></ArrowBackIcon>
+									<span>Back</span>
+								</Link>
+							</div>
 
-              <div className="mb-16 flex">
-                <img
-                  src={
-                    this.props.schools.result
-                      ? "http://localhost:3000/api/" +
-                        this.props.schools.result.data.logo
-                      : "../../../assets/icons/logo.png"
-                  }
-                  alt="right-arrow"
-                  className="item-icon"
-                />
-                <span className="f-16">
-                100m Freestyle (Male 9-10 y/o)
-                </span>
-              </div>
-              <div className="hr mb-32"></div>
-              <div className="f-32 fw-500">
-                <span>Assign Students.</span>
-              </div>
-              <div className="f-16 mb-32">
-                <span>Assign students to your event.</span>
-              </div>
-              <div className="f-12 mb-16">
-                <span>Student(s)</span>
-              </div>
-              <div className="fw-400 mb-16">
-                <TagInput onInputChange={this.handleChange} />
-              </div>
+							<div className='mb-16 flex'>
+								<img
+									src={
+										this.props.schools.result
+											? process.env.REACT_APP_API_ENDPOINT +
+											  this.props.schools.result.data.logo
+											: "../../../assets/icons/logo.png"
+									}
+									alt='right-arrow'
+									className='item-icon'
+								/>
+								<span className='f-16'>100m Freestyle (Male 9-10 y/o)</span>
+							</div>
+							<div className='hr mb-32'></div>
+							<div className='f-32 fw-500'>
+								<span>Assign Students.</span>
+							</div>
+							<div className='f-16 mb-32'>
+								<span>Assign students to your event.</span>
+							</div>
+							<div className='f-12 mb-16'>
+								<span>Student(s)</span>
+							</div>
+							<div className='fw-400 mb-16'>
+								<TagInput onInputChange={this.handleChange} />
+							</div>
 
-              <div className="right flex-center">
-                <span className="secondary">2 of 2</span>
-                {this.renderBtn()}
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
+							<div className='right flex-center'>
+								<span className='secondary'>2 of 2</span>
+								{this.renderBtn()}
+							</div>
+						</div>
+					</div>
+				</div>
+			</>
+		);
   }
 }
 

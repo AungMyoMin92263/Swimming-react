@@ -14,6 +14,13 @@ export const schoolReducers = (
         result: action.payload,
         error: null,
       };
+      
+      case ActionTypes.getSchoolObj:
+        return {
+          ...state,
+          result: action.payload,
+          error: null,
+        };
 
     case ActionTypes.createSchool:
       return {
@@ -28,6 +35,12 @@ export const schoolReducers = (
         error: null,
       };
     case ActionTypes.deleteSchool:
+      return {
+        ...state,
+        result: action.payload,
+        error: null,
+      };
+      case ActionTypes.inviteManager:
       return {
         ...state,
         result: action.payload,

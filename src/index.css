@@ -9,7 +9,7 @@
   --white: #FFF;
 }
 
-body {
+body a {
   font-family: "Work Sans";
   font-style: normal;
   text-decoration: none;
@@ -368,6 +368,7 @@ body {
   border-radius: 8px;
   border: none;
   color: var(--white);
+  text-decoration: none;
 }
 
 .idle-btn {
@@ -380,6 +381,7 @@ body {
   border: none;
   color: var(--white);
   background: #E5E5E5;
+  text-decoration: none;
 }
 
 .secondary-btn {

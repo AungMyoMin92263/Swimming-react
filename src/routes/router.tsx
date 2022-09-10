@@ -66,6 +66,10 @@ import CoachBadgeSentPage from "../coachApp/coach/CoachBadgeSent";
 //testing
 import TestingComponent from "./TestingComponent";
 import CoacheDashboardPage from "../coachApp/coach/CoacheDashboardPage";
+import CoachRecoverPasswordPage from "../coachApp/coach/CoachRecoverPasswordPage";
+import CoachChangePasswordPage from "../coachApp/coach/CoachChangePasswordPage";
+import StudentRecoverPasswordPage from "../studentApp/student/StudentRecoverPasswordPage";
+import StudentChangePasswordPage from "../studentApp/student/StudentChangePasswordPage";
 
 
 const windowHistory = createBrowserHistory({ window });
@@ -153,6 +157,19 @@ const routes = [
 
 			{
 				path: "add-school",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<AddSchoolPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+
+			{
+				path: "add-school/:id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
@@ -265,7 +282,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<ManagerLoginPage />
+						<ManagerLoginPage {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
@@ -458,6 +475,30 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
+				path: "change-password",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentChangePasswordPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "recover-password",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentRecoverPasswordPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
 				path: "welcome",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
@@ -627,6 +668,30 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
+				path: "recover-password",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachRecoverPasswordPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "change-password",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachChangePasswordPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
 				path: "welcome",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
@@ -643,7 +708,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<CoacheDashboardPage {...props}/>
+						<CoacheDashboardPage {...props} />
 					</>
 				),
 				footer: (props: any) => (

@@ -6,7 +6,6 @@ import { School } from "../model/school";
 import { AxiosRequestConfig } from "axios";
 import { getItem } from "../../auth/LocalStorage";
 
-var token = '';
 var option: AxiosRequestConfig;
 var optionImage: AxiosRequestConfig;
 
@@ -51,9 +50,36 @@ export const getAllSchools = () => {
         type: ActionTypes.getSchools,
         payload: response.data,
       });
+    } catch (err : any) {
+      if (err) {
+        dispatch<getSchoolsAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};
+
+export interface getSchoolObjAction {
+  type: ActionTypes.getSchoolObj | ActionTypes.getError;
+  payload: School | any;
+}
+
+export const getSchoolObj =  (url : string) => {
+  refreshToken();
+  return async (dispatch: Dispatch) => {
+    try {
+      const response = await apiServer.get<School>(url, option);
+      dispatch<getSchoolObjAction>({
+        type: ActionTypes.getSchoolObj,
+        payload: response.data,
+      });
     } catch (err) {
       if (err instanceof Error) {
-        dispatch<getSchoolsAction>({
+        dispatch<getSchoolObjAction>({
           type: ActionTypes.getError,
           payload: err.message,
         });
@@ -81,12 +107,12 @@ export const postSchool = (school : SchoolInterface) => {
         type: ActionTypes.createSchool,
         payload: response,
       });
-    } catch (err) {
-      if (err instanceof Error) {
+    } catch (err:any) {
+      if (err) {
         
         dispatch<createSchoolAction>({
           type: ActionTypes.getError,
-          payload: err.message,
+          payload: err.response.data.message,
         });
       } else {
         console.log("Unexpected error", err);
@@ -113,11 +139,12 @@ export const putSchool = (school: SchoolInterface, id: number) => {
         type: ActionTypes.editSchool,
         payload: response,
       });
-    } catch (err) {
-      if (err instanceof Error) {
+    } catch (err :any) {
+      if (err) {
+        console.log(err)
         dispatch<editSchoolAction>({
           type: ActionTypes.getError,
-          payload: err.message,
+          payload: err.response.data.message,
         });
       } else {
         console.log("Unexpected error", err);

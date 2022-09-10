@@ -8,11 +8,13 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { Link, Navigate } from "react-router-dom";
 import TagInput from "../../components/TagInput";
-import { removeItem } from "../../auth/LocalStorage";
+import { getItem, removeItem } from "../../auth/LocalStorage";
 import placeholder from './../../assets/images/place-holder.png';
 interface IStates {
 	emails: string[];
 	isCompleted: boolean;
+	errorMsg:string;
+	url : string;
 }
 
 interface IProps {
@@ -23,15 +25,20 @@ interface IProps {
 
 class InviteManagerPage extends React.Component<IProps, IStates> {
 	schoolImage: string | undefined;
+	url = '/admin/add-school/';
+
 	constructor(props: any) {
 		super(props);
 
 		this.state = {
 			emails: [],
 			isCompleted: false,
+			errorMsg:'',
+			url : '',
 		};
 	}
 	componentDidMount() {
+
 	}
 
 	handleChange = (tags: string[]) => {
@@ -54,32 +61,40 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 					user_email: this.state.emails,
 					schoold_id: this.props.schools.result.data.id,
 				});
-
-				if (!this.props.schools.error) {
-					this.setState({
-						isCompleted: true,
-					});
-					removeItem("school");
-				}
 			}
+			console.log(this.props.schools)
+			if (!this.props.schools.error) {
+				this.setState({
+					isCompleted: true,
+					
+				});
+				
+			}else{
+				this.setState({
+					isCompleted:false,
+					errorMsg: this.props.schools.error.message[0]
+				})
+				
 			}
-
-			
+			}	
 	};
+
+	back = () => {
+		this.setState({
+			url : this.url + this.props.schools.result.data.id
+		});
+	  };
 
 	renderBtn = () => {
 		if (!this.isValid()) {
 			return (
-				<button type='submit' className='idle-btn fw-600 ml-16'>
+				<button type='submit' className='idle-btn fw-600 ml-16' onClick={() => removeItem("school")}>
 					Done
 				</button>
 			);
 		} else
 			return (
 				<>
-					{this.state.isCompleted && (
-						<Navigate to='/admin/add-more-school' replace={true} />
-					)}
 					<button
 						type='submit'
 						className='primary-btn fw-600 ml-16'
@@ -92,21 +107,25 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 	};
 
 	render() {
+		const {errorMsg,url} = this.state;
 		return (
 			<>
 				<div className='wrapper'>
+				{this.state.isCompleted && (
+						<Navigate to='/admin/add-more-school' replace={true} />
+					)}
+					{url !== '' && <Navigate to={url} replace={true} />}
+
 					<div className='primary f-16 project-header'>
 						<span>My Report Cards</span>
 					</div>
 					<div className='container-cus'>
 						<div className='content col-lg-6'>
-							<div className='f-14 mb-32'>
-								<Link to='/admin/add-school' style={{ textDecoration: "none" }}>
+							<div className='f-14 mb-32' onClick={this.back}>
 									<ArrowBackIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 									></ArrowBackIcon>
 									<span>Back</span>
-								</Link>
 							</div>
 
 							<div className='mb-16 align-center'>
@@ -150,9 +169,9 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 									}}
 								/>
 							</div>
-							{this.props.schools.error && (
+							{errorMsg && (
 								<p className='text-danger'>
-									{this.props.schools.error.message[0]}
+									{errorMsg}
 								</p>
 							)}
 							<div className='right flex-center'>

@@ -9,6 +9,7 @@ import { School } from "../../stores/model/school";
 import { connect } from "react-redux";
 import { SchoolInterface } from "../../stores/model/school-interface";
 import { StoreState } from "../../stores/reducers";
+import { getItem, removeItem } from "../../auth/LocalStorage";
 interface IStates {
 	schools: School[];
 	name:string;
@@ -30,21 +31,21 @@ class AddMoreSchoolPage extends React.Component<IProps, IStates> {
 		};
 	}
 	componentDidMount() {
-		// var schoolobj = JSON.parse(getItem("school") || "null");
-		// if (schoolobj.result) var school = schoolobj.result.data;
+		var schoolobj = JSON.parse(getItem("school") || "null");
+		if (schoolobj) var school = schoolobj
 
-		// if (school) {
-		// 	this.setState({
-		// 		name: school.name,
-		// 		image: school.logo,
-		// 	});
-		// }
+		if (school) {
+			this.setState({
+				name: school.name,
+				image: school.logo,
+			});
+		}
 		console.log("props",this.props)
 	}
 
 
 	render() {
-		// const {school} = this.props.schools;
+		const {name, image} = this.state;
 
 		return (
 			<>
@@ -63,22 +64,22 @@ class AddMoreSchoolPage extends React.Component<IProps, IStates> {
 							<div className='mb-16 flex'>
 								<img
 									src={
-										this.props.schools.result
+										image
 											? process.env.REACT_APP_API_ENDPOINT + "/"+
-											  this.props.schools.result.data.logo
+											image
 											: "../../../assets/icons/logo.png"
 									}
 									alt='right-arrow'
 									className='item-icon'
 								/>
 								<span className='f-16'>
-									{this.props.schools.result
-										? this.props.schools.result.data.name
+									{name
+										? name
 										: ""}
 								</span>
 							</div>
 							<div className='hr mb-16'></div>
-							<Link to='/admin/add-school' style={{ textDecoration: "none" }}>
+							<Link to='/admin/add-school' style={{ textDecoration: "none" }} onClick={()=> removeItem("school")}>
 								<div className='mb-16 align-center'>
 									<AddIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
@@ -89,7 +90,7 @@ class AddMoreSchoolPage extends React.Component<IProps, IStates> {
 
 							<div className='hr mb-32'></div>
 							<Link to='/admin/dashboard' style={{ textDecoration: "none" }}>
-								<button type='submit' className='primary-btn right'>
+								<button type='submit' className='primary-btn right' onClick={()=> removeItem("school")}>
 									Done
 								</button>
 							</Link>

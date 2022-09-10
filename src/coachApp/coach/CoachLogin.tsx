@@ -75,7 +75,7 @@ class CoachLoginPage extends React.Component<IProps, IStates> {
 
   callback = async () => {
     const { email, password }: IStates = this.state;
-    await this.props.signIn({ email: email, password: password });
+    await this.props.signIn({ email: email, role : "coache",password: password });
     setItemWithObject("authUser", this.props.authUser);
   };
 

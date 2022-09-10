@@ -6,18 +6,25 @@ import "./ManagerDashboard.css";
 import AddIcon from "@mui/icons-material/Add";
 import { StoreState } from "../../stores/reducers";
 import { getAllEvents } from "../../stores/actions";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { Event } from "../../stores/model/event";
-import { getItem } from "../../auth/LocalStorage";
+import { getItem, removeItem } from "../../auth/LocalStorage";
+import { InitialIcon } from "../../atoms/InitialIcon";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import { signOut } from "../../stores/actions";
 
 interface IStates {
-  events: Event[];
+	events: Event[];
+	email: string;  
+  dropdown: boolean;
+  isLogout: boolean;
 }
 
 interface EventList {
   getAllEvents: Function;
   eventList: any;
+  signOut : Function;
 }
 
 type IProps = EventList;
@@ -28,12 +35,38 @@ class EventList extends React.Component<IProps, IStates> {
 
     this.state = {
       events: [],
+      email: '',
+      dropdown: false,
+      isLogout: false,
     };
   }
 
   componentDidMount() {
+    removeItem("event");
+    const user = JSON.parse(getItem("authUser") || "null");
+		if (user && user.userInfo) {
+			this.setState({
+				email: user.userInfo.data.email,
+			});
+		}
     this.getEvents();
   }
+
+  toggleOpen = () => {
+    let dropdownVal = !this.state.dropdown;
+    this.setState({
+      dropdown: dropdownVal,
+    });
+  };
+
+  logout = async () => {
+    await this.props.signOut();
+    removeItem("authUser");
+    removeItem("class");
+    this.setState({
+      isLogout: true,
+    });
+  };
 
   getEvents = async () => {
     let url = "";
@@ -115,51 +148,66 @@ class EventList extends React.Component<IProps, IStates> {
   };
 
   render() {
+    const { email,dropdown,isLogout} = this.state;
     return (
-      <>
-        <div className="container-cus">
-          <div className="dashboard">
-            {/* DASHBOARD HEADER */}
-            <div className="dashboard-header">
-              <div className="justify-end">
-                <div className="email-div">
-                  <img
-                    src="../../../assets/icons/alpha.png"
-                    alt="alpha"
-                    className="icon"
-                  />
-                  <span>Leon@gmail.com </span>
-                </div>
-              </div>
-              <div className="row justify-center">
-                <div className="col-8 col-md-8 justify-start align-center">
-                  <div className="f-40 fw-500">
-                    <span>Events</span>
+			<>
+				<div className='container-cus'>
+        {isLogout && <Navigate to="/manager/login" replace={true} />}
+					<div className='dashboard'>
+						{/* DASHBOARD HEADER */}
+						<div className='dashboard-header'>
+							<div className='justify-end'>
+								
+              <div className="dropdown">
+                  <div className="email-div cursor" onClick={this.toggleOpen}>
+                    <InitialIcon initials={email.substr(0, 1).toUpperCase()} />
+                    <span>{email} </span>
+                  </div>
+                  <div
+                    className={`dropdown-menu dropdown-menu-right ${
+                      dropdown ? "show" : ""
+                    }`}
+                    aria-labelledby="dropdownMenuButton"
+                  >
+                    <div className="dropdown-item cursor" onClick={this.logout}>
+                      <LogoutOutlinedIcon
+                        sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
+                      ></LogoutOutlinedIcon>
+                      <span>Logout</span>
+                    </div>
                   </div>
                 </div>
-				<div className="col-4 col-md-4 justify-end">
-                  <Link to="/manager/add-event">
-                    <button
-                      type="submit"
-                      className="primary-btn"
-                      // style={{ width: "140px" }}
-                    >
-                      Create Event
-                      <AddIcon
-                        sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
-                      ></AddIcon>
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-            {/* DASHBOARD BODY */}
+								
+							</div>
+							<div className='row justify-center'>
+								<div className='col-8 col-md-8 justify-start align-center'>
+									<div className='f-40 fw-500'>
+										<span>Events</span>
+									</div>
+								</div>
+								<div className='col-4 col-md-4 justify-end'>
+									<Link to='/manager/add-event'>
+										<button
+											type='submit'
+											className='primary-btn'
+											// style={{ width: "140px" }}
+										>
+											Create Event
+											<AddIcon
+												sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
+											></AddIcon>
+										</button>
+									</Link>
+								</div>
+							</div>
+						</div>
+						{/* DASHBOARD BODY */}
 
-            {this.renderBody()}
-          </div>
-        </div>
-      </>
-    );
+						{this.renderBody()}
+					</div>
+				</div>
+			</>
+		);
   }
 }
 
@@ -173,4 +221,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { getAllEvents })(EventList);
+export default connect(mapStateToProps, { getAllEvents,signOut })(EventList);

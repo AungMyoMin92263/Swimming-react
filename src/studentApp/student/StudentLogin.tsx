@@ -75,7 +75,7 @@ class StudentLoginPage extends React.Component<IProps, IStates> {
 
   callback = async () => {
     const { email, password }: IStates = this.state;
-    await this.props.signIn({ email: email, password: password });
+    await this.props.signIn({ email: email,role : "student", password: password });
     setItemWithObject("authUser", this.props.authUser);
   };
 
@@ -159,7 +159,7 @@ class StudentLoginPage extends React.Component<IProps, IStates> {
 
           <div className="center mb-16">
             <Link
-              to="/admin/recover-password"
+              to="/student/recover-password"
               style={{ textDecoration: "none" }}
             >
               <span className="f-14 primary">Forgot password?</span>

@@ -33,53 +33,53 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
 
   renderImageUpload = () => {
     return (
-      <div>
-        <label htmlFor="upload-button">
-          {this.state.image.preview || this.state.logo !== "" ? (
-            <>
-              <img
-                src={
-                  this.state.id === -1
-                    ? this.state.image.preview
-                    : "http://localhost:3000/api/" + this.state.logo
-                }
-                alt="preview"
-                className="preview-icon cursor"
-              />
-              <span
-                className="primary f-14 cursor"
-                style={{ marginLeft: "18px" }}
-              >
-                &nbsp; Change Image
-              </span>
-            </>
-          ) : (
-            <>
-              <>
-                <img
-                  id="logo"
-                  src="../../../assets/icons/upload.png"
-                  alt="upload"
-                  className="big-icon cursor"
-                />
-                <span
-                  className="primary f-14 cursor"
-                  style={{ marginLeft: "18px" }}
-                >
-                  &nbsp; Upload Image
-                </span>
-              </>
-            </>
-          )}
-        </label>
-        <input
-          type="file"
-          id="upload-button"
-          style={{ display: "none" }}
-          onChange={this.handleChange}
-        />
-      </div>
-    );
+			<div>
+				<label htmlFor='upload-button'>
+					{this.state.image.preview || this.state.logo !== "" ? (
+						<>
+							<img
+								src={
+									this.state.id === -1
+										? this.state.image.preview
+										: process.env.REACT_APP_API_ENDPOINT + this.state.logo
+								}
+								alt='preview'
+								className='preview-icon cursor'
+							/>
+							<span
+								className='primary f-14 cursor'
+								style={{ marginLeft: "18px" }}
+							>
+								&nbsp; Change Image
+							</span>
+						</>
+					) : (
+						<>
+							<>
+								<img
+									id='logo'
+									src='../../../assets/icons/upload.png'
+									alt='upload'
+									className='big-icon cursor'
+								/>
+								<span
+									className='primary f-14 cursor'
+									style={{ marginLeft: "18px" }}
+								>
+									&nbsp; Upload Image
+								</span>
+							</>
+						</>
+					)}
+				</label>
+				<input
+					type='file'
+					id='upload-button'
+					style={{ display: "none" }}
+					onChange={this.handleChange}
+				/>
+			</div>
+		);
   };
 
   handleChange = (e: any) => {

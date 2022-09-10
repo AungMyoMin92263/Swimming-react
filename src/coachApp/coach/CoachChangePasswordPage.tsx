@@ -1,7 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import InputFormAtom from "../../atoms/InputFormAtom";
-import { AuthInterface, SignedUpInterface } from "../../stores/model/auth-interface";
+import {
+	AuthInterface,
+	SignedUpInterface,
+} from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { changePwd } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
@@ -18,20 +21,20 @@ interface IStates {
 	passwordMatchMsg: string;
 	isCompleted: boolean;
 }
-interface ManagerChangePasswordPage {
+interface CoachChangePasswordPage {
 	changePwd: Function;
 	signedUpUser: SignedUpInterface;
 }
 
-type IProps = ManagerChangePasswordPage;
+type IProps = CoachChangePasswordPage;
 
-class ManagerChangePassword extends React.Component<IProps, IStates> {
+class CoachChangePasswordPage extends React.Component<IProps, IStates> {
 	constructor(props: IProps) {
 		super(props);
 		console.log("props", props);
 		this.state = {
 			email: "",
-			signUptoken:"",
+			signUptoken: "",
 			isReEnter: false,
 			firstPassword: "",
 			secondPassword: "",
@@ -100,12 +103,8 @@ class ManagerChangePassword extends React.Component<IProps, IStates> {
 				secondPassword: "",
 			});
 		} else {
-			
 			this.callback();
-			
-			
 		}
-		
 	};
 
 	callback = async () => {
@@ -115,7 +114,7 @@ class ManagerChangePassword extends React.Component<IProps, IStates> {
 			email: email,
 			token: signUptoken,
 			password: secondPassword,
-			role:'manager'
+			role: "manager",
 		});
 		if (this.props.signedUpUser.isSignedUp) {
 			this.setState({
@@ -131,7 +130,6 @@ class ManagerChangePassword extends React.Component<IProps, IStates> {
 				secondPassword: "",
 			});
 		}
-
 	};
 
 	renderPasswordInput = () => {
@@ -198,7 +196,7 @@ class ManagerChangePassword extends React.Component<IProps, IStates> {
 	renderBtn = () => {
 		if (this.state.isCompleted) {
 			return (
-				<Link to='/manager/login'>
+				<Link to='/coache/login'>
 					<button
 						type='submit'
 						className='primary-btn'
@@ -276,4 +274,4 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { changePwd })(ManagerChangePassword);
+export default connect(mapStateToProps, { changePwd })(CoachChangePasswordPage);

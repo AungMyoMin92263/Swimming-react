@@ -105,11 +105,11 @@ export const postClass = (classe : ClassInterface,url : string) => {
         type: ActionTypes.createClass,
         payload: response,
       });
-    } catch (err) {
-      if (err instanceof Error) {
+    } catch (err : any) {
+      if (err ) {
         dispatch<createClassAction>({
           type: ActionTypes.getError,
-          payload: err.message,
+          payload: err.response.data.message,
         });
       } else {
         console.log("Unexpected error", err);
@@ -138,9 +138,15 @@ export const putClass = (classe: ClassInterface, url : string, id: number) => {
       });
     } catch (err: any) {
       if (err ) {
+        console.log(err.response.data.statusCode)
+        // if (err.response.data.statusCode === 500 ){
+        //   var msg = err.response.data.message
+        // }else{
+        //   var msg = err.response.data.message[0]
+        // }
         dispatch<editClassAction>({
           type: ActionTypes.getError,
-          payload: err.message,
+          payload: err.response.data.message,
         });
       } else {
         console.log("Unexpected error", err);
@@ -226,11 +232,11 @@ export const inviteCoach = (emails : any) => {
         type: ActionTypes.inviteCoach,
         payload: response,
       });
-    } catch (err) {
-      if (err instanceof Error) {
+    } catch (err :any) {
+      if (err) {
         dispatch<inviteCoachAction>({
           type: ActionTypes.getError,
-          payload: err.message,
+          payload: err.response.data.message[0],
         });
       } else {
         console.log("Unexpected error", err);

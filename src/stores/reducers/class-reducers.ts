@@ -15,12 +15,12 @@ export const classReducers = (
         error: null,
       };
 
-      case ActionTypes.getClassObj:
-        return {
-          ...state,
-          result: action.payload,
-          error: null,
-        };
+    case ActionTypes.getClassObj:
+      return {
+        ...state,
+        result: action.payload,
+        error: null,
+      };
 
     case ActionTypes.createClass:
       return {
@@ -35,6 +35,18 @@ export const classReducers = (
         error: null,
       };
     case ActionTypes.deleteClass:
+      return {
+        ...state,
+        result: action.payload,
+        error: null,
+      };
+    case ActionTypes.inviteStudent:
+      return {
+        ...state,
+        result: action.payload,
+        error: null,
+      };
+    case ActionTypes.inviteCoach:
       return {
         ...state,
         result: action.payload,

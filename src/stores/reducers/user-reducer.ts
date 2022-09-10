@@ -43,13 +43,18 @@ export const authReducers = (
         error: null,
         token: null
       };
+      
+      case ActionTypes.getUsers:
+        return {
+          result: action.payload,
+          error: null,
+        };
     case ActionTypes.getError:
       return {
         ...state,
         isSignedIn: false,
         error: action.payload,
       };
-
     default:
       return state;
   }

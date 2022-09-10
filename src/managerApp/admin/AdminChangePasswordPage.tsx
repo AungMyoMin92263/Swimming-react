@@ -114,6 +114,7 @@ class AdminChangePasswordPage extends React.Component<IProps, IStates> {
 			email: email,
 			token: signUptoken,
 			password: secondPassword,
+			role:"admin"
 		});
 		if (this.props.signedUpUser.isSignedUp) {
 			this.setState({

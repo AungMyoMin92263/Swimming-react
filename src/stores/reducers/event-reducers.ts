@@ -33,6 +33,13 @@ export const eventReducers = (
         result: action.payload,
         error: null,
       };
+    case ActionTypes.inviteEvent:
+      return {
+        ...state,
+        result: action.payload,
+        error: null,
+      };
+
     case ActionTypes.getError:
       return {
         ...state,

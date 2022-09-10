@@ -4,113 +4,184 @@ import React from "react";
 import "./AdminDashboard.css";
 import "../manager/ManagerDashboard.css";
 
-import AddIcon from "@mui/icons-material/Add";
-import { School } from "../../stores/model/school";
-
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
-import { signIn } from "../../stores/actions";
-import { Link } from "react-router-dom";
+import { signIn, signOut, getAllUsers } from "../../stores/actions";
+import { Link, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
-
+import { getItem, removeItem } from "../../auth/LocalStorage";
+import { InitialIcon } from "../../atoms/InitialIcon";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 interface IStates {
-	schools: School[];
+  users: any[];
+  email: string;
+  dropdown: boolean;
+  isLogout: boolean;
+  dropdownMore : boolean;
+  currentIndex : number;
+  url : string;
 }
 interface UserSignInPage {
-	signIn: Function;
-	authUser: AuthInterface;
+  signIn: Function;
+  authUser: AuthInterface;
+  signOut: Function;
+  getAllUsers: Function;
+  users: any;
 }
 
 type IProps = UserSignInPage;
 
 class AdminPeopleListPage extends React.Component<IProps, IStates> {
-	constructor(props: any) {
-		super(props);
 
-		this.state = {
-			schools: [],
-		};
-	}
+  constructor(props: any) {
+    super(props);
 
-	componentDidMount() {
-		//loading
-	}
+    this.state = {
+      users: [],
+      email: "",
+      dropdown: false,
+      isLogout: false,
+      dropdownMore : false,
+      currentIndex : -1,
+      url : '',
+    };
+  }
 
-	render() {
-		return (
-			<>
-				<div className='container-cus'>
-					<div className='dashboard'>
-						{/* DASHBOARD HEADER */}
-						<div className='dashboard-header'>
-							<div className='justify-end'>
-								<div className='email-div'>
-									<img
-										src='../../../assets/icons/alpha.png'
-										alt='alpha'
-										className='icon'
-									/>
-									<span>Leon@gmail.com </span>
-								</div>
-							</div>
-							<div className='row justify-center'>
-								<div className='col-9 col-md-12 justify-start align-center'>
+  componentDidMount() {
+    const user = JSON.parse(getItem("authUser") || "null");
+    if (user && user.userInfo) {
+      this.setState({
+        email: user.userInfo.data.email,
+      });
+    }
+    this.getUsers();
+  }
 
-									<div className='f-40 fw-500'>
-										<span>People</span>
-									</div>
-								</div>
-							</div>
-						</div>
-						{/* DASHBOARD BODY */}
-						<div className='dashboard-body'>
-							{/* Start Add school */}
-							<div className='createClass flex-center'>
-								<div className='body'>
-									<div className='plus-icon mt-16'>
-										<img
-											src='../../../assets/icons/plus-round.png'
-											alt='plus'
-										/>
-										{/* <ControlPointIcon
-                      sx={{ color: "#808080", fontSize: 58 }}
-                    ></ControlPointIcon> */}
-									</div>
-									<div className='text f-16 mt-16'>
-										Create an event to assign to students.
-									</div>
-									<div className='flex-center mt-16'>
-										<Link to="/admin/people-list" style={{ textDecoration : 'none'}}>
-											<button
-												type='submit'
-												className='primary-btn'
-												// style={{ width: "140px" }}
-											>
-												Create People
-												<AddIcon
-													sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
-												></AddIcon>
-											</button>
-										</Link>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</>
-		);
-	}
+  getUsers = async () => {
+    await this.props.getAllUsers();
+    this.setState({
+      users : this.props.users.result
+    })
+  };
+
+  toggleOpen = () => {
+    let dropdownVal = !this.state.dropdown;
+    this.setState({
+      dropdown: dropdownVal,
+    });
+  };
+
+  logout = async () => {
+    await this.props.signOut();
+    removeItem("authUser");
+    removeItem("school");
+    this.setState({
+      isLogout: true,
+    });
+  };
+
+  toggleOpenMore = (index: number) => {
+    let dropdownVal = !this.state.dropdownMore;
+    this.setState({
+		currentIndex : index,
+		dropdownMore: dropdownVal,
+    });
+  };
+
+  render() {
+    const { users, email, dropdown, isLogout,dropdownMore,currentIndex } = this.state;
+    return (
+      <>
+        <div className="container-cus">
+          {isLogout && <Navigate to="/admin/login" replace={true} />}
+          <div className="dashboard">
+            {/* DASHBOARD HEADER */}
+            <div className="dashboard-header">
+              <div className="justify-end">
+                <div className="dropdown">
+                  <div className="email-div cursor" onClick={this.toggleOpen}>
+                    <InitialIcon initials={email.substr(0, 1).toUpperCase()} />
+                    <span>{email} </span>
+                  </div>
+                  <div
+                    className={`dropdown-menu dropdown-menu-right ${
+                      dropdown ? "show" : ""
+                    }`}
+                    aria-labelledby="dropdownMenuButton"
+                  >
+                    <div className="dropdown-item cursor" onClick={this.logout}>
+                      <LogoutOutlinedIcon
+                        sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
+                      ></LogoutOutlinedIcon>
+                      <span>Logout</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row justify-center">
+                <div className="col-9 col-md-12 justify-start align-center">
+                  <div className="f-40 fw-500">
+                    <span>People</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* DASHBOARD BODY */}
+            <div className="dashboard-body">
+              <div className="tableBody">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th className="col-1"></th>
+                      <th className="col-5">Name</th>
+                      <th className="col-3">Class</th>
+                      <th className="col-3">Role</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users &&
+                      users.length > 0 &&
+                      users.map((user: any, index: any) => (
+                        <tr>
+                          <td>
+                            <InitialIcon
+                              initials={user.email.substr(0, 1).toUpperCase()}
+                            />
+                          </td>
+                          <td>{user.name}</td>
+                          <td>
+                            <span>Pro Youth Morning</span>
+                          </td>
+                          <td>
+                              <span>{user.role}</span>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 }
 
 const mapStateToProps = ({
-	authUser,
+  authUser,
+  users,
 }: StoreState): {
-	authUser: AuthInterface;
+  authUser: AuthInterface;
+  users: any;
 } => {
-	return {
-		authUser,
-	};
+  return {
+    authUser,
+    users,
+  };
 };
 
-export default connect(mapStateToProps, { signIn })(AdminPeopleListPage);
+export default connect(mapStateToProps, { signIn, signOut, getAllUsers })(
+  AdminPeopleListPage
+);

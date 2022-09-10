@@ -22,6 +22,7 @@ import {
 	putClass,
 } from "../../stores/actions/class-action";
 import placeholder from "./../../assets/images/place-holder.png";
+import { removeItem } from './../../auth/LocalStorage';
 
 interface IStates {
 	isRecur: boolean;
@@ -29,6 +30,11 @@ interface IStates {
 	classObj: any;
 	isCompleted: boolean;
 	school_name: string;
+	school_id: number;
+	class_id: number;
+	errorMsg: string;
+	logo: string;
+	class_name: string;
 }
 
 const AntSwitch = styled(Switch)(({ theme }) => ({
@@ -96,19 +102,38 @@ class SetDateTime extends React.Component<IProps, IStates> {
 		super(props);
 
 		this.state = {
-			isRecur: false,
-			selectedDays: ["mon"],
+			isRecur: true,
+			selectedDays:[],
 			classObj: { start_time: "", end_time: "", start_date: "" },
 			isCompleted: false,
 			school_name: "",
+			errorMsg: "",
+			school_id: -1,
+			class_id: -1,
+			class_name: "",
+			logo: "",
 		};
 	}
 
 	componentDidMount() {
 		const classObject = JSON.parse(getItem("class") || "null");
+		console.log(classObject);
 		if (classObject) {
 			this.setState({
-				classObj: classObject,
+				isRecur: classObject.type === "daily" ? true : false,
+				selectedDays: classObject.open_days,
+				classObj: {
+					start_time: classObject.start_time,
+					end_time: classObject.end_time,
+					start_date: classObject.start_date,
+				},
+				isCompleted: false,
+				school_name: classObject.name,
+				errorMsg: "",
+				school_id: classObject.school_id,
+				class_id: classObject.id,
+				class_name: classObject.name,
+				logo: classObject.logo
 			});
 		}
 
@@ -138,7 +163,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
 
 	renderBtn = () => {
 		console.log(this.state.isRecur);
-    console.log(this.state.classObj.start_date);
+		console.log(this.state.classObj.start_date);
 		console.log(this.state.selectedDays);
 		console.log(this.state.classObj.start_time);
 		console.log(this.state.classObj.start_time);
@@ -181,10 +206,22 @@ class SetDateTime extends React.Component<IProps, IStates> {
 
 	isRecurChanged = () => {
 		let temp = this.state.selectedDays;
-		this.setState({
-			selectedDays: temp,
-			isRecur: !this.state.isRecur,
-		});
+		if (!this.state.isRecur) {
+			
+			this.setState({
+				selectedDays: temp,
+				isRecur: true,
+			});
+			console.log("Recurred False", this.state.isRecur);
+		}else{
+			
+			this.setState({
+				
+				selectedDays: [],
+				isRecur: false,
+			});
+			console.log("Recurred True", this.state.isRecur);
+		}
 		console.log("recur", this.state.isRecur);
 	};
 
@@ -317,28 +354,30 @@ class SetDateTime extends React.Component<IProps, IStates> {
 
 	submit = async () => {
 		const formData = new FormData();
-    var start_date = new Date(this.state.classObj.start_date)
-		formData.append("name", this.state.classObj.name);
-		formData.append("school_id", this.state.classObj.school_id);
+		var start_date = new Date(this.state.classObj.start_date);
+		console.log("STATE",this.state)
+		formData.append("name", this.state.class_name);
+		formData.append("school_id", this.state.school_id.toString());
 		formData.append("type", this.state.isRecur ? "daily" : "one-day");
 		formData.append("start_time", this.state.classObj.start_time);
 		formData.append("end_time", this.state.classObj.end_time);
 		formData.append("open_days", this.state.selectedDays);
 		formData.append("start_date", start_date.toISOString());
-		formData.append("logo", this.state.classObj.logo);
+		formData.append("logo", this.state.logo);
 
 		if (this.isValid()) {
-			let url = "school/" + this.state.classObj.school_id + "/class";
-			await this.props.putClass(formData, url, this.state.classObj.id);
-			if (this.props.classes.result && this.props.classes.result.data) {
-        console.log("Completed", this.props.classes.error);
-				if (this.props.classes.error) {
-          console.log("Completed",this.state.isCompleted);
-          this.setState({
-						isCompleted: false,
-					});
+			let url = "school/" + this.state.school_id + "/class";
+			await this.props.putClass(formData, url, this.state.class_id);
 
-				} else {
+			if (this.props.classes.error) {
+				console.log("Error",this.props.classes.error);
+				this.setState({
+					isCompleted: false,
+					errorMsg: this.props.classes.error,
+				});
+			} else {
+				if (this.props.classes.result && this.props.classes.result.data) {
+					removeItem('class')
 					setItemWithObject("class", this.props.classes.result.data);
 					this.setState({
 						isCompleted: true,
@@ -349,7 +388,8 @@ class SetDateTime extends React.Component<IProps, IStates> {
 	};
 
 	render() {
-		const { isRecur, classObj, school_name } = this.state;
+		const { isRecur, classObj, school_name, errorMsg, logo, class_name } =
+			this.state;
 		return (
 			<>
 				<div className='wrapper'>
@@ -357,7 +397,9 @@ class SetDateTime extends React.Component<IProps, IStates> {
 						<Navigate to='/manager/invite-coach' replace={true} />
 					)}
 					<div className='primary f-16 project-header'>
-						<span>My Report Cards</span>
+						<Link to='/manager/dashboard'>
+							<span>My Report Cards</span>
+						</Link>
 					</div>
 					<div className='container-cus'>
 						<div className='content'>
@@ -375,15 +417,15 @@ class SetDateTime extends React.Component<IProps, IStates> {
 							<div className='mb-16 align-center'>
 								<img
 									src={
-										classObj.logo
-											? process.env.REACT_APP_API_ENDPOINT + "/" + classObj.logo
+										logo
+											? process.env.REACT_APP_API_ENDPOINT + "/" + logo
 											: placeholder
 									}
 									alt='logo'
-									className={`${classObj.logo ? "item-icon" : "w-48"}`}
+									className={`${logo ? "item-icon" : "w-48"}`}
 								/>
 								<span className='f-16 '>
-									{classObj.name} ({school_name})
+									{class_name} ({school_name})
 								</span>
 							</div>
 							<div className='hr mb-16'></div>
@@ -398,6 +440,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
 									<AntSwitch
 										inputProps={{ "aria-label": "ant design" }}
 										value={isRecur}
+										checked={isRecur}
 										onChange={this.isRecurChanged}
 									/>
 									<Typography className='f-16'>
@@ -441,11 +484,9 @@ class SetDateTime extends React.Component<IProps, IStates> {
 									/>
 								</div>
 							</div>
-							{this.props.classes.error && (
-								<p className='text-danger'>{this.props.classes.error}</p>
-							)}
-							<div className='right'>
-								<span className='secondary'>2 of 4</span>
+							{errorMsg && <p className='text-danger'>{errorMsg}</p>}
+							<div className='right flex align-center'>
+								<span className='secondary mr-16'>2 of 4</span>
 
 								{this.renderBtn()}
 							</div>

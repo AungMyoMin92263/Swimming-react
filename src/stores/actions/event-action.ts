@@ -67,11 +67,11 @@ export const postEvent = (evente : EventInterface,url : string) => {
         type: ActionTypes.createEvent,
         payload: response,
       });
-    } catch (err) {
-      if (err instanceof Error) {
+    } catch (err:any) {
+      if (err) {
         dispatch<createEventAction>({
           type: ActionTypes.getError,
-          payload: err.message,
+          payload: err.response.data.message,
         });
       } else {
         console.log("Unexpected error", err);
@@ -98,11 +98,11 @@ export const putEvent = (evente: EventInterface, url : string, id: number) => {
         type: ActionTypes.editEvent,
         payload: response,
       });
-    } catch (err) {
-      if (err instanceof Error) {
+    } catch (err:any) {
+      if (err) {
         dispatch<editEventAction>({
           type: ActionTypes.getError,
-          payload: err.message,
+          payload: err.response.data.message,
         });
       } else {
         console.log("Unexpected error", err);
@@ -157,11 +157,11 @@ export const inviteEvent = (emails : any) => {
         type: ActionTypes.inviteEvent,
         payload: response,
       });
-    } catch (err) {
-      if (err instanceof Error) {
+    } catch (err:any) {
+      if (err) {
         dispatch<inviteEventAction>({
           type: ActionTypes.getError,
-          payload: err.message,
+          payload: err.response.data.message,
         });
       } else {
         console.log("Unexpected error", err);
