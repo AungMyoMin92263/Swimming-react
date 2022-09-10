@@ -2,7 +2,7 @@ import React from "react";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
-import { postClass, putClass } from "../../stores/actions/class-action";
+import { postClass, putClass, getClassObject } from "../../stores/actions/class-action";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -26,15 +26,18 @@ interface IProps {
 	classes: any;
 	postClass: Function;
 	putClass: Function;
+	getClassObject : Function;
 }
 
 class AddClass extends React.Component<IProps, IStates> {
+	id : any;
 	constructor(props: any) {
 		super(props);
-
+		let path = window.location.pathname.split("/");
+		this.id = path[3];
 		this.state = {
 			classObj: {
-				id: -1,
+				id: this.id? this.id : -1,
 				created_by: null,
 				created_at: new Date(),
 				updated_at: new Date(),
@@ -64,6 +67,7 @@ class AddClass extends React.Component<IProps, IStates> {
 	}
 
 	componentDidMount() {
+		
 		const user = JSON.parse(getItem("authUser") || "null");
 		if (user && user.userInfo && user.userInfo.data.assign_school.length > 0) {
 			this.setState({
@@ -73,13 +77,36 @@ class AddClass extends React.Component<IProps, IStates> {
 			});
 		}
 
-		const classObject = JSON.parse(getItem("class") || "null");
+		if(this.state.classObj.id === -1){ 
+			const classObject = JSON.parse(getItem("class") || "null");
 		if (classObject) {
 			this.setState({
 				classObj: classObject,
 			});
 		}
+		}else{
+			this.getClass();
+		}
 	}
+
+	getClass = async () => {
+		await this.props.getClassObject('school/'+this.state.schoolId + '/class/'+ this.state.classObj.id);
+		if(this.props.classes.result){
+		  if (this.props.classes.error) {
+			this.setState({
+			  errorMsg:this.props.classes.error
+			});
+		  }else{
+			let classe = this.props.classes.result;
+			if (classe){
+			  setItemWithObject("class", classe);
+			this.setState({
+			  classObj : classe
+			});
+			}
+		  }
+		}
+	  }
 
 	isValid = () => {
 		if (
@@ -364,4 +391,4 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { postClass, putClass })(AddClass);
+export default connect(mapStateToProps, { postClass, putClass, getClassObject })(AddClass);

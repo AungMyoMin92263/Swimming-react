@@ -70,7 +70,11 @@ import CoachRecoverPasswordPage from "../coachApp/coach/CoachRecoverPasswordPage
 import CoachChangePasswordPage from "../coachApp/coach/CoachChangePasswordPage";
 import StudentRecoverPasswordPage from "../studentApp/student/StudentRecoverPasswordPage";
 import StudentChangePasswordPage from "../studentApp/student/StudentChangePasswordPage";
-
+import StudentCreatePasswordPage from "../studentApp/student/StudentCreatePasswordPage";
+import ParentCreatePasswordPage from "../studentApp/parent/ParentCreatePasswordPage";
+import ParentLoginPage from "../studentApp/parent/ParentLoginPage";
+import ParentRecoverPasswordPage from "../studentApp/parent/ParentRecoverPasswordPage";
+import ParentChangePasswordPage from "../studentApp/parent/ParentChangePasswordPage";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -318,6 +322,18 @@ const routes = [
 				isMobileFooter: false,
 			},
 			{
+				path: "add-class/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<AddClass {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
 				path: "set-date-time",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
@@ -455,7 +471,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<ManagerCreatePasswordPage {...props} />
+						<StudentCreatePasswordPage {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
@@ -844,6 +860,59 @@ const routes = [
 						<FooterMobileMenu {...props} />
 					</>
 				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+		],
+	},
+	{
+		path: "/parent",
+		child: [
+			{
+				path: "create-password",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ParentCreatePasswordPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "login",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ParentLoginPage />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "recover-password",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ParentRecoverPasswordPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "change-password",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ParentChangePasswordPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
 				isSideBar: false,
 				isMobileFooter: true,
 			},

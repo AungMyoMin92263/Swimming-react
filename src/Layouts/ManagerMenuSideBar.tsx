@@ -53,11 +53,11 @@ const ManagerSideBar = (props: IPageProp) => {
         </div>
       </div>
       <div className="class-box">
-        <div className={`list-item ${path[2] === 'people-list' ? "active" : ""}`} onClick={() => props.history.push('people-list')}>
+        <div className={`list-item ${path[2] === 'people-list' ? "active" : ""}`} onClick={() => props.history.push('/manager/people-list')}>
           <AccountCircleOutlinedIcon sx={{ color: '#808080', fontSize: 32, mr: 2 }} ></AccountCircleOutlinedIcon>
           <span className="item-text"  >People</span>
         </div>
-        <div className={`list-item ${path[2] === 'event-list' ? "active" : ""}`} onClick={() => props.history.push('event-list')}>
+        <div className={`list-item ${path[2] === 'event-list' ? "active" : ""}`} onClick={() => props.history.push('/manager/event-list')}>
           <PoolIcon sx={{ color: '#808080', fontSize: 32, mr: 2 }} ></PoolIcon>
           <span className="item-text">Events</span>
         </div>

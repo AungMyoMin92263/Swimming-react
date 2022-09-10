@@ -8,7 +8,10 @@ import { School } from "../../stores/model/school";
 
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
-import { deleteSchoolObj, getAllSchools } from "../../stores/actions/school-action";
+import {
+  deleteSchoolObj,
+  getAllSchools,
+} from "../../stores/actions/school-action";
 import { signOut } from "../../stores/actions/auth-action";
 
 import { Link, Navigate } from "react-router-dom";
@@ -28,18 +31,17 @@ interface IStates {
   isLogout: boolean;
   dropdownMore: boolean;
   currentIndex: number;
-  url : string;
+  url: string;
 }
 interface IProps {
   getAllSchools: Function;
   schoolList: any;
   signOut: Function;
-  deleteSchoolObj : Function;
+  deleteSchoolObj: Function;
 }
 
 class AdminDashboardPage extends React.Component<IProps, IStates> {
-
-	url = '/admin/add-school/';
+  url = "/admin/add-school/";
 
   constructor(props: any) {
     super(props);
@@ -49,8 +51,8 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
       dropdown: false,
       isLogout: false,
       dropdownMore: false,
-	  currentIndex : -1,
-	  url : '',
+      currentIndex: -1,
+      url: "",
     };
   }
 
@@ -76,9 +78,9 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
   toggleOpenMore = (index: number) => {
     let dropdownVal = !this.state.dropdownMore;
     this.setState({
-		currentIndex : index,
-		dropdownMore: dropdownVal,
-		url : this.url+ this.state.schools[index].id
+      currentIndex: index,
+      dropdownMore: dropdownVal,
+      url: this.url + this.state.schools[index].id,
     });
   };
 
@@ -93,27 +95,38 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 
   getSchools = async () => {
     await this.props.getAllSchools();
-	if(this.props.schoolList.result)
-	this.setState({
-		schools : this.props.schoolList.result || []
-	})
+    if (this.props.schoolList.result)
+      this.setState({
+        schools: this.props.schoolList.result || [],
+      });
   };
 
   edit = () => {};
 
-  remove = (index : number) => {
-	this.removeSchool(this.state.schools[index].id);
+  remove = (index: number) => {
+    this.removeSchool(this.state.schools[index].id);
   };
 
-  removeSchool =async (id : any) => {
-	await this.props.deleteSchoolObj(id);
-	if(this.props.schoolList.result && this.props.schoolList.result.data.statusText === "success"){
-		this.getSchools();
-	}
-  }
+  removeSchool = async (id: any) => {
+    await this.props.deleteSchoolObj(id);
+    if (
+      this.props.schoolList.result &&
+      this.props.schoolList.result.data.statusText === "success"
+    ) {
+      this.getSchools();
+    }
+  };
 
   render() {
-    const { email, dropdown, isLogout,dropdownMore,currentIndex,url,schools } = this.state;
+    const {
+      email,
+      dropdown,
+      isLogout,
+      dropdownMore,
+      currentIndex,
+      url,
+      schools,
+    } = this.state;
     return (
       <>
         <div className="container-cus">
@@ -184,7 +197,7 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
                   <tbody>
                     {schools &&
                       schools.length > 0 &&
-                      schools.map((school: School, index : any) => (
+                      schools.map((school: School, index: any) => (
                         <tr>
                           <td>
                             <img
@@ -223,36 +236,38 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
                               <span>0</span>
 
                               <div className="dropdownMore">
-									<MoreVertIcon
-									  style={{
-										color: "inherit",
-										cursor: "pointer",
-									  }}
-									  onClick={() => this.toggleOpenMore(index)}
-									/>
-									<div
-									  className={`dropdown-menu ${
-										dropdownMore && currentIndex === index ? "show" : ""
-									  }`}
-									  aria-labelledby="dropdownMenuButton"
-									>
-									  <Link to={url}>
-										<div
-										  className="dropdown-item cursor"
-										  onClick={this.edit}
-										>
-										  <span>Edit</span>
-										</div>
-									  </Link>
-									  <div className="dropdown-divider"></div>
-									  <div
-										className="dropdown-item cursor"
-										onClick={()=> this.remove(index)}
-									  >
-										<span>Remove</span>
-									  </div>
-									</div>
-			</div>
+                                <MoreVertIcon
+                                  style={{
+                                    color: "inherit",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => this.toggleOpenMore(index)}
+                                />
+                                <div
+                                  className={`dropdown-menu ${
+                                    dropdownMore && currentIndex === index
+                                      ? "show"
+                                      : ""
+                                  }`}
+                                  aria-labelledby="dropdownMenuButton"
+                                >
+                                  <Link to={url}>
+                                    <div
+                                      className="dropdown-item cursor"
+                                      onClick={this.edit}
+                                    >
+                                      <span>Edit</span>
+                                    </div>
+                                  </Link>
+                                  <div className="dropdown-divider"></div>
+                                  <div
+                                    className="dropdown-item cursor"
+                                    onClick={() => this.remove(index)}
+                                  >
+                                    <span>Remove</span>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </td>
                         </tr>
@@ -281,6 +296,8 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { getAllSchools, signOut,deleteSchoolObj })(
-  AdminDashboardPage
-);
+export default connect(mapStateToProps, {
+  getAllSchools,
+  signOut,
+  deleteSchoolObj,
+})(AdminDashboardPage);
