@@ -7,7 +7,7 @@ export interface IBadgeList {
 const BadgeList = (props: IBadgeList) => {
   return (
     <div className='row mb-8'>
-      {props.badges.map((badge) => {
+      {props.badges && props.badges.length > 0 && props.badges.map((badge) => {
         return (
           <div className='col-4'>
             <BadgeItem {...badge} />

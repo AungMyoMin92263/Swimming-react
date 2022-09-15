@@ -8,4 +8,8 @@ export * from './class-action';
 
 export * from './event-action';
 
-export * from './people-action';
+export * from './global-action';
+
+export * from './coach-action';
+
+export * from './student-action';

@@ -6,11 +6,13 @@ import { schoolReducers } from "./school-reducer";
 import { MenuDataInterFace } from "../model/menu.interface";
 import { MenuReducers } from "./menuReducers";
 import { Class } from '../model/class';
-import { ClassInterface } from "../model/class-interface";
+import { ClassInterface, ClassRangeInterface } from "../model/class-interface";
 import { classReducers } from "./class-reducers";
 import { EventInterface } from "../model/event-interface";
 import { eventReducers } from "./event-reducers";
-import { peopleReducers } from "./people-reducer";
+import { globalReducers } from "./global-reducer";
+import { coachReducers } from "./coach-reducers";
+import { studentReducers } from "./student-reducers";
 export interface StoreState {
   authUser: any;
   signedUpUser:any;
@@ -22,6 +24,12 @@ export interface StoreState {
   events : EventInterface;
   menuState: MenuDataInterFace;
   users : any;
+  coachList : any[],
+  coache : any;
+  studentList : any[],
+  student : any;
+  response : any;
+  classListR: ClassRangeInterface
 }
 export const reducers = combineReducers<StoreState>({
   signedUpUser: authReducers,
@@ -34,5 +42,11 @@ export const reducers = combineReducers<StoreState>({
   events : eventReducers,
   eventList : eventReducers,
   menuState: MenuReducers,
-  users : peopleReducers,
+  users : globalReducers,
+  response : globalReducers,
+  coachList : coachReducers,
+  coache : coachReducers,
+  studentList : studentReducers,
+  student : studentReducers,
+  classListR: classReducers,
 });

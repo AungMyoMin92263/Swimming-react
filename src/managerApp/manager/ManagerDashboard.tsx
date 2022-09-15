@@ -66,21 +66,20 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
     if (
       user &&
       user.userInfo &&
-      user.userInfo.data.assign_school &&
-      user.userInfo.data.assign_school.length > 0
+      user.userInfo.data.assign_school
     ) {
       this.setState({
         email: user.userInfo.data.email,
         logo:
-          user.userInfo.data.assign_school.length > 0
-            ? user.userInfo.data.assign_school[0].school.logo
+          user.userInfo.data.assign_school
+            ? user.userInfo.data.assign_school.school.logo
             : "",
         school_name:
-          user.userInfo.data.assign_school.length > 0
-            ? user.userInfo.data.assign_school[0].school.name
+          user.userInfo.data.assign_school
+            ? user.userInfo.data.assign_school.school.name
             : "",
-            school_id :  user.userInfo.data.assign_school.length > 0
-            ? user.userInfo.data.assign_school[0].school.id
+            school_id :  user.userInfo.data.assign_school
+            ? user.userInfo.data.assign_school.school.id
             : 0,
       });
     }
@@ -119,11 +118,10 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
     if (
       user &&
       user.userInfo &&
-      user.userInfo.data.assign_school &&
-      user.userInfo.data.assign_school.length > 0
+      user.userInfo.data.assign_school
     ) {
       url =
-        "school/" + user.userInfo.data.assign_school[0].school.id + "/class";
+        "school/" + user.userInfo.data.assign_school.school.id + "/class";
       await this.props.getAllclasses(url);
       if (this.props.classList.result)
       this.setState({
@@ -214,18 +212,20 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
 												{classe.start_date} {classe.start_time}
 											</td>
 											<td className='emailInitialIcon'>
-												{classe.assign_user.map((user: any, index) =>
+												{classe.assign_user && classe.assign_user.length > 0 && classe.assign_user.map((user: any, index) =>
 													user.type === "coache" && index === 0 ? (
 														<InitialIcon
 															initials={user.user.email
 																.substr(0, 1)
 																.toUpperCase()}
+                                isFooterMenu={false}
 														/>
 													) : (
 														<InitialIconList
 															initials={user.user.email
 																.substr(0, 1)
 																.toUpperCase()}
+                                isFooterMenu={false}
 														/>
 													)
 												)}
@@ -321,7 +321,7 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
               <div className="justify-end">
                 <div className="dropdown">
                   <div className="email-div cursor" onClick={this.toggleOpen}>
-                    <InitialIcon initials={email.substr(0, 1).toUpperCase()} />
+                    <InitialIcon initials={email.substr(0, 1).toUpperCase()} isFooterMenu={false}/>
                     <span>{email} </span>
                   </div>
                   <div

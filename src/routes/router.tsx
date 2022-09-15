@@ -42,7 +42,7 @@ import ManagerClassDetailPage from "../managerApp/manager/ManagerClassDetailPage
 import StudentLoginPage from "../studentApp/student/StudentLogin";
 import AddEvent from "../managerApp/manager/AddEvent";
 import StudentWelcomePage from "../studentApp/student/StudentWelcome";
-import StudentDashboardPage from "../studentApp/student/StudentDashboard";
+import StudentDashboardPage from "../studentApp/student/StudentDashboardPage";
 import StudentClassesPage from "../studentApp/student/StudentClasses";
 import StudentEventsPage from "../studentApp/student/StudentEvents";
 import StudentEventDetailsPage from "../studentApp/student/StudentEventDetails";
@@ -62,6 +62,9 @@ import CoachBadgesListPage from "../coachApp/coach/CoachBadgesList";
 import CoachCreateBadgePage from "../coachApp/coach/CoachCreateBadge";
 import CoachEditIconPage from "../coachApp/coach/CoachEditIcon";
 import CoachBadgeSentPage from "../coachApp/coach/CoachBadgeSent";
+import CoachEventsPage from "../coachApp/coach/CoachEvents";
+import CoachCommentsPage from "../coachApp/coach/CoachComments";
+import CoachClassesPage from "../coachApp/coach/CoachClasses";
 
 //testing
 import TestingComponent from "./TestingComponent";
@@ -75,6 +78,7 @@ import ParentCreatePasswordPage from "../studentApp/parent/ParentCreatePasswordP
 import ParentLoginPage from "../studentApp/parent/ParentLoginPage";
 import ParentRecoverPasswordPage from "../studentApp/parent/ParentRecoverPasswordPage";
 import ParentChangePasswordPage from "../studentApp/parent/ParentChangePasswordPage";
+import CoachEnterCommentsPage from "../coachApp/coach/CoachEnterCommentsPage";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -531,7 +535,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<StudentDashboardPage />
+						<StudentDashboardPage {...props} />
 					</>
 				),
 				footer: (props: any) => (
@@ -607,7 +611,7 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
-				path: "profile-detail",
+				path: "dashboard/profile-detail",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
@@ -736,11 +740,11 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
-				path: "daily-program",
+				path: "dashboard/daily-program",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<CoachDailyProgramPage />
+						<CoachDailyProgramPage {...props} />
 					</>
 				),
 				footer: (props: any) => (
@@ -752,11 +756,11 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
-				path: "profile-detail",
+				path: "dashboard/daily-program/:id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<CoachProfileDetailsPage />
+						<CoachDailyProgramPage {...props} />
 					</>
 				),
 				footer: (props: any) => (
@@ -768,7 +772,67 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
-				path: "badge-list",
+				path: "dashboard/all-comments/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachCommentsPage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "dashboard/enter-comments/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachEnterCommentsPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "dashboard/profile-detail",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachProfileDetailsPage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "dashboard/profile-detail/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachProfileDetailsPage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "dashboard/badge-list/",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
@@ -836,7 +900,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<StudentClassesPage />
+						<CoachClassesPage />
 					</>
 				),
 				footer: (props: any) => (
@@ -852,7 +916,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<StudentEventsPage />
+						<CoachEventsPage />
 					</>
 				),
 				footer: (props: any) => (
@@ -992,7 +1056,7 @@ class RouteList extends React.Component {
 			<div>
 				<HistoryRouter history={windowHistory}>
 					<Routes>
-						{routes.map((route, index) => (
+						{routes && routes.length > 0 && routes.map((route, index) => (
 							<Route
 								key={index + "app-aside"}
 								path={route.path}
@@ -1002,7 +1066,7 @@ class RouteList extends React.Component {
 									</div>
 								}
 							>
-								{route.child.map((child, index) => (
+								{route.child && route.child.length > 0 && route.child.map((child, index) => (
 									<React.Fragment key={index + "child-" + index}>
 										{this.renderPage(child, index, windowHistory)}
 									</React.Fragment>

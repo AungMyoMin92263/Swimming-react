@@ -1,9 +1,11 @@
 import { SignUpAction, SignInAction, SignOutAction, RecoverPasswordAction, ChangePasswordAction } from "./auth-action";
 import { getSchoolsAction,createSchoolAction,editSchoolAction,deleteSchoolAction,inviteManagerAction, getSchoolObjAction} from './school-action';
 import { SelectedMenuAction } from './menu-action';
-import { createClassAction, deleteClassAction, editClassAction, getClassAction,getClassObjAction, inviteCoachAction, inviteStudentAction } from "./class-action";
+import { createClassAction, deleteClassAction, editClassAction, getClassAction, getClassObjAction, inviteCoachAction, inviteStudentAction, getClassByDateAction, getclassesByDateAction } from "./class-action";
 import { getEventAction , createEventAction , editEventAction ,deleteEventAction , inviteEventAction} from "./event-action";
-import { getUsersAction } from "./people-action";
+import { getAllAction, getUsersAction } from "./global-action";
+import { createCoachAction, createCommentAction, deleteCoachAction, editCoachAction, getCoachAction,getCoachObjAction } from "./coach-action";
+import { createStudentAction, deleteStudentAction, editStudentAction, getStudentAction,getStudentObjAction } from "./student-action";
 
 export enum ActionTypes {
   signUp,
@@ -23,6 +25,8 @@ export enum ActionTypes {
   selectedMenu,
 
   getClass,
+  getclassesByDate,
+  getclassesByDateRange,
   getClassObj,
   createClass,
   editClass,
@@ -38,11 +42,29 @@ export enum ActionTypes {
 
   inviteEvent,
 
-  getUsers,
+  //coach
+  getCoach,
+  getCoachObj,
+  createCoach,
+  editCoach,
+  deleteCoach,
+
+  postComment,
+
+   //student
+   getStudent,
+   getStudentObj,
+   createStudent,
+   editStudent,
+   deleteStudent,
+
+   //global
+   getAll,
+   getUsers,
 }
 
 export type Action = SignUpAction
-  |SignInAction
+  | SignInAction
   | SignOutAction 
   | RecoverPasswordAction
   | ChangePasswordAction
@@ -66,3 +88,17 @@ export type Action = SignUpAction
   | deleteEventAction
   | inviteEventAction
   | getUsersAction 
+  | getCoachAction 
+  | getCoachObjAction
+  | createCoachAction 
+  | editCoachAction 
+  | deleteCoachAction
+  | getStudentAction 
+  | getStudentObjAction
+  | createStudentAction 
+  | editStudentAction 
+  | deleteStudentAction
+  | getClassByDateAction 
+  | getAllAction
+  | getclassesByDateAction
+  | createCommentAction

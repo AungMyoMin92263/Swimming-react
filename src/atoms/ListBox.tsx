@@ -2,6 +2,7 @@ import React from 'react';
 import './ListBox.css'
 export interface IListBoxUI {
   title?: string,
+  noTitle?: boolean,
   children?: JSX.Element,
   more?: boolean
   more2?: boolean
@@ -15,9 +16,10 @@ export interface IListBoxUI {
 const ListBoxUI = (props: IListBoxUI) => {
   return (
     <div className="list-box">
-      <div className="list-box-title">
+      {props.noTitle ? <></> : <div className="list-box-title">
         {props.title}
-      </div>
+      </div>}
+      
       <div className="list-body">
         {props.children}
       </div>

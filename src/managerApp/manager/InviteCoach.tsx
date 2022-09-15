@@ -6,7 +6,7 @@ import { inviteCoach } from "../../stores/actions/class-action";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { Link, Navigate } from "react-router-dom";
-import { getItem, removeItem } from "../../auth/LocalStorage";
+import { getItem } from "../../auth/LocalStorage";
 import TagInput from "../../components/TagInput";
 import placeholder from "./../../assets/images/place-holder.png";
 
@@ -37,9 +37,9 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
 	}
 	componentDidMount() {
 		const user = JSON.parse(getItem("authUser") || "null");
-		if (user && user.userInfo && user.userInfo.data.assign_school.length > 0) {
+		if (user && user.userInfo && user.userInfo.data.assign_school) {
 			this.setState({
-				school_name: user.userInfo.data.assign_school[0].school.name,
+				school_name: user.userInfo.data.assign_school.school.name,
 			});
 		}
 		const classObject = JSON.parse(getItem("class") || "null");

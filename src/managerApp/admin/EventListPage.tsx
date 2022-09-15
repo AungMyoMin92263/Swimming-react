@@ -106,7 +106,7 @@ class EventListPage extends React.Component<IProps, IStates> {
 												<span>{evente.from_age}</span>-
 												<span className='mr-8'>{evente.to_age}</span> y/o
 											</td>
-											<td>{evente.students ? evente.students.length : 0}</td>
+											<td>{evente.studnetCount ? evente.studnetCount : 0}</td>
 										</tr>
 									))}
 							</tbody>
@@ -162,7 +162,7 @@ class EventListPage extends React.Component<IProps, IStates> {
 							<div className='justify-end'>
 								<div className='dropdown'>
 									<div className='email-div cursor' onClick={this.toggleOpen}>
-										<InitialIcon initials={email.substr(0, 1).toUpperCase()} />
+										<InitialIcon initials={email.substr(0, 1).toUpperCase()} isFooterMenu={false}/>
 										<span>{email} </span>
 									</div>
 									<div

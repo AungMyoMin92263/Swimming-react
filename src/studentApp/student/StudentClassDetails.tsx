@@ -36,7 +36,7 @@ class StudentClassDetailsPage extends React.Component<IProps, IStates> {
       callback: () => console.log("log click item"),
       smallText: "",
       icon: <><InitialIcon
-      initials={'J'}/></>,
+      initials={'J'} isFooterMenu={false}/></>,
       secondryText: false,
       isBigIcon: false,
     };

@@ -62,12 +62,12 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
       this.setState({
         email: user.userInfo.data.email,
         logo:
-          user.userInfo.data.assign_school.length > 0
-            ? user.userInfo.data.assign_school[0].school.logo
+          user.userInfo.data.assign_school
+            ? user.userInfo.data.assign_school.school.logo
             : "",
         school_name:
-          user.userInfo.data.assign_school.length > 0
-            ? user.userInfo.data.assign_school[0].school.name
+          user.userInfo.data.assign_school
+            ? user.userInfo.data.assign_school.school.name
             : "",
       });
     }
@@ -150,7 +150,7 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
           <div className="class-attendance-content flex align-center">
             <div className="student-content col-10 flex align-center">
               <div className="plus flex-center ml-16">
-                <InitialIcon initials={"J"} />
+                <InitialIcon initials={"J"} isFooterMenu={false}/>
               </div>
 
               <span className="f-16 ml-16">Joseph</span>
@@ -167,7 +167,7 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
           <div className="class-attendance-content flex align-center">
             <div className="student-content col-10 flex align-center ">
               <div className="plus flex-center ml-16">
-                <InitialIcon initials={"J"} />
+                <InitialIcon initials={"J"} isFooterMenu={false}/>
               </div>
 
               <span className="f-16 ml-16">Joseph</span>
@@ -203,7 +203,7 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
                 </Link>
                 <div className="justify-end">
                   <div className="email-div">
-                    <InitialIcon initials={email.substr(0, 1).toUpperCase()} />
+                    <InitialIcon initials={email.substr(0, 1).toUpperCase()} isFooterMenu={false}/>
                     <span>{email} </span>
                   </div>
                 </div>

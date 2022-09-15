@@ -50,6 +50,7 @@ class AddClass extends React.Component<IProps, IStates> {
 				start_time: "09:00",
 				end_time: "10:00",
 				start_date: null,
+				end_date:null,
 				logo: "",
 				assign_user: [],
 				studnetCount: 0,
@@ -69,11 +70,11 @@ class AddClass extends React.Component<IProps, IStates> {
 	componentDidMount() {
 		
 		const user = JSON.parse(getItem("authUser") || "null");
-		if (user && user.userInfo && user.userInfo.data.assign_school.length > 0) {
+		if (user && user.userInfo && user.userInfo.data.assign_school) {
 			this.setState({
-				schoolId: user.userInfo.data.assign_school[0].school.id,
-				school_name: user.userInfo.data.assign_school[0].school.name,
-				school_logo: user.userInfo.data.assign_school[0].school.logo,
+				schoolId: user.userInfo.data.assign_school.school.id,
+				school_name: user.userInfo.data.assign_school.school.name,
+				school_logo: user.userInfo.data.assign_school.school.logo,
 			});
 		}
 
@@ -130,6 +131,12 @@ class AddClass extends React.Component<IProps, IStates> {
 			"start_date",
 			this.state.classObj.start_date
 				? this.state.classObj.start_date
+				: new Date().toISOString()
+		);
+		formData.append(
+			"end_date",
+			this.state.classObj.end_date
+				? this.state.classObj.end_date
 				: new Date().toISOString()
 		);
 

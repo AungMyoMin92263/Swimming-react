@@ -31,7 +31,7 @@ const TagInput = (props: any) => {
 
 	return (
 		<div className='tags-input-container'>
-			{tags.map((tag, index) => (
+			{tags && tags.length > 0 && tags.map((tag, index) => (
 				<div className='tag-item' key={index}>
 					<span className='text'>{tag}</span>
 					<span className='close' onClick={() => removeTag(index)}>

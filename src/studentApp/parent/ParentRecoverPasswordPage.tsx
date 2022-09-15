@@ -81,7 +81,7 @@ class ParentRecoverPasswordPage extends React.Component<IProps, IStates> {
 	renderBtn = () => {
 		if (this.state.isCompleted) {
 			return (
-				<Link to='/coache/login'>
+				<Link to='/parent/login'>
 					<button
 						type='submit'
 						className='primary-btn'

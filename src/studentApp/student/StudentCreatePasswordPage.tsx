@@ -111,7 +111,7 @@ class StudentCreatePasswordPage extends React.Component<IProps, IStates> {
 		console.log("Call back", this.state.isCompleted);
 		const { email, secondPassword, signUptoken }: IStates = this.state;
 		await this.props.signUp({
-			name: email,
+			
 			sign_token: signUptoken,
 			password: secondPassword,
 		});

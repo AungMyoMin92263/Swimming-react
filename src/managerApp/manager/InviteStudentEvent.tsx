@@ -41,11 +41,10 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
 		if (
 			user &&
 			user.userInfo &&
-			user.userInfo.data.assign_school &&
-			user.userInfo.data.assign_school.length > 0
+			user.userInfo.data.assign_school
 		) {
 			this.setState({
-				logo: user.userInfo.data.assign_school[0].school.logo,
+				logo: user.userInfo.data.assign_school.school.logo,
 			});
 		}
     let eventObj = JSON.parse(getItem("event") || "")

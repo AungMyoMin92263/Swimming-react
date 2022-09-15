@@ -12,10 +12,12 @@ import ListItem, { IListItem } from "../../atoms/ListItem";
 import BestScoreBox from "../../atoms/BestScoreBox";
 import { InitialIcon } from "../../atoms/InitialIcon";
 import { Link, Navigate } from "react-router-dom";
+import { stderr } from "process";
 interface IStates {
   step: number;
   goNewBadge: boolean;
   goBadgeChoosed: boolean;
+  studentId:string | null;
 }
 
 interface IProps {
@@ -23,6 +25,7 @@ interface IProps {
 }
 
 class CoachBadgesListPage extends React.Component<IProps, IStates> {
+  urlProfileDetail :any
   constructor(props: any) {
     super(props);
 
@@ -30,10 +33,17 @@ class CoachBadgesListPage extends React.Component<IProps, IStates> {
       step: 0,
       goNewBadge: false,
       goBadgeChoosed: false,
+      studentId:''
     };
   }
   componentDidMount() {
-    console.log("authUser", this.props.authUser);
+    const params = new URLSearchParams(window.location.search);
+		const studentId = params.get("id");
+    this.setState({
+      studentId:studentId
+    })
+    if (this.state.studentId) this.urlProfileDetail = "/coache/dashboard/profile-detail/" + this.state.studentId
+    
     //loading
   }
 
@@ -67,7 +77,7 @@ class CoachBadgesListPage extends React.Component<IProps, IStates> {
 
           <div className="content-mobile col-sm-12">
             <div className="mb-32">
-              <Link to="/coache/profile-detail">
+              <Link to="/coache/dashboard/">
                 <button type="submit" className="back-btn">
                   <ArrowBackIcon
                     sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
@@ -77,7 +87,7 @@ class CoachBadgesListPage extends React.Component<IProps, IStates> {
             </div>
             <div className="align-center">
               <span className="mr-8">
-                <InitialIcon initials={"AR"} />
+                <InitialIcon initials={"AR"} isFooterMenu={false}/>
               </span>{" "}
               <span>Azlan Razali</span>
             </div>

@@ -94,9 +94,9 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
   }
   componentDidMount() {
     const user = JSON.parse(getItem("authUser") || "null");
-    if (user && user.userInfo && user.userInfo.data.assign_school.length > 0) {
+    if (user && user.userInfo && user.userInfo.data.assign_school) {
       this.setState({
-        school_name: user.userInfo.data.assign_school[0].school.name,
+        school_name: user.userInfo.data.assign_school.school.name,
       });
     }
 
@@ -291,7 +291,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
 									their profiles later.
 								</span>
 							</div>
-							{students.map((student: any, index) => (
+							{students && students.length > 0 && students.map((student: any, index) => (
 								<>
 									<div>
 										<div className='f-16 mb-16 fw-500 flex justify-space-between'>

@@ -101,7 +101,7 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
               <div className="justify-end">
                 <div className="dropdown">
                   <div className="email-div cursor" onClick={this.toggleOpen}>
-                    <InitialIcon initials={email.substr(0, 1).toUpperCase()} />
+                    <InitialIcon initials={email.substr(0, 1).toUpperCase()} isFooterMenu={false}/>
                     <span>{email} </span>
                   </div>
                   <div
@@ -147,6 +147,7 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
                           <td>
                             <InitialIcon
                               initials={user.email.substr(0, 1).toUpperCase()}
+                              isFooterMenu={false}
                             />
                           </td>
                           <td>{user.name}</td>

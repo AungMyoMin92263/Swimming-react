@@ -72,7 +72,7 @@ class EventList extends React.Component<IProps, IStates> {
     let url = "";
     const user = JSON.parse(getItem("authUser") || "null");
     if (user && user.userInfo) {
-      url = "school/" + user.userInfo.data.assign_school[0].school.id + "/event";
+      url = "school/" + user.userInfo.data.assign_school.school.id + "/event";
       this.props.getAllEvents(url);
     }
   };
@@ -81,36 +81,36 @@ class EventList extends React.Component<IProps, IStates> {
     let events = this.props.eventList.result;
     if (events && events.length > 0) {
       return (
-        <div className="dashboard-body">
-          <div className="tableBody">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th className="col-3">EVENT</th>
-                  <th className="col-3">GENDER</th>
-                  <th className="col-3">AGE GROUP</th>
-                  <th className="col-3">NO. STUDENTS</th>
-                </tr>
-              </thead>
-              <tbody>
-                {events &&
-                  events.length > 0 &&
-                  events.map((evente: Event) => (
-                    <tr>
-                      <td>{evente.name}</td>
-                      <td>{evente.gender}</td>
-                      <td>
-                        <span>{evente.from_age}</span>-
-                        <span className="mr-8">{evente.to_age}</span> y/o
-                      </td>
-                      <td>{evente.students? evente.students.length : 0}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      );
+				<div className='dashboard-body'>
+					<div className='tableBody'>
+						<table className='table'>
+							<thead>
+								<tr>
+									<th className='col-3'>EVENT</th>
+									<th className='col-3'>GENDER</th>
+									<th className='col-3'>AGE GROUP</th>
+									<th className='col-3'>NO. STUDENTS</th>
+								</tr>
+							</thead>
+							<tbody>
+								{events &&
+									events.length > 0 &&
+									events.map((evente: Event) => (
+										<tr>
+											<td>{evente.name}</td>
+											<td>{evente.gender}</td>
+											<td>
+												<span>{evente.from_age}</span>-
+												<span className='mr-8'>{evente.to_age}</span> y/o
+											</td>
+											<td>{evente.studnetCount ? evente.studnetCount : 0}</td>
+										</tr>
+									))}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			);
     } else {
       return (
         <div className="dashboard-body">
@@ -160,7 +160,7 @@ class EventList extends React.Component<IProps, IStates> {
 								
               <div className="dropdown">
                   <div className="email-div cursor" onClick={this.toggleOpen}>
-                    <InitialIcon initials={email.substr(0, 1).toUpperCase()} />
+                    <InitialIcon initials={email.substr(0, 1).toUpperCase()} isFooterMenu={false}/>
                     <span>{email} </span>
                   </div>
                   <div

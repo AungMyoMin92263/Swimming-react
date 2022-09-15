@@ -115,7 +115,7 @@ class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
 		console.log("Call back", this.state.isCompleted);
 		const { email, secondPassword, signUptoken }: IStates = this.state;
 		await this.props.signUp({
-			name: email,
+			
 			sign_token: signUptoken,
 			password: secondPassword,
 		});
@@ -242,6 +242,7 @@ class ManagerCreatePasswordPage extends React.Component<IProps, IStates> {
 
 				<div className='container-cus'>
 					<div className='content'>
+						<span className="f-10">Manager's</span>
 						<div className='title mb-32'>{this.renderTitle()}</div>
 						<div className='mb-32'>
 							{!isCompleted ? (

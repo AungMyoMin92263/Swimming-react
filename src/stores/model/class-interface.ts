@@ -9,3 +9,8 @@ export interface ClassInterface {
     logo?: string | null;
     error?: string | null;
 }
+
+export interface ClassRangeInterface {
+    class_list: ClassInterface[] | null
+    date: Date | null;
+}

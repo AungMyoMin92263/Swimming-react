@@ -16,9 +16,9 @@ const ManagerSideBar = (props: IPageProp) => {
 
   useEffect(() => {
   const user = JSON.parse(getItem("authUser") || "null");
-  if(user && user.userInfo && user.userInfo.data.assign_school.length > 0) {
-    setSchoolName(user.userInfo.data.assign_school[0].school.name);
-    setSchoolLogo(user.userInfo.data.assign_school[0].school.logo);
+  if(user && user.userInfo && user.userInfo.data.assign_school) {
+    setSchoolName(user.userInfo.data.assign_school.school.name);
+    setSchoolLogo(user.userInfo.data.assign_school.school.logo);
   }
   }, [])
 

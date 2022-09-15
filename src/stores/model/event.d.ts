@@ -15,5 +15,5 @@ export interface Event {
   assigned: number,
   school: School,
   assign_user: string[],
-  students: string[]
+  studnetCount: number
 }

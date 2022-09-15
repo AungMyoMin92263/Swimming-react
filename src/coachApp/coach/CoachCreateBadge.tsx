@@ -125,7 +125,7 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
     return (
       <>
         <div className="wrapper-mobile">
-        {goBadges && <Navigate to="/coache/badge-list" replace={true} />}
+        {goBadges && <Navigate to="/coache/dashboard/badge-list" replace={true} />}
 
           <div className="content-mobile col-sm-12">
             <div className="mb-32">

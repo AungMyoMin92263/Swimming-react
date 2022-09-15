@@ -61,6 +61,33 @@ export const getAllclasses =  (url : string) => {
   };
 };
 
+export interface getClassByDateAction {
+  type: ActionTypes.getclassesByDate | ActionTypes.getError;
+  payload: any;
+} 
+
+export const getclassesByDate =  (url : string) => {
+  refreshTokenClass();
+  return async (dispatch: Dispatch) => {
+    try {
+      const response = await apiServer.get<Class>(url, option);
+      dispatch<getClassAction>({
+        type: ActionTypes.getClass,
+        payload: response.data,
+      });
+    } catch (err) {
+      if (err instanceof Error) {
+        dispatch<getClassAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};
+
 export interface getClassObjAction {
   type: ActionTypes.getClassObj | ActionTypes.getError;
   payload: Class | any;
@@ -247,3 +274,29 @@ export const inviteCoach = (emails : any) => {
 
 
 
+export interface getclassesByDateAction {
+  type: ActionTypes.getclassesByDateRange | ActionTypes.getError;
+  payload: any;
+}
+
+export const getclassesByDateRange = (url: string) => {
+  refreshTokenClass();
+  return async (dispatch: Dispatch) => {
+    try {
+      const response = await apiServer.get<Class>(url, option);
+      dispatch<getclassesByDateAction>({
+        type: ActionTypes.getclassesByDateRange,
+        payload: response.data,
+      });
+    } catch (err: any) {
+      if (err) {
+        dispatch<getclassesByDateAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};

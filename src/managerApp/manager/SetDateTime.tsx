@@ -104,7 +104,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
 		this.state = {
 			isRecur: true,
 			selectedDays:[],
-			classObj: { start_time: "", end_time: "", start_date: "" },
+			classObj: { start_time: "", end_time: "", start_date: "", end_date:"" },
 			isCompleted: false,
 			school_name: "",
 			errorMsg: "",
@@ -126,6 +126,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
 					start_time: classObject.start_time,
 					end_time: classObject.end_time,
 					start_date: classObject.start_date,
+					end_date: classObject.end_date,
 				},
 				isCompleted: false,
 				school_name: classObject.name,
@@ -133,14 +134,14 @@ class SetDateTime extends React.Component<IProps, IStates> {
 				school_id: classObject.school_id,
 				class_id: classObject.id,
 				class_name: classObject.name,
-				logo: classObject.logo
+				logo: classObject.logo,
 			});
 		}
 
 		const user = JSON.parse(getItem("authUser") || "null");
-		if (user && user.userInfo && user.userInfo.data.assign_school.length > 0) {
+		if (user && user.userInfo && user.userInfo.data.assign_school) {
 			this.setState({
-				school_name: user.userInfo.data.assign_school[0].school.name,
+				school_name: user.userInfo.data.assign_school.school.name,
 			});
 		}
 	}
@@ -167,6 +168,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
 		console.log(this.state.selectedDays);
 		console.log(this.state.classObj.start_time);
 		console.log(this.state.classObj.start_time);
+		console.log(this.state.classObj.end_date);
 		if (this.state.isRecur) {
 			if (
 				this.state.selectedDays.length === 0 ||
@@ -292,42 +294,64 @@ class SetDateTime extends React.Component<IProps, IStates> {
 							{daysArray.map((day) => this.renderDay(day))}
 						</div>
 					</div>
-					<div className='mb-32'>
-						<LocalizationProvider dateAdapter={AdapterDateFns}>
-							<DatePicker
-								label='Class Date'
-								value={this.state.classObj.start_date}
-								onChange={(newValue) => {
-									let temp = this.state.classObj;
-									temp.start_date = newValue;
-									this.setState({
-										classObj: temp,
-									});
-								}}
-								renderInput={(params) => <TextField {...params} />}
-							/>
-						</LocalizationProvider>
+					<div className='mb-32 flex'>
+						<div className='col-6 pad-0-16'>
+							<LocalizationProvider dateAdapter={AdapterDateFns}>
+								<DatePicker
+									label='Start Date'
+									value={this.state.classObj.start_date}
+									onChange={(newValue) => {
+										let temp = this.state.classObj;
+										temp.start_date = newValue;
+										this.setState({
+											classObj: temp,
+										});
+									}}
+									renderInput={(params) => <TextField {...params} />}
+								/>
+							</LocalizationProvider>
+						</div>
+						<div className='col-6 pad-0-16'>
+							<LocalizationProvider dateAdapter={AdapterDateFns}>
+								<DatePicker
+									label='End Date'
+									value={this.state.classObj.end_date}
+									onChange={(newValue) => {
+										let temp = this.state.classObj;
+										temp.end_date = newValue;
+										this.setState({
+											classObj: temp,
+										});
+									}}
+									renderInput={(params) => <TextField {...params} />}
+								/>
+							</LocalizationProvider>
+						</div>
 					</div>
 				</>
 			);
 		} else {
 			return (
-				<div className='mb-32'>
-					<LocalizationProvider dateAdapter={AdapterDateFns}>
-						<DatePicker
-							label='Class Date'
-							value={this.state.classObj.start_date}
-							onChange={(newValue) => {
-								let temp = this.state.classObj;
-								temp.start_date = newValue;
-								this.setState({
-									classObj: temp,
-								});
-							}}
-							renderInput={(params) => <TextField {...params} />}
-						/>
-					</LocalizationProvider>
-				</div>
+				<>
+					<div className='mb-32 flex'>
+						<div className='col-6 pad-0-16'>
+							<LocalizationProvider dateAdapter={AdapterDateFns}>
+								<DatePicker
+									label='Class Date'
+									value={this.state.classObj.start_date}
+									onChange={(newValue) => {
+										let temp = this.state.classObj;
+										temp.start_date = newValue;
+										this.setState({
+											classObj: temp,
+										});
+									}}
+									renderInput={(params) => <TextField {...params} />}
+								/>
+							</LocalizationProvider>
+						</div>
+					</div>
+				</>
 			);
 		}
 	};
@@ -355,6 +379,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
 	submit = async () => {
 		const formData = new FormData();
 		var start_date = new Date(this.state.classObj.start_date);
+		var end_date = new Date(this.state.classObj.end_date);
 		console.log("STATE",this.state)
 		formData.append("name", this.state.class_name);
 		formData.append("school_id", this.state.school_id.toString());
@@ -363,6 +388,10 @@ class SetDateTime extends React.Component<IProps, IStates> {
 		formData.append("end_time", this.state.classObj.end_time);
 		formData.append("open_days", this.state.selectedDays);
 		formData.append("start_date", start_date.toISOString());
+		formData.append(
+			"end_date",
+			this.state.isRecur ? end_date.toISOString() : new Date().toISOString()
+		);
 		formData.append("logo", this.state.logo);
 
 		if (this.isValid()) {

@@ -8,13 +8,25 @@ export const classReducers = (
   action: Action
 ) => {
   switch (action.type) {
-    case ActionTypes.getClass:
+    case ActionTypes.getclassesByDate:
+      return {
+        ...state,
+        result: action.payload,
+        error: null,
+      };
+    case ActionTypes.getclassesByDateRange:
       return {
         ...state,
         result: action.payload,
         error: null,
       };
 
+    case ActionTypes.getClass:
+      return {
+        ...state,
+        result: action.payload,
+        error: null,
+      };
     case ActionTypes.getClassObj:
       return {
         ...state,

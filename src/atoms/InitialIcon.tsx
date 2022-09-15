@@ -1,5 +1,6 @@
 export interface InitialIconInterface {
 	initials:string;
+	isFooterMenu : boolean;
 }
 export const InitialIcon = (props: InitialIconInterface) => {
     var colors = [
@@ -14,7 +15,28 @@ export const InitialIcon = (props: InitialIconInterface) => {
 		];
    
 		// selecting random color
-		var random_color = colors[Math.floor(Math.random() * colors.length )];
+		var name = props.initials;
+		console.log(Math.abs(name.charCodeAt(0) % colors.length))
+		var random_color = colors[Math.abs(name.charCodeAt(0) % colors.length)];
+		// var random_color = colors[Math.floor(name.length / colors.length)];
+		if(props.isFooterMenu){
+			return (
+				<div
+					style={{
+						display:"flex",
+						backgroundColor: random_color,
+						alignItems: "center",
+						justifyContent: "center",
+						textAlign:'center',
+						borderRadius: "50%",
+						width: 28,
+						height: 28,
+					}}
+				>
+					<span style={{ color: "white", fontSize: 20 }}>{props.initials}</span>
+				</div>
+			);
+		}else
 	return (
 		<div
 			style={{
@@ -49,7 +71,10 @@ export const InitialIconList = (props: InitialIconInterface) => {
 	];
 
 	// selecting random color
-	var random_color = colors[Math.floor(Math.random() * colors.length)];
+	
+	var name = props.initials;
+	console.log(name.length)
+	var random_color = colors[Math.floor(name.length * colors.length)];
 	return (
 		<div
 			style={{

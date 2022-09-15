@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 
 import { getItem, removeItem } from "../../auth/LocalStorage";
 import placeholder from "./../../assets/images/place-holder.png";
+import { InitialIcon } from "../../atoms/InitialIcon";
 
 interface IStates {
 	students: any[];
@@ -41,9 +42,9 @@ class InvitedStudentSummaryPage extends React.Component<IProps, IStates> {
 	});
 
     const user = JSON.parse(getItem("authUser") || "null");
-    if(user && user.userInfo && user.userInfo.data.assign_school.length > 0) {
+    if(user && user.userInfo && user.userInfo.data.assign_school) {
        this.setState({
-        school_name : user.userInfo.data.assign_school[0].school.name,
+        school_name : user.userInfo.data.assign_school.school.name,
        });
     }
   }
@@ -63,25 +64,17 @@ class InvitedStudentSummaryPage extends React.Component<IProps, IStates> {
 							<div className='mb-16 align-center'>
 								<img
 									src={
-										classObj &&
-										classObj.logo
-											? process.env.REACT_APP_API_ENDPOINT +
-											  "/" +
-											  classObj.logo
+										classObj && classObj.logo
+											? process.env.REACT_APP_API_ENDPOINT + "/" + classObj.logo
 											: placeholder
 									}
 									alt='logo'
 									className={`${
-										classObj &&
-										classObj.logo
-											? "item-icon"
-											: "w-48"
+										classObj && classObj.logo ? "item-icon" : "w-48"
 									}`}
 								/>
 								<span className='f-16'>
-									{classObj &&
-										classObj.name}{" "}
-									({school_name})
+									{classObj && classObj.name} ({school_name})
 								</span>
 							</div>
 
@@ -98,13 +91,14 @@ class InvitedStudentSummaryPage extends React.Component<IProps, IStates> {
 								students.length > 0 &&
 								students.map((student: any) => (
 									<>
-										<div className='f-16 mb-32'>
-											<img
-												src='../../../assets/icons/alpha.png'
-												alt='alpha'
-												className='icon mr-8'
+										<div className='f-16 mb-32 align-center'>
+											<InitialIcon
+												initials={student.studentEmail
+													.substr(0, 1)
+													.toUpperCase()}
+													isFooterMenu={false}
 											/>
-											<span>{student.studentName}</span>
+											<span className='ml-16'>{student.studentName}</span>
 										</div>
 
 										<div className='hr mb-16'></div>

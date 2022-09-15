@@ -26,7 +26,7 @@ const ProfileContainer = (props: IProfile) => {
 			<div className='profile-tile'>{props.title}</div>
 			<div className='gird'>
 				<div className='row no-gutters'>
-					{props.display_item.map((item, index) => {
+					{props.display_item && props.display_item.length > 0 && props.display_item.map((item, index) => {
 						return (
 							<div className='col-6' key={`profile-item ${index}`}>
 								<span className='item-text'>{item.title}</span>
