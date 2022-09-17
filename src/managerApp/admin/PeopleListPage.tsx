@@ -196,7 +196,9 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 														</span>
 													</td>
 													<td>
-														<span>{user.role}</span>
+														<span>
+															{user.role === "coache" ? "coach" : user.role}
+														</span>
 													</td>
 												</tr>
 											))}
