@@ -21,14 +21,14 @@ interface IStates {
 	passwordMatchMsg: string;
 	isCompleted: boolean;
 }
-interface StudentChangePasswordPage {
+interface ParentChangePasswordPage {
 	changePwd: Function;
 	signedUpUser: SignedUpInterface;
 }
 
-type IProps = StudentChangePasswordPage;
+type IProps = ParentChangePasswordPage;
 
-class StudentChangePasswordPage extends React.Component<IProps, IStates> {
+class ParentChangePasswordPage extends React.Component<IProps, IStates> {
 	constructor(props: IProps) {
 		super(props);
 		console.log("props", props);
@@ -196,7 +196,7 @@ class StudentChangePasswordPage extends React.Component<IProps, IStates> {
 	renderBtn = () => {
 		if (this.state.isCompleted) {
 			return (
-				<Link to='/coache/login'>
+				<Link to='/coach/login'>
 					<button
 						type='submit'
 						className='primary-btn'
@@ -275,5 +275,5 @@ const mapStateToProps = ({
 };
 
 export default connect(mapStateToProps, { changePwd })(
-	StudentChangePasswordPage
+	ParentChangePasswordPage
 );

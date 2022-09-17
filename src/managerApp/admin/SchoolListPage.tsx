@@ -7,7 +7,8 @@ import { School } from "../../stores/model/school";
 
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
-import { signOut, signIn } from "../../stores/actions";
+import { signOut, signIn,LoadingActionFunc } from "../../stores/actions";
+
 import { Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 
@@ -17,6 +18,7 @@ interface IStates {
 interface UserSignInPage {
 	signIn: Function;
 	authUser: AuthInterface;
+	LoadingActionFunc : Function;
 }
 
 type IProps = UserSignInPage;
@@ -28,6 +30,7 @@ class SchoolListPage extends React.Component<IProps, IStates> {
 		this.state = {
 			schools: [],
 		};
+		this.props.LoadingActionFunc(true);
 	}
 
 	componentDidMount() {
@@ -97,4 +100,4 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { signIn })(SchoolListPage);
+export default connect(mapStateToProps, { signIn,LoadingActionFunc })(SchoolListPage);

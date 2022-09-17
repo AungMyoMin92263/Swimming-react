@@ -1,0 +1,37 @@
+.list-box {
+  background-color: #fff;
+  border: 1px solid #E5E5E5;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.list-box-title {
+  font-size: 12px;
+  color: #808080;
+  padding: 14px 16px;
+  border-bottom: 1px solid #E5E5E5;
+  font-weight: 500;
+}
+
+.list-footer {
+  color: var(--primary);
+  text-align: center;
+  border-top: 1px solid #E5E5E5;
+  display: flex;
+  width: 100%;
+}
+.list-footer>.box-btn:last-child{
+  border-left: 1px solid #E5E5E5;
+}
+
+.box-btn {
+  flex: 1;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 16px;
+}
+.list-body>.comment-item:last-child,.list-body>.card-list-item:last-child{
+  border-bottom: none;
+}

@@ -14,9 +14,9 @@ const root = ReactDOM.createRoot(
 );
 Axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 Axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT;
-// const composeEnhansers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-// const store = createStore(reducers, composeEnhansers(applyMiddleware(thunk)));
-const storeNew = configureStore({ reducer: reducers, middleware: (getDefaultMiddleware) => getDefaultMiddleware() })
+
+
+const storeNew = configureStore({ reducer: reducers, middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false })})
 
 
 root.render(

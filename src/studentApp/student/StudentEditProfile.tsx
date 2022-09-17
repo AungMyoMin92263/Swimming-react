@@ -7,13 +7,15 @@ import { connect } from "react-redux";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import ProfileContainer, { IProfile } from "../../atoms/ProfileContainer";
-import ListBoxUI from "../../atoms/ListBox";
 import ListItem, { IListItem } from "../../atoms/ListItem";
-import WatchLaterIcon from "@mui/icons-material/WatchLater";
+import InputFormAtom from "../../atoms/InputFormAtom";
 interface IStates {
   id: number;
   image: any;
   logo: string;
+  profile_details: any;
+  contact_details: any;
+  parent_details: any;
 }
 
 interface IProps {
@@ -28,58 +30,71 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
       id: -1,
       image: { preview: "", raw: "" },
       logo: "",
+      profile_details: {
+        name: "",
+        age: 0,
+        gender: "male",
+        favourite_stroke: "",
+      },
+      contact_details: {
+        student_email: "",
+        student_mobile: "",
+      },
+      parent_details: {
+        parent_name: "",
+        parent_email: "",
+        parent_mobile: "",
+      },
     };
   }
 
   renderImageUpload = () => {
     return (
-			<div>
-				<label htmlFor='upload-button'>
-					{this.state.image.preview || this.state.logo !== "" ? (
-						<>
-							<img
-								src={
-									this.state.id === -1
-										? this.state.image.preview
-										: process.env.REACT_APP_API_ENDPOINT + this.state.logo
-								}
-								alt='preview'
-								className='preview-icon cursor'
-							/>
-							<span
-								className='primary f-14 cursor'
-								style={{ marginLeft: "18px" }}
-							>
-								&nbsp; Change Image
-							</span>
-						</>
-					) : (
-						<>
-							<>
-								<img
-									id='logo'
-									src='../../../assets/icons/upload.png'
-									alt='upload'
-									className='big-icon cursor'
-								/>
-								<span
-									className='primary f-14 cursor'
-									style={{ marginLeft: "18px" }}
-								>
-									&nbsp; Upload Image
-								</span>
-							</>
-						</>
-					)}
-				</label>
-				<input
-					type='file'
-					id='upload-button'
-					style={{ display: "none" }}
-					onChange={this.handleChange}
-				/>
-			</div>
-		);
+      <div>
+        <label htmlFor="upload-button">
+          {this.state.image.preview || this.state.logo !== "" ? (
+            <>
+              <img
+                src={
+                  this.state.id === -1
+                    ? this.state.image.preview
+                    : process.env.REACT_APP_API_ENDPOINT + this.state.logo
+                }
+                alt="preview"
+                className="preview-icon cursor mb-8"
+              />
+              <div
+                className="primary f-14 cursor"
+              >
+                &nbsp; Change Image
+              </div>
+            </>
+          ) : (
+            <>
+              <>
+                <img
+                  id="logo"
+                  src="../../../assets/icons/upload.png"
+                  alt="upload"
+                  className="big-icon cursor mb-8"
+                />
+                <div
+                  className="primary f-14 cursor"
+                >
+                  &nbsp; Upload Image
+                </div>
+              </>
+            </>
+          )}
+        </label>
+        <input
+          type="file"
+          id="upload-button"
+          style={{ display: "none" }}
+          onChange={this.handleChange}
+        />
+      </div>
+    );
   };
 
   handleChange = (e: any) => {
@@ -107,6 +122,8 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
   }
 
   render() {
+    const { profile_details, contact_details, parent_details  } = this.state;
+
     let profile: IProfile = {
       title: "Azlan Razali",
       isLogo: true,
@@ -151,25 +168,86 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
               <span>PHOTO</span>
             </div>
             <div className="mb-8 center">{this.renderImageUpload()}</div>
-            <div className="row mb-8">
-              <div className="col-6">
-                <div>
-                  <span className="f-10">Stroke</span>
-                </div>
-                <div>
-                  <span className="f-16 fw-500">Freestyle</span>
-                </div>
-              </div>
-              <div className="col-6">
-                <div>
-                  <span className="f-10">Length</span>
-                </div>
-                <div>
-                  <span className="f-16 fw-500">100 metres</span>
-                </div>
+            <div className="row mb-16">
+              <div className="mb-8">
+                <InputFormAtom
+                  label="Name"
+                  placeholder={"Enter your name"}
+                  warning={''}
+                  type="text"
+                  showWarning={false}
+                  isDropdown={false}
+                  callback={(value: string) => {
+                    let temp = profile_details;
+                    temp.name = value;
+                    this.setState({
+                      profile_details: temp,
+                    });
+                  }}
+                  id="name"
+                  name="name"
+                  value={profile_details.name}
+                  required={true}
+                  maxLength={200}
+                  className=""
+                  clickCallback={() => {}}
+                />
               </div>
             </div>
-            <div className="mb-8"></div>
+            <div className="row mb-16">
+              <div className="col-6">
+              <div className="mb-8">
+                <InputFormAtom
+                  label="Age"
+                  placeholder={"Enter your age"}
+                  warning={''}
+                  type="text"
+                  showWarning={false}
+                  isDropdown={false}
+                  callback={(value: string) => {
+                    let temp = profile_details;
+                    temp.age = value;
+                    this.setState({
+                      profile_details: temp,
+                    });
+                  }}
+                  id="age"
+                  name="age"
+                  value={profile_details.age}
+                  required={true}
+                  maxLength={200}
+                  className=""
+                  clickCallback={() => {}}
+                />
+              </div>
+              </div>
+              <div className="col-6">
+              <div className="mb-8">
+                <InputFormAtom
+                  label="Gender"
+                  placeholder={"Enter your gender"}
+                  warning={''}
+                  type="text"
+                  showWarning={false}
+                  isDropdown={false}
+                  callback={(value: string) => {
+                    let temp = profile_details;
+                    temp.gender = value;
+                    this.setState({
+                      profile_details: temp,
+                    });
+                  }}
+                  id="gender"
+                  name="gender"
+                  value={profile_details.gender}
+                  required={true}
+                  maxLength={200}
+                  className=""
+                  clickCallback={() => {}}
+                />
+              </div>
+              </div>
+            </div>
           </div>
         </div>
       </>

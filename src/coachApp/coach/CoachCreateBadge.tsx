@@ -80,7 +80,7 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
                 alt="preview"
                 className="preview-icon cursor"
               />
-              <Link to="/coache/edit-icon">
+              <Link to="/coach/edit-icon">
               <div
                 className="primary f-14 cursor"
               >
@@ -125,11 +125,11 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
     return (
       <>
         <div className="wrapper-mobile">
-        {goBadges && <Navigate to="/coache/dashboard/badge-list" replace={true} />}
+        {goBadges && <Navigate to="/coach/dashboard/badge-list" replace={true} />}
 
           <div className="content-mobile col-sm-12">
             <div className="mb-32">
-              <Link to="/coache/badge-list">
+              <Link to="/coach/badge-list">
                 <button type="submit" className="back-btn">
                   <ArrowBackIcon
                     sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}

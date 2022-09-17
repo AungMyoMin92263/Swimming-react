@@ -1,36 +1,67 @@
 import React from 'react';
 import './App.css';
+import { getItem } from './auth/LocalStorage';
 import RouteList from './routes/router';
+import { AuthInterface } from './stores/model/auth-interface';
+import { StoreState } from './stores/reducers';
+import { connect } from "react-redux";
+import { setUpdateObj, LoadingActionFunc } from "./stores/actions";
 // interface IProps {
 //   path: string;
 // }
 
 // type AppProps = IProps;
 
-// interface AppStates {
-//   isBusy: boolean;
-//   isAuth: boolean;
-//   password: string;
-//   user: string;
-//   error: boolean;
-// }
+interface AppStates {
+  isBusy: boolean;
+  isAuth: boolean;
+  password: string;
+  user: string;
+  error: boolean;
+}
+interface UserSignInPage {
+  setUpdateObj: Function;
+  authUser?: AuthInterface;
+  response?: any;
+  LoadingActionFunc: Function;
+  loading: any;
+}
 
-class App extends React.Component {
-  constructor(props?: any) {
+
+type IProps = UserSignInPage;
+class App extends React.Component<IProps, AppStates> {
+  constructor(props: IProps) {
     super(props);
     this.state = { isBusy: false, isAuth: true, user: '', password: '', error: false };
+    console.log('this.props.loading', this.props.loading)
   }
 
   componentDidMount() {
-    // if (getItem('isAuth') === 'true') {
-    //   this.setState({ isAuth: false })
-    // }
+    const authUser = getItem('authUser');
+    if (authUser) {
+      let authOb = JSON.parse(authUser)
+      this.props.setUpdateObj(authOb.userInfo)
+    }
   }
 
   render() {
-    return <RouteList></RouteList>
+    return <div className={`${this.props.loading.loading > 0 ? "loading" : "no-loading"}`}><div className='loader-ajax'></div><RouteList></RouteList></div>;
   }
 
 
 }
-export default App;
+
+const mapStateToProps = ({
+  authUser, loading
+
+}: StoreState): {
+  authUser: AuthInterface; loading: any;
+} => {
+  return {
+    authUser, loading
+  };
+};
+
+export default connect(mapStateToProps, { setUpdateObj, LoadingActionFunc })(App);
+
+// export default connect({}, { setUpdateObj })(App);;

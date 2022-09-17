@@ -13,6 +13,7 @@ import {
   getAllSchools,
 } from "../../stores/actions/school-action";
 import { signOut } from "../../stores/actions/auth-action";
+import { LoadingActionFunc } from "../../stores/actions/global-action";
 
 import { Link, Navigate } from "react-router-dom";
 
@@ -38,6 +39,7 @@ interface IProps {
   schoolList: any;
   signOut: Function;
   deleteSchoolObj: Function;
+  LoadingActionFunc: Function;
 }
 
 class AdminDashboardPage extends React.Component<IProps, IStates> {
@@ -54,6 +56,7 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
       currentIndex: -1,
       url: "",
     };
+	// this.props.LoadingActionFunc(true);
   }
 
   componentDidMount() {
@@ -62,7 +65,7 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
     const user = JSON.parse(getItem("authUser") || "null");
     if (user && user.userInfo) {
       this.setState({
-        email: user.userInfo.data.email,
+        email: user.userInfo.email,
       });
     }
     this.getSchools();
@@ -91,12 +94,14 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
     this.setState({
       isLogout: true,
     });
+	this.props.LoadingActionFunc(true);
   };
 
   getSchools = async () => {
     await this.props.getAllSchools();
+	this.props.LoadingActionFunc(false);
     if (this.props.schoolList.result)
-      this.setState({
+      await this.setState({
         schools: this.props.schoolList.result || [],
       });
   };
@@ -137,7 +142,10 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 							<div className='justify-end'>
 								<div className='dropdown'>
 									<div className='email-div cursor' onClick={this.toggleOpen}>
-										<InitialIcon initials={email.substr(0, 1).toUpperCase()} isFooterMenu={false}/>
+										<InitialIcon
+											initials={email.substr(0, 1).toUpperCase()}
+											isFooterMenu={false}
+										/>
 										<span>{email} </span>
 									</div>
 									<div
@@ -188,8 +196,10 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 								<table className='table'>
 									<thead>
 										<tr>
-											<th className='col-1'></th>
-											<th className='col-5'>SCHOOL</th>
+											<th className='col-6'>
+												{" "}
+												<span className='ml-56'>SCHOOL</span>
+											</th>
 											<th className='col-3'>MANAGER(s)</th>
 											<th className='col-3'>NO. STUDENT</th>
 										</tr>
@@ -212,8 +222,9 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 															id='logo'
 															className={`${school ? "icon" : "w-48"}`}
 														/>
+
+														<span className='ml-16'>{school.name}</span>
 													</td>
-													<td>{school.name}</td>
 													<td className='emailInitialIcon'>
 														{school.assign_user.map((user: any, index) =>
 															user.type === "manager" && index === 0 ? (
@@ -221,14 +232,15 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 																	initials={user.user.email
 																		.substr(0, 1)
 																		.toUpperCase()}
-																		isFooterMenu={false}
+																	isFooterMenu={false}
 																/>
 															) : (
 																<InitialIconList
 																	initials={user.user.email
 																		.substr(0, 1)
 																		.toUpperCase()}
-																		isFooterMenu={false}
+																		
+																	isFooterMenu={false}
 																/>
 															)
 														)}
@@ -302,4 +314,5 @@ export default connect(mapStateToProps, {
   getAllSchools,
   signOut,
   deleteSchoolObj,
+  LoadingActionFunc
 })(AdminDashboardPage);

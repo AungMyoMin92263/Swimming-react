@@ -4,17 +4,15 @@ import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import AddIcon from "@mui/icons-material/Add";
-import ListBoxUI from "../../atoms/ListBox";
 import CommentItem, { ICommentItem } from "../../atoms/Comment";
 import { getItem } from "../../auth/LocalStorage";
-import { getClassObject, getAll } from "../../stores/actions";
+import { getClassObject, getAll, postComment } from "../../stores/actions";
 import { InitialIcon } from "../../atoms/InitialIcon";
 import { Link } from "react-router-dom";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
 import { Button } from "@mui/material";
-import { postComment } from './../../stores/actions/coach-action';
+import ListBoxUI from "../../molecules/ListBox";
 
 interface IStates {
   step: number;
@@ -50,7 +48,7 @@ class CoachCommentsPage extends React.Component<IProps, IStates> {
 	}
 	componentDidMount() {
 		this.urlDailyProgram =
-			"/coache/dashboard/daily-program/" + this.state.classId;
+			"/coach/dashboard/daily-program/" + this.state.classId;
 		this.authFromLocal();
 	}
 
@@ -58,11 +56,11 @@ class CoachCommentsPage extends React.Component<IProps, IStates> {
 		let user = JSON.parse(getItem("authUser") || "null");
 		if (user && user.userInfo) {
 			if (
-				user.userInfo.data.assign_class &&
-				user.userInfo.data.assign_class.length > 0
+				user.userInfo.assign_class &&
+				user.userInfo.assign_class.length > 0
 			) {
 				await this.setState({
-					schoolId: user.userInfo.data.assign_class[0].classes.school_id,
+					schoolId: user.userInfo.assign_class[0].classes.school_id,
 				});
 
 				this.getClass();

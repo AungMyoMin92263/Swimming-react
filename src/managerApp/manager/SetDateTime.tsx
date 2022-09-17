@@ -20,7 +20,8 @@ import {
 	getClassObject,
 	postClass,
 	putClass,
-} from "../../stores/actions/class-action";
+	LoadingActionFunc
+} from "../../stores/actions";
 import placeholder from "./../../assets/images/place-holder.png";
 import { removeItem } from './../../auth/LocalStorage';
 
@@ -96,6 +97,7 @@ interface IProps {
 	postClass: Function;
 	putClass: Function;
 	getClassObject: Function;
+	LoadingActionFunc : Function;
 }
 class SetDateTime extends React.Component<IProps, IStates> {
 	constructor(props: any) {
@@ -117,7 +119,6 @@ class SetDateTime extends React.Component<IProps, IStates> {
 
 	componentDidMount() {
 		const classObject = JSON.parse(getItem("class") || "null");
-		console.log(classObject);
 		if (classObject) {
 			this.setState({
 				isRecur: classObject.type === "daily" ? true : false,
@@ -139,11 +140,12 @@ class SetDateTime extends React.Component<IProps, IStates> {
 		}
 
 		const user = JSON.parse(getItem("authUser") || "null");
-		if (user && user.userInfo && user.userInfo.data.assign_school) {
+		if (user && user.userInfo && user.userInfo.assign_school) {
 			this.setState({
-				school_name: user.userInfo.data.assign_school.school.name,
+				school_name: user.userInfo.assign_school.school.name,
 			});
 		}
+		this.props.LoadingActionFunc(false);
 	}
 
 	valueChangedTimeEnd = (e: any) => {
@@ -163,12 +165,6 @@ class SetDateTime extends React.Component<IProps, IStates> {
 	};
 
 	renderBtn = () => {
-		console.log(this.state.isRecur);
-		console.log(this.state.classObj.start_date);
-		console.log(this.state.selectedDays);
-		console.log(this.state.classObj.start_time);
-		console.log(this.state.classObj.start_time);
-		console.log(this.state.classObj.end_date);
 		if (this.state.isRecur) {
 			if (
 				this.state.selectedDays.length === 0 ||
@@ -214,7 +210,6 @@ class SetDateTime extends React.Component<IProps, IStates> {
 				selectedDays: temp,
 				isRecur: true,
 			});
-			console.log("Recurred False", this.state.isRecur);
 		}else{
 			
 			this.setState({
@@ -222,9 +217,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
 				selectedDays: [],
 				isRecur: false,
 			});
-			console.log("Recurred True", this.state.isRecur);
 		}
-		console.log("recur", this.state.isRecur);
 	};
 
 	handleChange = (day: any) => {
@@ -298,7 +291,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
 						<div className='col-6 pad-0-16'>
 							<LocalizationProvider dateAdapter={AdapterDateFns}>
 								<DatePicker
-									label='Start Date'
+									label='Starting Date'
 									value={this.state.classObj.start_date}
 									onChange={(newValue) => {
 										let temp = this.state.classObj;
@@ -314,7 +307,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
 						<div className='col-6 pad-0-16'>
 							<LocalizationProvider dateAdapter={AdapterDateFns}>
 								<DatePicker
-									label='End Date'
+									label='Ending Date'
 									value={this.state.classObj.end_date}
 									onChange={(newValue) => {
 										let temp = this.state.classObj;
@@ -380,7 +373,6 @@ class SetDateTime extends React.Component<IProps, IStates> {
 		const formData = new FormData();
 		var start_date = new Date(this.state.classObj.start_date);
 		var end_date = new Date(this.state.classObj.end_date);
-		console.log("STATE",this.state)
 		formData.append("name", this.state.class_name);
 		formData.append("school_id", this.state.school_id.toString());
 		formData.append("type", this.state.isRecur ? "daily" : "one-day");
@@ -395,15 +387,18 @@ class SetDateTime extends React.Component<IProps, IStates> {
 		formData.append("logo", this.state.logo);
 
 		if (this.isValid()) {
+			this.props.LoadingActionFunc(true);
+
 			let url = "school/" + this.state.school_id + "/class";
 			await this.props.putClass(formData, url, this.state.class_id);
 
 			if (this.props.classes.error) {
-				console.log("Error",this.props.classes.error);
 				this.setState({
 					isCompleted: false,
 					errorMsg: this.props.classes.error,
 				});
+				this.props.LoadingActionFunc(false);
+
 			} else {
 				if (this.props.classes.result && this.props.classes.result.data) {
 					removeItem('class')
@@ -541,4 +536,5 @@ export default connect(mapStateToProps, {
 	postClass,
 	putClass,
 	getClassObject,
+	LoadingActionFunc
 })(SetDateTime);

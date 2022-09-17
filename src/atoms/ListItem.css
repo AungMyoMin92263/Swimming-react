@@ -13,8 +13,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 0px;
-  border-bottom: 1px solid #cccccc;
+  padding: 16px;
+  border-bottom: 1px solid #E5E5E5;
   /* border-top: 0px; */
 }
 
@@ -48,9 +48,9 @@
 }
 
 .text-icon {
-  width: 35px;
-  height: 35px;
-  margin: 0px 15px;
+  width: 24px;
+  height: 24px;
+  margin-right:  8px;
 }
 
 .text-icon>* {
@@ -58,8 +58,9 @@
 }
 
 .text-icon.isBig {
-  width: 50px;
-  height: 50px;
+  width: 64px;
+  height: 64px;
+  margin-right:  16px;
 }
 .title-text{
   font-weight: 500;
@@ -81,9 +82,15 @@
 
 .second-text {
   display: flex;
-  gap: 10px;
+  gap: 4px;
   align-items: center;
-  padding-left: 63px;
+  padding-left: 30px;
+}
+.bigicon .second-text{
+  padding-left: 80px;
+}
+.no-p-left{
+  padding-left: 0px;
 }
 
 .cmd-second-text {

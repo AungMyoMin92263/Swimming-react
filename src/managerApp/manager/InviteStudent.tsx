@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { StoreState } from "../../stores/reducers";
-import { inviteStudent } from "../../stores/actions/class-action";
+import { inviteStudent, LoadingActionFunc} from "../../stores/actions";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddIcon from "@mui/icons-material/Add";
@@ -52,6 +52,7 @@ interface IProps {
   emails: string[];
   classes: any;
   inviteStudent: Function;
+  LoadingActionFunc : Function;
 }
 
 class InviteStudentPage extends React.Component<IProps, IStates> {
@@ -94,9 +95,9 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
   }
   componentDidMount() {
     const user = JSON.parse(getItem("authUser") || "null");
-    if (user && user.userInfo && user.userInfo.data.assign_school) {
+    if (user && user.userInfo && user.userInfo.assign_school) {
       this.setState({
-        school_name: user.userInfo.data.assign_school.school.name,
+        school_name: user.userInfo.assign_school.school.name,
       });
     }
 
@@ -106,6 +107,8 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
         classObj: classObject,
       });
     }
+	this.props.LoadingActionFunc(false);
+
   }
 
   addStudent = () => {
@@ -176,6 +179,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
         student: tempStu,
       });
       if (this.state.classObj) {
+		this.props.LoadingActionFunc(true);
         await this.props.inviteStudent({
           user_email: this.state.emails,
           student: this.state.student,
@@ -187,6 +191,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
           this.setState({
             isCompleted: false,
           });
+		  this.props.LoadingActionFunc(false);
         } else {
           const student = JSON.parse(getItem("students") || "null");
           if (student) {
@@ -500,4 +505,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { inviteStudent })(InviteStudentPage);
+export default connect(mapStateToProps, { inviteStudent,LoadingActionFunc })(InviteStudentPage);

@@ -12,7 +12,7 @@ var option: AxiosRequestConfig;
 export const refreshTokenEvent = () => {
   const authUser = JSON.parse(getItem("authUser") || "null");
   if (authUser && authUser.userInfo) {
-  token = authUser.userInfo.data.token;
+  token = authUser.userInfo.token;
 
   option = {
     headers: {
@@ -32,12 +32,15 @@ export const getAllEvents =  (url : string) => {
   refreshTokenEvent();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.get<Event>(url, option);
       dispatch<getEventAction>({
         type: ActionTypes.getEvent,
         payload: response.data,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err instanceof Error) {
         dispatch<getEventAction>({
           type: ActionTypes.getError,
@@ -59,6 +62,7 @@ export const postEvent = (evente : EventInterface,url : string) => {
   refreshTokenEvent();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.post<Event>(
         url, evente, option
       );
@@ -67,7 +71,9 @@ export const postEvent = (evente : EventInterface,url : string) => {
         type: ActionTypes.createEvent,
         payload: response,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err:any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err) {
         dispatch<createEventAction>({
           type: ActionTypes.getError,
@@ -89,6 +95,7 @@ export const putEvent = (evente: EventInterface, url : string, id: number) => {
   refreshTokenEvent();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.put<Event>(
         url+'/' + id,
         evente,
@@ -98,7 +105,9 @@ export const putEvent = (evente: EventInterface, url : string, id: number) => {
         type: ActionTypes.editEvent,
         payload: response,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err:any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err) {
         dispatch<editEventAction>({
           type: ActionTypes.getError,
@@ -121,12 +130,15 @@ export const deleteEvent = (url : string,id: number) => {
 
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.delete<Event>(url+"/" + id, option);
       dispatch<deleteEventAction>({
         type: ActionTypes.deleteEvent,
         payload: response,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err instanceof Error) {
         dispatch<deleteEventAction>({
           type: ActionTypes.getError,
@@ -149,6 +161,7 @@ export const inviteEvent = (emails : any) => {
 
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.post<Event>(
         'assigned/event', emails, option
       );
@@ -157,7 +170,9 @@ export const inviteEvent = (emails : any) => {
         type: ActionTypes.inviteEvent,
         payload: response,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err:any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err) {
         dispatch<inviteEventAction>({
           type: ActionTypes.getError,

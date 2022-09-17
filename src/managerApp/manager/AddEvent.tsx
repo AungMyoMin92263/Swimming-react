@@ -12,7 +12,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link, Navigate } from "react-router-dom";
 import InputFormAtom from "../../atoms/InputFormAtom";
 import { getItem, setItemWithObject } from "../../auth/LocalStorage";
-import { postEvent, putEvent } from "../../stores/actions/event-action";
+import { postEvent, putEvent, LoadingActionFunc } from "../../stores/actions";
 
 interface IStates {
 	event: any;
@@ -33,6 +33,7 @@ interface IProps {
 	events: any;
 	postEvent: Function;
 	putEvent: Function;
+	LoadingActionFunc : Function;
 }
 class AddEvent extends React.Component<IProps, IStates> {
 	constructor(props: any) {
@@ -66,10 +67,10 @@ class AddEvent extends React.Component<IProps, IStates> {
 		if (
 			user &&
 			user.userInfo &&
-			user.userInfo.data.assign_school
+			user.userInfo.assign_school
 		) {
 			this.setState({
-				schoolId: user.userInfo.data.assign_school.school.id,
+				schoolId: user.userInfo.assign_school.school.id,
 			});
 		}
 
@@ -113,6 +114,8 @@ class AddEvent extends React.Component<IProps, IStates> {
 			});
 		} else {
 			if (this.isValid()) {
+				this.props.LoadingActionFunc(true);
+
 				let url = "school/" + this.state.schoolId + "/event";
 				if (this.state.event.id < 0) {
 					let tempEvent = {
@@ -131,6 +134,7 @@ class AddEvent extends React.Component<IProps, IStates> {
 							isCompleted: false,
 							errorMsg: this.props.events.error,
 						});
+						this.props.LoadingActionFunc(false);
 					} else {
             if (this.props.events.result) {
 							setItemWithObject("event", this.props.events.result.data);
@@ -160,6 +164,7 @@ class AddEvent extends React.Component<IProps, IStates> {
 						from_age: this.state.event.from_age,
 						to_age: this.state.event.to_age,
 					};
+
 					await this.props.putEvent(tempEvent, url, this.state.event.id);
 					if (this.props.events.result)
 						setItemWithObject("event", this.props.events.result.data);
@@ -493,4 +498,4 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { postEvent, putEvent })(AddEvent);
+export default connect(mapStateToProps, { postEvent, putEvent, LoadingActionFunc })(AddEvent);

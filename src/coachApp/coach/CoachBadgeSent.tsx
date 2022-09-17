@@ -48,11 +48,11 @@ class CoachBadgeSentPage extends React.Component<IProps, IStates> {
     return (
       <>
         <div className="wrapper-mobile">
-        {goProfile && <Navigate to="/coache/dashboard/profile-detail" replace={true} />}
+        {goProfile && <Navigate to="/coach/dashboard/profile-detail" replace={true} />}
 
           <div className="content-mobile col-sm-12">
             <div className="mb-32">
-              <Link to="/coache/dashboard/badge-list">
+              <Link to="/coach/dashboard/badge-list">
               <button type="submit" className="back-btn">
                 <ArrowBackIcon
                   sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}

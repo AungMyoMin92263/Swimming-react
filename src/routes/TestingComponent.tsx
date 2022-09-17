@@ -1,13 +1,13 @@
 import React from "react";
 import ListItem, { IListItem } from "../atoms/ListItem";
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
-import ListBoxUI from "../atoms/ListBox";
 import ProfileContainer, { IProfile } from "../atoms/ProfileContainer";
 import BestScoreBox from "../atoms/BestScoreBox";
 import CommentItem, { ICommentItem } from "../atoms/Comment";
-import BadgeList from "../atoms/BadgeList";
+import BadgeList from "../molecules/BadgeList";
 import { IBadgeItem } from "../atoms/BadgeItem";
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
+import ListBoxUI from "../molecules/ListBox";
 class TestingComponent extends React.Component {
 
   render() {

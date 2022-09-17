@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import InputFormAtom from "../../atoms/InputFormAtom";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
-import { signIn } from "../../stores/actions";
+import { signIn,LoadingActionFunc } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
 import { setItemWithObject } from "../../auth/LocalStorage";
 
@@ -20,6 +20,7 @@ interface IStates {
 interface UserSignInPage {
 	signIn: Function;
 	authUser: AuthInterface;
+	LoadingActionFunc : Function;
 	// refreshToken: Function;
 	// getClasses: Function;
 	// schoolList: any;
@@ -78,15 +79,15 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 		this.callback();
 	};
 	componentDidMount = () =>{
-		console.log("ENV",process.env)
+		this.props.LoadingActionFunc(false);
 	}
 
 	callback = async () => {
 		const { email, password }: IStates = this.state;
-
+		this.props.LoadingActionFunc(true);
 		await this.props.signIn({ email : email,role : 'manager',password : password});		
 		setItemWithObject("authUser", this.props.authUser);
-		
+		if(this.props.authUser.error)this.props.LoadingActionFunc(false);
 		// if(this.props.authUser.isSignedIn){
 		// 	this.props.refreshToken();
 		// 	await this.props.getClasses();
@@ -117,7 +118,7 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 				{/* { this.state.isNewUser === 't' && <Navigate to='/admin/welcome' replace={true} />}
 				{ this.state.isNewUser === 'f' && <Navigate to='/admin/dashboard' replace={true} />} */}
 
-				{ authUser.isSignedIn && <Navigate to='/manager/dashboard' replace={true} />}
+				{ authUser.isSignedIn && <Navigate to='/manager/welcome' replace={true} />}
 
 				<div className='primary f-16 project-header'>
 					<span>My Report Cards</span>
@@ -211,6 +212,6 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { signIn })(
+export default connect(mapStateToProps, { signIn,LoadingActionFunc })(
 	ManagerLoginPage
 );

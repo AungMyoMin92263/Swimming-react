@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { getItem, removeItem } from "../../auth/LocalStorage";
 import placeholder from "./../../assets/images/place-holder.png";
 import { InitialIcon } from "../../atoms/InitialIcon";
-
+import { LoadingActionFunc } from "../../stores/actions";
 interface IStates {
 	students: any[];
 	school_name: string;
@@ -18,6 +18,7 @@ interface IStates {
 
 interface IProps {
   classes: any;
+  LoadingActionFunc : Function;
 }
 class InvitedStudentSummaryPage extends React.Component<IProps, IStates> {
   constructor(props: any) {
@@ -42,11 +43,13 @@ class InvitedStudentSummaryPage extends React.Component<IProps, IStates> {
 	});
 
     const user = JSON.parse(getItem("authUser") || "null");
-    if(user && user.userInfo && user.userInfo.data.assign_school) {
+    if(user && user.userInfo && user.userInfo.assign_school) {
        this.setState({
-        school_name : user.userInfo.data.assign_school.school.name,
+        school_name : user.userInfo.assign_school.school.name,
        });
     }
+	this.props.LoadingActionFunc(false);
+
   }
 
   render() {
@@ -144,4 +147,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, {})(InvitedStudentSummaryPage);
+export default connect(mapStateToProps, { LoadingActionFunc })(InvitedStudentSummaryPage);

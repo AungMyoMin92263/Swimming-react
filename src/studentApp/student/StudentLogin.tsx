@@ -6,7 +6,7 @@ import { StoreState } from "../../stores/reducers";
 import { signIn } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
 import { setItemWithObject } from "../../auth/LocalStorage";
-
+import CoachMobileHeader from "../../atoms/CoachMobileHeader";
 interface IStates {
   email: string;
   password: string;
@@ -95,86 +95,84 @@ class StudentLoginPage extends React.Component<IProps, IStates> {
     let { authUser } = this.props;
     return (
       <div className="wrapper-mobile">
-        <div className="content-mobile center col-sm-12">
-          {authUser.isSignedIn && (
-            <Navigate to="/student/welcome" replace={true} />
-          )}
-          <div className="primary f-16 fw-500 m-32">
-            <span>My Report Cards</span>
-          </div>
-          <div className="fw-500 f-32">
-            <span>Login</span>
-          </div>
-          <div className="mb-16">
-            <InputFormAtom
-              label="Email Address"
-              placeholder={"Enter your email address"}
-              warning={emailMsg}
-              type="email"
-              showWarning={isEmailEmpty || !isEmailValid}
-              isDropdown={false}
-              callback={(value: string) => {
-                this.setState({
-                  email: value,
-                });
-              }}
-              id="signupEmail"
-              name="signupEmail"
-              value={email}
-              required={true}
-              maxLength={200}
-              className=""
-              clickCallback={() => {}}
-              focusCallback={() => {
-                this.setState({
-                  isEmailEmpty: false,
-                  isEmailValid: true,
-                });
-              }}
-            />
-          </div>
-          <div className="mb-32">
-            <InputFormAtom
-              label="Password"
-              placeholder={"Enter your password"}
-              warning={passwordMsg}
-              type="password"
-              showWarning={isPasswordEmpty}
-              isDropdown={false}
-              callback={(value: string) => {
-                this.setState({
-                  password: value,
-                });
-              }}
-              id="signupPassword"
-              name="signupPassword"
-              value={password}
-              required={true}
-              maxLength={200}
-              className=""
-              clickCallback={() => {}}
-            />
-          </div>
-          {authUser.error && <p className="text-danger">{authUser.error}</p>}
-
-          <div className="center mb-16">
-            <Link
-              to="/student/recover-password"
-              style={{ textDecoration: "none" }}
-            >
-              <span className="f-14 primary">Forgot password?</span>
-            </Link>
-          </div>
-
-          <button
-            type="submit"
-            className="btn btn-primary mobile-btn"
-            onClick={() => this.submit()}
-          >
-            Login
-          </button>
+      <div className="content-mobile-cus center col-sm-12">
+        {authUser.isSignedIn && (
+          <Navigate to="/coach/welcome" replace={true} />
+        )}
+        <CoachMobileHeader title={true} ></CoachMobileHeader>
+        <div className="fw-500 f-32 pt-40 pb-40">
+          <span>Log In</span>
         </div>
+        <div className="mb-16">
+          <InputFormAtom
+            label="Email Address"
+            placeholder={"Enter your email address"}
+            warning={emailMsg}
+            type="email"
+            showWarning={isEmailEmpty || !isEmailValid}
+            isDropdown={false}
+            callback={(value: string) => {
+              this.setState({
+                email: value,
+              });
+            }}
+            id="signupEmail"
+            name="signupEmail"
+            value={email}
+            required={true}
+            maxLength={200}
+            className=""
+            clickCallback={() => { }}
+            focusCallback={() => {
+              this.setState({
+                isEmailEmpty: false,
+                isEmailValid: true,
+              });
+            }}
+          />
+        </div>
+        <div className="mb-32">
+          <InputFormAtom
+            label="Password"
+            placeholder={"Enter your password"}
+            warning={passwordMsg}
+            type="password"
+            showWarning={isPasswordEmpty}
+            isDropdown={false}
+            callback={(value: string) => {
+              this.setState({
+                password: value,
+              });
+            }}
+            id="signupPassword"
+            name="signupPassword"
+            value={password}
+            required={true}
+            maxLength={200}
+            className=""
+            clickCallback={() => { }}
+          />
+        </div>
+        {authUser.error && <p className="text-danger">{authUser.error}</p>}
+
+        <div className="center mb-16 mt-120 fw-500">
+          <Link
+            to="/coach/recover-password"
+            style={{ textDecoration: "none" }}
+          >
+            <span className="f-14 primary">Forgot password?</span>
+          </Link>
+        </div>
+
+        <button
+          type="submit"
+          className="btn btn-primary mobile-btn cus-primay-btn-m"
+          onClick={() => this.submit()}
+        >
+          Login
+        </button>
       </div>
+    </div>
     );
   }
 }

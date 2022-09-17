@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import InputFormAtom from "../../atoms/InputFormAtom";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
-import { signIn } from "../../stores/actions";
+import { LoadingActionFunc, signIn } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
 import { setItemWithObject } from "../../auth/LocalStorage";
 import { refreshToken } from "../../stores/actions/school-action";
@@ -26,6 +26,7 @@ interface AdminLoginPage {
 	refreshToken: Function;
 	getAllSchools: Function;
 	schoolList: any;
+	LoadingActionFunc : Function;
 }
 
 type IProps = AdminLoginPage;
@@ -33,7 +34,6 @@ type IProps = AdminLoginPage;
 class AdminLoginPage extends React.Component<IProps, IStates> {
 	constructor(props: IProps) {
 		super(props);
-		console.log("props", props);
 		this.state = {
 			email: "",
 			password: "",
@@ -45,6 +45,7 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 			isNewUser: "",
 			schoolList:[]
 		};
+		this.props.LoadingActionFunc(false);
 	}
 
 	submit = () => {
@@ -104,6 +105,7 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 	}
 
 	callback = async () => {
+		this.props.LoadingActionFunc(true);
 		const { email, password }: IStates = this.state;
 
 		await this.props.signIn({ email: email,role : 'admin', password: password });
@@ -233,4 +235,4 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { signIn,refreshToken, getAllSchools })(AdminLoginPage);
+export default connect(mapStateToProps, { signIn,refreshToken, getAllSchools, LoadingActionFunc})(AdminLoginPage);

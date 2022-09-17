@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { StoreState } from "../../stores/reducers";
-import { inviteCoach } from "../../stores/actions/class-action";
+import { inviteCoach, LoadingActionFunc } from "../../stores/actions";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -22,6 +22,7 @@ interface IProps {
 	emails: string[];
 	classes: any;
 	inviteCoach: Function;
+	LoadingActionFunc : Function;
 }
 class InviteCoachPage extends React.Component<IProps, IStates> {
 	constructor(props: any) {
@@ -37,15 +38,16 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
 	}
 	componentDidMount() {
 		const user = JSON.parse(getItem("authUser") || "null");
-		if (user && user.userInfo && user.userInfo.data.assign_school) {
+		if (user && user.userInfo && user.userInfo.assign_school) {
 			this.setState({
-				school_name: user.userInfo.data.assign_school.school.name,
+				school_name: user.userInfo.assign_school.school.name,
 			});
 		}
 		const classObject = JSON.parse(getItem("class") || "null");
 		this.setState({
 			classObj: classObject,
 		});
+		this.props.LoadingActionFunc(false);
 	}
 
 	handleChange = (tags: string[]) => {
@@ -63,6 +65,8 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
 		console.log("Clicked")
 		if (this.isValid()) {
 			if (this.state.classObj) {
+				this.props.LoadingActionFunc(true);
+
 				await this.props.inviteCoach({
 					user_email: this.state.emails,
 					class_id: this.state.classObj.id,
@@ -73,6 +77,8 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
 						isCompleted: false,
 						errorMsg: this.props.classes.error,
 					});
+					this.props.LoadingActionFunc(false);
+
 				} else {
 					this.setState({
 						isCompleted: true,
@@ -192,4 +198,4 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { inviteCoach })(InviteCoachPage);
+export default connect(mapStateToProps, { inviteCoach,LoadingActionFunc })(InviteCoachPage);

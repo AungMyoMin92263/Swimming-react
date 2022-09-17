@@ -9,7 +9,12 @@ export interface ClassInterface {
     logo?: string | null;
     error?: string | null;
 }
-
+export interface ClassProgramInterface {
+    id?: number
+    logo?: string
+    upload_date?: string
+    class_id?:string
+}
 export interface ClassRangeInterface {
     class_list: ClassInterface[] | null
     date: Date | null;

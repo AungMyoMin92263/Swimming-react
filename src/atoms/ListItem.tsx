@@ -1,7 +1,6 @@
 import React from 'react';
 import "./ListItem.css"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-
 export interface IListItem {
   text: string,
   icon?: JSX.Element,
@@ -11,6 +10,7 @@ export interface IListItem {
   secondryText?: boolean
   selectable?: boolean
   children?: JSX.Element
+  arrowRight?: boolean
 }
 const ListItem = (props: IListItem) => {
   return (
@@ -19,7 +19,7 @@ const ListItem = (props: IListItem) => {
         props.callback()
       }
     }}>
-      <div className='item-text'>
+      <div className={props.isBigIcon ? 'item-text bigicon' : 'item-text'}>
         <div className='main-text'>
           {props.icon ? (<div className={props.isBigIcon ? "text-icon isBig" : "text-icon"}>{props.icon}</div>) : <></>}
           <div className='title-text'>
@@ -27,13 +27,13 @@ const ListItem = (props: IListItem) => {
             <small className='small-text'>{props.smallText}</small>
           </div>
         </div>
-        {/* <div className='second-text'> */}
-        {props.secondryText ? props.children : <></>}
-        {/* </div> */}
+        <div className={props.icon ? 'second-text' : 'second-text no-p-left'}>
+          {props.secondryText ? props.children : <></>}
+        </div>
       </div>
       <div className='item-icon'>
-        {!props.selectable ?
-          <ArrowForwardIosIcon></ArrowForwardIosIcon> :
+        {!props.selectable ? (!props.arrowRight ? <></> : <ArrowForwardIosIcon></ArrowForwardIosIcon>)
+          :
           <label className="radio-container">
             <input type="checkbox" className='checkbox' />
             <span className="checkmark"></span>

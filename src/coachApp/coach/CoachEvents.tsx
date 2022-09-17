@@ -3,9 +3,9 @@ import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
-import ListBoxUI from "../../atoms/ListBox";
 import ListItem, { IListItem } from "../../atoms/ListItem";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
+import ListBoxUI from "../../molecules/ListBox";
 
 interface IStates {
   step: number;
@@ -57,15 +57,12 @@ class CoachEventsPage extends React.Component<IProps, IStates> {
               callback={() => {}}
               more={false}
             >
-              <>
                 <ListItem {...item2}>
-                  {/* isBig */}
-                  <div className="second-text ">
+                  <>
                   <WatchLaterIcon />
-                    <label>27 Jul 2022</label>
-                  </div>
+                  <label>27 Jul 2022</label>
+                  </>
                 </ListItem>
-              </>
             </ListBoxUI>
             </div>
 

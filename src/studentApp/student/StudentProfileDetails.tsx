@@ -7,9 +7,9 @@ import { connect } from "react-redux";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import ProfileContainer, { IProfile } from "../../atoms/ProfileContainer";
-import ListBoxUI from "../../atoms/ListBox";
 import ListItem, { IListItem } from "../../atoms/ListItem";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
+import ListBoxUI from "../../molecules/ListBox";
 interface IStates {
   step: number;
 }
@@ -50,10 +50,10 @@ class StudentProfileDetailsPage extends React.Component<IProps, IStates> {
       icon: <img src={"/assets/icons/logo.png"} className="logo-icon" />,
       secondryText: true,
       isBigIcon: false,
-      selectable : true
+      selectable: true
     };
 
-    let item2 : IListItem = {
+    let item2: IListItem = {
       text: "100m Freestyle",
       callback: () => console.log("log click item"),
       smallText: "Male, 9-10 y/o, 64.42s",
@@ -76,10 +76,10 @@ class StudentProfileDetailsPage extends React.Component<IProps, IStates> {
             </div>
             <div className="mb-8">
 
-            <ProfileContainer {...profile}></ProfileContainer>
-</div>
+              <ProfileContainer {...profile}></ProfileContainer>
+            </div>
             <div className="mb-8">
-              <ListBoxUI title="Attendance" callback={() => {}} more={true} moreText="View All">
+              <ListBoxUI title="Attendance" callback={() => { }} more={true} moreText="View All">
                 <>
                   <ListItem {...item}>
                     <div className="second-text ">
@@ -115,7 +115,7 @@ class StudentProfileDetailsPage extends React.Component<IProps, IStates> {
               </ListBoxUI>
             </div>
             <div className="mb-8">
-              <ListBoxUI title="Events" callback={() => {}} more={true} moreText="View All">
+              <ListBoxUI title="Events" callback={() => { }} more={true} moreText="View All">
                 <>
                   <ListItem {...item2}>
                     <></>

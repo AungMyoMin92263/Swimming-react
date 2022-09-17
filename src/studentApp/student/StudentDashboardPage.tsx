@@ -3,7 +3,6 @@ import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
-import ListBoxUI from "../../atoms/ListBox";
 import ListItem, { IListItem } from "../../atoms/ListItem";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import { getItem } from "../../auth/LocalStorage";
@@ -11,6 +10,7 @@ import { InitialIcon } from "../../atoms/InitialIcon";
 import { Navigate } from "react-router-dom";
 import { getclassesByDate, getAllStudents } from "../../stores/actions";
 import placeholder from "../../assets/images/place-holder.png";
+import ListBoxUI from "../../molecules/ListBox";
 interface IStates {
 	step: number;
 	user_name: string;
@@ -93,17 +93,17 @@ class StudentDashboardPage extends React.Component<IProps, IStates> {
 		let user = JSON.parse(getItem("authUser") || "null");
 		if (user && user.userInfo) {
 			await this.setState({
-				user_id: user.userInfo.data.id,
-				user_name: user.userInfo.data.name,
+				user_id: user.userInfo.id,
+				user_name: user.userInfo.name,
 			});
 			if (this.state.user_id > -1) this.getStudents();
 
 			if (
-				user.userInfo.data.assign_class &&
-				user.userInfo.data.assign_class.length > 0
+				user.userInfo.assign_class &&
+				user.userInfo.assign_class.length > 0
 			) {
 				await this.setState({
-					schoolId: user.userInfo.data.assign_class[0].classes.school_id,
+					schoolId: user.userInfo.assign_class[0].classes.school_id,
 				});
 
 				this.getClassesByDate();
@@ -113,7 +113,7 @@ class StudentDashboardPage extends React.Component<IProps, IStates> {
 
 	classCallback = (id: any) => {
 		this.setState({ goClass: true });
-		this.urlClass = "/coache/dashboard/daily-program/" + id;
+		this.urlClass = "/coach/dashboard/daily-program/" + id;
 	};
 
 	getClassesByDate = async () => {
@@ -197,7 +197,7 @@ class StudentDashboardPage extends React.Component<IProps, IStates> {
 
 	studentCallback = (id: any) => {
 		this.setState({ goStudent: true });
-		this.urlStudent = "/coache/profile-detail/" + id;
+		this.urlStudent = "/coach/profile-detail/" + id;
 	};
 
 	render() {

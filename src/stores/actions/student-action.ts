@@ -11,7 +11,7 @@ var optionImage: AxiosRequestConfig;
 export const refreshTokenStudent = () => {
   const authUser = JSON.parse(getItem("authUser") || "null");
   if (authUser && authUser.userInfo) {
-  token = authUser.userInfo.data.token;
+  token = authUser.userInfo.token;
 
   option = {
     headers: {
@@ -41,12 +41,15 @@ export const getAllStudents =  (url : string) => {
   refreshTokenStudent();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.get<any>(url, option);
       dispatch<getStudentAction>({
         type: ActionTypes.getStudent,
         payload: response.data,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err instanceof Error) {
         dispatch<getStudentAction>({
           type: ActionTypes.getError,
@@ -68,12 +71,15 @@ export const getStudentObject =  (url : string) => {
   refreshTokenStudent();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.get<any>(url, option);
       dispatch<getStudentObjAction>({
         type: ActionTypes.getStudentObj,
         payload: response.data,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err instanceof Error) {
         dispatch<getStudentObjAction>({
           type: ActionTypes.getError,
@@ -95,6 +101,7 @@ export const postStudent = (student : any,url : string) => {
   refreshTokenStudent();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.post<any>(
         url, student, optionImage
       );
@@ -103,7 +110,9 @@ export const postStudent = (student : any,url : string) => {
         type: ActionTypes.createStudent,
         payload: response,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err : any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err ) {
         dispatch<createStudentAction>({
           type: ActionTypes.getError,
@@ -125,6 +134,7 @@ export const putStudent = (student: any, url : string, id: number) => {
   refreshTokenStudent();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.put<any>(
         url + '/' + id,
         student,
@@ -134,7 +144,9 @@ export const putStudent = (student: any, url : string, id: number) => {
         type: ActionTypes.editStudent,
         payload: response,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err: any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err ) {
         console.log(err.response.data.statusCode)
         // if (err.response.data.statusCode === 500 ){
@@ -163,12 +175,15 @@ export const deleteStudent = (url : string,id: number) => {
 
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.delete<any>(url+"/" + id, option);
       dispatch<deleteStudentAction>({
         type: ActionTypes.deleteStudent,
         payload: response,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err instanceof Error) {
         dispatch<deleteStudentAction>({
           type: ActionTypes.getError,

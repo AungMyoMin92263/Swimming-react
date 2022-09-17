@@ -3,7 +3,6 @@ import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
-import ListBoxUI from "../../atoms/ListBox";
 import ListItem, { IListItem } from "../../atoms/ListItem";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import { getItem } from "../../auth/LocalStorage";
@@ -12,6 +11,7 @@ import { getclassesByDateRange } from "../../stores/actions/class-action";
 import { ClassRangeInterface } from "../../stores/model/class-interface";
 import placeholder from "../../assets/images/place-holder.png";
 import { ClassInterface } from './../../stores/model/class-interface';
+import ListBoxUI from "../../molecules/ListBox";
 interface IStates {
 	step: number;
 	user_name: string;
@@ -49,7 +49,7 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 	}
 	classCallback = (id: any) => {
 		this.setState({ goClass: true });
-		this.urlClass = "/coache/dashboard/daily-program/" + id;
+		this.urlClass = "/coach/dashboard/daily-program/" + id;
 	};
 	getDatesInRange(startDate: Date, endDate: Date) {
 		const date = new Date(startDate.getTime());
@@ -65,16 +65,16 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 		let user = JSON.parse(getItem("authUser") || "null");
 		if (user && user.userInfo) {
 			this.setState({
-				user_id: user.userInfo.data.id,
-				user_name: user.userInfo.data.name,
+				user_id: user.userInfo.id,
+				user_name: user.userInfo.name,
 			});
 
 			if (
-				user.userInfo.data.assign_class &&
-				user.userInfo.data.assign_class.length > 0
+				user.userInfo.assign_class &&
+				user.userInfo.assign_class.length > 0
 			) {
 				this.setState({
-					schoolId: user.userInfo.data.assign_class[0].classes.school_id,
+					schoolId: user.userInfo.assign_class[0].classes.school_id,
 				});
 			}
 		}

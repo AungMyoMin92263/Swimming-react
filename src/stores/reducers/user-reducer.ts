@@ -6,7 +6,8 @@ export const authReducers = (
     isSignedIn: null,
     userInfo: null,
     error: null,
-    token: null
+    token: null,
+    otherUserinfo: null
   },
   action: Action
 ) => {
@@ -22,7 +23,7 @@ export const authReducers = (
     case ActionTypes.signUp:
       return {
         ...state,
-        isSignedUp:true,
+        isSignedUp: true,
       }
     case ActionTypes.changePwd:
       return {
@@ -31,7 +32,7 @@ export const authReducers = (
       }
     case ActionTypes.recoverPwd:
       const recoverUser = action.payload as IUser
-      return{
+      return {
         ...state,
         userInfo: recoverUser,
       }
@@ -43,8 +44,13 @@ export const authReducers = (
         error: null,
         token: null
       };
-      
-      case ActionTypes.getUsers:
+
+    case ActionTypes.getUsers:
+      return {
+        result: action.payload,
+        error: null,
+      };
+      case ActionTypes.editUser:
         return {
           result: action.payload,
           error: null,
@@ -54,6 +60,13 @@ export const authReducers = (
         ...state,
         isSignedIn: false,
         error: action.payload,
+      };
+
+    case ActionTypes.getOtherUserInfo:
+      return {
+        ...state,
+        error: null,
+        otherUserinfo: action.payload
       };
     default:
       return state;

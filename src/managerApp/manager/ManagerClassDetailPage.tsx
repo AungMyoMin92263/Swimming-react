@@ -18,7 +18,6 @@ import placeholder from "./../../assets/images/place-holder.png";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { AuthInterface } from "../../stores/model/auth-interface";
-import ListBoxUI from "../../atoms/ListBox";
 import ListItem, { IListItem } from "../../atoms/ListItem";
 import { InitialIcon } from "../../atoms/InitialIcon";
 import AddIcon from "@mui/icons-material/Add";
@@ -60,14 +59,14 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
     console.log(user.userInfo);
     if (user && user.userInfo) {
       this.setState({
-        email: user.userInfo.data.email,
+        email: user.userInfo.email,
         logo:
-          user.userInfo.data.assign_school
-            ? user.userInfo.data.assign_school.school.logo
+          user.userInfo.assign_school
+            ? user.userInfo.assign_school.school.logo
             : "",
         school_name:
-          user.userInfo.data.assign_school
-            ? user.userInfo.data.assign_school.school.name
+          user.userInfo.assign_school
+            ? user.userInfo.assign_school.school.name
             : "",
       });
     }

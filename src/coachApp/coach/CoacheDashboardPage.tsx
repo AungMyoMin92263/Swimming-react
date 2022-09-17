@@ -3,14 +3,17 @@ import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
-import ListBoxUI from "../../atoms/ListBox";
 import ListItem from "../../atoms/ListItem";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import { getItem } from "../../auth/LocalStorage";
 import { InitialIcon } from "../../atoms/InitialIcon";
 import { Navigate } from "react-router-dom";
-import { getclassesByDate, getAllStudents } from "../../stores/actions";
+import { getclassesByDate, getAllStudents, postClassProgram, getClassProgram } from "../../stores/actions";
 import placeholder from "../../assets/images/place-holder.png";
+import moment from 'moment';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import ListBoxUI from "../../molecules/ListBox";
+
 interface IStates {
   step: number;
   user_name: string;
@@ -32,7 +35,7 @@ interface IProps {
 }
 class CoacheDashboardPage extends React.Component<IProps, IStates> {
   path: any;
-  date: any;
+  // date: any;
   urlClass: any;
   urlStudent: any;
 
@@ -52,12 +55,9 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
     };
   }
   componentDidMount() {
-    this.date =
-      "Today, " +
-      new Date().getDate() +
-      " " +
-      this.displayMonth(new Date().getMonth());
-    this.getAuthFromLocal();
+    // this.date = "Today, " + moment().format('D MMMM');
+    // console.log(this.date);
+    this.getAuthFromLocal()
   }
 
   displayMonth = (month: number) => {
@@ -92,18 +92,20 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
   getAuthFromLocal = async () => {
     let user = JSON.parse(getItem("authUser") || "null");
     if (user && user.userInfo) {
+      console.log(user);
+
       await this.setState({
-        user_id: user.userInfo.data.id,
-        user_name: user.userInfo.data.name,
+        user_id: user.userInfo.id,
+        user_name: user.userInfo.name,
       });
       if (this.state.user_id > -1) this.getStudents();
 
       if (
-        user.userInfo.data.assign_class &&
-        user.userInfo.data.assign_class.length > 0
+        user.userInfo.assign_class &&
+        user.userInfo.assign_class.length > 0
       ) {
         await this.setState({
-          schoolId: user.userInfo.data.assign_class[0].classes.school_id,
+          schoolId: user.userInfo.assign_class[0].classes.school_id,
         });
 
         this.getClassesByDate();
@@ -112,8 +114,10 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
   };
 
   classCallback = (id: any) => {
-    this.setState({ goClass: true });
-    this.urlClass = "/coache/dashboard/daily-program/" + id;
+    // this.setState({ goClass: true });
+    // this.urlClass = "/coach/dashboard/daily-program/" + id;
+    let url = "/coach/dashboard/daily-program/" + id;
+    this.props.history.push(url)
   };
 
   getClassesByDate = async () => {
@@ -123,6 +127,7 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
       "/class/by-date?date=" +
       new Date().toISOString();
     await this.props.getclassesByDate(url);
+    console.log(this.props.classList);
 
     if (this.props.classList.result) {
       if (this.props.classList.result.length > 0) {
@@ -131,17 +136,18 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
           temp.push({
             obj: {
               text: this.props.classList.result[i].name,
-              callback: () =>
-                this.classCallback(this.props.classList.result[i].id),
+              callback: () => {
+                this.classCallback(this.props.classList.result[i].id)
+              },
               smallText: "",
               icon: (
                 <img
                   src={
                     this.props.classList.result[i].logo
                       ? process.env.REACT_APP_API_ENDPOINT +
-                        "/" +
-                        this.props.classList.result[i].logo
-                      : placeholder
+                      "/" +
+                      this.props.classList.result[i].logo
+                      : '/assets/images/place-holder.jpeg'
                   }
                   className="logo-icon"
                 />
@@ -179,7 +185,7 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
                   initials={this.props.studentList.result[i].email
                     .substr(0, 1)
                     .toUpperCase()}
-                    isFooterMenu={false}
+                  isFooterMenu={true}
                 />
               </>
             ),
@@ -195,40 +201,42 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
   };
 
   studentCallback = (id: any) => {
-    this.setState({ goStudent: true });
-    this.urlStudent = "/coache/dashboard/profile-detail/" + id;
+    let urlStudent = "/coach/dashboard/profile-detail/" + id;
+    this.props.history.push(urlStudent)
+
   };
 
   render() {
+    let date = "Today, " + moment().format('D MMMM');
     const { user_name, goClass, goStudent, classes, students } = this.state;
     return (
       <>
         {goClass && <Navigate to={this.urlClass} replace={true} />}
         {goStudent && <Navigate to={this.urlStudent} replace={true} />}
-        <div className="wrapper-mobile">
-          <div className="content-mobile col-sm-12">
-            <div className="f-32 fw-500 mt-16 mb-32">
+        <div className="wrapper-mobile bg-w ">
+          <div className="content-mobile-cus-space col-sm-12">
+            <div className="f-32 fw-500 mt-24 mb-40">
               <span> Hello, </span> <span>{user_name}</span>
             </div>
             <div className="mb-8">
-              <ListBoxUI title={this.date} callback={() => {}} more={false}>
+              <ListBoxUI title={date} callback={() => { }} more={false} noBtn={true}>
                 <>{classes &&
-											classes.length > 0 &&
-                    classes.map((classe: any, index: any) => (
-                      <ListItem {...classe.obj}>
-                        <div className="second-text ">
-                          <WatchLaterIcon />
-                          <label>{classe.start_time}</label>
-                        </div>
-                      </ListItem>
-                    ))}
+                  classes.length > 0 &&
+                  classes.map((classe: any, index: any) => (
+                    <ListItem {...classe.obj} key={`classOb${index}`} arrowRight={true}>
+                      <>
+                        <AccessTimeOutlinedIcon fontSize="small" />
+                        <label>{classe.start_time}</label>
+                      </>
+                    </ListItem>
+                  ))}
                 </>
               </ListBoxUI>
             </div>
 
             <ListBoxUI
               title="Students"
-              callback={() => {}}
+              callback={() => { }}
               more={true}
               moreText="View All"
             >
@@ -236,7 +244,7 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
                 {students &&
                   students.length > 0 &&
                   students.map((student: any, index: any) => (
-                    <ListItem {...student}>
+                    <ListItem {...student} arrowRight={true} key={`student${index}`}>
                       <></>
                     </ListItem>
                   ))}
@@ -265,6 +273,8 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { getclassesByDate, getAllStudents })(
+export default connect(mapStateToProps, {
+  getclassesByDate, getAllStudents
+})(
   CoacheDashboardPage
 );

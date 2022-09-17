@@ -1,11 +1,13 @@
-import { SignUpAction, SignInAction, SignOutAction, RecoverPasswordAction, ChangePasswordAction } from "./auth-action";
+import { SignUpAction, SignInAction, SignOutAction, RecoverPasswordAction, ChangePasswordAction, GetUsersAction, editUserAction } from "./auth-action";
 import { getSchoolsAction,createSchoolAction,editSchoolAction,deleteSchoolAction,inviteManagerAction, getSchoolObjAction} from './school-action';
 import { SelectedMenuAction } from './menu-action';
-import { createClassAction, deleteClassAction, editClassAction, getClassAction, getClassObjAction, inviteCoachAction, inviteStudentAction, getClassByDateAction, getclassesByDateAction } from "./class-action";
+import { createClassAction, deleteClassAction, editClassAction, getClassAction, getClassObjAction, inviteCoachAction, inviteStudentAction, getClassByDateAction, getclassesByDateAction, createClassProgramAction, getAssignUserByClassAction } from "./class-action";
 import { getEventAction , createEventAction , editEventAction ,deleteEventAction , inviteEventAction} from "./event-action";
-import { getAllAction, getUsersAction } from "./global-action";
-import { createCoachAction, createCommentAction, deleteCoachAction, editCoachAction, getCoachAction,getCoachObjAction } from "./coach-action";
+import { getAllAction, getUsersAction,LoadingAction } from "./global-action";
+import { createCoachAction, deleteCoachAction, editCoachAction, getCoachAction,getCoachObjAction } from "./coach-action";
 import { createStudentAction, deleteStudentAction, editStudentAction, getStudentAction,getStudentObjAction } from "./student-action";
+import { CommentAction } from "./comment-action";
+import { CreateAttendanceAction, GetMyAttendanceAction } from "./attendance-action";
 
 export enum ActionTypes {
   signUp,
@@ -14,6 +16,9 @@ export enum ActionTypes {
   recoverPwd,
   changePwd,
   getError,
+  getUserInfo,
+  getOtherUserInfo,
+  editUser,
 
   getSchools,
   getSchoolObj,
@@ -27,10 +32,21 @@ export enum ActionTypes {
   getClass,
   getclassesByDate,
   getclassesByDateRange,
+  getAssignUserByClass,
   getClassObj,
   createClass,
+  createClassProgram,
+  getClassProgram,
   editClass,
   deleteClass,
+  
+  // Comment
+  getComments,
+  postComment,
+
+  //MyAttendance
+  getMyAttendance,
+  createAttendance,
 
   inviteStudent,
   inviteCoach,
@@ -49,7 +65,6 @@ export enum ActionTypes {
   editCoach,
   deleteCoach,
 
-  postComment,
 
    //student
    getStudent,
@@ -61,6 +76,7 @@ export enum ActionTypes {
    //global
    getAll,
    getUsers,
+   loading,
 }
 
 export type Action = SignUpAction
@@ -77,7 +93,8 @@ export type Action = SignUpAction
   | SelectedMenuAction
   | getClassAction 
   | getClassObjAction
-  | createClassAction 
+  | createClassAction
+  | createClassProgramAction
   | editClassAction 
   | deleteClassAction
   | inviteStudentAction
@@ -88,6 +105,7 @@ export type Action = SignUpAction
   | deleteEventAction
   | inviteEventAction
   | getUsersAction 
+  | GetUsersAction
   | getCoachAction 
   | getCoachObjAction
   | createCoachAction 
@@ -101,4 +119,9 @@ export type Action = SignUpAction
   | getClassByDateAction 
   | getAllAction
   | getclassesByDateAction
-  | createCommentAction
+  | CommentAction
+  | LoadingAction
+  | getAssignUserByClassAction
+  | GetMyAttendanceAction
+  | CreateAttendanceAction
+  | editUserAction

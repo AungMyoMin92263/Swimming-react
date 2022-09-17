@@ -9,6 +9,14 @@
   --white: #FFF;
 }
 
+body * {
+  font-family: "Work Sans";
+}
+
+.bg-w {
+  background-color: #fff !important;
+}
+
 body a {
   font-family: "Work Sans";
   font-style: normal;
@@ -52,7 +60,7 @@ body a {
 .wrapper-mobile {
   background-color: var(--bg-color);
   color: var(--font-color);
-  height: calc(100vh - 65px);
+  height: 100vh;
   overflow-y: auto;
   display: flex;
   justify-content: center;
@@ -64,6 +72,24 @@ body a {
   overflow: hidden;
   max-width: 375px;
   height: calc(100vh - 137px);
+  overflow-y: auto;
+}
+
+.content-mobile-cus {
+  width: 100%;
+  padding: 16px;
+  overflow: hidden;
+  max-width: 375px;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.content-mobile-cus-space {
+  width: 100%;
+  padding: 16px;
+  overflow: hidden;
+  max-width: 600px;
+  height: calc(100vh - 65px);
   overflow-y: auto;
 }
 
@@ -177,36 +203,42 @@ body a {
   width: 100%;
 }
 
+.cus-primay-btn-m {
+  background-color: #0070F8;
+  border-radius: 8px;
+  height: 48px;
+}
+
 .form-footer {
   display: flex;
   justify-content: space-between;
 }
 
-.comment-input-div{
-position: absolute;
-bottom: 0px;
-width: 375px;
-height: 56px;
-margin-left: -15px;
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding: 16px;
-box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+.comment-input-div {
+  position: absolute;
+  bottom: 0px;
+  width: 375px;
+  height: 65px;
+  margin-left: -15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
 
 }
 
-.comment-input{
-  background: #FFFFFF;
+.comment-input {
+  background: inherit;
   border: none;
-  
+
 }
 
 .comment-input:focus {
   outline: none;
 }
 
-.send-btn{
+.send-btn {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -282,11 +314,29 @@ box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
 .mt-8 {
   margin-top: 8px;
 }
+
 .mt-16 {
   margin-top: 16px;
 }
+
 .mt-24 {
   margin-top: 24px;
+}
+
+.mt-32 {
+  margin-top: 32px;
+}
+
+.mt-40 {
+  margin-top: 40px;
+}
+
+.mt-56 {
+  margin-top: 56px;
+}
+
+.mt-120 {
+  margin-top: 120px;
 }
 
 .mr-8 {
@@ -302,21 +352,29 @@ box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 .mb-8 {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 
 .mb-16 {
   margin-bottom: 16px;
 }
 
+.mb-24 {
+  margin-bottom: 24px;
+}
+
 .mb-32 {
   margin-bottom: 32px;
 }
 
+.mb-40 {
+  margin-bottom: 40px;
+}
 
 .ml-16 {
   margin-left: 16px;
 }
+
 .ml-56 {
   margin-left: 56px;
 }
@@ -339,20 +397,60 @@ box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
   padding: 24px;
 }
 
-.pl-24 {
-  padding-left: 24px;
+.pt-8 {
+  padding-top: 8px;
 }
 
-.mt-8 {
-  margin-top: 8px;
+.pt-16 {
+  padding-top: 16px;
 }
 
-.mt-16 {
-  margin-top: 16px;
+.pt-24 {
+  padding-top: 24px;
 }
 
-.mt-32 {
-  margin-top: 32px;
+.pt-32 {
+  padding-top: 32px;
+}
+
+.pt-40 {
+  padding-top: 40px;
+}
+
+.pt-56 {
+  padding-top: 56px;
+}
+
+.pr-8 {
+  padding-right: 8px;
+}
+
+.pr-16 {
+  padding-right: 16px;
+}
+
+.pr-24 {
+  padding-right: 24px;
+}
+
+.pb-8 {
+  padding-bottom: 16px;
+}
+
+.pb-16 {
+  padding-bottom: 16px;
+}
+
+.pb-24 {
+  padding-bottom: 24px;
+}
+
+.pb-32 {
+  padding-bottom: 32px;
+}
+
+.pb-40 {
+  padding-bottom: 40px;
 }
 
 
@@ -469,7 +567,7 @@ box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
   justify-content: space-between;
 }
 
-.justify-space-around{
+.justify-space-around {
   justify-content: space-around;
 }
 
@@ -514,18 +612,24 @@ box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
   height: 40px;
   border-radius: 50%;
 }
-.file-upload{
+
+.file-upload {
   height: 135px;
   max-width: 100%;
   color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 500;
+  font-size: 14px;
+  text-align: center;
+  color: #0070F8;
+
 }
 
-.daily-programme-image{
-  height: 135px;
-  width: auto;
+.daily-programme-image {
+  /* height: 135px; */
+  width: 100%;
 }
 
 .back-btn {
@@ -537,23 +641,45 @@ box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
   background-color: #FFF;
 }
 
-.send-btn{
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    box-shadow: 2px 2px 2px 2px #dee2e6;
-    border: 0.1px solid #F5F5F5;
-    background-color: var(--primary);
+.send-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: 2px 2px 2px 2px #dee2e6;
+  border: 0.1px solid #F5F5F5;
+  background-color: var(--primary);
 }
 
 /* .row>*{
   padding: 0px !important;
 } */
 
-.big-logo{
+.big-logo {
   width: 80px;
   height: 80px;
   border-radius: 50%;
+}
+
+.page-tile {
+  font-weight: 500;
+  font-size: 32px;
+  color: #1A1A1A;
+
+}
+
+.no-bagde {
+  min-height: 100px;
+  font-size: 12px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-weight: 500;
+  color: #808080;
+}
+
+.no-bagde>span {
+  width: 100%;
 }
 
 @media screen and (max-width: 767px) {
@@ -567,6 +693,10 @@ box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
     text-align: center;
   }
 
+  .mobile-image-cus {
+    width: 100%;
+  }
+
   .mobile-image {
     width: 360px;
     height: 405px;
@@ -577,10 +707,11 @@ box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
   }
 }
 
-.fc-primary{
+.fc-primary {
   color: var(--primary)
 }
-.fc-second{
+
+.fc-second {
   color: var(--secondary);
 }
 
@@ -631,26 +762,26 @@ td {
   }
 }
 
-.badge-color{
-box-sizing: border-box;
+.badge-color {
+  box-sizing: border-box;
 
-width: 56px;
-height: 56px;
+  width: 56px;
+  height: 56px;
 
-background: #002D63;
-border: 2px solid #dee2e6;
-border-radius: 50%;
-}
-
-.edit-icon{
-  width : 64px;
-  height : 64px;
+  background: #002D63;
+  border: 2px solid #dee2e6;
   border-radius: 50%;
 }
 
-.w-120-icon{
-  width : 120px;
-  height : 120px;
+.edit-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+.w-120-icon {
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
 }
 
@@ -658,3 +789,44 @@ border-radius: 50%;
   margin-right: 0;
   margin-left: 0;
 }
+
+.loader-ajax {
+  display: none;
+  position: fixed;
+  z-index: 1100;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8) url("../src/assets/images/loader.gif") 50% 50% no-repeat;
+  background-size: 55px;
+}
+
+.loading {
+  overflow: hidden;
+}
+
+.loading .loader-ajax {
+  display: block;
+}
+
+.initial-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.initial-big-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+}
+

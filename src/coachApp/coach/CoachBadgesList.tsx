@@ -6,8 +6,6 @@ import { connect } from "react-redux";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-
-import ListBoxUI from "../../atoms/ListBox";
 import ListItem, { IListItem } from "../../atoms/ListItem";
 import BestScoreBox from "../../atoms/BestScoreBox";
 import { InitialIcon } from "../../atoms/InitialIcon";
@@ -42,7 +40,7 @@ class CoachBadgesListPage extends React.Component<IProps, IStates> {
     this.setState({
       studentId:studentId
     })
-    if (this.state.studentId) this.urlProfileDetail = "/coache/dashboard/profile-detail/" + this.state.studentId
+    if (this.state.studentId) this.urlProfileDetail = "/coach/dashboard/profile-detail/" + this.state.studentId
     
     //loading
   }
@@ -70,14 +68,14 @@ class CoachBadgesListPage extends React.Component<IProps, IStates> {
     return (
       <>
         <div className="wrapper-mobile">
-          {goNewBadge && <Navigate to="/coache/create-badge" replace={true} />}
+          {goNewBadge && <Navigate to="/coach/create-badge" replace={true} />}
           {goBadgeChoosed && (
-            <Navigate to="/coache/icon-confirm" replace={true} />
+            <Navigate to="/coach/icon-confirm" replace={true} />
           )}
 
           <div className="content-mobile col-sm-12">
             <div className="mb-32">
-              <Link to="/coache/dashboard/">
+              <Link to="/coach/dashboard/">
                 <button type="submit" className="back-btn">
                   <ArrowBackIcon
                     sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}

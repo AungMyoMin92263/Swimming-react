@@ -1,4 +1,5 @@
 import React from "react";
+import { LoadingActionFunc } from "../../stores/actions";
 
 // icon
 import AddIcon from "@mui/icons-material/Add";
@@ -17,7 +18,8 @@ interface IStates {
 }
 interface IProps {
 	schools: any;
-	school:School
+	school:School;
+	LoadingActionFunc : Function;
 }
 
 class AddMoreSchoolPage extends React.Component<IProps, IStates> {
@@ -40,7 +42,7 @@ class AddMoreSchoolPage extends React.Component<IProps, IStates> {
 				image: school.logo,
 			});
 		}
-		console.log("props",this.props)
+		this.props.LoadingActionFunc(false);
 	}
 
 
@@ -113,5 +115,5 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, {  })(AddMoreSchoolPage);
+export default connect(mapStateToProps, { LoadingActionFunc })(AddMoreSchoolPage);
 

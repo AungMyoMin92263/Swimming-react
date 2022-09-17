@@ -1,6 +1,6 @@
 import React from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import './ListBox.css'
+import '../molecules/ListBox.css'
 import ReplyOutlinedIcon from '@mui/icons-material/ReplyOutlined';
 export interface ICommentItem {
   message: string,

@@ -7,10 +7,10 @@ import { connect } from "react-redux";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
-import ListBoxUI from "../../atoms/ListBox";
 import ListItem, { IListItem } from "../../atoms/ListItem";
 import ProfileContainer, { IProfile } from "../../atoms/ProfileContainer";
 import BestScoreBox from "../../atoms/BestScoreBox";
+import ListBoxUI from "../../molecules/ListBox";
 interface IStates {
   step: number;
 }

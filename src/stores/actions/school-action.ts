@@ -12,7 +12,7 @@ var optionImage: AxiosRequestConfig;
 export const refreshToken = (token=null) => {
   if (token===null) {const authUser = JSON.parse(getItem("authUser") || "null");
   if (authUser && authUser.userInfo) {
-  token = authUser.userInfo.data.token;}
+  token = authUser.userInfo.token;}
   console.log('token',token)
 
   option = {
@@ -44,13 +44,16 @@ export const getAllSchools = () => {
   refreshToken();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.get<School>("schools", option);
       console.log('response', response.data)
       dispatch<getSchoolsAction>({
         type: ActionTypes.getSchools,
         payload: response.data,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err : any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err) {
         dispatch<getSchoolsAction>({
           type: ActionTypes.getError,
@@ -72,12 +75,15 @@ export const getSchoolObj =  (url : string) => {
   refreshToken();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.get<School>(url, option);
       dispatch<getSchoolObjAction>({
         type: ActionTypes.getSchoolObj,
         payload: response.data,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err instanceof Error) {
         dispatch<getSchoolObjAction>({
           type: ActionTypes.getError,
@@ -99,6 +105,7 @@ export const postSchool = (school : SchoolInterface) => {
   refreshToken();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.post<School>(
         'schools', school, optionImage
       );
@@ -107,7 +114,9 @@ export const postSchool = (school : SchoolInterface) => {
         type: ActionTypes.createSchool,
         payload: response,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err:any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err) {
         
         dispatch<createSchoolAction>({
@@ -130,6 +139,7 @@ export const putSchool = (school: SchoolInterface, id: number) => {
   refreshToken();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.put<School>(
         "schools/" + id,
         school,
@@ -139,7 +149,9 @@ export const putSchool = (school: SchoolInterface, id: number) => {
         type: ActionTypes.editSchool,
         payload: response,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err :any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err) {
         console.log(err)
         dispatch<editSchoolAction>({
@@ -162,12 +174,15 @@ export const deleteSchoolObj = (id: number) => {
   refreshToken();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.delete<School>("schools/" + id, option);
       dispatch<deleteSchoolAction>({
         type: ActionTypes.deleteSchool,
         payload: response,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err instanceof Error) {
         dispatch<deleteSchoolAction>({
           type: ActionTypes.getError,
@@ -189,6 +204,7 @@ export const inviteManager = (emails : any) => {
   refreshToken();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.post<School>(
         'assigned/school', emails, option
       );
@@ -197,7 +213,9 @@ export const inviteManager = (emails : any) => {
         type: ActionTypes.inviteManager,
         payload: response,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err: any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       console.log("Error", err.response)
       if (err) {
         dispatch<inviteManagerAction>({

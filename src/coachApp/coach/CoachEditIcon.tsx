@@ -46,11 +46,11 @@ class CoachEditIconPage extends React.Component<IProps, IStates> {
     return (
       <>
         <div className="wrapper-mobile">
-        {goCreateBadge && <Navigate to="/coache/create-badge" replace={true} />}
+        {goCreateBadge && <Navigate to="/coach/create-badge" replace={true} />}
 
           <div className="content-mobile col-sm-12">
             <div className="mb-32">
-              <Link to="/coache/create-badge">
+              <Link to="/coach/create-badge">
               <button type="submit" className="back-btn">
                 <ArrowBackIcon
                   sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}

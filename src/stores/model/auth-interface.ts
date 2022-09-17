@@ -3,6 +3,7 @@ export interface AuthInterface {
   userInfo: IUser | null;
   error?: string | null;
   token?: string | null;
+  otherUserinfo?: any 
 }
 
 export interface SignInInterface {

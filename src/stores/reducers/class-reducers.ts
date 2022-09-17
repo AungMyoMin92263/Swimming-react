@@ -3,6 +3,8 @@ import { Action, ActionTypes } from "../actions/types";
 export const classReducers = (
   state: any = {
     result: null,
+    dailyProgram: null,
+    assignUser: [],
     error: null,
   },
   action: Action
@@ -69,7 +71,16 @@ export const classReducers = (
         ...state,
         error: action.payload,
       };
-
+    case ActionTypes.createClassProgram:
+      return {
+        ...state,
+        dailyProgram: action.payload,
+      };
+    case ActionTypes.getAssignUserByClass:
+      return {
+        ...state,
+        assignUser: action.payload,
+      };
     default:
       return state;
   }

@@ -2,53 +2,29 @@ import { ActionTypes } from "./types";
 import apiServer from "../../api/api-service";
 import { Dispatch } from "redux";
 import { Class } from "../model/class";
-import { ClassInterface } from "../model/class-interface";
-import { AxiosRequestConfig } from "axios";
-import { getItem } from "../../auth/LocalStorage";
-
-var token = '';
-var option: AxiosRequestConfig;
-var optionImage: AxiosRequestConfig;
-
-export const refreshTokenClass = () => {
-  const authUser = JSON.parse(getItem("authUser") || "null");
-  if (authUser && authUser.userInfo) {
-  token = authUser.userInfo.data.token;
-
-  option = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  };
-  
-  optionImage = {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      'Accept': "multipart/form-data",
-      'type': "formData",
-      Authorization: `Bearer ${token}`,
-    },
-  };
+import { ClassInterface, ClassProgramInterface } from "../model/class-interface";
+import { refreshHeaderOptionToken } from "../../api/api-header-option";
+// import { AxiosRequestConfig } from "axios";
 
 
-}
-}
 export interface getClassAction {
   type: ActionTypes.getClass | ActionTypes.getError;
   payload: Class | Class[] | any;
 }
 
-export const getAllclasses =  (url : string) => {
-  refreshTokenClass();
+export const getAllclasses = (url: string) => {
+  let options = refreshHeaderOptionToken();
   return async (dispatch: Dispatch) => {
     try {
-      const response = await apiServer.get<Class>(url, option);
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.get<Class>(url, options.option);
       dispatch<getClassAction>({
         type: ActionTypes.getClass,
         payload: response.data,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err instanceof Error) {
         dispatch<getClassAction>({
           type: ActionTypes.getError,
@@ -64,18 +40,21 @@ export const getAllclasses =  (url : string) => {
 export interface getClassByDateAction {
   type: ActionTypes.getclassesByDate | ActionTypes.getError;
   payload: any;
-} 
+}
 
-export const getclassesByDate =  (url : string) => {
-  refreshTokenClass();
+export const getclassesByDate = (url: string) => {
+  let options = refreshHeaderOptionToken();
   return async (dispatch: Dispatch) => {
     try {
-      const response = await apiServer.get<Class>(url, option);
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.get<Class>(url, options.option);
       dispatch<getClassAction>({
         type: ActionTypes.getClass,
         payload: response.data,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err instanceof Error) {
         dispatch<getClassAction>({
           type: ActionTypes.getError,
@@ -93,16 +72,20 @@ export interface getClassObjAction {
   payload: Class | any;
 }
 
-export const getClassObject =  (url : string) => {
-  refreshTokenClass();
+export const getClassObject = (url: string) => {
+  let options = refreshHeaderOptionToken();
+
   return async (dispatch: Dispatch) => {
     try {
-      const response = await apiServer.get<Class>(url, option);
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.get<Class>(url, options.option);
       dispatch<getClassObjAction>({
         type: ActionTypes.getClassObj,
         payload: response.data,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err instanceof Error) {
         dispatch<getClassObjAction>({
           type: ActionTypes.getError,
@@ -120,21 +103,93 @@ export interface createClassAction {
   payload: Class | any;
 }
 
-export const postClass = (classe : ClassInterface,url : string) => {
-  refreshTokenClass();
+export const postClass = (classe: ClassInterface, url: string) => {
+  let options = refreshHeaderOptionToken();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.post<Class>(
-        url, classe, optionImage
+        url, classe, options?.optionImage
       );
 
       dispatch<createClassAction>({
         type: ActionTypes.createClass,
         payload: response,
       });
-    } catch (err : any) {
-      if (err ) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err: any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err) {
         dispatch<createClassAction>({
+          type: ActionTypes.getError,
+          payload: err.response.data.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};
+
+
+export interface createClassProgramAction {
+  type: ActionTypes.createClassProgram | ActionTypes.getError;
+  payload: ClassProgramInterface | any;
+}
+export const postClassProgram = (classProgram: ClassProgramInterface, url: string) => {
+  let options = refreshHeaderOptionToken();
+  return async (dispatch: Dispatch) => {
+    try {
+      let response
+      let id = classProgram.id
+      delete classProgram.id
+      dispatch({ type: ActionTypes.loading, payload: true })
+      if (id) {
+        response = await apiServer.put<Class>(
+          url + "/" + id, classProgram, options?.optionImage
+        );
+      } else {
+        response = await apiServer.post<Class>(
+          url, classProgram, options?.optionImage
+        );
+      }
+      dispatch<createClassProgramAction>({
+        type: ActionTypes.createClassProgram,
+        payload: response.data,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err: any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err) {
+        dispatch<createClassProgramAction>({
+          type: ActionTypes.getError,
+          payload: err.response.data.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};
+
+export const getClassProgram = (url: string) => {
+  let options = refreshHeaderOptionToken();
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.get<ClassProgramInterface>(
+        url,
+        options.option
+      );
+      dispatch<createClassProgramAction>({
+        type: ActionTypes.createClassProgram,
+        payload: response.data,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err: any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err) {
+        dispatch<createClassProgramAction>({
           type: ActionTypes.getError,
           payload: err.response.data.message,
         });
@@ -150,22 +205,25 @@ export interface editClassAction {
   payload: Class | any;
 }
 
-export const putClass = (classe: ClassInterface, url : string, id: number) => {
-  refreshTokenClass();
+export const putClass = (classe: ClassInterface, url: string, id: number) => {
+  let options = refreshHeaderOptionToken();
+
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.put<Class>(
         url + '/' + id,
         classe,
-        optionImage
+        options?.optionImage
       );
       dispatch<editClassAction>({
         type: ActionTypes.editClass,
         payload: response,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err: any) {
-      if (err ) {
-        console.log(err.response.data.statusCode)
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err) {
         // if (err.response.data.statusCode === 500 ){
         //   var msg = err.response.data.message
         // }else{
@@ -187,17 +245,21 @@ export interface deleteClassAction {
   payload: Class | any;
 }
 
-export const deleteClass = (url : string,id: number) => {
-  refreshTokenClass();
+export const deleteClass = (url: string, id: number) => {
+  let options = refreshHeaderOptionToken();
+
 
   return async (dispatch: Dispatch) => {
     try {
-      const response = await apiServer.delete<Class>(url+"/" + id, option);
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.delete<Class>(url + "/" + id, options?.option);
       dispatch<deleteClassAction>({
         type: ActionTypes.deleteClass,
         payload: response,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err instanceof Error) {
         dispatch<deleteClassAction>({
           type: ActionTypes.getError,
@@ -215,20 +277,22 @@ export interface inviteStudentAction {
   payload: any;
 }
 
-export const inviteStudent = (emails : any) => {
-  refreshTokenClass();
-
+export const inviteStudent = (emails: any) => {
+  let options = refreshHeaderOptionToken();
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.post<Class>(
-        'assigned/class/student', emails, option
+        'assigned/class/student', emails, options?.option
       );
 
       dispatch<inviteStudentAction>({
         type: ActionTypes.inviteStudent,
         payload: response,
       });
-    } catch (err:any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err: any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err) {
         dispatch<inviteStudentAction>({
           type: ActionTypes.getError,
@@ -242,24 +306,27 @@ export const inviteStudent = (emails : any) => {
 };
 
 export interface inviteCoachAction {
-  type: ActionTypes.inviteCoach| ActionTypes.getError;
+  type: ActionTypes.inviteCoach | ActionTypes.getError;
   payload: any;
 }
 
-export const inviteCoach = (emails : any) => {
-  refreshTokenClass();
+export const inviteCoach = (emails: any) => {
+  let options = refreshHeaderOptionToken();
 
   return async (dispatch: Dispatch) => {
     try {
+      dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.post<Class>(
-        'assigned/class/coache', emails, option
+        'assigned/class/coache', emails, options?.option
       );
 
       dispatch<inviteCoachAction>({
         type: ActionTypes.inviteCoach,
         payload: response,
       });
-    } catch (err :any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err: any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err) {
         dispatch<inviteCoachAction>({
           type: ActionTypes.getError,
@@ -280,15 +347,18 @@ export interface getclassesByDateAction {
 }
 
 export const getclassesByDateRange = (url: string) => {
-  refreshTokenClass();
+  let options = refreshHeaderOptionToken();
   return async (dispatch: Dispatch) => {
     try {
-      const response = await apiServer.get<Class>(url, option);
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.get<Class>(url, options.option);
       dispatch<getclassesByDateAction>({
         type: ActionTypes.getclassesByDateRange,
         payload: response.data,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err: any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
       if (err) {
         dispatch<getclassesByDateAction>({
           type: ActionTypes.getError,
@@ -300,3 +370,33 @@ export const getclassesByDateRange = (url: string) => {
     }
   };
 };
+
+export interface getAssignUserByClassAction {
+  type: ActionTypes.getAssignUserByClass | ActionTypes.getError;
+  payload: any;
+}
+
+export const getAssignUserByClass = (url: string) => {
+  let options = refreshHeaderOptionToken();
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.get<any>(url, options.option);
+      dispatch<getAssignUserByClassAction>({
+        type: ActionTypes.getAssignUserByClass,
+        payload: response.data,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err: any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err) {
+        dispatch<getAssignUserByClassAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  }
+}

@@ -16,9 +16,9 @@ const ManagerSideBar = (props: IPageProp) => {
 
   useEffect(() => {
   const user = JSON.parse(getItem("authUser") || "null");
-  if(user && user.userInfo && user.userInfo.data.assign_school) {
-    setSchoolName(user.userInfo.data.assign_school.school.name);
-    setSchoolLogo(user.userInfo.data.assign_school.school.logo);
+  if(user && user.userInfo && user.userInfo.assign_school) {
+    setSchoolName(user.userInfo.assign_school.school.name);
+    setSchoolLogo(user.userInfo.assign_school.school.logo);
   }
   }, [])
 
@@ -39,7 +39,7 @@ const ManagerSideBar = (props: IPageProp) => {
           <span className="item-text">{schoolName}</span>
         </div>
       </div>
-      <div className="class-box">
+      {/* <div className="class-box">
         <label className="menu-label">Classes</label>
         <div className={`list-item ${path[2] === 'class' ? "active" : ""}`}>
           <img src={"/assets/icons/logo.png"} alt="right-arrow" className="item-icon" />
@@ -51,7 +51,7 @@ const ManagerSideBar = (props: IPageProp) => {
           </div>
           <span className="item-text primary">Create Class</span>
         </div>
-      </div>
+      </div> */}
       <div className="class-box">
         <div className={`list-item ${path[2] === 'people-list' ? "active" : ""}`} onClick={() => props.history.push('/manager/people-list')}>
           <AccountCircleOutlinedIcon sx={{ color: '#808080', fontSize: 32, mr: 2 }} ></AccountCircleOutlinedIcon>

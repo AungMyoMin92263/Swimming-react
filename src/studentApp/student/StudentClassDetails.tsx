@@ -6,9 +6,9 @@ import { connect } from "react-redux";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-import ListBoxUI from "../../atoms/ListBox";
 import ListItem, { IListItem } from "../../atoms/ListItem";
 import { InitialIcon } from "../../atoms/InitialIcon";
+import ListBoxUI from "../../molecules/ListBox";
 interface IStates {
   step: number;
 }

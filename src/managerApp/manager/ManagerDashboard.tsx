@@ -5,7 +5,7 @@ import "./ManagerDashboard.css";
 import AddIcon from "@mui/icons-material/Add";
 import { StoreState } from "../../stores/reducers";
 import { getAllclasses,deleteClass} from "../../stores/actions/class-action";
-import { signOut } from "../../stores/actions/auth-action";
+import { signOut,LoadingActionFunc } from "../../stores/actions";
 import { connect } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
 import { Class } from "../../stores/model/class";
@@ -34,6 +34,7 @@ interface ManagerDashboardPage {
   classList: any;
   signOut: Function;
   deleteClass : Function;
+  LoadingActionFunc: Function;
 }
 
 type IProps = ManagerDashboardPage;
@@ -56,9 +57,11 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
       currentIndex: -1,
       url: "",
     };
+    this.props.LoadingActionFunc(true);
   }
 
   componentDidMount() {
+    this.props.LoadingActionFunc(false);
     removeItem("class");
     removeItem("event");
     removeItem("students")
@@ -66,20 +69,20 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
     if (
       user &&
       user.userInfo &&
-      user.userInfo.data.assign_school
+      user.userInfo.assign_school
     ) {
       this.setState({
-        email: user.userInfo.data.email,
+        email: user.userInfo.email,
         logo:
-          user.userInfo.data.assign_school
-            ? user.userInfo.data.assign_school.school.logo
+          user.userInfo.assign_school
+            ? user.userInfo.assign_school.school.logo
             : "",
         school_name:
-          user.userInfo.data.assign_school
-            ? user.userInfo.data.assign_school.school.name
+          user.userInfo.assign_school
+            ? user.userInfo.assign_school.school.name
             : "",
-            school_id :  user.userInfo.data.assign_school
-            ? user.userInfo.data.assign_school.school.id
+            school_id :  user.userInfo.assign_school
+            ? user.userInfo.assign_school.school.id
             : 0,
       });
     }
@@ -97,9 +100,8 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
   };
 
   remove = (index: number) => {
-          console.log('this.state.classes',this.state.classes)
-
     this.removeClass(this.state.classes[index].id);
+    this.props.LoadingActionFunc(true);
   };
 
   removeClass = async (id: any) => {
@@ -109,7 +111,7 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
       this.props.classList.result.data.statusText === "success"
     ) {
       this.getClasses();
-    }
+    }else this.props.LoadingActionFunc(false);
   };
 
   getClasses = async () => {
@@ -118,16 +120,17 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
     if (
       user &&
       user.userInfo &&
-      user.userInfo.data.assign_school
+      user.userInfo.assign_school
     ) {
       url =
-        "school/" + user.userInfo.data.assign_school.school.id + "/class";
+        "school/" + user.userInfo.assign_school.school.id + "/class";
       await this.props.getAllclasses(url);
       if (this.props.classList.result)
       this.setState({
         classes: this.props.classList.result || [],
       });
-    }
+      this.props.LoadingActionFunc(false);
+    }else this.props.LoadingActionFunc(false);
   };
 
   toggleOpen = () => {
@@ -144,6 +147,7 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
     this.setState({
       isLogout: true,
     });
+    this.props.LoadingActionFunc(true);
   };
 
   renderBody = () => {
@@ -181,8 +185,7 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
 						<table className='table'>
 							<thead>
 								<tr>
-									<th className='col-1'></th>
-									<th className='col-3'>CLASS</th>
+									<th className='col-4'>CLASS</th>
 									<th className='col-3'>NEXT DATE/TIME</th>
 									<th className='col-2'>COACH</th>
 									<th className='col-3'>NO. STUDENTS</th>
@@ -191,7 +194,7 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
 							<tbody>
 								{classes &&
 									classes.length > 0 &&
-									classes.map((classe: Class,index : any) => (
+									classes.map((classe: Class, index: any) => (
 										<tr>
 											<td>
 												<img
@@ -206,66 +209,67 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
 													id='logo'
 													className={`${classe ? "icon" : "w-48"}`}
 												/>
+												<span className='ml-16'>{classe.name}</span>
 											</td>
-											<td>{classe.name}</td>
 											<td>
 												{classe.start_date} {classe.start_time}
 											</td>
 											<td className='emailInitialIcon'>
-												{classe.assign_user && classe.assign_user.length > 0 && classe.assign_user.map((user: any, index) =>
-													user.type === "coache" && index === 0 ? (
-														<InitialIcon
-															initials={user.user.email
-																.substr(0, 1)
-																.toUpperCase()}
-                                isFooterMenu={false}
-														/>
-													) : (
-														<InitialIconList
-															initials={user.user.email
-																.substr(0, 1)
-																.toUpperCase()}
-                                isFooterMenu={false}
-														/>
-													)
-												)}
+												{classe.assign_user &&
+													classe.assign_user.length > 0 &&
+													classe.assign_user.map((user: any, index) =>
+														user.type === "coache" && index === 0 ? (
+															<InitialIcon
+																initials={user.user.email
+																	.substr(0, 1)
+																	.toUpperCase()}
+																isFooterMenu={false}
+															/>
+														) : (
+															<InitialIconList
+																initials={user.user.email
+																	.substr(0, 1)
+																	.toUpperCase()}
+																isFooterMenu={false}
+															/>
+														)
+													)}
 											</td>
 
 											<td>
 												<div className='flex justify-space-around'>
 													<span>{classe.studnetCount}</span>
-													<div className="dropdownMore">
-                                <MoreVertIcon
-                                  style={{
-                                    color: "inherit",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={() => this.toggleOpenMore(index)}
-                                />
-                                <div
-                                  className={`dropdown-menu ${
-                                    this.state.dropdownMore && this.state.currentIndex === index
-                                      ? "show"
-                                      : ""
-                                  }`}
-                                  aria-labelledby="dropdownMenuButton"
-                                >
-                                  <Link to={this.state.url}>
-                                    <div
-                                      className="dropdown-item cursor"
-                                    >
-                                      <span>View</span>
-                                    </div>
-                                  </Link>
-                                  <div className="dropdown-divider"></div>
-                                  <div
-                                    className="dropdown-item cursor"
-                                    onClick={() => this.remove(index)}
-                                  >
-                                    <span>Remove</span>
-                                  </div>
-                                </div>
-                              </div>
+													<div className='dropdownMore'>
+														<MoreVertIcon
+															style={{
+																color: "inherit",
+																cursor: "pointer",
+															}}
+															onClick={() => this.toggleOpenMore(index)}
+														/>
+														<div
+															className={`dropdown-menu ${
+																this.state.dropdownMore &&
+																this.state.currentIndex === index
+																	? "show"
+																	: ""
+															}`}
+															aria-labelledby='dropdownMenuButton'
+														>
+															<Link to={this.state.url}>
+																<div className='dropdown-item cursor'>
+																	<span>View</span>
+																</div>
+															</Link>
+															<div className='dropdown-divider'></div>
+															<div
+																className='dropdown-item cursor'
+																onClick={() => this.remove(index)}
+															>
+																<span>Remove</span>
+															</div>
+														</div>
+													</div>
 												</div>
 											</td>
 										</tr>
@@ -392,6 +396,6 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { getAllclasses, signOut, deleteClass })(
+export default connect(mapStateToProps, { getAllclasses, signOut, deleteClass, LoadingActionFunc })(
   ManagerDashboardPage
 );

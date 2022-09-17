@@ -8,7 +8,7 @@ import { Link, Navigate } from "react-router-dom";
 import TagInput from "../../components/TagInput";
 import { getItem, removeItem } from "../../auth/LocalStorage";
 import placeholder from "./../../assets/images/place-holder.png";
-import { inviteEvent } from "../../stores/actions/event-action";
+import { inviteEvent,LoadingActionFunc } from "../../stores/actions";
 interface IStates {
   event:any;
 	emails: string[];
@@ -21,6 +21,7 @@ interface IProps {
 	emails: string[];
 	events: any;
 	inviteEvent: Function;
+	LoadingActionFunc : Function;
 }
 
 class InviteStudentEvent extends React.Component<IProps, IStates> {
@@ -41,10 +42,10 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
 		if (
 			user &&
 			user.userInfo &&
-			user.userInfo.data.assign_school
+			user.userInfo.assign_school
 		) {
 			this.setState({
-				logo: user.userInfo.data.assign_school.school.logo,
+				logo: user.userInfo.assign_school.school.logo,
 			});
 		}
     let eventObj = JSON.parse(getItem("event") || "")
@@ -53,6 +54,8 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
 				event: eventObj
 			});
 		}
+		this.props.LoadingActionFunc(false);
+
 	}
   
 
@@ -71,7 +74,10 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
 	submit = async () => {
 		console.log("clicked")
 		if (this.isValid()) {
+
 			if (this.state.event ) {
+				this.props.LoadingActionFunc(true);
+
 				await this.props.inviteEvent({
 					user_email: this.state.emails,
 					event_id: this.state.event.id,
@@ -81,6 +87,7 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
 						isCompleted: false,
 						errorMsg: this.props.events.error,
 					});
+					this.props.LoadingActionFunc(false);
 				} else {
 					this.setState({
 						isCompleted: true,
@@ -88,6 +95,7 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
 					removeItem("school");
 				}
 			}
+
 		}
 	};
 
@@ -208,4 +216,4 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { inviteEvent })(InviteStudentEvent);
+export default connect(mapStateToProps, { inviteEvent,LoadingActionFunc })(InviteStudentEvent);

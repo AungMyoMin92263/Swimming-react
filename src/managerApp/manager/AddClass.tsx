@@ -2,7 +2,7 @@ import React from "react";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
-import { postClass, putClass, getClassObject } from "../../stores/actions/class-action";
+import { postClass, putClass, getClassObject,LoadingActionFunc } from "../../stores/actions";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -27,6 +27,7 @@ interface IProps {
 	postClass: Function;
 	putClass: Function;
 	getClassObject : Function;
+	LoadingActionFunc : Function;
 }
 
 class AddClass extends React.Component<IProps, IStates> {
@@ -70,11 +71,11 @@ class AddClass extends React.Component<IProps, IStates> {
 	componentDidMount() {
 		
 		const user = JSON.parse(getItem("authUser") || "null");
-		if (user && user.userInfo && user.userInfo.data.assign_school) {
+		if (user && user.userInfo && user.userInfo.assign_school) {
 			this.setState({
-				schoolId: user.userInfo.data.assign_school.school.id,
-				school_name: user.userInfo.data.assign_school.school.name,
-				school_logo: user.userInfo.data.assign_school.school.logo,
+				schoolId: user.userInfo.assign_school.school.id,
+				school_name: user.userInfo.assign_school.school.name,
+				school_logo: user.userInfo.assign_school.school.logo,
 			});
 		}
 
@@ -119,6 +120,7 @@ class AddClass extends React.Component<IProps, IStates> {
 	};
 
 	submit = async () => {
+
 		const formData = new FormData();
 		formData.append("name", this.state.classObj.name);
 		formData.append("school_id", this.state.schoolId);
@@ -147,6 +149,8 @@ class AddClass extends React.Component<IProps, IStates> {
 		}
 
 		if (this.isValid()) {
+			this.props.LoadingActionFunc(true);
+
 			let url = "school/" + this.state.schoolId + "/class";
 			if (this.state.classObj.id < 0) {
 				await this.props.postClass(formData, url);
@@ -334,10 +338,10 @@ class AddClass extends React.Component<IProps, IStates> {
 								<span className='f-16'>{school_name}</span>
 							</div>
 							<div className='hr mb-16'></div>
-							<div className='f-32 fw-500'>
+							<div className='f-32 fw-500 mb-8'>
 								<span>Create a class</span>
 							</div>
-							<div className='f-16 mb-16 fw-400'>
+							<div className='f-16 mb-16 fw-400 mb-32'>
 								<span>
 									Create a class to add students, parents and coaches.
 								</span>
@@ -398,4 +402,4 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { postClass, putClass, getClassObject })(AddClass);
+export default connect(mapStateToProps, { postClass, putClass, getClassObject, LoadingActionFunc })(AddClass);

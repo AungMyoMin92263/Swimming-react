@@ -9,6 +9,7 @@ import { Link, Navigate } from "react-router-dom";
 import InputFormAtom from "../../atoms/InputFormAtom";
 import { postSchool, putSchool,getSchoolObj } from "../../stores/actions/school-action";
 import { getItem, setItemWithObject } from "../../auth/LocalStorage";
+import { LoadingActionFunc } from "../../stores/actions";
 
 interface IStates {
   id: number;
@@ -29,6 +30,7 @@ interface IProps {
   postSchool: Function;
   putSchool: Function;
   getSchoolObj : Function;
+  LoadingActionFunc : Function;
 }
 class AddSchoolPage extends React.Component<IProps, IStates> {
   id : any;
@@ -49,6 +51,7 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
       isChangeLogo: false,
       errorMsg: ''
     };
+    this.props.LoadingActionFunc(true);
   }
   componentDidMount() {
     if(!this.state.id){ 
@@ -87,6 +90,8 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
         });
         }
       }
+      this.props.LoadingActionFunc(false);
+
     }
   }
 
@@ -117,6 +122,7 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
 
   submit = async () => {
     if (this.isValid()) {
+      this.props.LoadingActionFunc(true);
       const formData = new FormData();
       formData.append("name", this.state.name);
       if (this.state.id < 0) {
@@ -142,6 +148,7 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
           id: this.props.schools.result.data.id,
         });
         }
+        this.props.LoadingActionFunc(false);
         
       } else {
         await this.props.putSchool(formData, this.state.id);
@@ -161,6 +168,7 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
             id: this.props.schools.result.data.id,
           });
         }
+        this.props.LoadingActionFunc(false);
       }
     }
   };
@@ -263,10 +271,10 @@ class AddSchoolPage extends React.Component<IProps, IStates> {
 									<span>Back</span>
 								</Link>
 							</div>
-							<div className='f-32 fw-500'>
+							<div className='f-32 fw-500 mb-8'>
 								<span>Add a school.</span>
 							</div>
-							<div className='f-16 mb-16 fw-400'>
+							<div className='f-16 mb-16 fw-400 mb-32'>
 								<span>Get started by adding a school you manage.</span>
 							</div>
 							<div className='mb-16 align-center'>
@@ -324,6 +332,6 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { postSchool, putSchool,getSchoolObj })(
+export default connect(mapStateToProps, { postSchool, putSchool,getSchoolObj,LoadingActionFunc })(
   AddSchoolPage
 );

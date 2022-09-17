@@ -12,7 +12,7 @@ import { Event } from "../../stores/model/event";
 import { getItem, removeItem } from "../../auth/LocalStorage";
 import { InitialIcon } from "../../atoms/InitialIcon";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import { signOut } from "../../stores/actions";
+import { signOut,LoadingActionFunc } from "../../stores/actions";
 
 interface IStates {
 	events: Event[];
@@ -25,6 +25,7 @@ interface EventList {
   getAllEvents: Function;
   eventList: any;
   signOut : Function;
+  LoadingActionFunc : Function;
 }
 
 type IProps = EventList;
@@ -39,6 +40,8 @@ class EventList extends React.Component<IProps, IStates> {
       dropdown: false,
       isLogout: false,
     };
+    this.props.LoadingActionFunc(true);
+
   }
 
   componentDidMount() {
@@ -46,9 +49,10 @@ class EventList extends React.Component<IProps, IStates> {
     const user = JSON.parse(getItem("authUser") || "null");
 		if (user && user.userInfo) {
 			this.setState({
-				email: user.userInfo.data.email,
+				email: user.userInfo.email,
 			});
 		}
+    this.props.LoadingActionFunc(false);
     this.getEvents();
   }
 
@@ -72,9 +76,10 @@ class EventList extends React.Component<IProps, IStates> {
     let url = "";
     const user = JSON.parse(getItem("authUser") || "null");
     if (user && user.userInfo) {
-      url = "school/" + user.userInfo.data.assign_school.school.id + "/event";
-      this.props.getAllEvents(url);
-    }
+      url = "school/" + user.userInfo.assign_school.school.id + "/event";
+      await this.props.getAllEvents(url);
+      this.props.LoadingActionFunc(false);
+    }else this.props.LoadingActionFunc(false);
   };
 
   renderBody = () => {
@@ -221,4 +226,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { getAllEvents,signOut })(EventList);
+export default connect(mapStateToProps, { getAllEvents,signOut,LoadingActionFunc })(EventList);

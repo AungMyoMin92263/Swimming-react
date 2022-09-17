@@ -3,29 +3,35 @@ import { connect } from "react-redux";
 import { StoreState } from "../../stores/reducers";
 import { SchoolInterface } from "../../stores/model/school-interface";
 import { inviteManager } from "../../stores/actions/school-action";
+import { LoadingActionFunc } from "../../stores/actions";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { Link, Navigate } from "react-router-dom";
 import TagInput from "../../components/TagInput";
 import { getItem, removeItem } from "../../auth/LocalStorage";
-import placeholder from './../../assets/images/place-holder.png';
+import placeholder from "./../../assets/images/place-holder.png";
 interface IStates {
 	emails: string[];
 	isCompleted: boolean;
-	errorMsg:string;
-	url : string;
+	errorMsg: string;
+	url: string;
+	name: string;
+	school_id: number;
+	image: any;
+	logo: string;
 }
 
 interface IProps {
 	emails: string[];
 	schools: any;
 	inviteManager: Function;
+	LoadingActionFunc: Function;
 }
 
 class InviteManagerPage extends React.Component<IProps, IStates> {
 	schoolImage: string | undefined;
-	url = '/admin/add-school/';
+	url = "/admin/add-school/";
 
 	constructor(props: any) {
 		super(props);
@@ -33,12 +39,26 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 		this.state = {
 			emails: [],
 			isCompleted: false,
-			errorMsg:'',
-			url : '',
+			errorMsg: "",
+			url: "",
+			school_id: -1,
+			image: "",
+			logo: "",
+			name: "",
 		};
 	}
 	componentDidMount() {
-
+		let school = getItem("school");
+		if (school) {
+			let school1 = JSON.parse(school);
+			if (school1) {
+				this.setState({
+					logo: school1.logo,
+					school_id: school1.id,
+					name: school1.name,
+				});
+			}
+		}
 	}
 
 	handleChange = (tags: string[]) => {
@@ -53,42 +73,43 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 		else return true;
 	};
 
-	
 	submit = async () => {
 		if (this.isValid()) {
 			if (this.props.schools.result) {
+				this.props.LoadingActionFunc(true);
 				await this.props.inviteManager({
 					user_email: this.state.emails,
-					schoold_id: this.props.schools.result.data.id,
+					schoold_id: this.state.school_id,
 				});
 			}
-			console.log(this.props.schools)
+			console.log(this.props.schools);
 			if (!this.props.schools.error) {
 				this.setState({
 					isCompleted: true,
-					
 				});
-				
-			}else{
+			} else {
 				this.setState({
-					isCompleted:false,
-					errorMsg: this.props.schools.error.message[0]
-				})
-				
+					isCompleted: false,
+					errorMsg: this.props.schools.error.message[0],
+				});
 			}
-			}	
+		}
 	};
 
 	back = () => {
 		this.setState({
-			url : this.url + this.props.schools.result.data.id
+			url: this.url + this.props.schools.result.data.id,
 		});
-	  };
+	};
 
 	renderBtn = () => {
 		if (!this.isValid()) {
 			return (
-				<button type='submit' className='idle-btn fw-600 ml-16' onClick={() => removeItem("school")}>
+				<button
+					type='submit'
+					className='idle-btn fw-600 ml-16'
+					onClick={() => removeItem("school")}
+				>
 					Done
 				</button>
 			);
@@ -107,14 +128,14 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 	};
 
 	render() {
-		const {errorMsg,url} = this.state;
+		const { errorMsg, url } = this.state;
 		return (
 			<>
 				<div className='wrapper'>
-				{this.state.isCompleted && (
+					{this.state.isCompleted && (
 						<Navigate to='/admin/add-more-school' replace={true} />
 					)}
-					{url !== '' && <Navigate to={url} replace={true} />}
+					{url !== "" && <Navigate to={url} replace={true} />}
 
 					<div className='primary f-16 project-header'>
 						<span>My Report Cards</span>
@@ -122,32 +143,27 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 					<div className='container-cus'>
 						<div className='content col-lg-6'>
 							<div className='f-14 mb-32' onClick={this.back}>
-									<ArrowBackIcon
-										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-									></ArrowBackIcon>
-									<span>Back</span>
+								<ArrowBackIcon
+									sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+								></ArrowBackIcon>
+								<span>Back</span>
 							</div>
 
 							<div className='mb-16 align-center'>
 								<img
 									src={
-										this.props.schools.result
+										this.state.logo !== ""
 											? process.env.REACT_APP_API_ENDPOINT +
 											  "/" +
-											  this.props.schools.result.data.logo
+											  this.state.logo
 											: placeholder
 									}
 									alt='logo'
 									id='logo'
-									className={`${
-										this.props.schools.result ? "item-icon" : "w-48"
-									}`}
+									className={`${this.state.logo ? "item-icon" : "w-48"}`}
 								/>
 
-								<span className='f-16'>
-									{this.props.schools.result &&
-										this.props.schools.result.data.name}
-								</span>
+								<span className='f-16'>{this.state.name}</span>
 							</div>
 							<div className='hr mb-32'></div>
 							<div className='f-32 fw-500'>
@@ -169,11 +185,7 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
 									}}
 								/>
 							</div>
-							{errorMsg && (
-								<p className='text-danger'>
-									{errorMsg}
-								</p>
-							)}
+							{errorMsg && <p className='text-danger'>{errorMsg}</p>}
 							<div className='right flex-center'>
 								<span className='secondary'>2 of 2</span>
 								{this.renderBtn()}
@@ -196,6 +208,6 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { inviteManager })(
+export default connect(mapStateToProps, { inviteManager,LoadingActionFunc })(
 	InviteManagerPage
 );

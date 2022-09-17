@@ -13,3 +13,7 @@ export * from './global-action';
 export * from './coach-action';
 
 export * from './student-action';
+
+export * from './comment-action';
+
+export * from './attendance-action';

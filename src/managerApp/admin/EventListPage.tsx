@@ -1,4 +1,5 @@
 import React from "react";
+import { LoadingActionFunc } from "../../stores/actions";
 
 // import csss
 import "../admin/AdminDashboard.css";
@@ -25,6 +26,7 @@ interface EventListPage {
 	getAllEvents: Function;
 	eventList: any;
 	signOut: Function;
+	LoadingActionFunc : Function;
 }
 
 type IProps = EventListPage;
@@ -39,6 +41,7 @@ class EventListPage extends React.Component<IProps, IStates> {
 			dropdown: false,
 			isLogout: false,
 		};
+		this.props.LoadingActionFunc(true);
 	}
 
 	componentDidMount() {
@@ -46,10 +49,9 @@ class EventListPage extends React.Component<IProps, IStates> {
 		const user = JSON.parse(getItem("authUser") || "null");
 		if (user && user.userInfo) {
 			this.setState({
-				email: user.userInfo.data.email,
+				email: user.userInfo.email,
 			});
 		}
-    console.log(user)
 		this.getEvents();
 	}
 
@@ -77,7 +79,7 @@ class EventListPage extends React.Component<IProps, IStates> {
 				"school/" + 1 + "/event/all";
 			this.props.getAllEvents(url);
 		}
-    console.log("EventList",this.props.eventList.result);
+		this.props.LoadingActionFunc(false);
 	};
 
 	renderBody = () => {
@@ -222,6 +224,6 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { getAllEvents, signOut })(
+export default connect(mapStateToProps, { getAllEvents, signOut,LoadingActionFunc })(
 	EventListPage
 );

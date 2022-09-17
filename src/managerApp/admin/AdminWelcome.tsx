@@ -3,6 +3,8 @@ import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
+import { LoadingActionFunc } from "../../stores/actions";
+
 // icon
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -14,6 +16,7 @@ interface IStates {
 
 interface IProps {
 	authUser: AuthInterface;
+  LoadingActionFunc : Function;
 }
 
 class AdminWelcomePage extends React.Component<IProps, IStates> {
@@ -25,6 +28,7 @@ class AdminWelcomePage extends React.Component<IProps, IStates> {
     };
   }
   componentDidMount() {
+    this.props.LoadingActionFunc(false);
     console.log('authUser',this.props.authUser)
     //loading
   }
@@ -121,4 +125,4 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, {})(AdminWelcomePage);
+export default connect(mapStateToProps, { LoadingActionFunc })(AdminWelcomePage);

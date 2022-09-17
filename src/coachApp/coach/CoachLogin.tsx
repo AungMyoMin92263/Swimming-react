@@ -6,6 +6,7 @@ import { StoreState } from "../../stores/reducers";
 import { signIn } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
 import { setItemWithObject } from "../../auth/LocalStorage";
+import CoachMobileHeader from "../../atoms/CoachMobileHeader";
 
 interface IStates {
   email: string;
@@ -75,7 +76,7 @@ class CoachLoginPage extends React.Component<IProps, IStates> {
 
   callback = async () => {
     const { email, password }: IStates = this.state;
-    await this.props.signIn({ email: email, role : "coache",password: password });
+    await this.props.signIn({ email: email, role: "coache", password: password });
     setItemWithObject("authUser", this.props.authUser);
   };
 
@@ -95,15 +96,13 @@ class CoachLoginPage extends React.Component<IProps, IStates> {
     let { authUser } = this.props;
     return (
       <div className="wrapper-mobile">
-        <div className="content-mobile center col-sm-12">
+        <div className="content-mobile-cus center col-sm-12">
           {authUser.isSignedIn && (
-            <Navigate to="/coache/welcome" replace={true} />
+            <Navigate to="/coach/welcome" replace={true} />
           )}
-          <div className="primary f-16 fw-500 m-32">
-            <span>My Report Cards</span>
-          </div>
-          <div className="fw-500 f-32">
-            <span>Login</span>
+          <CoachMobileHeader title={true} ></CoachMobileHeader>
+          <div className="fw-500 f-32 pt-40 pb-40">
+            <span>Log In</span>
           </div>
           <div className="mb-16">
             <InputFormAtom
@@ -124,7 +123,7 @@ class CoachLoginPage extends React.Component<IProps, IStates> {
               required={true}
               maxLength={200}
               className=""
-              clickCallback={() => {}}
+              clickCallback={() => { }}
               focusCallback={() => {
                 this.setState({
                   isEmailEmpty: false,
@@ -152,14 +151,14 @@ class CoachLoginPage extends React.Component<IProps, IStates> {
               required={true}
               maxLength={200}
               className=""
-              clickCallback={() => {}}
+              clickCallback={() => { }}
             />
           </div>
           {authUser.error && <p className="text-danger">{authUser.error}</p>}
 
-          <div className="center mb-16">
+          <div className="center mb-16 mt-120 fw-500">
             <Link
-              to="/coache/recover-password"
+              to="/coach/recover-password"
               style={{ textDecoration: "none" }}
             >
               <span className="f-14 primary">Forgot password?</span>
@@ -168,7 +167,7 @@ class CoachLoginPage extends React.Component<IProps, IStates> {
 
           <button
             type="submit"
-            className="btn btn-primary mobile-btn"
+            className="btn btn-primary mobile-btn cus-primay-btn-m"
             onClick={() => this.submit()}
           >
             Login
