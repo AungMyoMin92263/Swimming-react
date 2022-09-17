@@ -5,7 +5,7 @@ import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { LoadingActionFunc, signIn } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
-import { setItemWithObject } from "../../auth/LocalStorage";
+import { removeItem, setItemWithObject } from "../../auth/LocalStorage";
 import { refreshToken } from "../../stores/actions/school-action";
 import { getAllSchools } from './../../stores/actions/school-action';
 
@@ -46,6 +46,7 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 			schoolList:[]
 		};
 		this.props.LoadingActionFunc(false);
+		removeItem("authUser");
 	}
 
 	submit = () => {

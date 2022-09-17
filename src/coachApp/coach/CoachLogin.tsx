@@ -5,7 +5,7 @@ import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { signIn } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
-import { setItemWithObject } from "../../auth/LocalStorage";
+import { removeItem, setItemWithObject } from "../../auth/LocalStorage";
 import CoachMobileHeader from "../../atoms/CoachMobileHeader";
 
 interface IStates {
@@ -37,6 +37,7 @@ class CoachLoginPage extends React.Component<IProps, IStates> {
       emailMsg: "",
       passwordMsg: "",
     };
+    removeItem("authUser");
   }
 
   submit = () => {

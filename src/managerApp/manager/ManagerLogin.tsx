@@ -5,7 +5,7 @@ import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { signIn,LoadingActionFunc } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
-import { setItemWithObject } from "../../auth/LocalStorage";
+import { removeItem, setItemWithObject } from "../../auth/LocalStorage";
 
 interface IStates {
 	email: string;
@@ -42,6 +42,7 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 			passwordMsg: "",
 			isNewUser : '',
 		};
+		removeItem("authUser");
 	}
 
 	submit = () => {
