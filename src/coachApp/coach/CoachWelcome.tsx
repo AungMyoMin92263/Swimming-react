@@ -31,6 +31,7 @@ class CoachWelcomePage extends React.Component<IProps, IStates> {
 	}
 
 	render() {
+		const { userInfo } = this.props.authUser
 		return (
 			<>
 				<div className='wrapper-mobile bg-w'>
@@ -80,7 +81,7 @@ class CoachWelcomePage extends React.Component<IProps, IStates> {
 						<div>
 							<div className='flex-center mt-24'>
 								<Link
-									to='/coach/add-info'
+									to={userInfo?.name ? '/coach/dashboard' : '/coach/add-info'}
 									style={{ textDecoration: "none",width:'100%' }}
 								>
 									<button type='submit' className='btn btn-primary mobile-btn cus-primay-btn-m'>

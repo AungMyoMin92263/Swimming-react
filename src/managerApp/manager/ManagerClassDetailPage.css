@@ -30,7 +30,7 @@
 }
 
 .class-detail-date-div {
-    
+
     display: flex;
     flex-direction: column;
 }
@@ -40,20 +40,40 @@
 }
 
 
-.class-attendance-body{
+.class-attendance-body {
     padding-bottom: 24px;
     background: #FFFFFF;
     border: 1px solid #E5E5E5;
     border-radius: 8px;
+    min-height: 224px;
+    overflow: hidden;
 
 }
 
-.class-attendance-content{
+.class-attendance-content {
     height: 72px;
     border-bottom: 1px solid #cccccc;
 }
 
-.plus{
+.plus {
     width: 40px;
     height: 40px;
+}
+
+.class-detail-img-content {
+    height: 160px;
+    border: 1px solid #E5E5E5;
+    border-radius: 8px;
+    padding: 2px;
+    margin-top:16px
+}
+
+.daily-programme-image-dash{
+    height: 150px;
+    width: 100%;
+}
+
+.event-list-table{
+    width: 100%;
+    margin-left: 16px;
 }

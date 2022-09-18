@@ -4,18 +4,20 @@ import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
 // icon
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { IListItem } from "../../atoms/ListItem";
-import InputFormAtom from "../../atoms/InputFormAtom";
-import { InitialIcon } from "../../atoms/InitialIcon";
-import { Link, Navigate } from "react-router-dom";
+import CoachMobileHeader from "../../atoms/CoachMobileHeader";
+import BadgeItem from "../../atoms/BadgeItem";
+import { CreateProfile } from "../../atoms/createProfile";
+import { giveBadgeToStudent } from "../../stores/actions/badge-action";
 
 interface IStates {
-  goProfile : boolean;
+  goProfile: boolean;
 }
 
 interface IProps {
   authUser: AuthInterface;
+  giveBadgeToStudent: Function
+  badges: any;
+  history: any
 }
 
 class CoachBadgeSentPage extends React.Component<IProps, IStates> {
@@ -23,66 +25,57 @@ class CoachBadgeSentPage extends React.Component<IProps, IStates> {
     super(props);
 
     this.state = {
-      goProfile : false,
+      goProfile: false,
     };
   }
   componentDidMount() {
-    console.log("authUser", this.props.authUser);
+    console.log("authUser", this.props.badges);
     //loading
+    if (!this.props.authUser.otherUserinfo && !this.props.badges.selectedBadge) {
+      this.props.history.back()
+    }
   }
 
+  sendBage = async () => {
+    let postData = {
+      user_id: this.props.authUser.otherUserinfo.id,
+      badge_id: this.props.badges.selectedBadge.id
+    }
+    await this.props.giveBadgeToStudent(postData)
+    this.props.history.go(-2)
+  }
   render() {
-    let item: IListItem = {
-      text: "Create a new badge",
-      callback: () => console.log("log click item"),
-      smallText: "Reward your students.",
-      icon: <img src={"/assets/icons/upload.png"} />,
-      secondryText: false,
-      isBigIcon: true,
-    };
 
-    const {
-      goProfile
-    } = this.state;
+    const badges = this.props.badges.selectedBadge
+    const receiver = this.props.authUser.otherUserinfo
 
     return (
       <>
         <div className="wrapper-mobile">
-        {goProfile && <Navigate to="/coach/dashboard/profile-detail" replace={true} />}
 
-          <div className="content-mobile col-sm-12">
-            <div className="mb-32">
-              <Link to="/coach/dashboard/badge-list">
-              <button type="submit" className="back-btn">
-                <ArrowBackIcon
-                  sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-                ></ArrowBackIcon>
-              </button></Link>
-            </div>
+          <div className="content-mobile-cus-space bg-w col-sm-12">
+            <CoachMobileHeader backBtn={true}></CoachMobileHeader>
             <div className="text-center">
-              <div className="f-32 fw-500 mt-16 mb-32">
+              <div className="f-32 fw-500 pt-40 mb-32">
                 <span>Confirm send?</span>
               </div>
-              <img
-                src={"/assets/icons/logo.png"}
-                alt="home"
-                className="w-120-icon mb-16"
-              />
+              <BadgeItem icon={badges.logo} callback={() => { }} isBig={true} color={badges.color} />
               <div className="mb-16 f-14 fw-500">
-                <span>Safe Swimmer</span>
+                <span>{badges.name}</span>
               </div>
               <div className="mb-16 f-14">
-                <span>Lorem ipsum sit dolor sanataria.</span>
+                <span>{badges.description}</span>
               </div>
               <div className="flex-center mb-32">
-                <div className="email-div" style={{ width: "181px" }}>
-                  <InitialIcon initials={"AR"} isFooterMenu={false}/>
-                  <span>Azlan Razali</span>
+                <div className="email-div-new">
+                  {/* <InitialIcon initials={"AR"} isFooterMenu={false} /> */}
+                  <CreateProfile image_url={receiver.avatar} name={receiver?.name || "User"} />
+                  <span className="email-div-name">{receiver.name}</span>
                 </div>
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary right w-100" onClick={()=> this.setState({ goProfile : true })}>
+            <button type="submit" className="btn btn-primary right w-100" onClick={() => { this.sendBage() }}>
               Send Badge
             </button>
           </div>
@@ -94,12 +87,15 @@ class CoachBadgeSentPage extends React.Component<IProps, IStates> {
 
 const mapStateToProps = ({
   authUser,
+  badges
 }: StoreState): {
   authUser: AuthInterface;
+  badges: any
 } => {
   return {
     authUser,
+    badges
   };
 };
 
-export default connect(mapStateToProps, {})(CoachBadgeSentPage);
+export default connect(mapStateToProps, { giveBadgeToStudent })(CoachBadgeSentPage);

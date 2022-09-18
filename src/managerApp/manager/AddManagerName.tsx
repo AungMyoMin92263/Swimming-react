@@ -110,14 +110,13 @@ class AddManagerNamePage extends React.Component<IProps, IStates> {
           });
           this.props.LoadingActionFunc(false);
         } else {
-          if (this.props.user.result)
+          if (this.props.user)
           // setItemWithObject("authUser", this.props.authUser.result.data);
-          console.log('this.props.user.result',this.props.user.result)
+          console.log('this.props.user.result',this.props.user.userInfo.name)
           this.setState({
-            isCompleted: true,
-            name: this.props.user.result.data.name,
-            logo: this.props.user.result.data.logo,
-          });
+						isCompleted: true,
+						
+					});
         }
     }
   };

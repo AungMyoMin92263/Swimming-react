@@ -15,6 +15,12 @@ export const attandanceReducers = (
         attandance_list: action.payload,
         error: null,
       };
+    case ActionTypes.getClassAttendance:
+      return {
+        ...state,
+        attandance_list: action.payload,
+        error: null,
+      };
     case ActionTypes.createAttendance:
       return {
         ...state,

@@ -3,6 +3,7 @@ import apiServer from "../../api/api-service";
 import { Dispatch } from "redux";
 import { AxiosRequestConfig } from "axios";
 import { getItem } from "../../auth/LocalStorage";
+import { refreshHeaderOptionToken } from "../../api/api-header-option";
 
 var token = '';
 var option: AxiosRequestConfig;
@@ -33,7 +34,7 @@ export const refreshTokenStudent = () => {
 }
 }
 export interface getStudentAction {
-  type: ActionTypes.getStudent | ActionTypes.getError;
+  type: ActionTypes.getStudent | ActionTypes.getOwnStudent| ActionTypes.getError;
   payload: any;
 }
 
@@ -61,6 +62,32 @@ export const getAllStudents =  (url : string) => {
     }
   };
 };
+
+
+export const getMyOwnStudent = (coacheId: number) => {
+  let options = refreshHeaderOptionToken();
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.get<any>('student/by-coache/' + coacheId, options?.option);
+      dispatch<getStudentAction>({
+        type: ActionTypes.getOwnStudent,
+        payload: response.data,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err instanceof Error) {
+        dispatch<getStudentAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+}
 
 export interface getStudentObjAction {
   type: ActionTypes.getStudentObj | ActionTypes.getError;

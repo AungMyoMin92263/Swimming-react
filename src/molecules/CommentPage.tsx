@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import CommentItem from "../atoms/Comment";
 import { InitialIcon } from "../atoms/InitialIcon";
 import ListBoxUI from "./ListBox";
-import { getAllComment } from "../stores/actions";
+import { getAllComment, getSendComment } from "../stores/actions";
 import { AuthInterface } from "../stores/model/auth-interface";
 import { StoreState } from "../stores/reducers";
 
@@ -15,7 +15,11 @@ interface IProps {
   getAllComment: Function;
   receiverId: any;
   isClass: boolean
-  comments?: any
+  comments: any
+  getSendComment: Function
+  isOwn?: boolean
+  history?: any
+  showRightArr?: boolean
 }
 
 class CommentListPage extends React.Component<IProps, IStates> {
@@ -28,16 +32,28 @@ class CommentListPage extends React.Component<IProps, IStates> {
   }
 
   componentDidMount(): void {
-    this.getComments()
+    if (this.props.isOwn) {
+      this.getSendComments()
+    } else {
+      this.getComments()
+    }
   }
 
   getComments = async () => {
     let url = this.props.isClass ? "comment/by-class/" : "comment/by-student/"
     await this.props.getAllComment(url + this.props.receiverId)
-    this.setState({
-      comments: this.props.comments.result,
-    });
+    // this.setState({
+    //   comments: this.props.comments.result,
+    // });
     // {class_id}
+  }
+
+  getSendComments = async () => {
+    let type = this.props.isClass ? "class" : "user"
+    await this.props.getSendComment(this.props.receiverId, type)
+    // this.setState({
+    //   comments: this.props.comments.send_cmt,
+    // });
   }
 
   createProfile = (image_url: string, name: string) => {
@@ -52,12 +68,12 @@ class CommentListPage extends React.Component<IProps, IStates> {
   }
 
   render() {
-    const { comments } = this.state
+    const { result, send_cmt } = this.props.comments
+    const comments = this.props.isOwn ? send_cmt : result
     return (
       <div>
 
-        <div className='page-tile pt-24 pb-40'>All Comments</div>
-        {comments.length > 0 ?
+        {comments && comments.length > 0 ?
           <ListBoxUI
             title=""
             callback={() => { }}
@@ -73,7 +89,9 @@ class CommentListPage extends React.Component<IProps, IStates> {
                   message={cmd.message}
                   callback={() => { }}
                   timeString={cmd.user_info.name + " at " + moment(cmd.created_at).format("DD MMM, h:mm a")}
-                  key={`cmd-item-${index}`} />
+                  key={`cmd-item-${index}`}
+                  showRightArr={this.props.showRightArr}
+                />
               )}
             </>
             {/*  */}
@@ -95,4 +113,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { getAllComment })(CommentListPage)
+export default connect(mapStateToProps, { getAllComment, getSendComment })(CommentListPage)

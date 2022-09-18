@@ -9,11 +9,11 @@ const BadgeList = (props: IBadgeList) => {
     <>
       {
         props.badges.length > 0 ?
-          < div className='row mb-8' >
+          < div className='row mb-16 mt-16 badge-list' >
             {
-              props.badges.map((badge) => {
+              props.badges.map((badge,index) => {
                 return (
-                  <div className='col-4'>
+                  <div className='col-4 badge-margin' key={`badge-box${index}`}>
                     <BadgeItem {...badge} />
                   </div>
                 )

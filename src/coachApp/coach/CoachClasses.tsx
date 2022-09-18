@@ -194,7 +194,7 @@ class CoachClassesPage extends React.Component<IProps, IStates> {
         {goClass && <Navigate to={this.urlClass} replace={true} />}
 
         <div className="wrapper-mobile">
-          <div className="content-mobile col-sm-12">
+          <div className="content-mobile-cus-space bg-w  col-sm-12">
             <div className="f-32 fw-500 mt-16 mb-32">
               <span> Classes </span>
             </div>

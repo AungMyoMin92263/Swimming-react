@@ -207,7 +207,7 @@ export const putUser = (user: any, url: string, id: number) => {
       );
       dispatch<editUserAction>({
         type: ActionTypes.editUser,
-        payload: response,
+        payload: response.data,
       });
       dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err: any) {
@@ -216,6 +216,52 @@ export const putUser = (user: any, url: string, id: number) => {
         dispatch<editUserAction>({
           type: ActionTypes.getError,
           payload: err.response.data.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};
+
+export interface SetStudentViewAction {
+  type: ActionTypes.setStudentView | ActionTypes.getError;
+  payload: any;
+}
+
+export const setStudentView = (student: any) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch<SetStudentViewAction>({ type: ActionTypes.setStudentView, payload: student })
+    }
+    catch (err: any) {
+
+    }
+  }
+}
+
+export interface deleteUserAction {
+  type: ActionTypes.deleteUser | ActionTypes.getError;
+  payload: any;
+}
+
+export const deleteUser = (url : string,id: number) => {
+
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.delete<any>(url+"/" + id);
+      dispatch<deleteUserAction>({
+        type: ActionTypes.deleteUser,
+        payload: response,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err instanceof Error) {
+        dispatch<deleteUserAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
         });
       } else {
         console.log("Unexpected error", err);

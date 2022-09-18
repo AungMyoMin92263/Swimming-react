@@ -23,12 +23,14 @@ import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 interface IStates {
   users: any[];
+
   email: string;
   dropdown: boolean;
   isLogout: boolean;
   dropdownMore: boolean;
   currentIndex: number;
   url: string;
+  search : string;
 }
 interface UserSignInPage {
   signIn: Function;
@@ -53,6 +55,7 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
       dropdownMore: false,
       currentIndex: -1,
       url: "",
+	  search : "",
     };
     this.props.LoadingActionFunc(true);
   }
@@ -100,8 +103,16 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
     });
   };
 
+  searchChanged = (e : any) => {
+	this.setState({
+		search : e.target.value
+	})
+	console.log('search',e.target.value,this.state.search)
+
+  }
+
   render() {
-    const { users, email, dropdown, isLogout, dropdownMore, currentIndex } =
+    const { users, email, dropdown, isLogout, dropdownMore, currentIndex,search } =
       this.state;
     return (
 			<>
@@ -155,11 +166,13 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 											</div>
 											<input
 												className='dash-input-div'
-												placeholder='Search by class, date/time or coach(es)'
+												placeholder='Search by name or role'
+												value={search}
+												onChange={this.searchChanged}
 											/>
 										</div>
 										<div className='dash-filter-div'>
-											<FilterListIcon
+											{/* <FilterListIcon
 												sx={{
 													color: "#0070F8",
 													fontSize: 18,
@@ -167,7 +180,7 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 													mr: 0.5,
 												}}
 											/>
-											Filter
+											Filter */}
 										</div>
 									</div>
 								</div>
@@ -178,7 +191,8 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 												{" "}
 												<span className='ml-56'>Name</span>
 											</th>
-											<th className='col-3'>Role</th>
+											<th className='col-6'>Role</th>
+											{/* <th className='col-1'></th> */}
 										</tr>
 									</thead>
 									<tbody>
@@ -197,9 +211,30 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 													</td>
 													<td>
 														<span>
-															{user.role === "coache" ? "coach" : user.role}
+															{user.role === "coache"
+																? "Coach"
+																: user.role === "admin"
+																? "Admin"
+																: user.role === "manager"
+																? "School Manager"
+																: user.role === "student"
+																? "Student"
+																: user.role === "parent"
+																? "Parent"
+																: user.role}
 														</span>
 													</td>
+													{/* <td>
+														<div className='mr-16'>
+															<MoreVertIcon
+																style={{
+																	color: "inherit",
+																	cursor: "pointer",
+																}}
+																onClick={() => this.toggleOpenMore(index)}
+															/>
+														</div>
+													</td> */}
 												</tr>
 											))}
 									</tbody>

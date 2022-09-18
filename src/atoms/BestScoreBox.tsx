@@ -1,6 +1,7 @@
 import React from 'react';
 import "./BestScoreBox.css"
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 interface IStartBtn {
   title: string,
   score?: string,
@@ -15,7 +16,7 @@ const BestScoreBox = (props: IStartBtn) => {
       </div>
       <div className='score-text'>
         <h3 className='score-title'>{props.title}</h3>
-        <h3 className='score-date'><CalendarTodayIcon /> <label >{props.scoreDate}</label></h3>
+        <h3 className='score-date'><CalendarTodayOutlinedIcon fontSize='small' /> <label >{props.scoreDate}</label></h3>
       </div>
     </div>
   )

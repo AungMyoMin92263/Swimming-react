@@ -3,16 +3,23 @@ import { Action, ActionTypes } from "../actions/types";
 export const studentReducers = (
   state: any = {
     result: null,
+    own_students: [],
     error: null,
   },
   action: Action
 ) => {
   switch (action.type) {
-    
+
     case ActionTypes.getStudent:
       return {
         ...state,
         result: action.payload,
+        error: null,
+      };
+    case ActionTypes.getOwnStudent:
+      return {
+        ...state,
+        own_students: action.payload,
         error: null,
       };
 
@@ -41,7 +48,7 @@ export const studentReducers = (
         result: action.payload,
         error: null,
       };
-      case ActionTypes.getError:
+    case ActionTypes.getError:
       return {
         ...state,
         error: action.payload,

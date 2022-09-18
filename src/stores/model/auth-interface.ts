@@ -4,6 +4,7 @@ export interface AuthInterface {
   error?: string | null;
   token?: string | null;
   otherUserinfo?: any 
+  viewStudent?: any 
 }
 
 export interface SignInInterface {

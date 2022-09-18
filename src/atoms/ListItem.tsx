@@ -11,6 +11,8 @@ export interface IListItem {
   selectable?: boolean
   children?: JSX.Element
   arrowRight?: boolean
+  checked?: boolean
+  chooseCallBack?: Function
 }
 const ListItem = (props: IListItem) => {
   return (
@@ -35,7 +37,11 @@ const ListItem = (props: IListItem) => {
         {!props.selectable ? (!props.arrowRight ? <></> : <ArrowForwardIosIcon></ArrowForwardIosIcon>)
           :
           <label className="radio-container">
-            <input type="checkbox" className='checkbox' />
+            <input type="checkbox" value='true' checked={props.checked === true} className='checkbox' onChange={(e) => {
+              if (props.chooseCallBack) {
+                props.chooseCallBack(e.target.checked)
+              }
+            }} />
             <span className="checkmark"></span>
           </label>
         }

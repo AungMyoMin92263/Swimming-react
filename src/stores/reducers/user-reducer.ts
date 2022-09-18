@@ -1,3 +1,4 @@
+import { setItem, setItemWithObject } from '../../auth/LocalStorage';
 import { Action, ActionTypes } from '../actions/types';
 import { AuthInterface } from '../model/auth-interface';
 
@@ -7,13 +8,21 @@ export const authReducers = (
     userInfo: null,
     error: null,
     token: null,
-    otherUserinfo: null
+    otherUserinfo: null,
+    viewStudent: null
   },
   action: Action
 ) => {
   switch (action.type) {
     case ActionTypes.signIn:
       const user = action.payload as IUser
+      setItem("userToken", user?.token || "")
+      setItemWithObject("authUser", {
+        ...state,
+        isSignedIn: true,
+        userInfo: user,
+        token: user.token
+      });
       return {
         ...state,
         isSignedIn: true,
@@ -47,14 +56,16 @@ export const authReducers = (
 
     case ActionTypes.getUsers:
       return {
+        ...state,
         result: action.payload,
         error: null,
       };
-      case ActionTypes.editUser:
-        return {
-          result: action.payload,
-          error: null,
-        };
+    case ActionTypes.editUser:
+      return {
+        ...state,
+        userInfo: action.payload,
+        error: null,
+      };
     case ActionTypes.getError:
       return {
         ...state,
@@ -68,6 +79,19 @@ export const authReducers = (
         error: null,
         otherUserinfo: action.payload
       };
+    case ActionTypes.setStudentView:
+      return {
+        ...state,
+        error: null,
+        viewStudent: action.payload
+      };
+      case ActionTypes.deleteUser:
+        return {
+          ...state,
+        result: action.payload,
+        error: null,
+        };
+
     default:
       return state;
   }

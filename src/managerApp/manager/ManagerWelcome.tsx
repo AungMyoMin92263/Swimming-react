@@ -2,7 +2,7 @@ import React from "react";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
-
+import {  LoadingActionFunc } from "../../stores/actions";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -15,7 +15,8 @@ interface IStates {
 }
 
 interface IProps {
-  authUser: AuthInterface;
+	authUser: AuthInterface;
+	LoadingActionFunc: Function;
 }
 
 class ManagerWelcomePage extends React.Component<IProps, IStates> {
@@ -29,18 +30,19 @@ class ManagerWelcomePage extends React.Component<IProps, IStates> {
   }
   componentDidMount() {
     const user = JSON.parse(getItem("authUser") || "null");
-    if(user.userInfo.name){
+    if(user && user.userInfo && user.userInfo.name){
       this.setState({
         goDashboard:true
       })
     }
+	this.props.LoadingActionFunc(false);
     //loading
   }
 
   render() {
     return (
 			<>
-				{!this.state.goDashboard && <Navigate to='/manager/dashboard' replace={true} />}
+				{this.state.goDashboard && <Navigate to='/manager/dashboard' replace={true} />}
 				<div className='wrapper'>
 					<div className='primary f-16 project-header'>
 						<span>My Report Cards</span>
@@ -90,4 +92,6 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, {})(ManagerWelcomePage);
+export default connect(mapStateToProps, { LoadingActionFunc })(
+	ManagerWelcomePage
+);

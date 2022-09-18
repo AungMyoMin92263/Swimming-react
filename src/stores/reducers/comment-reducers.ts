@@ -4,6 +4,7 @@ export const commentReducers = (
   state: any = {
     result: null,
     success: null,
+    send_cmt: [],
     error: null,
   },
   action: Action
@@ -13,6 +14,12 @@ export const commentReducers = (
       return {
         ...state,
         result: action.payload,
+        error: null,
+      };
+    case ActionTypes.getSendComments:
+      return {
+        ...state,
+        send_cmt: action.payload,
         error: null,
       };
     case ActionTypes.postComment:

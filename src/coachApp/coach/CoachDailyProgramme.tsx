@@ -97,34 +97,34 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 
   getClass = async () => {
     let url = "school/" + this.state.schoolId + "/class/" + this.state.id;
-    await this.props.getClassObject(url);
-    if (this.props.classes && this.props.classes.result) {
+    await this.props.getClassObject(url, true);
+    if (this.props.classes && this.props.classes.viewClass) {
       let comment = []
       let profile: IProfile = {
         isLogo: true,
-        logo: this.props.classes.result.logo,
-        title: this.props.classes.result.name,
+        logo: this.props.classes.viewClass.logo,
+        title: this.props.classes.viewClass.name,
         display_item: [
           {
             title: 'Date',
-            value: this.props.classes.result.start_date
+            value: moment(this.props.classes.viewClass.start_date).format("D MMM YYYY")
           },
           {
             title: 'Time',
-            value: this.props.classes.result.start_time
+            value: this.props.classes.viewClass.start_time
           },
           {
             title: 'No. Student',
-            value: this.props.classes.result.studentCount
+            value: this.props.classes.viewClass.studentCount
           }
         ]
       }
-      // if(this.props.classes.result.comments){
+      // if(this.props.classes.viewClass.comments){
       //   comment
       // }
       this.setState({
         ...this.state,
-        classe: this.props.classes.result,
+        classe: this.props.classes.viewClass,
         profile: profile
       });
     }
@@ -157,6 +157,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
           secondryText: true,
           isBigIcon: false,
           selectable: true,
+          checked: tempAttendances[i].attend
         });
       }
       this.setState({
@@ -179,7 +180,6 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
         let temp = this.state.image;
         temp.preview = URL.createObjectURL(e.target.files[0]);
         temp.raw = e.target.files[0];
-        console.log(this.state.id);
         await this.postClassProgram(this.state.id, temp.raw)
         // this.setState({
         //   image: temp,
@@ -197,7 +197,6 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
       upload_date: date,
       id: oldId
     }
-    console.log(url);
 
     await this.props.postClassProgram(postData, url)
     this.setState({
@@ -220,13 +219,13 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 
   goToAllComments = (id: any) => {
     // this.setState({ goAllComments: true });
-    let cmdUrl = "/coach/dashboard/all-comments/" + id;
+    let cmdUrl = "/coach/dashboard/all-comments/" + id + "/class";
     this.props.history.push(cmdUrl)
   };
 
   goToEnterComments = (id: any) => {
     this.setState({ goEnterComment: true });
-    this.urlEnterComment = "/coach/dashboard/enter-comments/" + id;
+    this.urlEnterComment = "/coach/dashboard/enter-comments/" + id + "/class";
   };
 
 
@@ -265,7 +264,6 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
     };
 
     const { classe, attendances, coaches, goAllComments, goEnterComment, profile, classProgram } = this.state;
-    console.log(attendances);
 
     return (
       <>
@@ -280,7 +278,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
               <ListBoxUI title="Daily Program" callback={() => { }} callback2={() => { }} noBtn={true}>
                 {classProgram && classProgram.image_url !== "" ? (
                   <>
-                    <label htmlFor="fileUpload">
+                    <label htmlFor="fileUpload" className="cursor-pointer">
                       <img
                         src={process.env.REACT_APP_API_ENDPOINT + "/" + classProgram.image_url}
                         alt="preview"
@@ -291,7 +289,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
                   </>
                 ) :
                   <div className="file-upload">
-                    <label htmlFor="fileUpload">Tap to Upload</label>
+                    <label htmlFor="fileUpload" className="cursor-pointer">Tap to Upload</label>
                     <FileUploadOutlinedIcon />
                     <input type="file" id="fileUpload" style={{ display: 'none' }} onChange={this.handleChange} />
                   </div>
@@ -303,7 +301,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
                 <div className="mb-8">
                   <ListBoxUI title="Coaches" callback={() => { }} callback2={() => { }} noBtn={true}>
                     <>
-                      {this.props.classes.assignUser?.map((coach: any, index: any) => {
+                      {this.props.classes.assignUser?.filter((coach:any) => coach.type == 'coache').map((coach: any, index: any) => {
                         return (<ListItem text={coach.user.name || coach.user.email} callback={() => { }} key={`coache${index}`} icon={<>
                           <InitialIcon isFooterMenu={true}
                             initials={(coach.user.name || coach.user.email || "User")
@@ -328,7 +326,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
                 moreText2="Add Comment"
               >
                 {classe.comments ? <>
-                  {classe.comments.map((res: any, index: number) => {
+                  {classe.comments.slice(0, 3).map((res: any, index: number) => {
                     return (
                       <CommentItem
                         profile={this.createProfile(res.user_info.avatar, res.user_info.name)}
@@ -345,12 +343,14 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
               <div className="mb-8">
                 <ListBoxUI
                   title="Attendance"
-                  callback={() => { }}
+                  callback={() => {
+                    this.props.history.push("/coach/class/attendance/" + this.state.classe.id)
+                  }}
                   more={true}
                   moreText="View All"
                 >
                   <>
-                    {attendances.map((attend, index) => {
+                    {attendances.slice(0, 5).map((attend, index) => {
                       return <ListItem {...attend} key={`attend${index}`} />
                     })}
                   </>

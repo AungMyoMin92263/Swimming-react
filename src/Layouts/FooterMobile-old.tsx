@@ -1,5 +1,5 @@
 import React from 'react';
-import './MenuBar.css';
+import './menuBar.css';
 
 export default class FooterMobile extends React.Component {
     constructor(props: any) {

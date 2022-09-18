@@ -3,7 +3,6 @@
   width: 100%;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
   justify-content: center;
 }
 .cus-badge>img{
@@ -16,6 +15,7 @@
   font-size: 12px;
   word-wrap: break-word;
   color: #808080;
+  text-align: center;
 }
 
 .badge-title.active{

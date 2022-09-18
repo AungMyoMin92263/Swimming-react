@@ -8,12 +8,15 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { IListItem } from "../../atoms/ListItem";
 import InputFormAtom from "../../atoms/InputFormAtom";
 import { Link, Navigate } from "react-router-dom";
+import CoachMobileHeader from "../../atoms/CoachMobileHeader";
+import { createBadge } from "../../stores/actions/badge-action";
 
 interface IStates {
   id: number;
   image: any;
   logo: string;
   name: string;
+  color: string;
   isNameValid: boolean;
   isNameEmpty: boolean;
   NameMsg: string;
@@ -21,14 +24,18 @@ interface IStates {
   DesMsg: string;
   isDesValid: boolean;
   isDesEmpty: boolean;
-  goBadges : boolean;
+  goBadges: boolean;
 }
 
 interface IProps {
   authUser: AuthInterface;
+  badges: any
+  createBadge: Function
+  history: any
 }
 
 class CoachCreateBadgePage extends React.Component<IProps, IStates> {
+  colors = ["dark-blue", "blue", "light-blue", "light-pink", "pink"]
   constructor(props: any) {
     super(props);
 
@@ -44,7 +51,8 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
       DesMsg: "",
       isDesValid: true,
       isDesEmpty: false,
-      goBadges : false
+      goBadges: false,
+      color: ""
     };
   }
   componentDidMount() {
@@ -71,28 +79,36 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
     }
   };
 
-  renderImageUpload = () => {
+  createBadge = async () => {
+    let postData = {
+      "name": this.state.name,
+      "logo": this.props.badges.selectedIcon || "/assets/icons/star.svg",
+      "color": this.state.color,
+      "description": this.state.description
+    }
+    await this.props.createBadge(postData)
+    this.props.history.back()
+  }
+
+  renderImageUpload = (image_url: string, color?: string,) => {
     return (
       <div>
-        <label htmlFor="upload-button">
-        <img
-                src={"/assets/icons/logo.png"}
-                alt="preview"
-                className="preview-icon cursor"
-              />
-              <Link to="/coach/edit-icon">
-              <div
-                className="primary f-14 cursor"
-              >
-                Tap to edit Icon
-              </div></Link>
+        <label className="upload-button-cus">
+          <div className={`badge-icon-box big bg-${color}`}>
+            <img
+              src={image_url ? image_url : "/assets/icons/star.svg"}
+              alt="preview"
+              className={`preview-icon-only`}
+            />
+          </div>
+
+          <Link to="/coach/edit-icon">
+            <div
+              className="primary f-14 cursor"
+            >
+              Tap to edit Icon
+            </div></Link>
         </label>
-        <input
-          type="file"
-          id="upload-button"
-          style={{ display: "none" }}
-          onChange={this.handleChange}
-        />
       </div>
     );
   };
@@ -102,7 +118,7 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
       text: "Create a new badge",
       callback: () => console.log("log click item"),
       smallText: "Reward your students.",
-      icon: <img src={"/assets/icons/upload.png"} />,
+      icon: <img src={"/assets/icons/start.svg"} />,
       secondryText: false,
       isBigIcon: true,
     };
@@ -121,40 +137,41 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
       isDesEmpty,
       goBadges
     } = this.state;
-
+    let badgeIcon = this.props.badges.selectedIcon || ''
     return (
       <>
         <div className="wrapper-mobile">
-        {goBadges && <Navigate to="/coach/dashboard/badge-list" replace={true} />}
+          {goBadges && <Navigate to="/coach/dashboard/badge-list" replace={true} />}
 
-          <div className="content-mobile col-sm-12">
-            <div className="mb-32">
-              <Link to="/coach/badge-list">
-                <button type="submit" className="back-btn">
-                  <ArrowBackIcon
-                    sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-                  ></ArrowBackIcon>
-                </button>
-              </Link>
-            </div>
-            <div className="f-32 fw-500 mt-16 mb-32" style={{ width: "247px" }}>
+          <div className="content-mobile-cus-space bg-w col-sm-12">
+            <CoachMobileHeader backBtn={true}></CoachMobileHeader>
+            <div className="f-32 fw-500 mt-32 mb-32" style={{ width: "247px" }}>
               <span>Create Badge</span>
             </div>
-            <div className="text-center">
+            <div className="text-center pt-8">
               <div className="mb-16 f-12">
                 <span>Badge Preview</span>
               </div>
-              <div className="mb-32">{this.renderImageUpload()}</div>
+              <div className="mb-32">{this.renderImageUpload(badgeIcon, this.state.color)}</div>
             </div>
             <div className="f-12 fw-500 mb-16">
               <span>Badge Colour</span>
             </div>
-            <div className="align-center mb-16">
-              <button className="mr-16 badge-color"></button>
-              <button className="mr-16 badge-color" style={{ backgroundColor : '#0070F8'}}></button>
-              <button className="mr-16 badge-color" style={{ backgroundColor : '#E6F1FE'}}></button>
-              <button className="mr-16 badge-color" style={{ backgroundColor : '#FAEFEF'}}></button>
-              <button className="mr-16 badge-color" style={{ backgroundColor : '#C95D63'}}></button>
+            <div className="align-center mb-16" style={{ justifyContent: "space-between" }}>
+              {this.colors.map((color, index) => {
+                return <button key={`colotbtn${index}`} className={`badge-color-btn bg-${color}`} onClick={() => {
+                  this.setState({
+                    ...this.state,
+                    color: color
+                  })
+                }}></button>
+              })}
+
+              {/* <button className="mr-16 badge-color"></button>
+              <button className="mr-16 badge-color" style={{ backgroundColor: '#0070F8' }}></button>
+              <button className="mr-16 badge-color" style={{ backgroundColor: '#E6F1FE' }}></button>
+              <button className="mr-16 badge-color" style={{ backgroundColor: '#FAEFEF' }}></button>
+              <button className="mr-16 badge-color" style={{ backgroundColor: '#C95D63' }}></button> */}
             </div>
             <div className="mb-16">
               <InputFormAtom
@@ -175,7 +192,7 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
                 required={true}
                 maxLength={200}
                 className=""
-                clickCallback={() => {}}
+                clickCallback={() => { }}
                 focusCallback={() => {
                   this.setState({
                     isNameEmpty: false,
@@ -203,7 +220,7 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
                 required={true}
                 maxLength={200}
                 className=""
-                clickCallback={() => {}}
+                clickCallback={() => { }}
                 focusCallback={() => {
                   this.setState({
                     isDesEmpty: false,
@@ -212,7 +229,7 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
                 }}
               />
             </div>
-            <button type="submit" className="btn btn-primary right w-100" onClick={()=> this.setState({ goBadges : true})}>
+            <button type="submit" className="btn btn-primary cus-primay-btn-m right w-100" onClick={() => this.createBadge()}>
               Done
             </button>
           </div>
@@ -224,12 +241,15 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
 
 const mapStateToProps = ({
   authUser,
+  badges
 }: StoreState): {
   authUser: AuthInterface;
+  badges: any
 } => {
   return {
     authUser,
+    badges
   };
 };
 
-export default connect(mapStateToProps, {})(CoachCreateBadgePage);
+export default connect(mapStateToProps, { createBadge })(CoachCreateBadgePage);

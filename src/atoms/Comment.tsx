@@ -9,6 +9,7 @@ export interface ICommentItem {
   timeString?: string
   showReply?: boolean
   reply?: number
+  showRightArr?: boolean
 }
 const CommentItem = (props: ICommentItem) => {
   return (
@@ -26,9 +27,10 @@ const CommentItem = (props: ICommentItem) => {
           <label>{props.reply || 0} replies</label>
         </div>
       </div>
-      <div className='item-icon' onClick={() => props.callback()}>
+      {props.showRightArr ? <div className='item-icon' onClick={() => props.callback()}>
         <ArrowForwardIosIcon></ArrowForwardIosIcon>
-      </div>
+      </div> : <></>}
+
     </div>
   )
 }

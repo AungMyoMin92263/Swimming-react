@@ -19,6 +19,7 @@ interface IProps {
     focusCallback?: Function;
     description?: string;
     children?: React.ReactNode
+    disabled?: boolean
 }
 
 interface IStates {
@@ -89,7 +90,8 @@ class InputFormAtom extends React.Component<IProps, IStates>{
             className,
             clickCallback,
             description,
-            isDropdown
+            isDropdown,
+            disabled
         } = this.props;
 
         return <div className={`input-form-atom ${showWarning ? 'invalid' : ''} ${this.state.isFocus ? 'focus' : ''} ${value !== '' ? 'populated' : ''}`} onFocus={() => this.isFocus()} onBlur={() => this.focusOut()}>
@@ -113,6 +115,7 @@ class InputFormAtom extends React.Component<IProps, IStates>{
                     maxLength={maxLength}
                     className={`${className}`}
                     onClick={() => clickCallback}
+                    disabled={disabled ? true : false}
                 />
             }
             {(!isDropdown && type === 'textarea') &&
@@ -127,6 +130,7 @@ class InputFormAtom extends React.Component<IProps, IStates>{
                         maxLength={maxLength}
                         className={`${className}`}
                         onClick={() => clickCallback}
+                        disabled={disabled ? true : false}
                     ></textarea>
                     <span className="counter">{value.length}/{maxLength}</span>
                 </>

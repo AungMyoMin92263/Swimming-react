@@ -1,13 +1,14 @@
-import { SignUpAction, SignInAction, SignOutAction, RecoverPasswordAction, ChangePasswordAction, GetUsersAction, editUserAction } from "./auth-action";
+import { SignUpAction, SignInAction, SignOutAction, RecoverPasswordAction, ChangePasswordAction, GetUsersAction, editUserAction, SetStudentViewAction,deleteUserAction } from "./auth-action";
 import { getSchoolsAction,createSchoolAction,editSchoolAction,deleteSchoolAction,inviteManagerAction, getSchoolObjAction} from './school-action';
 import { SelectedMenuAction } from './menu-action';
 import { createClassAction, deleteClassAction, editClassAction, getClassAction, getClassObjAction, inviteCoachAction, inviteStudentAction, getClassByDateAction, getclassesByDateAction, createClassProgramAction, getAssignUserByClassAction } from "./class-action";
-import { getEventAction , createEventAction , editEventAction ,deleteEventAction , inviteEventAction} from "./event-action";
+import { getEventAction , createEventAction , editEventAction ,deleteEventAction , inviteEventAction, EventRecordAction} from "./event-action";
 import { getAllAction, getUsersAction,LoadingAction } from "./global-action";
 import { createCoachAction, deleteCoachAction, editCoachAction, getCoachAction,getCoachObjAction } from "./coach-action";
 import { createStudentAction, deleteStudentAction, editStudentAction, getStudentAction,getStudentObjAction } from "./student-action";
 import { CommentAction } from "./comment-action";
 import { CreateAttendanceAction, GetMyAttendanceAction } from "./attendance-action";
+import { CreateBadgeAction, CreatingBadgeAction, GetMyBadgesAction } from "./badge-action";
 
 export enum ActionTypes {
   signUp,
@@ -19,6 +20,8 @@ export enum ActionTypes {
   getUserInfo,
   getOtherUserInfo,
   editUser,
+  setStudentView,
+  deleteUser,
 
   getSchools,
   getSchoolObj,
@@ -34,6 +37,7 @@ export enum ActionTypes {
   getclassesByDateRange,
   getAssignUserByClass,
   getClassObj,
+  getClassDetail,
   createClass,
   createClassProgram,
   getClassProgram,
@@ -43,10 +47,20 @@ export enum ActionTypes {
   // Comment
   getComments,
   postComment,
+  getSendComments,
 
   //MyAttendance
   getMyAttendance,
+  getClassAttendance,
   createAttendance,
+
+  //MyBadge
+  getMyBadges,
+  createBadges,
+  giveBadges,
+  getAllBadges,
+  selectBadgeIcon,
+  selectGiveBadge,
 
   inviteStudent,
   inviteCoach,
@@ -55,7 +69,12 @@ export enum ActionTypes {
   createEvent,
   editEvent,
   deleteEvent,
+  getDetailEvent,
 
+  getEventsRecordDetail,
+  createEventRecord,
+  updateEventRecord,
+  
   inviteEvent,
 
   //coach
@@ -69,6 +88,7 @@ export enum ActionTypes {
    //student
    getStudent,
    getStudentObj,
+   getOwnStudent,
    createStudent,
    editStudent,
    deleteStudent,
@@ -124,4 +144,10 @@ export type Action = SignUpAction
   | getAssignUserByClassAction
   | GetMyAttendanceAction
   | CreateAttendanceAction
+  | CreateBadgeAction
+  | GetMyBadgesAction
+  | CreatingBadgeAction
   | editUserAction
+  | SetStudentViewAction
+  | EventRecordAction
+  | deleteUserAction

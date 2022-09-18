@@ -38,37 +38,37 @@ class TestingComponent extends React.Component {
     let badges: IBadgeItem[] = [
       {
         text: "Badge 1",
-        icon: <img src={"/assets/icons/logo.png"} className="logo-icon" />,
+        icon: "",
         callback: () => console.log("log click item"),
         isActive: true
       },
       {
         text: "Badge 2",
-        icon: <img src={"/assets/icons/logo.png"} className="logo-icon" />,
+        icon: "",
         callback: () => console.log("log click item"),
         isActive: true
       },
       {
         text: "Badge 3",
-        icon: <img src={"/assets/icons/logo.png"} className="logo-icon" />,
+        icon: "",
         callback: () => console.log("log click item"),
         isActive: false
       },
       {
         text: "Badge 4",
-        icon: <img src={"/assets/icons/logo.png"} className="logo-icon" />,
+        icon: "",
         callback: () => console.log("log click item"),
         isActive: false
       },
       {
         text: "Badge 5",
-        icon: <img src={"/assets/icons/logo.png"} className="logo-icon" />,
+        icon: "",
         callback: () => console.log("log click item"),
         isActive: false
       },
       {
         text: "Badge 6",
-        icon: <img src={"/assets/icons/logo.png"} className="logo-icon" />,
+        icon: "",
         callback: () => console.log("log click item"),
         isActive: false
       },

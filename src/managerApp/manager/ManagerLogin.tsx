@@ -30,6 +30,7 @@ type IProps = UserSignInPage;
 
 class ManagerLoginPage extends React.Component<IProps, IStates> {
 	constructor(props: IProps) {
+
 		super(props);
 		console.log("props", props);
 		this.state = {
@@ -42,7 +43,7 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 			passwordMsg: "",
 			isNewUser : '',
 		};
-		removeItem("authUser");
+		
 	}
 
 	submit = () => {

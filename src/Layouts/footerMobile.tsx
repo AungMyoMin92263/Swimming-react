@@ -1,13 +1,12 @@
 import React from "react";
 import { IPageProp } from "../pagePropsInterface";
-import './menuBar.css';
-
 import PoolIcon from '@mui/icons-material/Pool';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import { useEffect } from "react";
 import { getItem } from "../auth/LocalStorage";
 import { InitialIcon } from "../atoms/InitialIcon";
+import './MenuBar.css';
 
 const FooterMobileMenu = (props: IPageProp) => {
 const [url,setURL]= React.useState('');

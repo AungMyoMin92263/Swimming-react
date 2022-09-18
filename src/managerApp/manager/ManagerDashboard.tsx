@@ -4,8 +4,8 @@ import React from "react";
 import "./ManagerDashboard.css";
 import AddIcon from "@mui/icons-material/Add";
 import { StoreState } from "../../stores/reducers";
-import { getAllclasses,deleteClass} from "../../stores/actions/class-action";
-import { signOut,LoadingActionFunc } from "../../stores/actions";
+import { getAllclasses, deleteClass } from "../../stores/actions/class-action";
+import { signOut, LoadingActionFunc } from "../../stores/actions";
 import { connect } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
 import { Class } from "../../stores/model/class";
@@ -17,11 +17,13 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+
 interface IStates {
   classes: Class[];
   email: string;
   logo: string;
-  school_id:number;
+  school_id: number;
   school_name: string;
   dropdown: boolean;
   isLogout: boolean;
@@ -33,7 +35,7 @@ interface ManagerDashboardPage {
   getAllclasses: Function;
   classList: any;
   signOut: Function;
-  deleteClass : Function;
+  deleteClass: Function;
   LoadingActionFunc: Function;
 }
 
@@ -64,33 +66,27 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
     this.props.LoadingActionFunc(false);
     removeItem("class");
     removeItem("event");
-    removeItem("students")
+    removeItem("students");
     const user = JSON.parse(getItem("authUser") || "null");
-    if (
-      user &&
-      user.userInfo &&
-      user.userInfo.assign_school
-    ) {
+    if (user && user.userInfo && user.userInfo.assign_school) {
       this.setState({
         email: user.userInfo.email,
-        logo:
-          user.userInfo.assign_school
-            ? user.userInfo.assign_school.school.logo
-            : "",
-        school_name:
-          user.userInfo.assign_school
-            ? user.userInfo.assign_school.school.name
-            : "",
-            school_id :  user.userInfo.assign_school
-            ? user.userInfo.assign_school.school.id
-            : 0,
+        logo: user.userInfo.assign_school
+          ? user.userInfo.assign_school.school.logo
+          : "",
+        school_name: user.userInfo.assign_school
+          ? user.userInfo.assign_school.school.name
+          : "",
+        school_id: user.userInfo.assign_school
+          ? user.userInfo.assign_school.school.id
+          : 0,
       });
     }
     this.getClasses();
   }
 
   toggleOpenMore = (index: number) => {
-    console.log('toggleOpenMore',index)
+    console.log("toggleOpenMore", index);
     let dropdownVal = !this.state.dropdownMore;
     this.setState({
       currentIndex: index,
@@ -105,32 +101,30 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
   };
 
   removeClass = async (id: any) => {
-    await this.props.deleteClass('/school/'+this.state.school_id+'/class' ,id);
+    await this.props.deleteClass(
+      "/school/" + this.state.school_id + "/class",
+      id
+    );
     if (
       this.props.classList.result &&
       this.props.classList.result.data.statusText === "success"
     ) {
       this.getClasses();
-    }else this.props.LoadingActionFunc(false);
+    } else this.props.LoadingActionFunc(false);
   };
 
   getClasses = async () => {
     let url = "";
     const user = JSON.parse(getItem("authUser") || "null");
-    if (
-      user &&
-      user.userInfo &&
-      user.userInfo.assign_school
-    ) {
-      url =
-        "school/" + user.userInfo.assign_school.school.id + "/class";
+    if (user && user.userInfo && user.userInfo.assign_school) {
+      url = "school/" + user.userInfo.assign_school.school.id + "/class";
       await this.props.getAllclasses(url);
       if (this.props.classList.result)
-      this.setState({
-        classes: this.props.classList.result || [],
-      });
+        this.setState({
+          classes: this.props.classList.result || [],
+        });
       this.props.LoadingActionFunc(false);
-    }else this.props.LoadingActionFunc(false);
+    } else this.props.LoadingActionFunc(false);
   };
 
   toggleOpen = () => {
@@ -154,131 +148,127 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
     let classes = this.props.classList.result;
     if (classes && classes.length > 0) {
       return (
-				<div className='dashboard-body'>
-					<div className='tableBody'>
-						<div className='tableSearch'>
-							<div className='textArea'>
-								<div className='dash-search-div'>
-									<div className='dash-search-icon-div'>
-										<SearchIcon
-											sx={{ color: "#808080", fontSize: 16, mr: 0.5 }}
-										/>
-									</div>
-									<input
-										className='dash-input-div'
-										placeholder='Search by class, date/time or coach(es)'
-									/>
-								</div>
-								<div className='dash-filter-div'>
-									<FilterListIcon
-										sx={{
-											color: "#0070F8",
-											fontSize: 18,
-											fontWeight: 500,
-											mr: 0.5,
-										}}
-									/>
-									Filter
-								</div>
-							</div>
-						</div>
-						<table className='table'>
-							<thead>
-								<tr>
-									<th className='col-4'>CLASS</th>
-									<th className='col-3'>NEXT DATE/TIME</th>
-									<th className='col-2'>COACH</th>
-									<th className='col-3'>NO. STUDENTS</th>
-								</tr>
-							</thead>
-							<tbody>
-								{classes &&
-									classes.length > 0 &&
-									classes.map((classe: Class, index: any) => (
-										<tr>
-											<td>
-												<img
-													src={
-														classe
-															? process.env.REACT_APP_API_ENDPOINT +
-															  "/" +
-															  classe.logo
-															: placeholder
-													}
-													alt='logo'
-													id='logo'
-													className={`${classe ? "icon" : "w-48"}`}
-												/>
-												<span className='ml-16'>{classe.name}</span>
-											</td>
-											<td>
-												{classe.start_date} {classe.start_time}
-											</td>
-											<td className='emailInitialIcon'>
-												{classe.assign_user &&
-													classe.assign_user.length > 0 &&
-													classe.assign_user.map((user: any, index) =>
-														user.type === "coache" && index === 0 ? (
-															<InitialIcon
-																initials={user.user.email
-																	.substr(0, 1)
-																	.toUpperCase()}
-																isFooterMenu={false}
-															/>
-														) : (
-															<InitialIconList
-																initials={user.user.email
-																	.substr(0, 1)
-																	.toUpperCase()}
-																isFooterMenu={false}
-															/>
-														)
-													)}
-											</td>
+        <div className="dashboard-body">
+          <div className="tableBody">
+            <div className="tableSearch">
+              <div className="textArea">
+                <div className="dash-search-div">
+                  <div className="dash-search-icon-div">
+                    <SearchIcon
+                      sx={{ color: "#808080", fontSize: 16, mr: 0.5 }}
+                    />
+                  </div>
+                  <input
+                    className="dash-input-div"
+                    placeholder="Search by class, date/time or coach(es)"
+                  />
+                </div>
+                <div className="dash-filter-div">
+                  <FilterListIcon
+                    sx={{
+                      color: "#0070F8",
+                      fontSize: 18,
+                      fontWeight: 500,
+                      mr: 0.5,
+                    }}
+                  />
+                  Filter
+                </div>
+              </div>
+            </div>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th className="col-4">CLASS</th>
+                  <th className="col-3">NEXT DATE/TIME</th>
+                  <th className="col-2">COACH</th>
+                  <th className="col-3">NO. STUDENTS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {classes &&
+                  classes.length > 0 &&
+                  classes.map((classe: Class, index: any) => (
+                    <tr>
+                      <td>
+                        <img
+                          src={
+                            classe
+                              ? process.env.REACT_APP_API_ENDPOINT +
+                                "/" +
+                                classe.logo
+                              : placeholder
+                          }
+                          alt="logo"
+                          id="logo"
+                          className={`${classe ? "icon" : "w-48"}`}
+                        />
+                        <span className="ml-16">{classe.name}</span>
+                      </td>
+                      <td>
+                        {classe.start_date} {classe.start_time}
+                      </td>
+                      <td className="emailInitialIcon">
+                        {classe.assign_user &&
+                          classe.assign_user.length > 0 &&
+                          classe.assign_user.map((user: any, index) =>
+                            user.type === "coache" && index === 0 ? (
+                              <InitialIcon
+                                initials={(user.user? user.user.email : '').substr(0, 1).toUpperCase()}
+                                isFooterMenu={false}
+                              />
+                            ) : (
+                              <InitialIconList
+                                initials={(user.user? user.user.email : '').substr(0, 1).toUpperCase()}
+                                isFooterMenu={false}
+                              />
+                            )
+                          )}
+                      </td>
 
-											<td>
-												<div className='flex justify-space-around'>
-													<span>{classe.studnetCount}</span>
-													<div className='dropdownMore'>
-														<MoreVertIcon
-															style={{
-																color: "inherit",
-																cursor: "pointer",
-															}}
-															onClick={() => this.toggleOpenMore(index)}
-														/>
-														<div
-															className={`dropdown-menu ${
-																this.state.dropdownMore &&
-																this.state.currentIndex === index
-																	? "show"
-																	: ""
-															}`}
-															aria-labelledby='dropdownMenuButton'
-														>
-															<Link to={this.state.url}>
-																<div className='dropdown-item cursor'>
-																	<span>View</span>
-																</div>
-															</Link>
-															<div className='dropdown-divider'></div>
-															<div
-																className='dropdown-item cursor'
-																onClick={() => this.remove(index)}
-															>
-																<span>Remove</span>
-															</div>
-														</div>
-													</div>
-												</div>
-											</td>
-										</tr>
-									))}
-							</tbody>
-						</table>
-					</div>
-				</div>
-			);
+                      <td>
+                        <div className="flex justify-space-around">
+                          <span>{classe.studentCount}</span>
+                          <div className="dropdownMore">
+                            <MoreVertIcon
+                              style={{
+                                color: "inherit",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => this.toggleOpenMore(index)}
+                            />
+                            <div
+                              className={`dropdown-menu ${
+                                this.state.dropdownMore &&
+                                this.state.currentIndex === index
+                                  ? "show"
+                                  : ""
+                              }`}
+                              aria-labelledby="dropdownMenuButton"
+                            >
+                              <Link to={this.state.url}>
+                                <div className="dropdown-item cursor">
+                                  <span>View</span>
+                                </div>
+                              </Link>
+                              <div className="dropdown-divider"></div>
+                              <div
+                                className="dropdown-item cursor"
+                                onClick={() => this.remove(index)}
+                              >
+                                <span>Remove</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
     } else {
       return (
         <div className="dashboard-body">
@@ -325,7 +315,10 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
               <div className="justify-end">
                 <div className="dropdown">
                   <div className="email-div cursor" onClick={this.toggleOpen}>
-                    <InitialIcon initials={email.substr(0, 1).toUpperCase()} isFooterMenu={false}/>
+                    <InitialIcon
+                      initials={email.substr(0, 1).toUpperCase()}
+                      isFooterMenu={false}
+                    />
                     <span>{email} </span>
                   </div>
                   <div
@@ -334,6 +327,15 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
                     }`}
                     aria-labelledby="dropdownMenuButton"
                   >
+                    <Link to={"/manager/edit-profile"}>
+                      <div className="dropdown-item cursor">
+                        <EditOutlinedIcon
+                          sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
+                        ></EditOutlinedIcon>
+                        <span>Edit Profile</span>
+                      </div>
+                    </Link>
+                    <div className="dropdown-divider"></div>
                     <div className="dropdown-item cursor" onClick={this.logout}>
                       <LogoutOutlinedIcon
                         sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
@@ -396,6 +398,9 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { getAllclasses, signOut, deleteClass, LoadingActionFunc })(
-  ManagerDashboardPage
-);
+export default connect(mapStateToProps, {
+  getAllclasses,
+  signOut,
+  deleteClass,
+  LoadingActionFunc,
+})(ManagerDashboardPage);

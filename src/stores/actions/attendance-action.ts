@@ -4,7 +4,7 @@ import apiServer from "../../api/api-service";
 import { Dispatch } from "redux";
 
 export interface GetMyAttendanceAction {
-  type: ActionTypes.getMyAttendance | ActionTypes.getError;
+  type: ActionTypes.getMyAttendance | ActionTypes.getClassAttendance | ActionTypes.getError;
   payload: any;
 }
 export const getMyAttend = (student_id: number) => {
@@ -17,6 +17,57 @@ export const getMyAttend = (student_id: number) => {
         type: ActionTypes.getMyAttendance,
         payload: response.data,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err instanceof Error) {
+        dispatch<GetMyAttendanceAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};
+
+export const getMyAttendByClass = (studentId: number, classId: number, month: string) => {
+  let options = refreshHeaderOptionToken();
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.get<GetMyAttendanceAction>(`attendance/student/${studentId}/class/${classId}?month=${month}`, options?.option);
+      dispatch<GetMyAttendanceAction>({
+        type: ActionTypes.getMyAttendance,
+        payload: response.data,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err instanceof Error) {
+        dispatch<GetMyAttendanceAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};
+
+export const getClassAttend = (classId: number) => {
+  let options = refreshHeaderOptionToken();
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.get<GetMyAttendanceAction>(`/attendance/byClass/${classId}`, options?.option);
+      dispatch<GetMyAttendanceAction>({
+        type: ActionTypes.getClassAttendance,
+        payload: response.data,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err) {
       dispatch({ type: ActionTypes.loading, payload: false })
       if (err instanceof Error) {
@@ -46,6 +97,7 @@ export const createAttendance = (data: any) => {
         type: ActionTypes.createAttendance,
         payload: response.data,
       });
+      dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err) {
       dispatch({ type: ActionTypes.loading, payload: false })
       if (err instanceof Error) {

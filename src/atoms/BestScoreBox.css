@@ -2,15 +2,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  margin: 15px;
+  gap: 24px;
+  margin: 16px;
 }
 
 .score {
-  width: 90px;
-  height: 90px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
-  border: 0.5px solid #cccccc;
+  border: 1px solid #F5F5F5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,28 +18,42 @@
 }
 
 .score-count {
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 600;
   color: var(--primary);
 }
-.scoure-unit{
-  font-size: 12px;
+
+.scoure-unit {
+  font-weight: 500;
+  font-size: 8px;
   color: #808080;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
-.score-text{
+
+.score-text {
   flex: 1;
 }
-.score-title{
+
+.score-title {
   color: #1A1A1A;
-  font-size: 15px;
+  font-weight: 500;
+  font-size: 16px;
 }
-.score-date{
+
+.score-date {
   display: flex;
   width: 100%;
   align-items: center;
-  font-size: 13px;
   gap: 10px;
   color: var(--primary);
 }
-.score-date>label{
+
+.score-date>label,.score-date>svg {
   color: #808080;
+  font-weight: 400;
+  font-size: 14px;
+}
+.score-date>svg {
+  color: var(--primary);
 }

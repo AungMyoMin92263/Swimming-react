@@ -13,5 +13,5 @@
     start_date: DateTime,
     logo: string,
     assign_user: any[],
-    studnetCount: number
+   studentCount: number
   }

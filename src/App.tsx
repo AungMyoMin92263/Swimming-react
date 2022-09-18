@@ -33,7 +33,6 @@ class App extends React.Component<IProps, AppStates> {
   constructor(props: IProps) {
     super(props);
     this.state = { isBusy: false, isAuth: true, user: '', password: '', error: false };
-    console.log('this.props.loading', this.props.loading)
   }
 
   componentDidMount() {

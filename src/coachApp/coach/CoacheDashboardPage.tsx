@@ -92,8 +92,6 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
   getAuthFromLocal = async () => {
     let user = JSON.parse(getItem("authUser") || "null");
     if (user && user.userInfo) {
-      console.log(user);
-
       await this.setState({
         user_id: user.userInfo.id,
         user_name: user.userInfo.name,
@@ -127,7 +125,6 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
       "/class/by-date?date=" +
       new Date().toISOString();
     await this.props.getclassesByDate(url);
-    console.log(this.props.classList);
 
     if (this.props.classList.result) {
       if (this.props.classList.result.length > 0) {
@@ -236,7 +233,7 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
 
             <ListBoxUI
               title="Students"
-              callback={() => { }}
+              callback={() => { this.props.history.push("/coach/dashboard/students")}}
               more={true}
               moreText="View All"
             >

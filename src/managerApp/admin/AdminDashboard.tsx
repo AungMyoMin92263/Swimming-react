@@ -33,6 +33,8 @@ interface IStates {
   dropdownMore: boolean;
   currentIndex: number;
   url: string;
+  managerUrl : string;
+
 }
 interface IProps {
   getAllSchools: Function;
@@ -44,7 +46,7 @@ interface IProps {
 
 class AdminDashboardPage extends React.Component<IProps, IStates> {
   url = "/admin/add-school/";
-
+  managerUrl = "/admin/invite-manager-summary/";
   constructor(props: any) {
     super(props);
     this.state = {
@@ -55,6 +57,7 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
       dropdownMore: false,
       currentIndex: -1,
       url: "",
+	  managerUrl : "",
     };
 	// this.props.LoadingActionFunc(true);
   }
@@ -84,6 +87,7 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
       currentIndex: index,
       dropdownMore: dropdownVal,
       url: this.url + this.state.schools[index].id,
+	  managerUrl : this.managerUrl + this.state.schools[index].id
     });
   };
 
@@ -130,6 +134,7 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
       dropdownMore,
       currentIndex,
       url,
+	  managerUrl,
       schools,
     } = this.state;
     return (
@@ -239,17 +244,16 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 																	initials={user.user.email
 																		.substr(0, 1)
 																		.toUpperCase()}
-																		
 																	isFooterMenu={false}
 																/>
 															)
 														)}
 													</td>
 													<td>
-														<div className='flex justify-space-around'>
+														<div className='flex justify-space-between'>
 															<span>0</span>
 
-															<div className='dropdownMore'>
+															<div className='dropdownMore mr-24'>
 																<MoreVertIcon
 																	style={{
 																		color: "inherit",
@@ -265,12 +269,23 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 																	}`}
 																	aria-labelledby='dropdownMenuButton'
 																>
+																	<div
+																		className='dropdown-item cursor'
+																		onClick={this.edit}
+																	>
+																		<span>View</span>
+																	</div>
+																	<div className='dropdown-divider'></div>
 																	<Link to={url}>
-																		<div
-																			className='dropdown-item cursor'
-																			onClick={this.edit}
-																		>
-																			<span>Edit</span>
+																		<div className='dropdown-item cursor'>
+																			<span>Edit School</span>
+																		</div>
+																	</Link>
+																	<div className='dropdown-divider'></div>
+
+																	<Link to={managerUrl}>
+																		<div className='dropdown-item cursor'>
+																			<span>Edit School Managers</span>
 																		</div>
 																	</Link>
 																	<div className='dropdown-divider'></div>

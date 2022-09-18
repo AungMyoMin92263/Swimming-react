@@ -16,25 +16,27 @@ import { studentReducers } from "./student-reducers";
 import { CommentInterface } from "../model/comment.interface";
 import { commentReducers } from "./comment-reducers";
 import { attandanceReducers } from "./attandance-reducers";
+import { badgeReducers } from "./badge-reducers";
 export interface StoreState {
   authUser: any;
   signedUpUser: any;
   schools: SchoolInterface;
   schoolList: School[],
   classList: Class[],
-  classes: ClassInterface;
+  classes: any;
   eventList: Event[],
   events: EventInterface;
   menuState: MenuDataInterFace;
   users: any;
   coachList: any[],
-  coache: any;
+  coach: any;
   studentList: any[],
   student: any;
   response: any;
   classListR: ClassRangeInterface
   comments: CommentInterface[],
   loading: any;
+  badges: any
   attendance: any;
   user : any;
 }
@@ -52,13 +54,14 @@ export const reducers = combineReducers<StoreState>({
   users: globalReducers,
   response: globalReducers,
   coachList: coachReducers,
-  coache: coachReducers,
+  coach: coachReducers,
   studentList: studentReducers,
   student: studentReducers,
   classListR: classReducers,
   comments: commentReducers,
   loading: globalReducers,
   attendance: attandanceReducers,
+  badges: badgeReducers,
   user : authReducers,
 
 });

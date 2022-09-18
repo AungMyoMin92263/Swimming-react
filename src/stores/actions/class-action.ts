@@ -68,11 +68,11 @@ export const getclassesByDate = (url: string) => {
 };
 
 export interface getClassObjAction {
-  type: ActionTypes.getClassObj | ActionTypes.getError;
+  type: ActionTypes.getClassObj | ActionTypes.getClassDetail | ActionTypes.getError;
   payload: Class | any;
 }
 
-export const getClassObject = (url: string) => {
+export const getClassObject = (url: string, detail?: boolean) => {
   let options = refreshHeaderOptionToken();
 
   return async (dispatch: Dispatch) => {
@@ -80,7 +80,7 @@ export const getClassObject = (url: string) => {
       dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.get<Class>(url, options.option);
       dispatch<getClassObjAction>({
-        type: ActionTypes.getClassObj,
+        type: detail ? ActionTypes.getClassDetail : ActionTypes.getClassObj,
         payload: response.data,
       });
       dispatch({ type: ActionTypes.loading, payload: false })

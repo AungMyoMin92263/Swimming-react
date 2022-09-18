@@ -12,23 +12,23 @@ var option: AxiosRequestConfig;
 export const refreshTokenEvent = () => {
   const authUser = JSON.parse(getItem("authUser") || "null");
   if (authUser && authUser.userInfo) {
-  token = authUser.userInfo.token;
+    token = authUser.userInfo.token;
 
-  option = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  };
-}
+    option = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+  }
 }
 
 export interface getEventAction {
-  type: ActionTypes.getEvent | ActionTypes.getError;
+  type: ActionTypes.getEvent | ActionTypes.getDetailEvent | ActionTypes.getError;
   payload: Event | Event[] | any;
 }
 
-export const getAllEvents =  (url : string) => {
+export const getAllEvents = (url: string) => {
   refreshTokenEvent();
   return async (dispatch: Dispatch) => {
     try {
@@ -53,12 +53,93 @@ export const getAllEvents =  (url : string) => {
   };
 };
 
+export const getDetailEvents = (school_id: number, id: number) => {
+  refreshTokenEvent();
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.get<Event>(`/school/${school_id}/event/${id}`, option);
+      dispatch<getEventAction>({
+        type: ActionTypes.getDetailEvent,
+        payload: response.data,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err instanceof Error) {
+        dispatch<getEventAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};
+
+export interface EventRecordAction {
+  type: ActionTypes.getEventsRecordDetail | ActionTypes.createEventRecord | ActionTypes.updateEventRecord | ActionTypes.getError;
+  payload: any;
+}
+
+export const getEventsRecordDetail = (eventId: number, studentId: number) => {
+  refreshTokenEvent();
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.get<any>(`/event-record/detail?event_id=${eventId}&user_id=${studentId}`, option);
+      dispatch<EventRecordAction>({
+        type: ActionTypes.getEventsRecordDetail,
+        payload: response.data,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err instanceof Error) {
+        dispatch<EventRecordAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};
+
+export const postEventsRecord = (data: any) => {
+  refreshTokenEvent();
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.post<any>(`/event-record`,data, option);
+      dispatch<EventRecordAction>({
+        type: ActionTypes.createEventRecord,
+        payload: response.data,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err instanceof Error) {
+        dispatch<EventRecordAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};
+
+
 export interface createEventAction {
   type: ActionTypes.createEvent | ActionTypes.getError;
   payload: Event | any;
 }
 
-export const postEvent = (evente : EventInterface,url : string) => {
+export const postEvent = (evente: EventInterface, url: string) => {
   refreshTokenEvent();
   return async (dispatch: Dispatch) => {
     try {
@@ -72,7 +153,7 @@ export const postEvent = (evente : EventInterface,url : string) => {
         payload: response,
       });
       dispatch({ type: ActionTypes.loading, payload: false })
-    } catch (err:any) {
+    } catch (err: any) {
       dispatch({ type: ActionTypes.loading, payload: false })
       if (err) {
         dispatch<createEventAction>({
@@ -91,13 +172,13 @@ export interface editEventAction {
   payload: Event | any;
 }
 
-export const putEvent = (evente: EventInterface, url : string, id: number) => {
+export const putEvent = (evente: EventInterface, url: string, id: number) => {
   refreshTokenEvent();
   return async (dispatch: Dispatch) => {
     try {
       dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.put<Event>(
-        url+'/' + id,
+        url + '/' + id,
         evente,
         option
       );
@@ -106,7 +187,7 @@ export const putEvent = (evente: EventInterface, url : string, id: number) => {
         payload: response,
       });
       dispatch({ type: ActionTypes.loading, payload: false })
-    } catch (err:any) {
+    } catch (err: any) {
       dispatch({ type: ActionTypes.loading, payload: false })
       if (err) {
         dispatch<editEventAction>({
@@ -125,13 +206,13 @@ export interface deleteEventAction {
   payload: Event | any;
 }
 
-export const deleteEvent = (url : string,id: number) => {
+export const deleteEvent = (url: string, id: number) => {
   refreshTokenEvent();
 
   return async (dispatch: Dispatch) => {
     try {
       dispatch({ type: ActionTypes.loading, payload: true })
-      const response = await apiServer.delete<Event>(url+"/" + id, option);
+      const response = await apiServer.delete<Event>(url + "/" + id, option);
       dispatch<deleteEventAction>({
         type: ActionTypes.deleteEvent,
         payload: response,
@@ -156,7 +237,7 @@ export interface inviteEventAction {
   payload: any;
 }
 
-export const inviteEvent = (emails : any) => {
+export const inviteEvent = (emails: any) => {
   refreshTokenEvent();
 
   return async (dispatch: Dispatch) => {
@@ -171,7 +252,7 @@ export const inviteEvent = (emails : any) => {
         payload: response,
       });
       dispatch({ type: ActionTypes.loading, payload: false })
-    } catch (err:any) {
+    } catch (err: any) {
       dispatch({ type: ActionTypes.loading, payload: false })
       if (err) {
         dispatch<inviteEventAction>({

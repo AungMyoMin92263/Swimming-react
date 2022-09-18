@@ -68,27 +68,30 @@ class AddClass extends React.Component<IProps, IStates> {
 		};
 	}
 
-	componentDidMount() {
-		
+	componentDidMount() {	
+		this.authFromLocal();
+	}
+
+	authFromLocal = async() => {
 		const user = JSON.parse(getItem("authUser") || "null");
 		if (user && user.userInfo && user.userInfo.assign_school) {
-			this.setState({
+			await this.setState({
 				schoolId: user.userInfo.assign_school.school.id,
 				school_name: user.userInfo.assign_school.school.name,
 				school_logo: user.userInfo.assign_school.school.logo,
 			});
-		}
 
-		if(this.state.classObj.id === -1){ 
+			if(this.state.classObj.id === -1){ 
 			const classObject = JSON.parse(getItem("class") || "null");
-		if (classObject) {
-			this.setState({
-				classObj: classObject,
-			});
-		}
-		}else{
-			this.getClass();
-		}
+			if (classObject) {
+				this.setState({
+					classObj: classObject,
+				});
+			}
+			}else{
+				this.getClass();
+			}
+		}	
 	}
 
 	getClass = async () => {

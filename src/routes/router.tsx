@@ -19,6 +19,7 @@ import AdminEventListPage from "../managerApp/admin/EventListPage";
 import AdminRecoverPasswordPage from "../managerApp/admin/AdminRecoverPasswordPage";
 import AdminChangePasswordPage from "../managerApp/admin/AdminChangePasswordPage";
 import AdminPeopleListPage from "../managerApp/admin/PeopleListPage";
+import InvitedManagerSummaryPage from "../managerApp/admin/InvitedManagerSummary";
 
 import ManagerSideBar from "../Layouts/ManagerMenuSideBar";
 import InviteStudentEvent from "../managerApp/manager/InviteStudentEvent";
@@ -33,6 +34,9 @@ import InviteStudentPage from "../managerApp/manager/InviteStudent";
 import InvitedStudentSummaryPage from "../managerApp/manager/InvitedStudentSummary";
 import ManagerCreatePasswordPage from "../managerApp/manager/ManagerCreatePasswordPage";
 import AddManagerNamePage from "../managerApp/manager/AddManagerName";
+import ManagerEditProfilePage from "../managerApp/manager/ManagerEditProfile";
+import ManagerInviteCoachSummaryPage from "../managerApp/manager/ManagerInviteCoachSummaryPage"
+import ManagerInviteStudentSummaryPage from "../managerApp/manager/ManagerInviteStudentSummaryPage"
 
 
 import AssignStudentPage from "../managerApp/manager/AssignStudent";
@@ -89,8 +93,18 @@ import ParentWelcomePage from "../studentApp/parent/ParentWelcome";
 
 //testing
 import TestingComponent from "./TestingComponent";
-
-
+import CocahGiveBadgePage from "../coachApp/coach/CoachGiveBadge";
+import CoachEventsDetailPage from "../coachApp/coach/CoachEventsDetailPage";
+import CoachStudentRecordPage from "../coachApp/coach/CoachStudentRecord";
+import CoachCreateStudentRecordPage from "../coachApp/coach/CoachCreateStudentRecord";
+import CoachStudentAttandPage from "../coachApp/coach/CoachStudentAttandPage";
+import CoacheProfile from "../coachApp/coach/CoacheProfile";
+import CoachStudentsList from "../coachApp/coach/CoachStudentsList";
+import ManagerCoachDetailPage from "../managerApp/manager/ManagerCoachDetailPage";
+import ManagerStudentDetailPage from "../managerApp/manager/ManagerStudentDetailPage";
+import CoachStudentAttendanceList from "../coachApp/coach/CoachStudentAttendanceList";
+import ManagerStudentEditProfile from "../managerApp/manager/ManagerStudentEditProfile";
+import ManagerCoachEditProfile from "../managerApp/manager/ManagerCoachEditProfile";
 
 
 const windowHistory = createBrowserHistory({ window });
@@ -104,7 +118,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<Navigate to={'/admin/login'} replace={true}></Navigate>
+						<Navigate to={"/admin/login"} replace={true}></Navigate>
 					</>
 				),
 				footer: (props: any) => <></>,
@@ -227,6 +241,31 @@ const routes = [
 				isMobileFooter: false,
 			},
 			{
+				path: "invite-manager/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<InviteManagerPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+
+			{
+				path: "invite-manager-summary/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<InvitedManagerSummaryPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
 				path: "add-more-school",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
@@ -279,7 +318,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<Navigate to={'/manager/login'} replace={true}></Navigate>
+						<Navigate to={"/manager/login"} replace={true}></Navigate>
 					</>
 				),
 				footer: (props: any) => <></>,
@@ -348,7 +387,20 @@ const routes = [
 				isSideBar: false,
 				isMobileFooter: false,
 			},
-			
+
+			{
+				path: "edit-profile",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ManagerEditProfilePage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+
 			{
 				path: "login",
 				sideBar: (props: any) => <></>,
@@ -529,6 +581,86 @@ const routes = [
 				isSideBar: true,
 				isMobileFooter: false,
 			},
+			{
+				path: "coach-detail/:id",
+				sideBar: (props: any) => (
+					<>
+						<ManagerSideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<ManagerCoachDetailPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "student-detail/:id",
+				sideBar: (props: any) => (
+					<>
+						<ManagerSideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<ManagerStudentDetailPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "invite-coach-summary/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ManagerInviteCoachSummaryPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "invite-student-summary/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ManagerInviteStudentSummaryPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "student-edit-profile/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ManagerStudentEditProfile {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "edit-coach/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ManagerCoachEditProfile {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
 		],
 	},
 	{
@@ -539,7 +671,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<Navigate to={'/student/login'} replace={true}></Navigate>
+						<Navigate to={"/student/login"} replace={true}></Navigate>{" "}
 					</>
 				),
 				footer: (props: any) => <></>,
@@ -719,7 +851,7 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
-				path: "edit-profile",
+				path: "me/edit-profile",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
@@ -744,7 +876,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<Navigate to={'/coach/login'} replace={true}></Navigate>
+						<Navigate to={"/coach/login"} replace={true}></Navigate>
 					</>
 				),
 				footer: (props: any) => <></>,
@@ -775,7 +907,7 @@ const routes = [
 				isSideBar: false,
 				isMobileFooter: false,
 			},
-			
+
 			{
 				path: "add-info",
 				sideBar: (props: any) => <></>,
@@ -841,6 +973,22 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
+				path: "me",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoacheProfile {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
 				path: "dashboard/daily-program",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
@@ -873,7 +1021,7 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
-				path: "dashboard/all-comments/:id",
+				path: "dashboard/all-comments/:id/class",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
@@ -889,7 +1037,35 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
-				path: "dashboard/enter-comments/:id",
+				path: "dashboard/enter-comments/:id/class",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachEnterCommentsPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "dashboard/all-comments/:id/user",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachCommentsPage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "dashboard/enter-comments/:id/user",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
@@ -917,6 +1093,23 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
+				path: "dashboard/students",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachStudentsList {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+
+			{
 				path: "dashboard/profile-detail/:id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
@@ -933,7 +1126,23 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
-				path: "dashboard/badge-list/",
+				path: "student/attendance/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachStudentAttendanceList {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "dashboard/badge-list/:id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
@@ -949,11 +1158,27 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
+				path: "dashboard/give-badges/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CocahGiveBadgePage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
 				path: "create-badge",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<CoachCreateBadgePage />
+						<CoachCreateBadgePage {...props} />
 					</>
 				),
 				footer: (props: any) => (
@@ -969,7 +1194,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<CoachEditIconPage />
+						<CoachEditIconPage {...props} />
 					</>
 				),
 				footer: (props: any) => (
@@ -985,7 +1210,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<CoachBadgeSentPage />
+						<CoachBadgeSentPage {...props} />
 					</>
 				),
 				footer: (props: any) => (
@@ -1029,11 +1254,11 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
-				path: "me",
+				path: "event/detail/:id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<CoachMePage {...props} />
+						<CoachEventsDetailPage {...props} />
 					</>
 				),
 				footer: (props: any) => (
@@ -1045,11 +1270,75 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
+				path: "student/record/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachStudentRecordPage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "class/attendance/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachStudentAttandPage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "create/record/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachCreateStudentRecordPage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			// {
+			// 	path: "me",
+			// 	sideBar: (props: any) => <></>,
+			// 	main: (props: any) => (
+			// 		<>
+			// 			<CoachMePage {...props} />
+			// 		</>
+			// 	),
+			// 	footer: (props: any) => (
+			// 		<>
+			// 			<FooterMobileMenu {...props} />
+			// 		</>
+			// 	),
+			// 	isSideBar: false,
+			// 	isMobileFooter: true,
+			// },
+			{
 				path: "me/edit-profile",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<CoachEditProfilePage />
+						<CoachEditProfilePage {...props} />
 					</>
 				),
 				footer: (props: any) => (
@@ -1070,7 +1359,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<Navigate to={'/parent/login'} replace={true}></Navigate>
+						<Navigate to={"/parent/login"} replace={true}></Navigate>
 					</>
 				),
 				footer: (props: any) => <></>,
@@ -1142,10 +1431,10 @@ const routes = [
 ];
 
 class RouteList extends React.Component {
-	componentDidMount(){
+	componentDidMount() {
 		console.log('Router')
 	}
-	renderPage = (child: any, index: any, porps: any) => {
+	renderPage = (child: any, index: any, porps: any, appname: string) => {
 		let prop: any = { history: porps };
 		if (child.isSideBar) {
 			return (
@@ -1153,7 +1442,7 @@ class RouteList extends React.Component {
 					path={child.path}
 					key={index + "child-aside"}
 					element={
-						<ProtectedRoute {...prop} path={child.path}>
+						<ProtectedRoute {...prop} path={child.path} appname={appname}>
 							<div className='main-layout'>
 								<div>
 									<div className='shadow-box'></div>
@@ -1173,7 +1462,7 @@ class RouteList extends React.Component {
 						path={child.path}
 						key={index + "no-aside"}
 						element={
-							<ProtectedRoute {...prop} path={child.path}>
+							<ProtectedRoute {...prop} path={child.path} appname={appname}>
 								<div className='main-layout'>
 									<div className='main-body'>{<child.main {...prop} />}</div>
 									<div className='footer-menu'>
@@ -1191,7 +1480,7 @@ class RouteList extends React.Component {
 						path={child.path}
 						key={index + "no-aside"}
 						element={
-							<ProtectedRoute {...prop} path={child.path}>
+							<ProtectedRoute {...prop} path={child.path} appname={appname}>
 								<div className='main-layout'>
 									<div>
 										<div className='banner-box'></div>
@@ -1228,7 +1517,7 @@ class RouteList extends React.Component {
 							>
 								{route.child && route.child.length > 0 && route.child.map((child, index) => (
 									<React.Fragment key={index + "child-" + index}>
-										{this.renderPage(child, index, windowHistory)}
+										{this.renderPage(child, index, windowHistory, route.path)}
 									</React.Fragment>
 								))}
 								{/* <Route index element={<Home />} /> */}

@@ -4,6 +4,8 @@ import React from "react";
 import "../admin/AdminDashboard.css";
 import "./ManagerDashboard.css";
 import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import { StoreState } from "../../stores/reducers";
 import { getAllEvents } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
@@ -88,6 +90,32 @@ class EventList extends React.Component<IProps, IStates> {
       return (
 				<div className='dashboard-body'>
 					<div className='tableBody'>
+						<div className='tableSearch'>
+							<div className='textArea'>
+								<div className='dash-search-div'>
+									<div className='dash-search-icon-div'>
+										<SearchIcon
+											sx={{ color: "#808080", fontSize: 16, mr: 0.5 }}
+										/>
+									</div>
+									<input
+										className='dash-input-div'
+										placeholder='Search by style or age group'
+									/>
+								</div>
+								<div className='dash-filter-div'>
+									<FilterListIcon
+										sx={{
+											color: "#0070F8",
+											fontSize: 18,
+											fontWeight: 500,
+											mr: 0.5,
+										}}
+									/>
+									Filter
+								</div>
+							</div>
+						</div>
 						<table className='table'>
 							<thead>
 								<tr>

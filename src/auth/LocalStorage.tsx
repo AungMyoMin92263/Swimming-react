@@ -7,6 +7,9 @@ export const getItem = (lkey: string) => {
 };
 
 export const removeItem = (lkey: string) => {
+  if(lkey == 'authUser'){
+    localStorage.removeItem('userToken');
+  }
   return localStorage.removeItem(lkey);
 };
 
@@ -15,7 +18,7 @@ export const clearItem = () => {
 };
 
 export const setItemWithObject = (lkey: string, lvalue: object) => {
-  return localStorage.setItem(lkey, JSON.stringify(lvalue));
+  localStorage.setItem(lkey, JSON.stringify(lvalue));
 };
 
 export const setArrayWithObject = (lkey: string, lvalue: object) =>{

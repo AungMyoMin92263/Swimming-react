@@ -5,6 +5,7 @@ export const classReducers = (
     result: null,
     dailyProgram: null,
     assignUser: [],
+    viewClass: null,
     error: null,
   },
   action: Action
@@ -35,7 +36,12 @@ export const classReducers = (
         result: action.payload,
         error: null,
       };
-
+    case ActionTypes.getClassDetail:
+      return {
+        ...state,
+        viewClass: action.payload,
+        error: null,
+      };
     case ActionTypes.createClass:
       return {
         ...state,

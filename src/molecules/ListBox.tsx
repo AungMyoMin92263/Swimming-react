@@ -14,6 +14,7 @@ export interface IListBoxUI {
 }
 
 const ListBoxUI = (props: IListBoxUI) => {
+  let childLen = Object.keys(props.children?.props || {}).length
   return (
     <div className="list-box">
       {props.noTitle ? <></> : <div className="list-box-title">
@@ -21,7 +22,7 @@ const ListBoxUI = (props: IListBoxUI) => {
       </div>}
 
       <div className="list-body">
-        {props.children?.props?.children ? props.children :
+        {childLen > 0 ? props.children :
           <div className='no-bagde'>
             <span>There is no {props.title}</span>
           </div>}

@@ -24,7 +24,6 @@ class CoachEventsPage extends React.Component<IProps, IStates> {
     };
   }
   componentDidMount() {
-    console.log("authUser", this.props.authUser);
     //loading
   }
 
