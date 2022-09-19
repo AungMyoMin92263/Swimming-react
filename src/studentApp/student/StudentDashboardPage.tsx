@@ -102,11 +102,14 @@ class StudentDashboardPage extends React.Component<IProps, IStates> {
 				user.userInfo.assign_class &&
 				user.userInfo.assign_class.length > 0
 			) {
-				await this.setState({
-					schoolId: user.userInfo.assign_class[0].classes.school_id,
-				});
+				
+				if (user.userInfo.assign_class[0].classes) {
+					await this.setState({
+						schoolId: user.userInfo.assign_class[0].classes.school_id,
+					});
 
-				this.getClassesByDate();
+					this.getClassesByDate();
+				}
 			}
 		}
 	};

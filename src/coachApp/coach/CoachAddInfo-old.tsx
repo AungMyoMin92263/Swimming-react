@@ -2,10 +2,14 @@ import React from "react";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
+
+// icon
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { Link } from "react-router-dom";
+import CoachMobileHeader from "../../atoms/CoachMobileHeader";
+import { Carousel } from "react-bootstrap";
 import "./CoachWelcome.css";
 import InputFormAtom from "../../atoms/InputFormAtom";
-import { putUser } from "../../stores/actions";
-import { setItemWithObject } from "../../auth/LocalStorage";
 interface IStates {
   id: number;
   name: string;
@@ -21,8 +25,6 @@ interface IStates {
 
 interface IProps {
   authUser: AuthInterface;
-  putUser: Function;
-  history: any;
 }
 
 class CoachAddInfoPage extends React.Component<IProps, IStates> {
@@ -67,30 +69,20 @@ class CoachAddInfoPage extends React.Component<IProps, IStates> {
     } else
       return (
         <>
-          <button
-            type="submit"
-            onClick={() => this.updateUser()}
-            className="btn btn-primary mobile-btn cus-primay-btn-m"
+          <Link
+            to="/coach/dashboard"
+            style={{ textDecoration: "none", width: "100%" }}
           >
-            <span>Done</span>
-          </button>
-          {/* </Link> */}
+            <button
+              type="submit"
+              className="btn btn-primary mobile-btn cus-primay-btn-m"
+            >
+              <span>Done</span>
+            </button>
+          </Link>
         </>
       );
   };
-
-  updateUser = async () => {
-    let userData = {
-      name: this.state.name,
-      email: this.props.authUser.userInfo?.email,
-      avatar: this.state.logo ? this.state.logo : null,
-    }
-    await this.props.putUser(userData, "users", this.props.authUser.userInfo?.id)
-    if (!this.props.authUser.error) {
-      setItemWithObject("authUser", this.props.authUser);
-      this.props.history.push("/coach/dashboard")
-    }
-  }
 
   handleChange = (e: any) => {
     var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
@@ -124,8 +116,8 @@ class CoachAddInfoPage extends React.Component<IProps, IStates> {
                   this.state.id === -1
                     ? this.state.image.preview
                     : this.state.isChangeLogo
-                      ? this.state.image.preview
-                      : process.env.REACT_APP_API_ENDPOINT + "/" + this.state.logo
+                    ? this.state.image.preview
+                    : process.env.REACT_APP_API_ENDPOINT + "/" + this.state.logo
                 }
                 alt="preview"
                 className="preview-icon cursor  mb-8"
@@ -199,7 +191,7 @@ class CoachAddInfoPage extends React.Component<IProps, IStates> {
                 required={true}
                 maxLength={200}
                 className=""
-                clickCallback={() => { }}
+                clickCallback={() => {}}
                 focusCallback={() => {
                   // this.setState({
                   //   isNameEmpty: false,
@@ -228,4 +220,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { putUser })(CoachAddInfoPage);
+export default connect(mapStateToProps, {})(CoachAddInfoPage);

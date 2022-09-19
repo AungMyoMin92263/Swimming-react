@@ -47,7 +47,8 @@ class CoacheProfile extends React.Component<IProps, IStates> {
     };
   }
   componentDidMount() {
-      
+
+    
   }
 
   render() {
@@ -81,11 +82,11 @@ class CoacheProfile extends React.Component<IProps, IStates> {
                 <div className="p-16">
                   <div className="f-14 mb-16">
                     <LocalPhoneOutlinedIcon className="mr-8"/>
-                    <label>{userInfo?.phone}</label>
+                    <label>+6012-8824696</label>
                   </div>
                   <div className="f-14">
                     <EmailOutlinedIcon className="mr-8"/>
-                    <label>{userInfo?.email}</label>
+                    <label>joseph@gmail.com</label>
                   </div>
                 </div>
                 </>

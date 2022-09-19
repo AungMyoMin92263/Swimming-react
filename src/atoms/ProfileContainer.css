@@ -34,3 +34,10 @@
   color: #1A1A1A;
   margin-bottom: 16px;
 }
+
+.profile-icon {
+  width: 80px;
+  height: 80px;
+  color: #808080;
+  border-radius: 50%;
+}

@@ -17,12 +17,12 @@ import { InputPhoneNumber } from "../../atoms/InputPhoneNumber";
 import { putUser } from "../../stores/actions";
 import { setItemWithObject } from "../../auth/LocalStorage";
 interface IStates {
-  id: number;
-  image: any;
-  logo: any;
-  profile_details: any;
-  contact_details: any;
-  updatedLogo?: boolean
+	id: number;
+	image: any;
+	logo: any;
+	profile_details: any;
+	contact_details: any;
+	updatedLogo?: boolean;
 }
 
 interface IProps {
@@ -36,7 +36,7 @@ class CoachEditProfilePage extends React.Component<IProps, IStates> {
 
   constructor(props: any) {
     super(props);
-
+    console.log("this.props.authUser", this.props.authUser);
     this.state = {
       id: this.props.authUser.userInfo?.id || 0,
       image: { preview: "", raw: "" },
@@ -56,48 +56,57 @@ class CoachEditProfilePage extends React.Component<IProps, IStates> {
   renderImageUpload = () => {
     const { userInfo } = this.props.authUser
     return (
-      <div>
-        <label htmlFor="upload-button">
-          {this.state.image.preview || this.state.logo !== "" ? (
-            <>
-              <img
-                src={
-                  this.state.id === -1
-                    ? this.state.image.preview
-                    : process.env.REACT_APP_API_ENDPOINT + this.state.logo
-                }
-                alt="preview"
-                className="preview-icon cursor mb-8"
-              />
-              <div className="primary f-14 cursor">&nbsp; Change Image</div>
-            </>
-          ) : (
-            <>
-              <>
-                {/* <img
+			<div>
+				<label htmlFor='upload-button'>
+					{this.state.image.preview || this.state.logo !== "" ? (
+						<>
+							<img
+								// src={
+								// 	this.state.id === -1
+								// 		? this.state.image.preview
+								// 		: process.env.REACT_APP_API_ENDPOINT + "/" + this.state.logo
+								// }
+								src={
+									this.state.id === -1
+										? this.state.image.preview
+										: this.state.updatedLogo
+										? this.state.image.preview
+										: process.env.REACT_APP_API_ENDPOINT + "/" + this.state.logo
+								}
+								alt='preview'
+								className='preview-icon cursor mb-8'
+							/>
+							<div className='primary f-14 cursor'>&nbsp; Change Image</div>
+						</>
+					) : (
+						<>
+							<>
+								{/* <img
                   id="logo"
                   src="../../../assets/icons/upload.png"
                   alt="upload"
                   className="big-icon cursor mb-8"
                 /> */}
-                <InitialIcon
-                  initials={(userInfo?.name || "User").substr(0, 1).toUpperCase()}
-                  isFooterMenu={false}
-                  isInitialIcon={true}
-                />
-                <div className="primary f-14 cursor">&nbsp; Upload Image</div>
-              </>
-            </>
-          )}
-        </label>
-        <input
-          type="file"
-          id="upload-button"
-          style={{ display: "none" }}
-          onChange={this.handleChange}
-        />
-      </div>
-    );
+								<InitialIcon
+									initials={(userInfo?.name || "User")
+										.substr(0, 1)
+										.toUpperCase()}
+									isFooterMenu={false}
+									isInitialIcon={true}
+								/>
+								<div className='primary f-14 cursor'>&nbsp; Upload Image</div>
+							</>
+						</>
+					)}
+				</label>
+				<input
+					type='file'
+					id='upload-button'
+					style={{ display: "none" }}
+					onChange={this.handleChange}
+				/>
+			</div>
+		);
   };
 
   updateUser = async () => {

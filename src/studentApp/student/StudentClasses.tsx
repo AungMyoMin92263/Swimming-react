@@ -73,9 +73,12 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 				user.userInfo.assign_class &&
 				user.userInfo.assign_class.length > 0
 			) {
+				
+			if (user.userInfo.assign_class[0].classes) {
 				this.setState({
 					schoolId: user.userInfo.assign_class[0].classes.school_id,
 				});
+			}
 			}
 		}
 	};

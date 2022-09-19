@@ -145,7 +145,14 @@ class CoachStudentsList extends React.Component<IProps, IStates> {
                     }}>
                       <option value={0}>All</option>
                       {userInfo?.assign_class?.map((classData: any, index: any) => {
-                        return <option value={classData.classes.id} key={`classId${index}`}>{classData.classes.name}</option>
+                        return (
+													<option
+														value={classData.classes && classData.classes.id}
+														key={`classId${index}`}
+													>
+														{classData.classes && classData.classes.name}
+													</option>
+												);
                       })}
                     </select>
                   </div>

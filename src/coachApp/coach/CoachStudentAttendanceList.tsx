@@ -52,13 +52,17 @@ class CoachStudentAttendanceList extends React.Component<IProps, IStates> {
     let date = moment().format("YYYY-MM-DD")
     const student = this.props.authUser.otherUserinfo
     if (this.props.authUser.userInfo?.assign_class.length > 0) {
-      const selected = this.state.selectedClass?.id ? this.state.selectedClass : this.props.authUser.userInfo?.assign_class[0].classes
-      this.setState({
-        ...this.state,
-        selectedClass: selected,
-        selectBox: selected.id
-      })
-      await this.props.getMyAttendByClass(student.id, selected.id, date)
+      if (this.props.authUser.userInfo?.assign_class[0].classes){
+				const selected = this.state.selectedClass?.id
+					? this.state.selectedClass
+					: this.props.authUser.userInfo?.assign_class[0].classes;
+				this.setState({
+					...this.state,
+					selectedClass: selected,
+					selectBox: selected.id,
+				});
+				await this.props.getMyAttendByClass(student.id, selected.id, date);
+      }
     }
   }
 
@@ -157,7 +161,14 @@ class CoachStudentAttendanceList extends React.Component<IProps, IStates> {
                       });
                     }}>
                       {userInfo?.assign_class?.map((classData: any, index: any) => {
-                        return <option value={classData.classes.id} key={`classId${index}`}>{classData.classes.name}</option>
+                        return (
+													<option
+														value={classData.classes && classData.classes.id}
+														key={`classId${index}`}
+													>
+														{classData.classes && classData.classes.name}
+													</option>
+												);
                       })}
                     </select>
                   </div>

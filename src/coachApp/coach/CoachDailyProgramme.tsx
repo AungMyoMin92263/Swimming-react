@@ -82,15 +82,17 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
         user.userInfo.assign_class &&
         user.userInfo.assign_class.length > 0
       ) {
-        await this.setState({
-          ...this.state,
-          schoolId: user.userInfo.assign_class[0].classes.school_id,
-        });
+        if (user.userInfo.assign_class[0].classes) {
+					 await this.setState({
+							...this.state,
+							schoolId: user.userInfo.assign_class[0].classes.school_id,
+						});
 
-        await this.getClass();
-        await this.getCoachesByClass();
-        await this.getAttendancesByClass();
-        await this.getClassProgram()
+						await this.getClass();
+						await this.getCoachesByClass();
+						await this.getAttendancesByClass();
+						await this.getClassProgram();
+				}
       }
     }
   };

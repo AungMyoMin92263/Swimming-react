@@ -18,7 +18,7 @@ const ProfileContainer = (props: IProfile) => {
 		<div className='profile-group'>
 			{props.isLogo ? (
 				<div className='profile-logo'>
-					{props.logo ? <img src={process.env.REACT_APP_API_ENDPOINT + "/" + props.logo} /> : firstLetter}
+					{props.logo ? <img src={process.env.REACT_APP_API_ENDPOINT + "/" + props.logo} className="profile-icon"/> : firstLetter}
 				</div>
 			) : (
 				<></>
