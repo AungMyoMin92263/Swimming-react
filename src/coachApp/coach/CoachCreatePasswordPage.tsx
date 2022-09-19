@@ -229,30 +229,34 @@ class CoachCreatePasswordPage extends React.Component<IProps, IStates> {
 		} = this.state;
 		let { signedUpUser } = this.props;
 		return (
-			<div className='wrapper'>
-				<div className='primary f-16 project-header'>
-					<span>My Report Cards</span>
-				</div>
+			<div className='wrapper-mobile '>
+				<div className='content-mobile-cus bg-w col-sm-12'>
+					<div className='primary f-16 project-header'>
+						<span>My Report Cards</span>
+					</div>
 
-				<div className='container-cus'>
-					<div className='content'>
-						<span className='f-10'>Coach's</span>
-						<div className='title mb-32'>{this.renderTitle()}</div>
-						<div className='mb-32'>
-							{!isCompleted ? (
-								<span className='emailWrapper fw-500 f-14'>{email}</span>
-							) : (
-								<span className='fw-400 f-16'>Welcome to My Report Cards!</span>
+					<div className='container-cus'>
+						<div className='content'>
+							<span className='f-10'>Coach's</span>
+							<div className='title mb-32'>{this.renderTitle()}</div>
+							<div className='mb-32'>
+								{!isCompleted ? (
+									<span className='emailWrapper fw-500 f-14'>{email}</span>
+								) : (
+									<span className='fw-400 f-16'>
+										Welcome to My Report Cards!
+									</span>
+								)}
+							</div>
+							<div className='mb-32'>{this.renderPasswordInput()}</div>
+							{<p className='text-danger'>{this.state.passwordMatchMsg}</p>}
+							{signedUpUser.error && (
+								<p className='text-danger'>{signedUpUser.error}</p>
 							)}
-						</div>
-						<div className='mb-32'>{this.renderPasswordInput()}</div>
-						{<p className='text-danger'>{this.state.passwordMatchMsg}</p>}
-						{signedUpUser.error && (
-							<p className='text-danger'>{signedUpUser.error}</p>
-						)}
-						<div className='form-footer'>
-							<span></span>
-							{this.renderBtn()}
+							<div className='form-footer'>
+								<span></span>
+								{this.renderBtn()}
+							</div>
 						</div>
 					</div>
 				</div>

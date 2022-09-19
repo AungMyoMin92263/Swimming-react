@@ -921,7 +921,7 @@ const routes = [
 				),
 				footer: (props: any) => <></>,
 				isSideBar: false,
-				isMobileFooter: true,
+				isMobileFooter: false,
 			},
 			{
 				path: "login",
@@ -958,7 +958,7 @@ const routes = [
 				),
 				footer: (props: any) => <></>,
 				isSideBar: false,
-				isMobileFooter: true,
+				isMobileFooter: false,
 			},
 			{
 				path: "change-password",
@@ -970,7 +970,7 @@ const routes = [
 				),
 				footer: (props: any) => <></>,
 				isSideBar: false,
-				isMobileFooter: true,
+				isMobileFooter: false,
 			},
 			{
 				path: "welcome",
