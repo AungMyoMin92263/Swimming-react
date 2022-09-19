@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import InputFormAtom from "../../atoms/InputFormAtom";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
-import { signIn,LoadingActionFunc } from "../../stores/actions";
+import { signIn, LoadingActionFunc } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
 import { removeItem, setItemWithObject } from "../../auth/LocalStorage";
 
@@ -15,12 +15,12 @@ interface IStates {
 	isPasswordEmpty: boolean;
 	emailMsg: string;
 	passwordMsg: string;
-	isNewUser : string;
+	isNewUser: string;
 }
 interface UserSignInPage {
 	signIn: Function;
 	authUser: AuthInterface;
-	LoadingActionFunc : Function;
+	LoadingActionFunc: Function;
 	// refreshToken: Function;
 	// getClasses: Function;
 	// schoolList: any;
@@ -30,7 +30,7 @@ type IProps = UserSignInPage;
 
 class ManagerLoginPage extends React.Component<IProps, IStates> {
 	constructor(props: IProps) {
-
+		removeItem("authUser");
 		super(props);
 		console.log("props", props);
 		this.state = {
@@ -41,9 +41,8 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 			isPasswordEmpty: false,
 			emailMsg: "",
 			passwordMsg: "",
-			isNewUser : '',
+			isNewUser: "",
 		};
-		
 	}
 
 	submit = () => {
@@ -80,16 +79,20 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 
 		this.callback();
 	};
-	componentDidMount = () =>{
+	componentDidMount = () => {
 		this.props.LoadingActionFunc(false);
-	}
+	};
 
 	callback = async () => {
 		const { email, password }: IStates = this.state;
 		this.props.LoadingActionFunc(true);
-		await this.props.signIn({ email : email,role : 'manager',password : password});		
+		await this.props.signIn({
+			email: email,
+			role: "manager",
+			password: password,
+		});
 		setItemWithObject("authUser", this.props.authUser);
-		if(this.props.authUser.error)this.props.LoadingActionFunc(false);
+		if (this.props.authUser.error) this.props.LoadingActionFunc(false);
 		// if(this.props.authUser.isSignedIn){
 		// 	this.props.refreshToken();
 		// 	await this.props.getClasses();
@@ -98,7 +101,6 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 		// });
 		// }
 		// console.log('isNewUser',this.state.isNewUser)
-
 	};
 
 	validateEmail = (email: string) => {
@@ -120,13 +122,15 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 				{/* { this.state.isNewUser === 't' && <Navigate to='/admin/welcome' replace={true} />}
 				{ this.state.isNewUser === 'f' && <Navigate to='/admin/dashboard' replace={true} />} */}
 
-				{ authUser.isSignedIn && <Navigate to='/manager/welcome' replace={true} />}
+				{authUser.isSignedIn && (
+					<Navigate to='/manager/welcome' replace={true} />
+				)}
 
 				<div className='primary f-16 project-header'>
 					<span>My Report Cards</span>
 				</div>
 
-				<div className="container-cus">
+				<div className='container-cus'>
 					<div className='content col-lg-6 col-md-8 col-12'>
 						<div className='title mb-16'>
 							<span>Login</span>
@@ -203,10 +207,11 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 }
 
 const mapStateToProps = ({
-	authUser,schoolList,
+	authUser,
+	schoolList,
 }: StoreState): {
 	authUser: AuthInterface;
-	schoolList : any;
+	schoolList: any;
 } => {
 	return {
 		authUser,
@@ -214,6 +219,6 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { signIn,LoadingActionFunc })(
+export default connect(mapStateToProps, { signIn, LoadingActionFunc })(
 	ManagerLoginPage
 );

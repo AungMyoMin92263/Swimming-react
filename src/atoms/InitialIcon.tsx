@@ -58,33 +58,48 @@ export const InitialIconList = (props: InitialIconInterface) => {
 		"#ffff00",
 		"#ff6600",
 		"#051e3e",
-		"#251e3e",
-		"#451e3e",
-		"#651e3e",
-		"#851e3e",
+		"#251e3e", "#451e3e", "#651e3e", "#851e3e"
 	];
 
 	// selecting random color
-
 	var name = props.initials;
-	console.log(name.length)
-	var random_color = colors[Math.floor(name.length * colors.length)];
-	return (
-		<div
-			style={{
-				display: "flex",
-				backgroundColor: random_color,
-				alignItems: "center",
-				justifyContent: "center",
-				textAlign: "center",
-				borderRadius: "50%",
-				width: 40,
-				height: 40,
-				marginLeft: "-8px",
-			}}
-		>
-			<span style={{ color: "white", fontSize: 20 }}>{props.initials}</span>
-		</div>
-	);
+	// console.log(Math.abs(name.charCodeAt(0) % colors.length))
+	var random_color = colors[Math.abs(name.charCodeAt(0) % colors.length)];
+	// var random_color = colors[Math.floor(name.length / colors.length)];
+	if (props.isFooterMenu) {
+		return (
+			<div
+				style={{
+					display: "flex",
+					backgroundColor: random_color,
+					alignItems: "center",
+					justifyContent: "center",
+					textAlign: "center",
+					borderRadius: "50%",
+					width: 40,
+					height: 40,
+					
+				}}
+			>
+				<span style={{ color: "white", fontSize: "14px" }}>
+					{props.initials ? props.initials : ""}
+				</span>
+			</div>
+		);
+	} else
+		return (
+			<div
+				className={`${
+					props.isInitialIcon ? "initial-big-icon cursor mb-8" : "initial-icon"
+				} isBig-${props.isBig}`}
+				style={{ backgroundColor: random_color, marginLeft: "-8px" }}
+			>
+				<span
+					style={{ color: "white", fontSize: props.isInitialIcon ? 50 : 20 }}
+				>
+					{props.initials ? props.initials : ""}
+				</span>
+			</div>
+		);
 };
 

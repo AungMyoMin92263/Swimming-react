@@ -11,18 +11,28 @@ import { putUser, LoadingActionFunc, getUserInfo } from "../../stores/actions";
 import { getItem, setItemWithObject } from "../../auth/LocalStorage";
 import { InitialIcon } from "../../atoms/InitialIcon";
 import { InputPhoneNumber } from "../../atoms/InputPhoneNumber";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Box from "@mui/material/Box";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import { putStudent } from "./../../stores/actions/student-action";
 
 interface IStates {
 	id: number;
 	name: string;
-	isManagerNameValid: boolean;
+	isStudentNameValid: boolean;
 	isManagerNameEmpty: boolean;
 	nameMsg: string;
 	image: any;
 	logo: string;
 	mobile: string;
+	age: string;
+	gender: string;
+	favourite: string;
 	email: string;
-	password: string;
+	parentEmail: string;
+	parentMobile: string;
 	isCompleted: boolean;
 	isChangeLogo: boolean;
 	errorMsg: string;
@@ -31,25 +41,31 @@ interface IStates {
 interface IProps {
 	match: any;
 	user: any;
-	putUser: Function;
+	putStudent: Function;
 	LoadingActionFunc: Function;
 	getUserInfo: Function;
 }
 class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
+	id: any;
 	constructor(props: any) {
 		super(props);
-
+		let path = window.location.pathname.split("/");
+		this.id = path[3];
 		this.state = {
 			id: -1,
 			name: "",
-			isManagerNameValid: true,
+			isStudentNameValid: true,
 			isManagerNameEmpty: false,
 			nameMsg: "",
 			image: { preview: "", raw: "" },
 			logo: "",
 			mobile: "",
+			age: "",
 			email: "",
-			password: "",
+			gender: "Male",
+			favourite: "",
+			parentEmail: "",
+			parentMobile: "",
 			isCompleted: false,
 			isChangeLogo: false,
 			errorMsg: "",
@@ -63,7 +79,7 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 		let user = JSON.parse(getItem("authUser") || "null");
 		if (user && user.userInfo) {
 			await this.setState({
-				id: user.userInfo.id,
+				id: this.id,
 			});
 			this.getUserInfo();
 		}
@@ -71,15 +87,14 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 
 	getUserInfo = async () => {
 		await this.props.getUserInfo(this.state.id);
-		if (this.props.user && this.props.user.userInfo) {
-			let userObj = this.props.user.userInfo;
+		if (this.props.user && this.props.user.otherUserinfo) {
+			let userObj = this.props.user.otherUserinfo;
 			this.setState({
 				id: userObj.id,
 				name: userObj.name,
 				logo: userObj.avatar,
-				mobile: userObj.phone,
+				mobile: userObj.phone ? userObj.phone : "",
 				email: userObj.email,
-				password: userObj.password,
 			});
 		}
 	};
@@ -107,6 +122,11 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 		if (this.state.name === "" || this.state.logo === "") return false;
 		else return true;
 	};
+	handleChangeAge = (event: SelectChangeEvent) => {
+		this.setState({
+			age: event.target.value,
+		});
+	};
 
 	submit = async () => {
 		if (this.isValid()) {
@@ -114,11 +134,15 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 			formData.append("name", this.state.name);
 			formData.append("phone", this.state.mobile);
 			formData.append("email", this.state.email);
+			formData.append("parent_email", this.state.parentEmail);
+			formData.append("age", this.state.age);
+			formData.append("gender", this.state.gender);
+			formData.append("favorite", this.state.favourite);
 			// formData.append("password", this.state.password);
 			if (this.state.logo) formData.append("avatar", this.state.logo);
 			this.props.LoadingActionFunc(true);
 
-			await this.props.putUser(formData, "users", this.state.id);
+			await this.props.putStudent(formData, "student", this.state.id);
 
 			if (this.props.user.error) {
 				this.setState({
@@ -229,7 +253,7 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 		const {
 			name,
 			isManagerNameEmpty,
-			isManagerNameValid,
+			isStudentNameValid,
 			nameMsg,
 			errorMsg,
 			mobile,
@@ -259,9 +283,9 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 							</div>
 
 							<div className='f-32 fw-500 mb-8'>
-								<span>Edit Profile.</span>
+								<span>Edit Student.</span>
 							</div>
-							<div className='f-16 mb-16 fw-400 mb-32'>
+							<div className='f-16 mb-16 fw-500 mb-32'>
 								<span>Profile Details</span>
 							</div>
 							<div className='mb-16'>{this.renderImageUpload()}</div>
@@ -272,7 +296,7 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 									placeholder={"Enter your name"}
 									warning={nameMsg}
 									type='text'
-									showWarning={isManagerNameEmpty || !isManagerNameValid}
+									showWarning={isManagerNameEmpty || !isStudentNameValid}
 									isDropdown={false}
 									callback={(value: string) => {
 										this.setState({
@@ -289,7 +313,89 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 									focusCallback={() => {
 										// this.setState({
 										//   isManagerNameEmpty: false,
-										//   isManagerNameValid: true,
+										//   isStudentNameValid: true,
+										// });
+									}}
+								/>
+							</div>
+
+							<div className='flex mb-16'>
+								<div className='col-5'>
+									<InputFormAtom
+										label='Age'
+										placeholder={"Age"}
+										warning={nameMsg}
+										type='text'
+										showWarning={isManagerNameEmpty || !isStudentNameValid}
+										isDropdown={false}
+										callback={(value: string) => {
+											this.setState({
+												age: value,
+											});
+										}}
+										id='age'
+										name='age'
+										value={this.state.age}
+										required={true}
+										maxLength={200}
+										className=''
+										clickCallback={() => {}}
+										focusCallback={() => {
+											// this.setState({
+											//   isManagerNameEmpty: false,
+											//   isStudentNameValid: true,
+											// });
+										}}
+									/>
+								</div>
+								<div className='col-2'></div>
+								<div className='col-5'>
+									<div className={`input-form-atom`}>
+										<div className='label-con'>
+											<label>Gender</label>
+										</div>
+										<div className='dropdown-box cursor'>
+											<select
+												name='filter-class'
+												id='filterClass'
+												value={this.state.gender}
+												onChange={(e) => {
+													this.setState({
+														gender: e.currentTarget.value,
+													});
+												}}
+											>
+												<option value={"Male"}>Male</option>
+												<option value={"Female"}>Female</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div className='fw-400 mb-16'>
+								<InputFormAtom
+									label='Favourite Stroke'
+									placeholder={"Favourite Stroke"}
+									warning={""}
+									type='text'
+									showWarning={false}
+									isDropdown={false}
+									callback={(value: string) => {
+										this.setState({
+											favourite: value,
+										});
+									}}
+									id='favaourite'
+									name='favaourite'
+									value={this.state.favourite}
+									required={false}
+									maxLength={200}
+									className=''
+									clickCallback={() => {}}
+									focusCallback={() => {
+										// this.setState({
+										//   isManagerNameEmpty: false,
+										//   isStudentNameValid: true,
 										// });
 									}}
 								/>
@@ -318,14 +424,14 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 									required={true}
 									maxLength={200}
 									className=''
-									disabled={true}
+									disabled={false}
 									clickCallback={() => {}}
 								/>
 							</div>
 
 							<div className='mb-16'>
 								<InputPhoneNumber
-									label='Mobile'
+									label='Student Mobile'
 									placeholder={"Enter mobile number"}
 									warning={""}
 									showWarning={false}
@@ -336,7 +442,55 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 									}}
 									id='mobile'
 									name='mobile'
-									value={mobile}
+									value={this.state.mobile}
+									required={true}
+									maxLength={200}
+									className=''
+									clickCallback={() => {}}
+								/>
+							</div>
+							<div className='mb-16'>
+								<span className='f-16 fw-500'>Parent Details</span>
+							</div>
+
+							<div className='pb-16'>
+								<InputFormAtom
+									label='Parent Email'
+									placeholder={"Enter email"}
+									warning={""}
+									type='text'
+									showWarning={false}
+									isDropdown={false}
+									callback={(value: string) => {
+										this.setState({
+											parentEmail: value,
+										});
+									}}
+									id='name'
+									name='name'
+									value={this.state.parentEmail}
+									required={true}
+									maxLength={200}
+									className=''
+									disabled={false}
+									clickCallback={() => {}}
+								/>
+							</div>
+
+							<div className='mb-16'>
+								<InputPhoneNumber
+									label='Parent Mobile'
+									placeholder={"Enter mobile number"}
+									warning={""}
+									showWarning={false}
+									callback={(value: string) => {
+										this.setState({
+											parentMobile: value,
+										});
+									}}
+									id='mobile'
+									name='mobile'
+									value={this.state.parentMobile}
 									required={true}
 									maxLength={200}
 									className=''
@@ -369,7 +523,7 @@ const mapStateToProps = ({
 };
 
 export default connect(mapStateToProps, {
-	putUser,
+	putStudent,
 	getUserInfo,
 	LoadingActionFunc,
 })(ManagerStudentEditProfilePage);

@@ -8,22 +8,35 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 
 import { Link } from "react-router-dom";
 
-import { setItemWithObject } from "../../auth/LocalStorage";
+import { getItem, setItemWithObject } from "../../auth/LocalStorage";
 import placeholder from "./../../assets/images/place-holder.png";
 import { InitialIcon } from "../../atoms/InitialIcon";
 import { getSchoolObj, LoadingActionFunc } from "../../stores/actions";
+import { getClassObject, getAll } from "../../stores/actions";
+import { deleteCoach } from "./../../stores/actions/coach-action";
 interface IStates {
 	school: any;
 	errorMsg: string;
 	url: string;
+	school_logo: any;
+	school_name: string;
+	schoolId: string;
+	classId: any;
+	class_name: string;
+	class_logo: string;
+	coachList: string[];
 }
 
 interface IProps {
 	LoadingActionFunc: Function;
 	schools: any;
 	getSchoolObj: Function;
+	getClassObject: Function;
+	classes: any;
+	deleteCoach: Function;
+	coach: any;
 }
-class ManagerInviteStudentSummartPage extends React.Component<IProps, IStates> {
+class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 	id: any;
 	constructor(props: any) {
 		super(props);
@@ -34,12 +47,34 @@ class ManagerInviteStudentSummartPage extends React.Component<IProps, IStates> {
 			school: { name: "", logo: "", assign_user: [] },
 			errorMsg: "",
 			url: "",
+			school_logo: "",
+			school_name: "",
+			schoolId: "",
+			classId: this.id,
+			class_name: "",
+			class_logo: "",
+			coachList: [],
 		};
 	}
 	componentDidMount() {
-		if (this.id) this.getSchool();
-		this.props.LoadingActionFunc(false);
+		this.authFromLocal();
 	}
+
+	authFromLocal = async () => {
+		const user = JSON.parse(getItem("authUser") || "null");
+		if (user && user.userInfo) {
+			await this.setState({
+				schoolId: user.userInfo.assign_school
+					? user.userInfo.assign_school.school.id
+					: 0,
+				school_name: user.userInfo.assign_school
+					? user.userInfo.assign_school.school.name
+					: "",
+			});
+			this.getClass();
+		}
+		this.props.LoadingActionFunc(false);
+	};
 
 	getSchool = async () => {
 		await this.props.getSchoolObj("schools/" + this.id);
@@ -62,9 +97,62 @@ class ManagerInviteStudentSummartPage extends React.Component<IProps, IStates> {
 			this.props.LoadingActionFunc(false);
 		}
 	};
+	getClass = async () => {
+		let url = "school/" + this.state.schoolId + "/class/" + this.state.classId;
+		await this.props.getClassObject(url);
+		console.log(this.props);
+		if (this.props.classes && this.props.classes.viewClass) {
+			console.log("fffffffffffffffffffff");
+			this.setState({
+				coachList: this.props.classes.viewClass.assign_user,
+				class_logo: this.props.classes.viewClass.logo,
+				class_name: this.props.classes.viewClass.name,
+			});
+		}
+		if (
+			this.props.classes &&
+			this.props.classes.result &&
+			this.props.classes.result.assign_user
+		) {
+			console.log("MMMMMMMMMM");
+			this.setState({
+				coachList: this.props.classes.result.assign_user,
+				class_logo: this.props.classes.result.logo,
+				class_name: this.props.classes.result.name,
+			});
+		}
+	};
+	handleDelete = async (user_id: any) => {
+		let deleteCoachUrl = "assigned/class";
+		console.log("user_id", user_id);
+		await this.props.deleteCoach(deleteCoachUrl, user_id);
+
+		if (
+			this.props.coach &&
+			this.props.coach.result &&
+			this.props.coach.result.data.statusText === "success"
+		) {
+			console.log("deleteed");
+			this.getClass();
+		}
+		if (this.props.coach.error) {
+			this.setState({
+				errorMsg: this.props.coach.error,
+			});
+		}
+	};
 
 	render() {
-		const { school, url } = this.state;
+		const {
+			url,
+			school_logo,
+			school_name,
+			schoolId,
+			classId,
+			class_name,
+			class_logo,
+			coachList,
+		} = this.state;
 		return (
 			<>
 				<div className='wrapper'>
@@ -76,7 +164,10 @@ class ManagerInviteStudentSummartPage extends React.Component<IProps, IStates> {
 					<div className='container-cus'>
 						<div className='content col-lg-6 col-md-6 col-sm-12'>
 							<div className='f-14 mb-32'>
-								<Link to='/admin/dashboard' style={{ textDecoration: "none" }}>
+								<Link
+									to={"/manager/class/" + classId}
+									style={{ textDecoration: "none" }}
+								>
 									<ArrowBackIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 									></ArrowBackIcon>
@@ -86,35 +177,38 @@ class ManagerInviteStudentSummartPage extends React.Component<IProps, IStates> {
 							<div className='mb-8 align-center'>
 								<img
 									src={
-										school && school.logo
-											? process.env.REACT_APP_API_ENDPOINT + "/" + school.logo
+										class_logo
+											? process.env.REACT_APP_API_ENDPOINT + "/" + class_logo
 											: placeholder
 									}
 									alt='logo'
-									className={`${school && school.logo ? "item-icon" : "w-48"}`}
+									className={`${class_logo ? "item-icon" : "w-48"}`}
 								/>
-								<span className='f-16'>{school && school.name}</span>
+								<span className='f-16'>{school_name}/</span>
+								<span className='fc-second'>({class_name})</span>
 							</div>
 							<div className='hr mb-32'></div>
 
 							<div className='f-32 fw-500 mb-32'>
-								<span>My Students.</span>
+								<span>My Coaches.</span>
 							</div>
 
-							{school.assign_user &&
-								school.assign_user.length > 0 &&
-								school.assign_user.map((manager: any) => (
+							{coachList &&
+								coachList.length > 0 &&
+								coachList.map((coach: any) => (
 									<>
 										<div className='f-16 mb-32 align-center justify-space-between'>
 											<div className='align-center'>
 												<InitialIcon
-													initials={manager.user.email
+													initials={(coach.user ? coach.user.email : "")
 														.substr(0, 1)
 														.toUpperCase()}
 													isFooterMenu={false}
 												/>
 												<span className='ml-16'>
-													{manager.user.name ? manager.user.name : "-"}
+													{coach.user && coach.user.name
+														? coach.user.name
+														: "-"}
 												</span>
 											</div>
 											<div>
@@ -124,6 +218,7 @@ class ManagerInviteStudentSummartPage extends React.Component<IProps, IStates> {
 														fontSize: 24,
 														cursor: "pointer",
 													}}
+													onClick={() => this.handleDelete(coach.id)}
 												></DeleteOutlineOutlinedIcon>
 											</div>
 										</div>
@@ -131,12 +226,15 @@ class ManagerInviteStudentSummartPage extends React.Component<IProps, IStates> {
 										<div className='hr mb-16'></div>
 									</>
 								))}
-							<Link to={url} style={{ textDecoration: "none" }}>
+							<Link
+								to={"/manager/invite-coach"}
+								style={{ textDecoration: "none" }}
+							>
 								<div className='mb-16 align-center'>
 									<AddIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 									></AddIcon>
-									<span className='primary'>Add another manager</span>
+									<span className='primary'>Add another coach</span>
 								</div>
 							</Link>
 
@@ -156,14 +254,23 @@ class ManagerInviteStudentSummartPage extends React.Component<IProps, IStates> {
 
 const mapStateToProps = ({
 	schools,
+	classes,
+	coach,
 }: StoreState): {
 	schools: any;
+	classes: any;
+	coach: any;
 } => {
 	return {
 		schools,
+		classes,
+		coach,
 	};
 };
 
-export default connect(mapStateToProps, { LoadingActionFunc, getSchoolObj })(
-	ManagerInviteStudentSummartPage
-);
+export default connect(mapStateToProps, {
+	LoadingActionFunc,
+	getSchoolObj,
+	getClassObject,
+	deleteCoach,
+})(ManagerInviteCoachSummaryPage);

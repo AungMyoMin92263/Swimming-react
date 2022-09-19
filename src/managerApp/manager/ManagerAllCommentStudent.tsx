@@ -71,7 +71,7 @@ interface IProps {
 	history: any;
 }
 
-class ManagerClassDetailPage extends React.Component<IProps, IStates> {
+class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 	id: any;
 	urlComments: any;
 	urlEnterComment: any;
@@ -367,7 +367,7 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
 	};
 	renderCoaches = () => {
 		let editAddCoachUrl = "/manager/invite-coach-summary/" + this.state.id;
-		
+
 		return (
 			<>
 				<div className='class-attendance-header mt-24 fc-second'>
@@ -398,14 +398,17 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
 											<div className='plus flex-center ml-16'>
 												<InitialIcon
 													isFooterMenu={true}
-													initials={(
-														coach.user? (coach.user.name || coach.user.email) : 'User' 
-													).substr(0, 1).toUpperCase()}
+													initials={(coach.user
+														? coach.user.name || coach.user.email
+														: "User"
+													)
+														.substr(0, 1)
+														.toUpperCase()}
 												/>
 											</div>
 
 											<span className='f-16 ml-16'>
-												{coach.user? (coach.user.name || coach.user.email) : '' }
+												{coach.user ? coach.user.name || coach.user.email : ""}
 											</span>
 										</div>
 										<div className='justify-end'>
@@ -649,4 +652,4 @@ export default connect(mapStateToProps, {
 	getAssignUserByClass,
 	signOut,
 	LoadingActionFunc,
-})(ManagerClassDetailPage);
+})(ManagerAllCommentStudent);

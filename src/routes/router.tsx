@@ -105,6 +105,10 @@ import ManagerStudentDetailPage from "../managerApp/manager/ManagerStudentDetail
 import CoachStudentAttendanceList from "../coachApp/coach/CoachStudentAttendanceList";
 import ManagerStudentEditProfile from "../managerApp/manager/ManagerStudentEditProfile";
 import ManagerCoachEditProfile from "../managerApp/manager/ManagerCoachEditProfile";
+import EditClass from "../managerApp/manager/EditClass";
+import EditSetDateTime from "../managerApp/manager/EditSetDateTime";
+import EditSchoolPage from "../managerApp/admin/EditSchoolPage";
+import ManagerAllCommentStudent from "../managerApp/manager/ManagerAllCommentStudent";
 
 
 const windowHistory = createBrowserHistory({ window });
@@ -216,11 +220,11 @@ const routes = [
 			},
 
 			{
-				path: "add-school/:id",
+				path: "edit-school/:id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<AddSchoolPage {...props} />
+						<EditSchoolPage {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
@@ -442,11 +446,23 @@ const routes = [
 				isMobileFooter: false,
 			},
 			{
-				path: "add-class/:id",
+				path: "edit-class/:id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<AddClass {...props} />
+						<EditClass {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "edit-set-date-time/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<EditSetDateTime {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
@@ -650,11 +666,23 @@ const routes = [
 				isMobileFooter: false,
 			},
 			{
-				path: "edit-coach/:id",
+				path: "coach-edit-profile/:id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<ManagerCoachEditProfile {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "all-comments/user/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ManagerAllCommentStudent {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,

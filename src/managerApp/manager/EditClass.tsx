@@ -2,7 +2,12 @@ import React from "react";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
-import { postClass, putClass, getClassObject,LoadingActionFunc } from "../../stores/actions";
+import {
+	postClass,
+	putClass,
+	getClassObject,
+	LoadingActionFunc,
+} from "../../stores/actions";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -26,19 +31,19 @@ interface IProps {
 	classes: any;
 	postClass: Function;
 	putClass: Function;
-	getClassObject : Function;
-	LoadingActionFunc : Function;
+	getClassObject: Function;
+	LoadingActionFunc: Function;
 }
 
-class AddClass extends React.Component<IProps, IStates> {
-	id : any;
+class EditClass extends React.Component<IProps, IStates> {
+	id: any;
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
 		this.id = path[3];
 		this.state = {
 			classObj: {
-				id: this.id? this.id : -1,
+				id: this.id ? this.id : -1,
 				created_by: null,
 				created_at: new Date(),
 				updated_at: new Date(),
@@ -51,7 +56,7 @@ class AddClass extends React.Component<IProps, IStates> {
 				start_time: "09:00",
 				end_time: "10:00",
 				start_date: null,
-				end_date:null,
+				end_date: null,
 				logo: "",
 				assign_user: [],
 				studnetCount: 0,
@@ -68,11 +73,11 @@ class AddClass extends React.Component<IProps, IStates> {
 		};
 	}
 
-	componentDidMount() {	
+	componentDidMount() {
 		this.authFromLocal();
 	}
 
-	authFromLocal = async() => {
+	authFromLocal = async () => {
 		const user = JSON.parse(getItem("authUser") || "null");
 		if (user && user.userInfo && user.userInfo.assign_school) {
 			await this.setState({
@@ -81,37 +86,39 @@ class AddClass extends React.Component<IProps, IStates> {
 				school_logo: user.userInfo.assign_school.school.logo,
 			});
 
-			if(this.state.classObj.id === -1){ 
-			const classObject = JSON.parse(getItem("class") || "null");
-			if (classObject) {
-				this.setState({
-					classObj: classObject,
-				});
-			}
-			}else{
+			if (this.state.classObj.id === -1) {
+				const classObject = JSON.parse(getItem("class") || "null");
+				if (classObject) {
+					this.setState({
+						classObj: classObject,
+					});
+				}
+			} else {
 				this.getClass();
 			}
-		}	
-	}
+		}
+	};
 
 	getClass = async () => {
-		await this.props.getClassObject('school/'+this.state.schoolId + '/class/'+ this.state.classObj.id);
-		if(this.props.classes.result){
-		  if (this.props.classes.error) {
-			this.setState({
-			  errorMsg:this.props.classes.error
-			});
-		  }else{
-			let classe = this.props.classes.result;
-			if (classe){
-			  setItemWithObject("class", classe);
-			this.setState({
-			  classObj : classe
-			});
+		await this.props.getClassObject(
+			"school/" + this.state.schoolId + "/class/" + this.state.classObj.id
+		);
+		if (this.props.classes.result) {
+			if (this.props.classes.error) {
+				this.setState({
+					errorMsg: this.props.classes.error,
+				});
+			} else {
+				let classe = this.props.classes.result;
+				if (classe) {
+					setItemWithObject("class", classe);
+					this.setState({
+						classObj: classe,
+					});
+				}
 			}
-		  }
 		}
-	  }
+	};
 
 	isValid = () => {
 		if (
@@ -123,7 +130,6 @@ class AddClass extends React.Component<IProps, IStates> {
 	};
 
 	submit = async () => {
-
 		const formData = new FormData();
 		formData.append("name", this.state.classObj.name);
 		formData.append("school_id", this.state.schoolId);
@@ -163,7 +169,6 @@ class AddClass extends React.Component<IProps, IStates> {
 						isCompleted: false,
 						errorMsg: this.props.classes.error,
 					});
-					this.props.LoadingActionFunc(false);
 				} else {
 					if (this.props.classes.result && this.props.classes.result.data) {
 						setItemWithObject("class", this.props.classes.result.data);
@@ -171,7 +176,6 @@ class AddClass extends React.Component<IProps, IStates> {
 							isCompleted: true,
 						});
 					}
-					this.props.LoadingActionFunc(false);
 				}
 			} else {
 				await this.props.putClass(formData, url, this.state.classObj.id);
@@ -181,7 +185,6 @@ class AddClass extends React.Component<IProps, IStates> {
 						isCompleted: true,
 					});
 				}
-				this.props.LoadingActionFunc(false);
 			}
 		}
 	};
@@ -224,7 +227,10 @@ class AddClass extends React.Component<IProps, IStates> {
 			return (
 				<>
 					{this.state.isCompleted && (
-						<Navigate to='/manager/set-date-time' replace={true} />
+						<Navigate
+							to={"/manager/edit-set-date-time/" + this.state.classObj.id}
+							replace={true}
+						/>
 					)}
 					<button type='submit' className='primary-btn' onClick={this.submit}>
 						Continue
@@ -307,8 +313,7 @@ class AddClass extends React.Component<IProps, IStates> {
 	};
 
 	render() {
-		const { classObj, school_name, school_logo, errorMsg } =
-			this.state;
+		const { classObj, school_name, school_logo, errorMsg } = this.state;
 
 		return (
 			<>
@@ -387,7 +392,7 @@ class AddClass extends React.Component<IProps, IStates> {
 							<div>{errorMsg && <p className='text-danger'>{errorMsg}</p>}</div>
 
 							<div className='right flex align-center'>
-								<span className='secondary mr-16'>1 of 4</span>
+								<span className='secondary mr-16'>1 of 2</span>
 								{this.renderBtn()}
 							</div>
 						</div>
@@ -408,4 +413,9 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { postClass, putClass, getClassObject, LoadingActionFunc })(AddClass);
+export default connect(mapStateToProps, {
+	postClass,
+	putClass,
+	getClassObject,
+	LoadingActionFunc,
+})(EditClass);

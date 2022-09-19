@@ -45,7 +45,7 @@ interface IProps {
 }
 
 class AdminDashboardPage extends React.Component<IProps, IStates> {
-  url = "/admin/add-school/";
+  url = "/admin/edit-school/";
   managerUrl = "/admin/invite-manager-summary/";
   constructor(props: any) {
     super(props);
