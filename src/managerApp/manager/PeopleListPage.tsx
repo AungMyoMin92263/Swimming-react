@@ -97,7 +97,7 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 		if (user && user.userInfo) {
 			await this.setState({
 				email: user.userInfo.email,
-				school_id: user.userInfo.assign_school.id,
+				school_id: user.userInfo.assign_school.school_id,
 			});
 			if (user.userInfo.assign_school) {
         		this.getUsers();
@@ -340,30 +340,30 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 									<tbody>
 										{filteredUsers &&
 											filteredUsers.length > 0 &&
-											filteredUsers.map((user: any, index: any) => (
+											filteredUsers.map((user: {name : string,email : string,role : string}, index: any) => (
 												<tr>
 													<td className='flex justify-center'>
 														<InitialIcon
-															initials={user.email.substr(0, 1).toUpperCase()}
+															initials={(user && user.email)?  user.email.substr(0, 1).toUpperCase() : ''}
 															isFooterMenu={false}
 														/>
 														<span className='ml-16'>
-															{!user.name || user.name === "" ? "-" : user.name}
+															{(!user || !user.name || user.name === "") ? "-" : user.name}
 														</span>
 													</td>
 													<td>
 														<span>
-															{user.role === "coache"
+															{(user && user.role === "coache")
 																? "Coach"
-																: user.role === "admin"
+																: (user && user.role === "admin")
 																? "Admin"
-																: user.role === "manager"
+																: (user && user.role === "manager")
 																? "School Manager"
-																: user.role === "student"
+																: (user && user.role === "student")
 																? "Student"
-																: user.role === "parent"
+																: (user && user.role === "parent")
 																? "Parent"
-																: user.role}
+																: ''}
 														</span>
 													</td>
 													<td>
@@ -386,7 +386,7 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 																>
 																	<Link
 																		to={
-																			user.role === "coache"
+																			user && user.role === "coache"
 																				? viewCoachUrl
 																				: viewStudentUrl
 																		}
@@ -399,7 +399,7 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 
 																	<Link
 																		to={
-																			user.role === "coache"
+																			user && user.role === "coache"
 																				? editCoachUrl
 																				: editStudentUrl
 																		}

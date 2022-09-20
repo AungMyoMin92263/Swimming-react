@@ -132,6 +132,7 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 
 				<div className='container-cus'>
 					<div className='content col-lg-6 col-md-8 col-12'>
+						<span className='f-10'>Manager's</span>
 						<div className='title mb-16'>
 							<span>Login</span>
 						</div>

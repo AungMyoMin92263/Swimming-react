@@ -7,7 +7,7 @@ import { LoadingActionFunc, signIn } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
 import { removeItem, setItemWithObject } from "../../auth/LocalStorage";
 import { refreshToken } from "../../stores/actions/school-action";
-import { getAllSchools } from './../../stores/actions/school-action';
+import { getAllSchools } from "./../../stores/actions/school-action";
 
 interface IStates {
 	email: string;
@@ -26,7 +26,7 @@ interface AdminLoginPage {
 	refreshToken: Function;
 	getAllSchools: Function;
 	schoolList: any;
-	LoadingActionFunc : Function;
+	LoadingActionFunc: Function;
 }
 
 type IProps = AdminLoginPage;
@@ -43,7 +43,7 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 			emailMsg: "",
 			passwordMsg: "",
 			isNewUser: "",
-			schoolList:[]
+			schoolList: [],
 		};
 		this.props.LoadingActionFunc(false);
 		removeItem("authUser");
@@ -81,41 +81,41 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 			return;
 		}
 
-		this.callback()
-	}
-	setItems = async() =>{
+		this.callback();
+	};
+	setItems = async () => {
 		if (this.props.authUser.isSignedIn && this.props.authUser.userInfo) {
-			await this.props.refreshToken(
-				this.props.authUser.token 
-			);
+			await this.props.refreshToken(this.props.authUser.token);
 			await this.props.getAllSchools();
 			this.setSchools();
 		}
-				
-	}
-	setSchools = () =>{
+	};
+	setSchools = () => {
 		if (this.props.authUser.isSignedIn && this.props.schoolList.result) {
 			this.setState({
 				isNewUser:
-					this.props.schoolList.result && this.props.schoolList.result.length > 0
+					this.props.schoolList.result &&
+					this.props.schoolList.result.length > 0
 						? "f"
 						: "t",
 			});
 		}
-		return null
-	}
+		return null;
+	};
 
 	callback = async () => {
 		this.props.LoadingActionFunc(true);
 		const { email, password }: IStates = this.state;
 
-		await this.props.signIn({ email: email,role : 'admin', password: password });
-		setItemWithObject("authUser", this.props.authUser)
-		await this.setItems()
+		await this.props.signIn({
+			email: email,
+			role: "admin",
+			password: password,
+		});
+		setItemWithObject("authUser", this.props.authUser);
+		await this.setItems();
 		this.props.LoadingActionFunc(false);
-	}
-
-
+	};
 
 	validateEmail = (email: string) => {
 		return email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i) ? true : false;
@@ -150,6 +150,7 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 
 				<div className='container-cus'>
 					<div className='content col-lg-6 col-md-8 col-12'>
+						<span className='f-10'>Admin's</span>
 						<div className='title mb-16'>
 							<span>Login</span>
 						</div>
@@ -225,10 +226,11 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 }
 
 const mapStateToProps = ({
-	authUser,schoolList,
+	authUser,
+	schoolList,
 }: StoreState): {
 	authUser: AuthInterface;
-	schoolList : any;
+	schoolList: any;
 } => {
 	return {
 		authUser,
@@ -236,4 +238,9 @@ const mapStateToProps = ({
 	};
 };
 
-export default connect(mapStateToProps, { signIn,refreshToken, getAllSchools, LoadingActionFunc})(AdminLoginPage);
+export default connect(mapStateToProps, {
+	signIn,
+	refreshToken,
+	getAllSchools,
+	LoadingActionFunc,
+})(AdminLoginPage);

@@ -61,6 +61,10 @@ import StudentEditProfilePage from "../studentApp/student/StudentEditProfile";
 import StudentRecoverPasswordPage from "../studentApp/student/StudentRecoverPasswordPage";
 import StudentChangePasswordPage from "../studentApp/student/StudentChangePasswordPage";
 import StudentCreatePasswordPage from "../studentApp/student/StudentCreatePasswordPage";
+import StudentDailyProgramPage from "../studentApp/student/StudentDailyProgramme";
+import StudentCommentsPage from "../studentApp/student/StudentComments";
+import StudentEnterCommentsPage from "../studentApp/student/StudentEnterCommentsPage";
+import StudentViewProfile from "../studentApp/student/StudentMeProfileDetails";
 
 //coach
 import CoachLoginPage from "../coachApp/coach/CoachLogin";
@@ -846,6 +850,39 @@ const routes = [
 				isSideBar: false,
 				isMobileFooter: true,
 			},
+			
+			{
+				path: "dashboard/daily-program",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentDailyProgramPage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "dashboard/daily-program/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentDailyProgramPage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
 			{
 				path: "dashboard/profile-detail",
 				sideBar: (props: any) => <></>,
@@ -883,7 +920,51 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<StudentEditProfilePage />
+						<StudentEditProfilePage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "dashboard/all-comments/:id/class",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentCommentsPage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "dashboard/enter-comments/:id/class",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentEnterCommentsPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "me/profile-detail/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentViewProfile {...props} />
 					</>
 				),
 				footer: (props: any) => (
@@ -970,7 +1051,7 @@ const routes = [
 				),
 				footer: (props: any) => <></>,
 				isSideBar: false,
-				isMobileFooter: false,
+				isMobileFooter: true,
 			},
 			{
 				path: "welcome",

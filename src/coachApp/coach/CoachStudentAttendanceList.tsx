@@ -51,7 +51,7 @@ class CoachStudentAttendanceList extends React.Component<IProps, IStates> {
   getMyAttendance = async () => {
     let date = moment().format("YYYY-MM-DD")
     const student = this.props.authUser.otherUserinfo
-    if (this.props.authUser.userInfo?.assign_class.length > 0) {
+    if (this.props && this.props.authUser.userInfo?.assign_class.length > 0) {
       if (this.props.authUser.userInfo?.assign_class[0].classes){
 				const selected = this.state.selectedClass?.id
 					? this.state.selectedClass

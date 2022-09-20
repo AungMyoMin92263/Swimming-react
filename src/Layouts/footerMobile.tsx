@@ -9,18 +9,17 @@ import { InitialIcon } from "../atoms/InitialIcon";
 import './MenuBar.css';
 
 const FooterMobileMenu = (props: IPageProp) => {
-const [url,setURL]= React.useState('');
-const [name,setName]= React.useState('');
-
+const [role,setRole]= React.useState('');
+const [name,setName]= React.useState<string>('');
+const [id,setId]= React.useState('');
   let path = props.history.location.pathname.split("/");
   useEffect(() => {
 	let user = JSON.parse(getItem("authUser") || "null");
     if (user && user.userInfo) {
-      if (user.userInfo) {
-        setURL('/coach/dashboard/profile-detail/'+user.userInfo.id);
-				setName(user.userInfo.name);
-      }
+        setRole(user.userInfo.role);
+		setId(user.userInfo.id);
     }
+	setName("");
   }, [])
 
   return (
@@ -31,7 +30,7 @@ const [name,setName]= React.useState('');
 						className={`menu-item cursor ${
 							path[2] === "dashboard" ? "active" : ""
 						}`}
-						onClick={() => props.history.push("/coach/dashboard")}
+						onClick={() => props.history.push(role === 'student'? "/student/dashboard" :"/coach/dashboard" )}
 					>
 						<HomeOutlinedIcon
 							sx={{
@@ -45,7 +44,7 @@ const [name,setName]= React.useState('');
 						className={`menu-item cursor ${
 							path[2] === "class-list" ? "active" : ""
 						}`}
-						onClick={() => props.history.push("/coach/class-list")}
+						onClick={() => props.history.push(role === 'student'? "/student/class-list" : "/coach/class-list")}
 					>
 						<EventNoteIcon
 							sx={{
@@ -59,7 +58,7 @@ const [name,setName]= React.useState('');
 						className={`menu-item cursor ${
 							path[2] === "event-list" ? "active" : ""
 						}`}
-						onClick={() => props.history.push("/coach/event-list")}
+						onClick={() => props.history.push(role === 'student'? "/student/event-list" : "/coach/event-list")}
 					>
 						<PoolIcon
 							sx={{
@@ -73,14 +72,12 @@ const [name,setName]= React.useState('');
 						className={`menu-item cursor ${
 							path[2] === "me" ? "active" : ""
 						}`}
-						onClick={() => props.history.push("/coach/me")}
+						onClick={() => props.history.push(role === 'student'? "/student/me/profile-detail/"+id : "/coach/me")}
 					>
-						{name && (
 							<InitialIcon
-								initials={name.substr(0, 1).toUpperCase()}
+								initials={(name && name !== "" ? name.substring(0,1) : "M").toUpperCase()}
 								isFooterMenu={true}
 							/>
-						)}
 
 						<span className='f-8'>ME</span>
 					</div>

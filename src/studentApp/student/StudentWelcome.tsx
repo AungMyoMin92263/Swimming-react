@@ -83,7 +83,7 @@ class StudentWelcomePage extends React.Component<IProps, IStates> {
 						<div>
 							<div className='flex-center mt-24'>
 								<Link
-									to='/coach/dashboard'
+									to='/student/dashboard'
 									style={{ textDecoration: "none",width:'100%' }}
 								>
 									<button type='submit' className='btn btn-primary mobile-btn cus-primay-btn-m'>
