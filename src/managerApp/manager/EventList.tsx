@@ -18,9 +18,10 @@ import { signOut,LoadingActionFunc } from "../../stores/actions";
 
 interface IStates {
 	events: Event[];
-	email: string;  
-  dropdown: boolean;
-  isLogout: boolean;
+	email: string;
+	filterText: string;
+	dropdown: boolean;
+	isLogout: boolean;
 }
 
 interface EventList {
@@ -33,61 +34,68 @@ interface EventList {
 type IProps = EventList;
 
 class EventList extends React.Component<IProps, IStates> {
-  constructor(props: any) {
-    super(props);
+	constructor(props: any) {
+		super(props);
 
-    this.state = {
-      events: [],
-      email: '',
-      dropdown: false,
-      isLogout: false,
-    };
-    this.props.LoadingActionFunc(true);
+		this.state = {
+			events: [],
+			email: "",
+			filterText: "",
+			dropdown: false,
+			isLogout: false,
+		};
+		this.props.LoadingActionFunc(true);
+	}
 
-  }
-
-  componentDidMount() {
-    removeItem("event");
-    const user = JSON.parse(getItem("authUser") || "null");
+	componentDidMount() {
+		removeItem("event");
+		const user = JSON.parse(getItem("authUser") || "null");
 		if (user && user.userInfo) {
 			this.setState({
 				email: user.userInfo.email,
 			});
 		}
-    this.props.LoadingActionFunc(false);
-    this.getEvents();
-  }
+		this.props.LoadingActionFunc(false);
+		this.getEvents();
+	}
 
-  toggleOpen = () => {
-    let dropdownVal = !this.state.dropdown;
-    this.setState({
-      dropdown: dropdownVal,
-    });
-  };
+	toggleOpen = () => {
+		let dropdownVal = !this.state.dropdown;
+		this.setState({
+			dropdown: dropdownVal,
+		});
+	};
 
-  logout = async () => {
-    await this.props.signOut();
-    removeItem("authUser");
-    removeItem("class");
-    this.setState({
-      isLogout: true,
-    });
-  };
+	logout = async () => {
+		await this.props.signOut();
+		removeItem("authUser");
+		removeItem("class");
+		this.setState({
+			isLogout: true,
+		});
+	};
 
-  getEvents = async () => {
-    let url = "";
-    const user = JSON.parse(getItem("authUser") || "null");
-    if (user && user.userInfo) {
-      url = "school/" + user.userInfo.assign_school.school.id + "/event";
-      await this.props.getAllEvents(url);
-      this.props.LoadingActionFunc(false);
-    }else this.props.LoadingActionFunc(false);
-  };
+	getEvents = async () => {
+		let url = "";
+		const user = JSON.parse(getItem("authUser") || "null");
+		if (user && user.userInfo) {
+			url = "school/" + user.userInfo.assign_school.school.id + "/event";
+			await this.props.getAllEvents(url);
+			this.props.LoadingActionFunc(false);
+		} else this.props.LoadingActionFunc(false);
+	};
 
-  renderBody = () => {
-    let events = this.props.eventList.result;
-    if (events && events.length > 0) {
-      return (
+	searchChanged = (e: any) => {
+		this.setState({
+			...this.state,
+			filterText: e.currentTarget.value,
+		});
+	};
+
+	renderBody = () => {
+		let events = this.props.eventList.result;
+		if (events && events.length > 0) {
+			return (
 				<div className='dashboard-body'>
 					<div className='tableBody'>
 						<div className='tableSearch'>
@@ -101,6 +109,8 @@ class EventList extends React.Component<IProps, IStates> {
 									<input
 										className='dash-input-div'
 										placeholder='Search by style or age group'
+										value={this.state.filterText}
+										onChange={this.searchChanged}
 									/>
 								</div>
 								<div className='dash-filter-div'>
@@ -128,89 +138,100 @@ class EventList extends React.Component<IProps, IStates> {
 							<tbody>
 								{events &&
 									events.length > 0 &&
-									events.map((evente: Event) => (
-										<tr>
-											<td>{evente.name}</td>
-											<td>{evente.gender}</td>
-											<td>
-												<span>{evente.from_age}</span>-
-												<span className='mr-8'>{evente.to_age}</span> y/o
-											</td>
-											<td>{evente.studnetCount ? evente.studnetCount : 0}</td>
-										</tr>
-									))}
+									events
+										.filter((evente: any) => {
+											if (!this.state.filterText) {
+												return true;
+											} else {
+												return (evente.from_age.toString() || "")
+													.toLowerCase()
+													.startsWith(this.state.filterText.toLowerCase());
+											}
+										})
+										.map((evente: Event) => (
+											<tr>
+												<td>{evente.name}</td>
+												<td>{evente.gender}</td>
+												<td>
+													<span>{evente.from_age}</span>-
+													<span className='mr-8'>{evente.to_age}</span> y/o
+												</td>
+												<td>{evente.studnetCount ? evente.studnetCount : 0}</td>
+											</tr>
+										))}
 							</tbody>
 						</table>
 					</div>
 				</div>
 			);
-    } else {
-      return (
-        <div className="dashboard-body">
-          {/* Start Add school */}
-          <div className="createClass flex-center">
-            <div className="body">
-              <div className="plus-icon mt-16">
-                <img src="../../../assets/icons/plus-round.png" alt="plus" />
-              </div>
-              <div className="text f-16 mt-16">
-                Create an event to assign to students.
-              </div>
-              <div className="flex-center mt-16">
-                <Link
-                  to="/manager/add-event"
-                  style={{ textDecoration: "none" }}
-                >
-                  <button
-                    type="submit"
-                    className="primary-btn"
-                    // style={{ width: "140px" }}
-                  >
-                    Create Event
-                    <AddIcon
-                      sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
-                    ></AddIcon>
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-  };
+		} else {
+			return (
+				<div className='dashboard-body'>
+					{/* Start Add school */}
+					<div className='createClass flex-center'>
+						<div className='body'>
+							<div className='plus-icon mt-16'>
+								<img src='../../../assets/icons/plus-round.png' alt='plus' />
+							</div>
+							<div className='text f-16 mt-16'>
+								Create an event to assign to students.
+							</div>
+							<div className='flex-center mt-16'>
+								<Link
+									to='/manager/add-event'
+									style={{ textDecoration: "none" }}
+								>
+									<button
+										type='submit'
+										className='primary-btn'
+										// style={{ width: "140px" }}
+									>
+										Create Event
+										<AddIcon
+											sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
+										></AddIcon>
+									</button>
+								</Link>
+							</div>
+						</div>
+					</div>
+				</div>
+			);
+		}
+	};
 
-  render() {
-    const { email,dropdown,isLogout} = this.state;
-    return (
+	render() {
+		const { email, dropdown, isLogout } = this.state;
+		return (
 			<>
 				<div className='container-cus'>
-        {isLogout && <Navigate to="/manager/login" replace={true} />}
+					{isLogout && <Navigate to='/manager/login' replace={true} />}
 					<div className='dashboard'>
 						{/* DASHBOARD HEADER */}
 						<div className='dashboard-header'>
 							<div className='justify-end'>
-								
-              <div className="dropdown">
-                  <div className="email-div cursor" onClick={this.toggleOpen}>
-                    <InitialIcon initials={email.substr(0, 1).toUpperCase()} isFooterMenu={false}/>
-                    <span>{email} </span>
-                  </div>
-                  <div
-                    className={`dropdown-menu dropdown-menu-right ${
-                      dropdown ? "show" : ""
-                    }`}
-                    aria-labelledby="dropdownMenuButton"
-                  >
-                    <div className="dropdown-item cursor" onClick={this.logout}>
-                      <LogoutOutlinedIcon
-                        sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
-                      ></LogoutOutlinedIcon>
-                      <span>Logout</span>
-                    </div>
-                  </div>
-                </div>
-								
+								<div className='dropdown'>
+									<div className='email-div cursor' onClick={this.toggleOpen}>
+										<InitialIcon
+											initials={email.substr(0, 1).toUpperCase()}
+											isFooterMenu={false}
+										/>
+										<span>{email} </span>
+									</div>
+									<div
+										className={`dropdown-menu dropdown-menu-right ${
+											dropdown ? "show" : ""
+										}`}
+										aria-labelledby='dropdownMenuButton'
+									>
+										<div className='dropdown-item cursor' onClick={this.logout}>
+											<LogoutOutlinedIcon
+												sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
+											></LogoutOutlinedIcon>
+											<span>Logout</span>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div className='row justify-center'>
 								<div className='col-8 col-md-8 justify-start align-center'>
@@ -241,7 +262,7 @@ class EventList extends React.Component<IProps, IStates> {
 				</div>
 			</>
 		);
-  }
+	}
 }
 
 const mapStateToProps = ({

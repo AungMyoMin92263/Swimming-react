@@ -49,8 +49,9 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
     };
   }
   classCallback = (id: any) => {
+    console.log('id',id)
     this.setState({ goClass: true });
-    this.urlClass = "/student/dashboard/daily-program/" + id;
+    this.urlClass = "/student/class-list/daily-program/" + id;
   };
 
   getDatesInRange(startDate: Date, endDate: Date) {
@@ -131,7 +132,7 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
     ) {
       let temp = this.state.classList;
       this.props.classListR.result.map((classesObj: any) => {
-        let tempObj: ClassInterface[] = classesObj.class_list || [];
+        let tempObj: any[] = classesObj.class_list || [];
         if (tempObj.length > 0) {
           let tempInnerList = [];
           for (let i = 0; i < tempObj.length; i++) {
@@ -157,6 +158,7 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
                 isBigIcon: false,
               },
               start_time: tempObj[i].start_time,
+              id: tempObj[i].id,
             });
           }
           temp.push({
@@ -185,46 +187,46 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
     const { classList, goClass } = this.state;
 
     return (
-      <>
-	    {goClass && <Navigate to={this.urlClass} replace={true} />}
+			<>
+				{goClass && <Navigate to={this.urlClass} replace={true} />}
 
-        <div className="wrapper-mobile">
-          <div className="content-mobile col-sm-12">
-            <div className="f-32 fw-500 mt-16 mb-32">
-              <span> Classes </span>
-            </div>
-            {classList &&
-              classList.length > 0 &&
-              classList.map((classes: any) => (
-                <div className="mb-8">
-                  <ListBoxUI
-                    title={classes.date}
-                    callback={() => {}}
-                    more={false}
-                    noBtn={true}
-                  >
-                    <>
-                      <>
-                        {classes.list &&
-                          classes.list.length > 0 &&
-                          classes.list.map((classe: any) => (
-                            <ListItem
-                              {...classe.obj}
-                              callback={() => this.classCallback(classe.id)}
-                            >
-                              <WatchLaterIcon />
-                              <label>{classe.start_time}</label>
-                            </ListItem>
-                          ))}
-                      </>
-                    </>
-                  </ListBoxUI>
-                </div>
-              ))}
-          </div>
-        </div>
-      </>
-    );
+				<div className='wrapper-mobile bg-w'>
+					<div className='content-mobile col-sm-12'>
+						<div className='f-32 fw-500 mt-16 mb-32'>
+							<span> Classes </span>
+						</div>
+						{classList &&
+							classList.length > 0 &&
+							classList.map((classes: any) => (
+								<div className='mb-8'>
+									<ListBoxUI
+										title={classes.date}
+										callback={() => {}}
+										more={false}
+										noBtn={true}
+									>
+										<>
+											<>
+												{classes.list &&
+													classes.list.length > 0 &&
+													classes.list.map((classe: any) => (
+														<ListItem
+															{...classe.obj}
+															callback={() => this.classCallback(classe.id)}
+														>
+															<WatchLaterIcon />
+															<label>{classe.start_time}</label>
+														</ListItem>
+													))}
+											</>
+										</>
+									</ListBoxUI>
+								</div>
+							))}
+					</div>
+				</div>
+			</>
+		);
   }
 }
 

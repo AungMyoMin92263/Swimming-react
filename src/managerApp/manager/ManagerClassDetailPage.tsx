@@ -37,6 +37,7 @@ import { profile } from "console";
 import ListBoxUI from "../../molecules/ListBox";
 import CommentItem from "../../atoms/Comment";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import CommentDashItem from "../../atoms/CommentDash";
 interface IStates {
 	email: string;
 	logo: string;
@@ -73,13 +74,13 @@ interface IProps {
 
 class ManagerClassDetailPage extends React.Component<IProps, IStates> {
 	id: any;
-	urlComments: any;
-	urlEnterComment: any;
+	urlClassAllComments: any;
 	url = "/manager/edit-class/";
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
 		this.id = path[3];
+		this.urlClassAllComments = "/manager/all-comments/class/" + this.id;
 		this.state = {
 			email: "",
 			logo: "",
@@ -144,7 +145,7 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
 				display_item: [
 					{
 						title: "Date",
-						value: moment(this.props.classes.viewClass.start_date).format(
+						value: moment(new Date).format(
 							"D MMM YYYY"
 						),
 					},
@@ -244,11 +245,11 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
 	};
 
 	goCoachDetail = (user_id: number) => {
-		let coachDetailUrl = "/manager/coach-detail/" + user_id;
+		let coachDetailUrl = "/manager/coach-detail/" + user_id + "/class/"+ this.id;
 		this.props.history.push(coachDetailUrl);
 	};
 	goStudentDetail = (user_id: number) => {
-		let studentDetailUrl = "/manager/student-detail/" + user_id;
+		let studentDetailUrl = "/manager/student-detail/" + user_id +"/class/"+this.id;
 		this.props.history.push(studentDetailUrl);
 	};
 
@@ -367,7 +368,7 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
 	};
 	renderCoaches = () => {
 		let editAddCoachUrl = "/manager/invite-coach-summary/" + this.state.id;
-		
+
 		return (
 			<>
 				<div className='class-attendance-header mt-24 fc-second'>
@@ -398,14 +399,17 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
 											<div className='plus flex-center ml-16'>
 												<InitialIcon
 													isFooterMenu={true}
-													initials={(
-														coach.user? (coach.user.name || coach.user.email) : 'User' 
-													).substr(0, 1).toUpperCase()}
+													initials={(coach.user
+														? coach.user.name || coach.user.email
+														: "User"
+													)
+														.substr(0, 1)
+														.toUpperCase()}
 												/>
 											</div>
 
 											<span className='f-16 ml-16'>
-												{coach.user? (coach.user.name || coach.user.email) : '' }
+												{coach.user ? coach.user.name || coach.user.email : ""}
 											</span>
 										</div>
 										<div className='justify-end'>
@@ -426,7 +430,9 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
 			<div className='mt-24'>
 				<div className='class-comment-header flex justify-space-between '>
 					<span className='fc-second'>Class Comments</span>
-					<span className='fc-primary'>View All</span>
+					<Link to={this.urlClassAllComments}>
+						<span className='fc-primary'>View All</span>
+					</Link>
 				</div>
 				<div className='class-attendance-body mt-16 '>
 					<div>
@@ -434,7 +440,7 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
 							<>
 								{this.state.classe.comments.map((res: any, index: number) => {
 									return (
-										<CommentItem
+										<CommentDashItem
 											profile={this.createProfile(
 												res.user_info.avatar,
 												res.user_info.name
@@ -447,18 +453,18 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
 												moment(res.created_at).format("DD MMM, h:mm a")
 											}
 											key={`cmd-${index}`}
-										></CommentItem>
+										></CommentDashItem>
 									);
 								})}
 							</>
 						) : (
-							<CommentItem
+							<CommentDashItem
 								profile={this.createProfile("", "")}
 								message={"There is no comment"}
 								callback={() => {}}
 								timeString={""}
 								key={""}
-							></CommentItem>
+							></CommentDashItem>
 						)}
 					</div>
 				</div>
@@ -545,6 +551,9 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 									></ArrowBackIcon>
 									<span>Back</span>
+									<span className='ml-16 fc-second'>
+										{this.state.school_name} {"		"}
+									</span>
 								</Link>
 								<div className='justify-end'>
 									<div className='dropdown'>

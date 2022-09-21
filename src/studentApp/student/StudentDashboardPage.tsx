@@ -2,7 +2,7 @@ import React from "react";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
-
+import moment from "moment";
 import ListItem, { IListItem } from "../../atoms/ListItem";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import { getItem } from "../../auth/LocalStorage";
@@ -106,16 +106,17 @@ class StudentDashboardPage extends React.Component<IProps, IStates> {
 						schoolId: user.userInfo.assign_class[0].classes.school_id,
 					});
 
-					this.getClassesByDate();
+					this.getClassesByDate(user.userInfo.assign_class[0].classes.school_id);
 				}
       }
     }
   };
 
-  getClassesByDate = async () => {
+  getClassesByDate = async (id : any) => {
+
     let url =
       "school/" +
-      this.state.schoolId +
+      id +
       "/class/by-date?date=" +
       new Date().toISOString();
     await this.props.getclassesByDate(url);
@@ -168,43 +169,48 @@ class StudentDashboardPage extends React.Component<IProps, IStates> {
   };
 
   render() {
-    const { user_name, goClass, goStudent, classes, students } = this.state;
+    const { user_name, goClass, goStudent, classes } = this.state;
+    let date = "Today, " + moment().format("D MMMM");
     return (
-      <>
-        {goClass && <Navigate to={this.urlClass} replace={true} />}
-        {goStudent && <Navigate to={this.urlStudent} replace={true} />}
-        <div className="wrapper-mobile">
-          <div className="content-mobile col-sm-12">
-            <div className="f-32 fw-500 mt-16 mb-32">
-              <span> Hello, </span> <span>{user_name}</span>
-            </div>
-            <div className="mb-8">
-              {/* classes  */}
-              {classes && classes.length > 0 && (
-                <ListBoxUI title={this.date} callback={() => {}} more={false}>
-                  <>
-                    {classes &&
-                      classes.length > 0 &&
-                      classes.map((classe: any, index: any) => (
-                        <ListItem
-                          {...classe.obj}
-                          key={`classOb${index}`}
-                          arrowRight={true}
-                        >
-                          <>
-                            <AccessTimeOutlinedIcon fontSize="small" />
-                            <label>{classe.start_time}</label>
-                          </>
-                        </ListItem>
-                      ))}
-                  </>
-                </ListBoxUI>
-              )}
-            </div>
-          </div>
-        </div>
-      </>
-    );
+			<>
+				{goClass && <Navigate to={this.urlClass} replace={true} />}
+				{goStudent && <Navigate to={this.urlStudent} replace={true} />}
+				<div className='wrapper-mobile bg-w'>
+					<div className='content-mobile-cus-space col-sm-12'>
+						<div className='f-32 fw-500 mt-24 mb-40'>
+							<span> Hello, </span> <span>{user_name}</span>
+						</div>
+						<div className='mb-8'>
+							<ListBoxUI
+								title={date}
+								callback={() => {}}
+								more={false}
+								noBtn={true}
+							>
+								<>
+									{classes &&
+										classes.length > 0 &&
+										classes.map((classe: any, index: any) => (
+											<ListItem
+												{...classe.obj}
+												key={`classOb${index}`}
+												arrowRight={true}
+											>
+												<>
+													<AccessTimeOutlinedIcon fontSize='small' />
+													<label>{classe.start_time}</label>
+												</>
+											</ListItem>
+										))}
+								</>
+							</ListBoxUI>
+						</div>
+
+						
+					</div>
+				</div>
+			</>
+		);
   }
 }
 

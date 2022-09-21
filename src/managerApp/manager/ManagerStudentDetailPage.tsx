@@ -7,11 +7,12 @@ import "./ManagerClassDetailPage.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { StoreState } from "../../stores/reducers";
-import {
+import {getClassObject,
 	getAllComment,
 	getAllEvents,
 	getDetailEvents,
 	getUserInfo,
+	getAll
 } from "../../stores/actions";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -40,6 +41,7 @@ import LoadingActionFunc from "./PeopleListPage";
 import BadgeList from "../../molecules/BadgeList";
 import { CreateProfile } from "../../atoms/createProfile";
 import BadgeListDash from "../../molecules/BadgeListDash";
+import CommentDashItem from "../../atoms/CommentDash";
 interface IStates {
 	email: string;
 	logo: string;
@@ -51,6 +53,7 @@ interface IStates {
 	image: any;
 	schoolId: any;
 	id: any;
+	attendances: any[];
 }
 interface IProps {
 	user_id: any;
@@ -60,6 +63,10 @@ interface IProps {
 	history: any;
 	comments: any;
 	eventList: any;
+	classes: any;
+	getAll: Function;
+	response: any;
+	getClassObject: Function;
 	getAllEvents: Function;
 	getDetailEvents: Function;
 	defaultPath: string;
@@ -69,14 +76,26 @@ interface IProps {
 
 class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 	id: any;
-	urlComments: any;
+	class_id:any;
+	urlStudentAllComments: any;
+	urlStudentBadgetList: any;
+	urlStudentAllAttendacnes: any;
+	urlStudentEventList: any;
 	urlEnterComment: any;
 	url = "/manager/student-edit-profile/";
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
 		this.id = path[3];
+		this.class_id = path[5]
+		this.urlStudentAllComments = "/manager/all-comments/user/" + this.id+"/class/"+this.class_id;
+		this.urlStudentBadgetList =
+			"/manager/all-badgets/user/" + this.id + "/class/" + this.class_id;
+		this.urlStudentAllAttendacnes = "/manager/all-attendances/user/" + this.id + "/class/"+ this.class_id;
+		this.urlStudentEventList =
+			"/manager/all-events/user/" + this.id + "/class/" + this.class_id;
 		this.state = {
+			attendances : [],
 			email: "",
 			logo: "",
 			school_name: "",
@@ -90,10 +109,16 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 		};
 	}
 	componentDidMount() {
+		this.authFromLocal()
+		this.getDetailAll();
+		//loading
+	}
+
+	authFromLocal = async ()=>{
 		const user = JSON.parse(getItem("authUser") || "null");
 		console.log(user.userInfo);
 		if (user && user.userInfo) {
-			this.setState({
+			await this.setState({
 				email: user.userInfo.email,
 				logo: user.userInfo.assign_school
 					? user.userInfo.assign_school.school.logo
@@ -102,23 +127,59 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 					? user.userInfo.assign_school.school.name
 					: "",
 				schoolId: user.userInfo.assign_school
-					? user.userInfo.assign_school.school.school_id
+					? user.userInfo.assign_school.school_id
 					: -1,
 			});
+			let classUrl =
+				"school/" + this.state.schoolId + "/class/" + this.class_id;
+			this.props.getClassObject(classUrl, true)
 		}
-		this.getDetailAll();
-		console.log("authUser", this.props.authUser);
-		//loading
+
 	}
 	getDetailAll = async () => {
+		
 		let cmdUrl = "comment/by-student/" + this.id;
 		let eventUrl = "assigned/event/by-users/" + this.id;
 		await Promise.all([
+			
 			this.props.getUserInfo(this.id, true),
 			this.props.getAllComment(cmdUrl),
 			this.props.getAllEvents(eventUrl),
+			this.getAttendanceByStudent()
 		]);
 	};
+
+		getAttendanceByStudent = async () => {
+		let url =
+			"attendance/student/" + this.id + "/class/"+ this.class_id
+		await this.props.getAll(url);
+		if (
+			this.props.response &&
+			this.props.response.result &&
+			this.props.response.result.length > 0
+		) {
+			let tempAttendances = this.props.response.result;
+			let res = [];
+			for (let i = 0; i < tempAttendances.length; i++) {
+				res.push({
+					text: tempAttendances[i].classes.name,
+					callback: () => console.log("log click item"),
+					smallText: "",
+					logo: tempAttendances[i].classes.logo,
+					attended:tempAttendances[i].attend,
+					record_date:tempAttendances[i].record_date,
+					secondryText: true,
+					isBigIcon: false,
+					selectable: true,
+				});
+			}
+
+			this.setState({
+				attendances: res,
+			});
+		}
+	}
+
 	toggleOpen = () => {
 		let dropdownVal = !this.state.dropdown;
 		this.setState({
@@ -161,20 +222,24 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 
 	renderBadgetList = () => {
 		const badgeData: any[] =
-			this.props.authUser.otherUserinfo?.own_badges.map((res: any) => {
-				return {
-					text: res.badge.name,
-					icon: res.badge.logo,
-					description: res.badge.description,
-					callback: () => {},
-					isActive: true,
-				};
-			}) || [];
+			this.props.authUser.otherUserinfo?.own_badges
+				.slice(0, 4)
+				.map((res: any) => {
+					return {
+						text: res.badge.name,
+						icon: res.badge.logo,
+						description: res.badge.description,
+						callback: () => {},
+						isActive: true,
+					};
+				}) || [];
 		return (
 			<>
 				<div className='class-comment-header flex justify-space-between mt-16'>
 					<span className='fc-second'>Badgets</span>
-					<span className='fc-primary'>View All</span>
+					<Link to={this.urlStudentBadgetList}>
+						<span className='fc-primary'>View All</span>
+					</Link>
 				</div>
 				<div className='class-attendance-body mt-16 '>
 					<BadgeListDash badges={badgeData} key='st_badge_list'></BadgeListDash>
@@ -188,8 +253,10 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 		return (
 			<div className='mt-24'>
 				<div className='class-comment-header flex justify-space-between '>
-					<span className='fc-second'>Class Comments</span>
-					<span className='fc-primary'>View All</span>
+					<span className='fc-second'>Comments</span>
+					<Link to={this.urlStudentAllComments}>
+						<span className='fc-primary'>View All</span>
+					</Link>
 				</div>
 				<div className='class-attendance-body mt-16 '>
 					<div>
@@ -197,7 +264,7 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 							<>
 								{comments.slice(0, 3).map((res: any, index: number) => {
 									return (
-										<CommentItem
+										<CommentDashItem
 											key={`st_cmd-${index}`}
 											profile={
 												<CreateProfile
@@ -212,7 +279,7 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 												" at " +
 												moment(res.created_at).format("DD MMM, h:mm a")
 											}
-										></CommentItem>
+										></CommentDashItem>
 									);
 								})}
 							</>
@@ -229,20 +296,57 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 			<>
 				<div className='class-comment-header flex justify-space-between mt-16'>
 					<span className='fc-second'>Attendance</span>
-					<span className='fc-primary'>View All</span>
+					<Link to={this.urlStudentAllAttendacnes}>
+						<span className='fc-primary'>View All</span>
+					</Link>
 				</div>
 				<div className='class-attendance-body mt-16 '>
-					<div className='class-attendance-sub-header flex mt-16 ml-16'>
-						<div className='col-5 f-10'>
-							<span className='ml-56'>CLASS</span>
-						</div>
-						<div className='col-5 f-10'>
-							<span className='ml-16'>DATE/TIME</span>
-						</div>
-						<div className='col-2 f-10'>
-							<span className='ml-16'>ATTENDACE</span>
-						</div>
-					</div>
+					<table className='table mt-16'>
+						<thead className='ml-16'>
+							<tr>
+								<th className='col-5 f-10 '>
+									<span className='ml-40'>CLASS</span>
+								</th>
+								<th className='col-5 f-10'>DATE/TIME</th>
+								<th className='col-2 f-10'>ATTENDACE</th>
+							</tr>
+						</thead>
+						<tbody>
+							{this.state.attendances.slice(0, 5).map((attend, index) => {
+								return (
+									<>
+										<tr className=''>
+											<td className='col-5 '>
+												<img
+													src={
+														process.env.REACT_APP_API_ENDPOINT +
+														"/" +
+														attend.logo
+													}
+													alt=''
+													className='logo-icon ml-16'
+												/>
+												<span className='f-16'>{attend.text}</span>
+											</td>
+											<td className='col-5 '>
+												<span className='f-16'>{attend.record_date}</span>
+											</td>
+
+											<td className='attendance-content col-2 '>
+												{attend.checked}
+												<Checkbox
+													disabled
+													checked={attend.attended}
+													icon={<RadioButtonUncheckedIcon />}
+													checkedIcon={<CheckCircleIcon />}
+												/>
+											</td>
+										</tr>
+									</>
+								);
+							})}
+						</tbody>
+					</table>
 				</div>
 			</>
 		);
@@ -253,7 +357,9 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 			<>
 				<div className='class-comment-header flex justify-space-between mt-16'>
 					<span className='fc-second'>Events</span>
-					<span className='fc-primary'>View All</span>
+					<Link to={this.urlStudentEventList}>
+						<span className='fc-primary'>View All</span>
+					</Link>
 				</div>
 				<div className='class-attendance-body mt-16'>
 					<table className='event-list-table ml-16'>
@@ -271,35 +377,36 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 								<span className='fc-second fw-500'>RECORD</span>
 							</th>
 						</thead>
-
-						{events.length > 0 ? (
-							<>
-								{events.map((event: any, index: number) => {
-									return (
-										<tr className='flex'>
-											<td className='col-4 f-10'>
-												<span className='f-16'>{event.event.name}</span>
-											</td>
-											<td className='col-3 f-10'>
-												<span className='f-16 fc-second'>
-													{event.event.gender}
-												</span>
-											</td>
-											<td className='col-3 f-10'>
-												<span className='f-16 fc-second'>
-													{event.event.from_age} - {event.event.to_age} y/o
-												</span>
-											</td>
-											<td className='col-2 f-10'>
-												<span>-</span>
-											</td>
-										</tr>
-									);
-								})}
-							</>
-						) : (
-							<></>
-						)}
+						<tbody>
+							{events  && events.length > 0 ? (
+								<>
+									{events.map((event: any, index: number) => {
+										return (
+											<tr className='flex'>
+												<td className='col-4 f-10'>
+													<span className='f-16'>{event.event.name}</span>
+												</td>
+												<td className='col-3 f-10'>
+													<span className='f-16 fc-second'>
+														{event.event.gender}
+													</span>
+												</td>
+												<td className='col-3 f-10'>
+													<span className='f-16 fc-second'>
+														{event.event.from_age} - {event.event.to_age} y/o
+													</span>
+												</td>
+												<td className='col-2 f-10'>
+													<span>-</span>
+												</td>
+											</tr>
+										);
+									})}
+								</>
+							) : (
+								<span>There is no events</span>
+							)}
+						</tbody>
 					</table>
 				</div>
 			</>
@@ -340,20 +447,27 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 					<div className='dashboard'>
 						<div className='dashboard-header'>
 							<div className='justify-center justify-space-between'>
-								<div>
-									<Link
-										to='/manager/dashboard'
+								<div className='flex cursor align-center '>
+									<div
+										className='flex cursor align-center '
+										onClick={() => this.props.history.back()}
 										style={{ textDecoration: "none" }}
 									>
 										<ArrowBackIcon
 											sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 										></ArrowBackIcon>
-										<span>Back</span>
-									</Link>
+										<span className='fc-primary'>Back</span>
+									</div>
 									<span className='ml-16 fc-second'>
-										{this.state.school_name}
+										{this.state.school_name} {"		"}
 									</span>
-									<span>{}</span>
+									<span className='ml-16 fc-second'>
+										{this.props.classes &&
+											this.props.classes.viewClass?.name &&(
+												<span className='ml-16 fc-second'>/</span>
+											)}
+										{this.props.classes && this.props.classes.viewClass?.name}
+									</span>
 								</div>
 
 								<div className='justify-end'>
@@ -388,10 +502,20 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 							<div className='justify-center'>
 								<div className='col-8 col-md-8 justify-start align-center'>
 									<div className='mr-16'>
-										{profile.title ? (
+										{profile.logo ? (
+											<img
+												src={
+													process.env.REACT_APP_API_ENDPOINT +
+													"/" +
+													profile.logo
+												}
+												alt=''
+											/>
+										) : profile.title ? (
 											<InitialIcon
-												initials={profile.title.substr(0, 1).toUpperCase()}
+												initials={profile?.title.substr(0, 1).toUpperCase()}
 												isFooterMenu={false}
+												isMid={true}
 											/>
 										) : (
 											<></>
@@ -399,7 +523,7 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 									</div>
 
 									<div className='f-40 fw-500'>
-										<span>{profile.title}</span>
+										<span>{profile?.title}</span>
 									</div>
 								</div>
 								<div className='col-4 col-md-4 justify-end'>
@@ -487,14 +611,17 @@ const mapStateToProps = ({
 	comments,
 	eventList,
 	response,
+	classes
 }: StoreState): {
 	authUser: AuthInterface;
 	comments: any;
 	eventList: any;
 	response: any;
+	classes:any;
 } => {
 	return {
 		authUser,
+		classes,
 		comments,
 		eventList,
 		response,
@@ -502,6 +629,8 @@ const mapStateToProps = ({
 };
 
 export default connect(mapStateToProps, {
+	getAll,
+	getClassObject,
 	getUserInfo,
 	getAllComment,
 	getAllEvents,

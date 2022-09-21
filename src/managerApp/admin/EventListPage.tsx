@@ -20,6 +20,7 @@ import { signOut } from "../../stores/actions";
 interface IStates {
 	events: Event[];
 	email: string;
+	filterText: string;
 	dropdown: boolean;
 	isLogout: boolean;
 }
@@ -28,7 +29,7 @@ interface EventListPage {
 	getAllEvents: Function;
 	eventList: any;
 	signOut: Function;
-	LoadingActionFunc : Function;
+	LoadingActionFunc: Function;
 }
 
 type IProps = EventListPage;
@@ -40,6 +41,7 @@ class EventListPage extends React.Component<IProps, IStates> {
 		this.state = {
 			events: [],
 			email: "",
+			filterText: "",
 			dropdown: false,
 			isLogout: false,
 		};
@@ -77,11 +79,16 @@ class EventListPage extends React.Component<IProps, IStates> {
 		let url = "";
 		const user = JSON.parse(getItem("authUser") || "null");
 		if (user && user.userInfo) {
-			url =
-				"school/" + 1 + "/event/all";
+			url = "school/" + 1 + "/event/all";
 			this.props.getAllEvents(url);
 		}
 		this.props.LoadingActionFunc(false);
+	};
+	searchChanged = (e: any) => {
+		this.setState({
+			...this.state,
+			filterText: e.currentTarget.value,
+		});
 	};
 
 	renderBody = () => {
@@ -101,10 +108,12 @@ class EventListPage extends React.Component<IProps, IStates> {
 									<input
 										className='dash-input-div'
 										placeholder='Search by style or age group'
+										value={this.state.filterText}
+										onChange={this.searchChanged}
 									/>
 								</div>
 								<div className='dash-filter-div'>
-									<FilterListIcon
+									{/* <FilterListIcon
 										sx={{
 											color: "#0070F8",
 											fontSize: 18,
@@ -112,7 +121,7 @@ class EventListPage extends React.Component<IProps, IStates> {
 											mr: 0.5,
 										}}
 									/>
-									Filter
+									Filter */}
 								</div>
 							</div>
 						</div>
@@ -128,17 +137,27 @@ class EventListPage extends React.Component<IProps, IStates> {
 							<tbody>
 								{events &&
 									events.length > 0 &&
-									events.map((evente: Event) => (
-										<tr>
-											<td>{evente.name}</td>
-											<td>{evente.gender}</td>
-											<td>
-												<span>{evente.from_age}</span>-
-												<span className='mr-8'>{evente.to_age}</span> y/o
-											</td>
-											<td>{evente.studnetCount ? evente.studnetCount : 0}</td>
-										</tr>
-									))}
+									events
+										.filter((evente: any) => {
+											if (!this.state.filterText) {
+												return true;
+											} else {
+												return (evente.from_age.toString() || "")
+													.toLowerCase()
+													.startsWith(this.state.filterText.toLowerCase());
+											}
+										})
+										.map((evente: Event) => (
+											<tr>
+												<td>{evente.name}</td>
+												<td>{evente.gender}</td>
+												<td>
+													<span>{evente.from_age}</span>-
+													<span className='mr-8'>{evente.to_age}</span> y/o
+												</td>
+												<td>{evente.studnetCount ? evente.studnetCount : 0}</td>
+											</tr>
+										))}
 							</tbody>
 						</table>
 					</div>
@@ -192,7 +211,10 @@ class EventListPage extends React.Component<IProps, IStates> {
 							<div className='justify-end'>
 								<div className='dropdown'>
 									<div className='email-div cursor' onClick={this.toggleOpen}>
-										<InitialIcon initials={email.substr(0, 1).toUpperCase()} isFooterMenu={false}/>
+										<InitialIcon
+											initials={email.substr(0, 1).toUpperCase()}
+											isFooterMenu={false}
+										/>
 										<span>{email} </span>
 									</div>
 									<div

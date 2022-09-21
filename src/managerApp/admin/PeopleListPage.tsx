@@ -22,15 +22,14 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 interface IStates {
-  users: any[];
-
-  email: string;
-  dropdown: boolean;
-  isLogout: boolean;
-  dropdownMore: boolean;
-  currentIndex: number;
-  url: string;
-  search : string;
+	users: any[];
+	email: string;
+	dropdown: boolean;
+	isLogout: boolean;
+	dropdownMore: boolean;
+	currentIndex: number;
+	url: string;
+	filterText: string;
 }
 interface UserSignInPage {
   signIn: Function;
@@ -48,15 +47,15 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
     super(props);
 
     this.state = {
-      users: [],
-      email: "",
-      dropdown: false,
-      isLogout: false,
-      dropdownMore: false,
-      currentIndex: -1,
-      url: "",
-	  search : "",
-    };
+			users: [],
+			email: "",
+			dropdown: false,
+			isLogout: false,
+			dropdownMore: false,
+			currentIndex: -1,
+			url: "",
+			filterText: "",
+		};
     this.props.LoadingActionFunc(true);
   }
 
@@ -104,16 +103,22 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
   };
 
   searchChanged = (e : any) => {
-	this.setState({
-		search : e.target.value
-	})
-	console.log('search',e.target.value,this.state.search)
-
+	 this.setState({
+			...this.state,
+			filterText: e.currentTarget.value,
+		});
   }
 
   render() {
-    const { users, email, dropdown, isLogout, dropdownMore, currentIndex,search } =
-      this.state;
+    const {
+			users,
+			email,
+			dropdown,
+			isLogout,
+			dropdownMore,
+			currentIndex,
+			filterText,
+		} = this.state;
     return (
 			<>
 				<div className='container-cus'>
@@ -167,7 +172,7 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 											<input
 												className='dash-input-div'
 												placeholder='Search by name or role'
-												value={search}
+												value={filterText}
 												onChange={this.searchChanged}
 											/>
 										</div>
@@ -198,33 +203,45 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 									<tbody>
 										{users &&
 											users.length > 0 &&
-											users.map((user: any, index: any) => (
-												<tr>
-													<td className='flex justify-center'>
-														<InitialIcon
-															initials={user.email.substr(0, 1).toUpperCase()}
-															isFooterMenu={false}
-														/>
-														<span className='ml-16'>
-															{!user.name || user.name === "" ? "-" : user.name}
-														</span>
-													</td>
-													<td>
-														<span>
-															{user.role === "coache"
-																? "Coach"
-																: user.role === "admin"
-																? "Admin"
-																: user.role === "manager"
-																? "School Manager"
-																: user.role === "student"
-																? "Student"
-																: user.role === "parent"
-																? "Parent"
-																: user.role}
-														</span>
-													</td>
-													{/* <td>
+											users
+												.filter((user: any) => {
+													if (!filterText) {
+														return true;
+													} else {
+														return (user.name || "")
+															.toLowerCase()
+															.startsWith(filterText.toLowerCase());
+													}
+												})
+												.map((user: any, index: any) => (
+													<tr>
+														<td className='flex justify-center'>
+															<InitialIcon
+																initials={user.email.substr(0, 1).toUpperCase()}
+																isFooterMenu={false}
+															/>
+															<span className='ml-16'>
+																{!user.name || user.name === ""
+																	? "-"
+																	: user.name}
+															</span>
+														</td>
+														<td>
+															<span>
+																{user.role === "coache"
+																	? "Coach"
+																	: user.role === "admin"
+																	? "Admin"
+																	: user.role === "manager"
+																	? "School Manager"
+																	: user.role === "student"
+																	? "Student"
+																	: user.role === "parent"
+																	? "Parent"
+																	: user.role}
+															</span>
+														</td>
+														{/* <td>
 														<div className='mr-16'>
 															<MoreVertIcon
 																style={{
@@ -235,8 +252,8 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 															/>
 														</div>
 													</td> */}
-												</tr>
-											))}
+													</tr>
+												))}
 									</tbody>
 								</table>
 							</div>

@@ -210,6 +210,15 @@ class StudentDailyProgramPage extends React.Component<IProps, IStates> {
     }
   }
 
+  
+
+  goToCoachProfile = (id: any) => {
+    // this.setState({ goAllComments: true });
+    console.log('id....',id)
+    let cmdUrl = "/student/coach/profile/" + id;
+    this.props.history.push(cmdUrl)
+  };
+
   render() {
     let item: IListItem = {
       text: "Joseph",
@@ -270,7 +279,9 @@ class StudentDailyProgramPage extends React.Component<IProps, IStates> {
                   <ListBoxUI title="Coaches" callback={() => { }} callback2={() => { }} noBtn={true}>
                     <>
                       {this.props.classes.assignUser?.filter((coach:any) => coach.type === 'coache').map((coach: any, index: any) => {
-                        return (<ListItem text={coach.user.name || coach.user.email} callback={() => { }} key={`coache${index}`} icon={<>
+                        return (<ListItem text={coach.user.name || coach.user.email} 
+                        callback={() => this.goToCoachProfile(coach.user.id)}
+                        key={`coache${index}`} icon={<>
                           <InitialIcon isFooterMenu={true}
                             initials={(coach.user.name || coach.user.email || "User")
                               .substr(0, 1)

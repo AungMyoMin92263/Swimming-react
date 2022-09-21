@@ -8,11 +8,10 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { StoreState } from "../../stores/reducers";
 import {
+	getUserInfo,
+	getAll,
 	getClassObject,
 	getAllComment,
-	getAllEvents,
-	getDetailEvents,
-	getUserInfo,
 } from "../../stores/actions";
 import { connect } from "react-redux";
 import { signOut, LoadingActionFunc } from "../../stores/actions";
@@ -50,12 +49,16 @@ interface IStates {
 	image: any;
 	schoolId: any;
 	id: any;
+	attendances: any[];
+	total_attended: number;
+	total_class: number;
 }
 interface IProps {
 	user_id: any;
 	authUser: any;
 	getUserInfo: Function;
-	getAllComment: Function;
+	getAll: Function;
+	response: any;
 	history: any;
 	getClassObject: Function;
 	defaultPath: string;
@@ -65,16 +68,19 @@ interface IProps {
 	comments: any;
 }
 
-class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
+class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 	id: any;
 	class_id: any;
 	url = "/manager/student-edit-profile/";
+	currentMonth = moment(new Date()).format("MMM YYYY");
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
 		this.id = path[4];
 		this.class_id = path[6];
 		this.state = {
+			total_attended: 0,
+			total_class: 0,
 			email: "",
 			logo: "",
 			school_name: "",
@@ -85,6 +91,7 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 			image: { preview: "", raw: "" },
 			schoolId: -1,
 			id: this.id ? this.id : -1,
+			attendances: [],
 		};
 	}
 	componentDidMount() {
@@ -93,9 +100,8 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 		//loading
 	}
 	getDetailAll = async () => {
-		let cmdUrl = "comment/by-student/" + this.id;
 		await Promise.all([
-			this.props.getAllComment(cmdUrl),
+			this.getAttendanceByStudent(),
 			this.props.getUserInfo(this.id, true),
 		]);
 	};
@@ -137,46 +143,114 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 		this.props.LoadingActionFunc(true);
 	};
 
-	renderComment = () => {
-		const comments = this.props.comments?.result || [];
+	getAttendanceByStudent = async () => {
+		let url = "attendance/student/" + this.id + "/class/" + this.class_id;
+		await this.props.getAll(url);
+		if (
+			this.props.response &&
+			this.props.response.result &&
+			this.props.response.result.length > 0
+		) {
+			let tempAttendances = this.props.response.result;
+			let res = [];
+			let j = 0;
+			let temp_total_attended = 0
+			let temp_total_class = 0
+			for (let i = 0; i < tempAttendances.length; i++) {
+				res.push({
+					text: tempAttendances[i].classes.name,
+					callback: () => console.log("log click item"),
+					smallText: "",
+					logo: tempAttendances[i].classes.logo,
+					attended: tempAttendances[i].attend,
+					record_date: tempAttendances[i].record_date,
+					secondryText: true,
+					isBigIcon: false,
+					selectable: true,
+				});
+				temp_total_class = tempAttendances.length;
+				if (tempAttendances[i].attend) {
+					temp_total_attended = j+1
+				}
+			}
+
+			this.setState({
+				attendances: res,
+				total_attended: temp_total_attended,
+				total_class: temp_total_class,
+			});
+		}
+	};
+
+	renderAttendance = () => {
 		return (
-			<div className='mt-24'>
+			<>
 				<div className='class-attendance-body mt-16 '>
-					<div>
-						{comments.length > 0 ? (
-							<>
-								{comments.map((res: any, index: number) => {
-									return (
-										<CommentDashItem
-											key={`st_cmd-${index}`}
-											profile={
-												<CreateProfile
-													image_url={res.user_info.avatar}
-													name={res.user_info.name}
-												/>
-											}
-											message={res.message}
-											callback={() => {}}
-											timeString={
-												res.user_info.name +
-												" at " +
-												moment(res.created_at).format("DD MMM, h:mm a")
-											}
-										></CommentDashItem>
-									);
-								})}
-							</>
-						) : (
-							<></>
-						)}
+					<div className='class-attendance-sub-header flex mt-16 ml-16'>
+						<div className='col-5 f-10 ml-16'>
+							<span className='ml-56'>CLASS</span>
+						</div>
+						<div className='col-4 f-10'>
+							<span className='ml-16'>DATE/TIME</span>
+						</div>
+						<div className='col-3 f-10 flex-center'>
+							<span className='ml-16'>ATTENDACE</span>
+						</div>
 					</div>
+					{this.state.attendances.map((attend, index) => {
+						return (
+							<>
+								<div className='class-attendance-content flex align-center'>
+									<div className='student-content col-5 '>
+										<img
+											src={
+												process.env.REACT_APP_API_ENDPOINT + "/" + attend.logo
+											}
+											alt=''
+											className='logo-icon ml-16'
+										/>
+										<span className='f-16 ml-16'>{attend.text}</span>
+									</div>
+									<div className='student-content col-5'>
+										<span className='f-16 ml-16'>{attend.record_date}</span>
+									</div>
+
+									<div className='attendance-content col-2 flex-center mr-8'>
+										{attend.checked}
+										<Checkbox
+											disabled
+											checked={attend.attended}
+											icon={<RadioButtonUncheckedIcon />}
+											checkedIcon={<CheckCircleIcon />}
+										/>
+									</div>
+								</div>
+							</>
+						);
+					})}
 				</div>
-			</div>
+			</>
 		);
 	};
 
 	render() {
 		const { email, logo, school_name, step } = this.state;
+		const profile: IProfile = {
+			isLogo: true,
+			logo: this.props.authUser.otherUserinfo?.avatar,
+			title: this.props.authUser.otherUserinfo?.name,
+			display_item: [
+				{
+					title: "STUDENT",
+					value: this.props.authUser.otherUserinfo?.name || "-",
+				},
+				{
+					title: "ATTENDANCES",
+					value: "-",
+				},
+			],
+		};
+
 		return (
 			<>
 				<div className='container-cus'>
@@ -241,14 +315,54 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 									<div className='mr-16'></div>
 
 									<div className='f-40 fw-500'>
-										<span>All comments</span>
+										<span>{this.currentMonth}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div className='mt-24 class-daily'>
+							<div className='class-detail col-12'>
+								<div className=''>
+									<span className='fc-second'>Details</span>
+
+									<div className='mt-16 attend-detail-content'>
+										<div className='class-detail-date-time'>
+											<div className='col-3 flex-column'>
+												<span className='f-10 fc-second'>
+													{profile &&
+														profile.display_item &&
+														profile.display_item[0].title}
+												</span>
+											</div>
+											<div className='col-3 flex-column'>
+												<span className='f-10 fc-second'>
+													{profile &&
+														profile.display_item &&
+														profile.display_item[1].title}
+												</span>
+											</div>
+										</div>
+										<div className='class-detail-date-time mt-8'>
+											<div className='col-3 flex-column'>
+												<span className='f-16 fw-500'>
+													{profile &&
+														profile.display_item &&
+														profile.display_item[0].value}
+												</span>
+											</div>
+											<div className='col-3 flex-column'>
+												<span className='f-16 fw-500'>
+													{this.state.total_attended}/{this.state.total_class}
+												</span>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 
 						<div className='class-detail-body'>
-							<>{this.renderComment()}</>
+							<>{this.renderAttendance()}</>
 						</div>
 					</div>
 				</div>
@@ -260,25 +374,23 @@ const mapStateToProps = ({
 	authUser,
 	classes,
 	response,
-	comments,
 }: StoreState): {
 	authUser: AuthInterface;
 	classes: any;
 	response: any;
-	comments:any;
 } => {
 	return {
 		authUser,
 		classes,
 		response,
-		comments,
 	};
 };
 
 export default connect(mapStateToProps, {
+	getAll,
+	getUserInfo,
 	getAllComment,
 	getClassObject,
-	getUserInfo,
 	signOut,
 	LoadingActionFunc,
-})(ManagerAllCommentStudent);
+})(ManagerAllAttendancesStudent);

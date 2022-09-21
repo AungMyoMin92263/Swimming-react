@@ -51,9 +51,9 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
   constructor(props: any) {
     super(props);
     let path = window.location.pathname.split("/");
-    this.id = path[3];
+    this.id = path[4];
     this.state = {
-      id: -1,
+      id: this.id ? this.id : -1,
       name: "",
       isStudentNameValid: true,
       isManagerNameEmpty: false,
@@ -62,7 +62,7 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
       logo: "",
       mobile: "",
       age: "",
-      email: "",
+      email: "User",
       gender: "Male",
       favourite: "",
       parentEmail: "",
@@ -74,14 +74,16 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
   }
 
   componentDidMount() {
-    this.authFromLocal();
+    if(this.state.id === -1)this.authFromLocal();
+    else this.getUserInfo();
   }
 
   authFromLocal = async () => {
     let user = JSON.parse(getItem("authUser") || "null");
     if (user && user.userInfo) {
       await this.setState({
-        id: this.id,
+        id: user.userInfo.id,
+        email : user.userInfo.email
       });
       this.getUserInfo();
     }
@@ -102,6 +104,7 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
   };
 
   handleChange = (e: any) => {
+    console.log('handleChange',e)
     var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
     if (!allowedExtensions.exec(e.target.files[0].name)) {
       alert("Invalid file type");
@@ -184,49 +187,46 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
   renderImageUpload = () => {
     return (
       <div>
-        <div className="f-12 mb-8">Photo(Optional)</div>
-        <label htmlFor="upload-button">
+        <label htmlFor="upload-button center">
           {this.state.image.preview ||
           (this.state.logo && this.state.logo !== "") ? (
-            <div className="flex">
-              <img
-                src={
-                  this.state.id === -1
-                    ? this.state.image.preview
-                    : this.state.isChangeLogo
-                    ? this.state.image.preview
-                    : process.env.REACT_APP_API_ENDPOINT + "/" + this.state.logo
-                }
-                alt="preview"
-                className="preview-icon cursor"
-              />
-              <span className="primary f-14 cursor">&nbsp; Change Image</span>
+            <>
+            <img
+              src={
+                this.state.id === -1
+                  ? this.state.image.preview
+                  : this.state.isChangeLogo
+                  ? this.state.image.preview
+                  : process.env.REACT_APP_API_ENDPOINT + "/" + this.state.logo
+              }
+              alt="preview"
+              className="preview-icon cursor"
+            />
+            <div className="primary f-14 cursor">
+              &nbsp; Change Image
             </div>
+            </>
           ) : (
             <>
-              <>
                 {/* <img
                   id="logo"
                   src="../../../assets/icons/upload.png"
                   alt="upload"
                   className="big-icon cursor"
                 /> */}
-                <div className="flex-center">
                   <InitialIcon
                     initials={
                       this.state.email
-                        ? this.state.email.substr(0, 1).toUpperCase()
+                        ? this.state.email.substring(0, 1).toUpperCase()
                         : ""
                     }
                     isFooterMenu={false}
                     isInitialIcon={true}
                   />
 
-                  <span className="primary f-14 cursor  mb-8">
+                  <div className="primary f-14 cursor  mb-8">
                     &nbsp; Upload Image
-                  </span>
-                </div>
-              </>
+                  </div>
             </>
           )}
         </label>
@@ -256,7 +256,7 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
         <div className="wrapper-mobile">
           <div className="content-mobile col-sm-12">
             <StudentMobileHeader backBtn={true} />
-            <div className="f-32 fw-500 mb-8">
+            <div className="f-32 fw-500 mb-32">
               <span>Edit Profile</span>
             </div>
             <div className="mb-8 center f-12">

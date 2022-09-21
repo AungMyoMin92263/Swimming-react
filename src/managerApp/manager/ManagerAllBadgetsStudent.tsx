@@ -9,10 +9,10 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { StoreState } from "../../stores/reducers";
 import {
 	getClassObject,
-	getAllComment,
-	getAllEvents,
-	getDetailEvents,
-	getUserInfo,
+	getAll,
+	getClassProgram,
+	postClassProgram,
+	getAssignUserByClass,
 } from "../../stores/actions";
 import { connect } from "react-redux";
 import { signOut, LoadingActionFunc } from "../../stores/actions";
@@ -37,8 +37,8 @@ import { profile } from "console";
 import ListBoxUI from "../../molecules/ListBox";
 import CommentItem from "../../atoms/Comment";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import { CreateProfile } from "../../atoms/createProfile";
-import CommentDashItem from "../../atoms/CommentDash";
+import BadgeListDash from "../../molecules/BadgeListDash";
+import { getUserInfo } from './../../stores/actions/auth-action';
 interface IStates {
 	email: string;
 	logo: string;
@@ -65,7 +65,7 @@ interface IProps {
 	comments: any;
 }
 
-class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
+class ManagerAllBadgetsStudent extends React.Component<IProps, IStates> {
 	id: any;
 	class_id: any;
 	url = "/manager/student-edit-profile/";
@@ -89,16 +89,9 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 	}
 	componentDidMount() {
 		this.authFromLocal();
-		this.getDetailAll();
+		// this.getDetailAll();
 		//loading
 	}
-	getDetailAll = async () => {
-		let cmdUrl = "comment/by-student/" + this.id;
-		await Promise.all([
-			this.props.getAllComment(cmdUrl),
-			this.props.getUserInfo(this.id, true),
-		]);
-	};
 
 	authFromLocal = async () => {
 		const user = JSON.parse(getItem("authUser") || "null");
@@ -119,6 +112,7 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 			let classUrl =
 				"school/" + this.state.schoolId + "/class/" + this.class_id;
 			this.props.getClassObject(classUrl, true);
+			this.props.getUserInfo(this.id, true);
 		}
 	};
 	toggleOpen = () => {
@@ -137,41 +131,24 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 		this.props.LoadingActionFunc(true);
 	};
 
-	renderComment = () => {
-		const comments = this.props.comments?.result || [];
+	renderBadgetList = () => {
+		const badgeData: any[] =
+			this.props.authUser.otherUserinfo?.own_badges
+				.map((res: any) => {
+					return {
+						text: res.badge.name,
+						icon: res.badge.logo,
+						description: res.badge.description,
+						callback: () => {},
+						isActive: true,
+					};
+				}) || [];
 		return (
-			<div className='mt-24'>
-				<div className='class-attendance-body mt-16 '>
-					<div>
-						{comments.length > 0 ? (
-							<>
-								{comments.map((res: any, index: number) => {
-									return (
-										<CommentDashItem
-											key={`st_cmd-${index}`}
-											profile={
-												<CreateProfile
-													image_url={res.user_info.avatar}
-													name={res.user_info.name}
-												/>
-											}
-											message={res.message}
-											callback={() => {}}
-											timeString={
-												res.user_info.name +
-												" at " +
-												moment(res.created_at).format("DD MMM, h:mm a")
-											}
-										></CommentDashItem>
-									);
-								})}
-							</>
-						) : (
-							<></>
-						)}
-					</div>
+			<>
+				<div className='class-attendance-body mt-16 p-24'>
+					<BadgeListDash badges={badgeData} key='st_badge_list'></BadgeListDash>
 				</div>
-			</div>
+			</>
 		);
 	};
 
@@ -241,14 +218,14 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 									<div className='mr-16'></div>
 
 									<div className='f-40 fw-500'>
-										<span>All comments</span>
+										<span>All Badgets</span>
 									</div>
 								</div>
 							</div>
 						</div>
 
 						<div className='class-detail-body'>
-							<>{this.renderComment()}</>
+							<>{this.renderBadgetList()}</>
 						</div>
 					</div>
 				</div>
@@ -260,25 +237,20 @@ const mapStateToProps = ({
 	authUser,
 	classes,
 	response,
-	comments,
 }: StoreState): {
 	authUser: AuthInterface;
 	classes: any;
 	response: any;
-	comments:any;
 } => {
 	return {
 		authUser,
 		classes,
 		response,
-		comments,
 	};
 };
 
-export default connect(mapStateToProps, {
-	getAllComment,
-	getClassObject,
-	getUserInfo,
-	signOut,
-	LoadingActionFunc,
-})(ManagerAllCommentStudent);
+export default connect(mapStateToProps, { getUserInfo,	getClassObject, })(
+	ManagerAllBadgetsStudent
+);
+
+

@@ -27,7 +27,7 @@
 }
 
 .message-area {
-  padding: 0px 15px;
+  padding: 0px;
 }
 
 .item-icon {
@@ -94,6 +94,7 @@ svg {
   gap: 4px;
   align-items: center;
   padding-left: 30px;
+  flex-wrap: wrap;
 }
 
 .bigicon .second-text {

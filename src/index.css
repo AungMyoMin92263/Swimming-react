@@ -11,6 +11,7 @@
 
 body {
   overflow: auto;
+  background-color: var(--bg-color);
 }
 
 body * {
@@ -75,9 +76,11 @@ body a {
   padding: 16px;
   overflow: hidden;
   max-width: 375px;
-  height: calc(100vh - 137px);
+  /* height: calc(100vh - 137px); */
+  height : calc(100vh - 75px);
   overflow-y: auto;
 }
+
 
 .content-mobile-cus {
   width: 100%;
@@ -381,6 +384,10 @@ body a {
 
 .ml-56 {
   margin-left: 56px;
+}
+
+.ml-40{
+  margin-left: 40px !important;
 }
 
 
@@ -689,6 +696,12 @@ body a {
   border-radius: 50%;
 }
 
+.logo-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
 .page-tile {
   font-weight: 500;
   font-size: 32px;
@@ -808,6 +821,11 @@ body a {
   height: 120px;
 }
 
+.initial-icon.isMid-true {
+  width: 80px;
+  height: 80px;
+}
+
 .badge-icon-box img {
   width: 32px;
   height: 32px;
@@ -894,9 +912,11 @@ body a {
   box-shadow: none;
   width: 100%;
 }
-.comment-input-div .comment-input{
+
+.comment-input-div .comment-input {
   flex: 1;
 }
+
 .send-btn {
   width: 40px;
   height: 40px;
@@ -908,11 +928,13 @@ body a {
   align-items: center;
   justify-content: center;
 }
+
 .send-btn[disabled] {
   background: #E5E5E5;
 
 }
-.send-btn svg{
+
+.send-btn svg {
   color: #fff;
   font-size: 14px;
 }
@@ -920,14 +942,17 @@ body a {
 .cursor-pointer {
   cursor: pointer;
 }
-.filter-input-item svg{
- color: #808080;
+
+.filter-input-item svg {
+  color: #808080;
 }
-.filter-input{
+
+.filter-input {
   flex: 1;
   margin-left: 8px;
 }
-.filter-input-box{
+
+.filter-input-box {
   border: 0px;
   font-size: 14px;
   font-weight: 400;
@@ -935,14 +960,17 @@ body a {
   height: 24px;
   width: 100%;
 }
+
 .filter-input-box:focus {
   border: 0px !important;
   outline: none !important;
 }
-.dropdown-box{
+
+.dropdown-box {
   width: 100%;
 }
-.dropdown-box::before{
+
+.dropdown-box::before {
   content: "";
   display: block;
   position: absolute;
@@ -952,6 +980,17 @@ body a {
   height: 24px;
   background-image: url("../public/assets/icons/dropdown.svg");
 }
+
+.slot-label {
+  display: flex;
+  flex-basis: 100%;
+  gap: 4px;
+  align-items: center;
+}
+.slot-label svg {
+  font-size: 16px;
+}
+
 @media screen and (max-width: 767px) {
 
   .project-header {

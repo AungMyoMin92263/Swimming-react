@@ -31,7 +31,7 @@ export const coachReducers = (
     case ActionTypes.editCoach:
       return {
         ...state,
-        result: action.payload,
+        success: action.payload ? true : false,
         error: null,
       };
     case ActionTypes.deleteCoach:

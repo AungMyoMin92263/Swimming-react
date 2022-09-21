@@ -8,6 +8,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { StoreState } from "../../stores/reducers";
 import {
+	getClassObject,
 	getAllComment,
 	getAllEvents,
 	getDetailEvents,
@@ -27,11 +28,8 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { ClassInterface } from "../../stores/model/class-interface";
 import ProfileContainer, { IProfile } from "../../atoms/ProfileContainer";
-import { Checkbox } from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import moment from "moment";
-import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
-import { profile } from "console";
+import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 
 import CommentItem from "../../atoms/Comment";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
@@ -42,6 +40,7 @@ import { CreateProfile } from "../../atoms/createProfile";
 import BadgeListDash from "../../molecules/BadgeListDash";
 interface IStates {
 	email: string;
+
 	logo: string;
 	dropdown: boolean;
 	isLogout: boolean;
@@ -55,6 +54,7 @@ interface IStates {
 interface IProps {
 	user_id: any;
 	authUser: any;
+	classes: any;
 	getUserInfo: Function;
 	getAllComment: Function;
 	history: any;
@@ -62,6 +62,7 @@ interface IProps {
 	eventList: any;
 	getAllEvents: Function;
 	getDetailEvents: Function;
+	getClassObject: Function;
 	defaultPath: string;
 	signOut: Function;
 	LoadingActionFunc: Function;
@@ -69,6 +70,7 @@ interface IProps {
 
 class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 	id: any;
+	class_id: any;
 	urlComments: any;
 	urlEnterComment: any;
 	Editurl = "/manager/coach-edit-profile/";
@@ -76,6 +78,7 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 		super(props);
 		let path = window.location.pathname.split("/");
 		this.id = path[3];
+		this.class_id = path[5];
 		this.state = {
 			email: "",
 			logo: "",
@@ -106,8 +109,9 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 					: -1,
 			});
 		}
+		let classUrl = "school/" + this.state.schoolId + "/class/" + this.class_id;
 		this.getDetailAll();
-		console.log("authUser", this.props.authUser);
+		this.props.getClassObject(classUrl, true);
 		//loading
 	}
 	getDetailAll = async () => {
@@ -135,177 +139,6 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 		this.props.LoadingActionFunc(true);
 	};
 
-	goToAllComments = (id: any) => {
-		// this.setState({ goAllComments: true });
-		let cmdUrl = "/coach/dashboard/all-comments/" + id;
-		this.props.history.push(cmdUrl);
-	};
-
-	goCoachDetail = (user_id: number) => {
-		let coachDetailUrl = "/manager/coach-detail/" + user_id;
-		this.props.history.push(coachDetailUrl);
-	};
-
-	createProfile = (image_url: string, name: string) => {
-		if (image_url) {
-			return <img src={"/assets/icons/logo.png"} className='logo-icon' />;
-		} else {
-			return (
-				<InitialIcon
-					initials={name.substr(0, 1).toUpperCase()}
-					isFooterMenu={true}
-				/>
-			);
-		}
-	};
-
-	renderBadgetList = () => {
-		const badgeData: any[] =
-			this.props.authUser.otherUserinfo?.own_badges.map((res: any) => {
-				return {
-					text: res.badge.name,
-					icon: res.badge.logo,
-					description: res.badge.description,
-					callback: () => {},
-					isActive: true,
-				};
-			}) || [];
-		return (
-			<>
-				<div className='class-comment-header flex justify-space-between mt-16'>
-					<span className='fc-second'>Badgets</span>
-					<span className='fc-primary'>View All</span>
-				</div>
-				<div className='class-attendance-body mt-16 '>
-					<BadgeListDash badges={badgeData} key='st_badge_list'></BadgeListDash>
-				</div>
-			</>
-		);
-	};
-
-	renderComment = () => {
-		const comments = this.props.comments?.result || [];
-		return (
-			<div className='mt-24'>
-				<div className='class-comment-header flex justify-space-between '>
-					<span className='fc-second'>Class Comments</span>
-					<span className='fc-primary'>View All</span>
-				</div>
-				<div className='class-attendance-body mt-16 '>
-					<div>
-						{comments.length > 0 ? (
-							<>
-								{comments.slice(0, 3).map((res: any, index: number) => {
-									return (
-										<CommentItem
-											key={`st_cmd-${index}`}
-											profile={
-												<CreateProfile
-													image_url={res.user_info.avatar}
-													name={res.user_info.name}
-												/>
-											}
-											message={res.message}
-											callback={() => {}}
-											timeString={
-												res.user_info.name +
-												" at " +
-												moment(res.created_at).format("DD MMM, h:mm a")
-											}
-										></CommentItem>
-									);
-								})}
-							</>
-						) : (
-							<></>
-						)}
-					</div>
-				</div>
-			</div>
-		);
-	};
-	renderAttendance = () => {
-		return (
-			<>
-				<div className='class-comment-header flex justify-space-between mt-16'>
-					<span className='fc-second'>Attendance</span>
-					<span className='fc-primary'>View All</span>
-				</div>
-				<div className='class-attendance-body mt-16 '>
-					<div className='class-attendance-sub-header flex mt-16 ml-16'>
-						<div className='col-5 f-10'>
-							<span className='ml-56'>CLASS</span>
-						</div>
-						<div className='col-5 f-10'>
-							<span className='ml-16'>DATE/TIME</span>
-						</div>
-						<div className='col-2 f-10'>
-							<span className='ml-16'>ATTENDACE</span>
-						</div>
-					</div>
-				</div>
-			</>
-		);
-	};
-	renderEventList = () => {
-		const events = this.props.eventList?.result || [];
-		return (
-			<>
-				<div className='class-comment-header flex justify-space-between mt-16'>
-					<span className='fc-second'>Events</span>
-					<span className='fc-primary'>View All</span>
-				</div>
-				<div className='class-attendance-body mt-16'>
-					<table className='event-list-table ml-16'>
-						<thead className='class-attendance-sub-header flex '>
-							<th className='col-4 f-10'>
-								<span className='fc-second fw-500'>EVENT</span>
-							</th>
-							<th className='col-3 f-10'>
-								<span className='fc-second fw-500'>GENDER</span>
-							</th>
-							<th className='col-3 f-10'>
-								<span className='fc-second fw-500'>AGE GROUP</span>
-							</th>
-							<th className='col-2 f-10'>
-								<span className='fc-second fw-500'>RECORD</span>
-							</th>
-						</thead>
-
-						{events.length > 0 ? (
-							<>
-								{events.map((event: any, index: number) => {
-									return (
-										<tr className='flex'>
-											<td className='col-4 f-10'>
-												<span className='f-16'>{event.event.name}</span>
-											</td>
-											<td className='col-3 f-10'>
-												<span className='f-16 fc-second'>
-													{event.event.gender}
-												</span>
-											</td>
-											<td className='col-3 f-10'>
-												<span className='f-16 fc-second'>
-													{event.event.from_age} - {event.event.to_age} y/o
-												</span>
-											</td>
-											<td className='col-2 f-10'>
-												<span>-</span>
-											</td>
-										</tr>
-									);
-								})}
-							</>
-						) : (
-							<></>
-						)}
-					</table>
-				</div>
-			</>
-		);
-	};
-
 	render() {
 		const { email, logo, school_name, step } = this.state;
 		const profile: IProfile = {
@@ -314,22 +147,8 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 			title: this.props.authUser.otherUserinfo?.name,
 			display_item: [
 				{
-					title: "Age",
+					title: "Bio",
 					value: this.props.authUser.otherUserinfo?.student?.age || "-",
-				},
-				{
-					title: "Gender",
-					value: (
-						this.props.authUser.otherUserinfo?.student?.gender || "-"
-					).toUpperCase(),
-				},
-				{
-					title: "Favourite Stroke",
-					value: this.props.authUser.otherUserinfo?.favorite || "-",
-				},
-				{
-					title: "Personal Best",
-					value: this.props.authUser.otherUserinfo?.bestScore || 0,
 				},
 			],
 		};
@@ -353,7 +172,10 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 									<span className='ml-16 fc-second'>
 										{this.state.school_name}
 									</span>
-									<span>{}</span>
+									<span className='ml-16 fc-second'>/</span>
+									<span className='ml-16 fc-second'>
+										{this.props.classes && this.props.classes.viewClass?.name}
+									</span>
 								</div>
 
 								<div className='justify-end'>
@@ -421,60 +243,63 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 						<div className='mt-24 class-daily'>
 							<div className='class-detail col-12'>
 								<div className=''>
-									<span className='fc-second'>Student Detail</span>
+									<span className='fc-second fw-500'>Coach Details</span>
 
-									<div className='mt-16 class-detail-content'>
+									<div className='mt-16 attend-detail-content'>
 										<div className='class-detail-date-time'>
-											<div className='col-6 flex-column'>
+											<div className='col-3 flex-column'>
 												<span className='f-10 fc-second'>
 													{profile &&
 														profile.display_item &&
 														profile.display_item[0].title}
 												</span>
+											</div>
+										</div>
+										<div className='class-detail-date-time mt-8'>
+											<div className='col-3 flex-column'>
 												<span className='f-16 fw-500'>
 													{profile &&
 														profile.display_item &&
 														profile.display_item[0].value}
 												</span>
 											</div>
-											<div className='col-6 flex-column'>
-												<span className='f-10 fc-second'>
-													{profile &&
-														profile.display_item &&
-														profile.display_item[1].title}
-												</span>
-												<span className='f-16 fw-500'>
-													{profile &&
-														profile.display_item &&
-														profile.display_item[1].value}
-												</span>
-											</div>
-										</div>
-										<div className='coach-no-students'>
-											<div className='col-6 flex-column'>
-												<span className='f-10 fc-second'>
-													{profile &&
-														profile.display_item &&
-														profile.display_item[2].title}
-												</span>
-												<span className='f-16 fw-500'>
-													{profile &&
-														profile.display_item &&
-														profile.display_item[2].value}
-												</span>
+											<div className='col-3 flex-column'>
+												<span className='f-16 fw-500'></span>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div className='class-detail-body'>
-							<>
-								{this.renderBadgetList()}
-								{this.renderComment()}
-								{this.renderAttendance()}
-								{this.renderEventList()}
-							</>
+						<div className='class-daily'>
+							<div className='class-detail col-12'>
+								<div className=''>
+									<span className='fc-second fw-500'>Contact Card</span>
+
+									<div className='mt-16 attend-detail-content'>
+										<div className='class-detail-date-time'>
+											<div className='col-4 flex-column'>
+												<span className='f-10 fc-second'>MOBILE</span>
+											</div>
+											<div className='col-4 flex-column'>
+												<span className='f-10 fc-second'>EMAIL</span>
+											</div>
+										</div>
+										<div className='class-detail-date-time mt-8'>
+											<div className='col-4 flex-column'>
+												<span className='f-16 fw-500'>
+													<LocalPhoneOutlinedIcon className='mr-8' />
+												</span>
+											</div>
+											<div className='col-4 flex-column'>
+												<span className='f-16 fw-500'>
+													<EmailOutlinedIcon className='mr-8' />
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -487,21 +312,25 @@ const mapStateToProps = ({
 	comments,
 	eventList,
 	response,
+	classes,
 }: StoreState): {
 	authUser: AuthInterface;
 	comments: any;
 	eventList: any;
 	response: any;
+	classes: any;
 } => {
 	return {
 		authUser,
 		comments,
 		eventList,
 		response,
+		classes,
 	};
 };
 
 export default connect(mapStateToProps, {
+	getClassObject,
 	getUserInfo,
 	getAllComment,
 	getAllEvents,

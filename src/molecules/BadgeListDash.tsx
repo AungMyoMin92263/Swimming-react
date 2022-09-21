@@ -11,7 +11,7 @@ const BadgeListDash = (props: IBadgeList) => {
 				<div className='row mb-16 mt-16 badge-list-dash text-center'>
 					{props.badges.map((badge, index) => {
 						return (
-							<div className='col-4 badge-margin' key={`badge-box${index}`}>
+							<div className='col-3 badge-margin' key={`badge-box${index}`}>
 								<BadgeItem {...badge} />
 								<span className='fc-second'>{badge.description}</span>
 							</div>

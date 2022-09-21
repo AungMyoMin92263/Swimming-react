@@ -91,12 +91,16 @@ class CoachCommentsPage extends React.Component<IProps, IStates> {
 		const { classId } = this.state
 		return (
 			<>
-				<div className="wrapper-mobile bg-w">
-					<div className="content-mobile-cus-space col-sm-12" id="sendCmtList">
+				<div className='wrapper-mobile bg-w'>
+					<div className='content-mobile-cus-space col-sm-12' id='sendCmtList'>
 						<CoachMobileHeader backBtn={true}></CoachMobileHeader>
-						<CommentListPage receiverId={classId} isClass={this.state.commentType == 'class'} isOwn={true}></CommentListPage>
+						<CommentListPage
+							receiverId={classId}
+							isClass={this.state.commentType == "class"}
+							isOwn={true}
+						></CommentListPage>
 						<div className='comment-box'>
-							<div className="cmd-input">
+							<div className='cmd-input'>
 								<div className='comment-input-div'>
 									<input
 										className='comment-input'
@@ -105,8 +109,21 @@ class CoachCommentsPage extends React.Component<IProps, IStates> {
 										onChange={this.handleChange}
 									/>
 									<div className='input-icons align-center'>
-										<AttachFileIcon onClick={() => this.fileUplaodChange()} style={{ rotate: "45deg" }} />
-										<button disabled={!this.state.newcomment} className="ml-16 send-btn" onClick={() => this.submit()}>
+										<AttachFileIcon
+											onClick={() => this.fileUplaodChange()}
+											style={{ rotate: "45deg" }}
+										/>
+										<input
+											type='file'
+											id='upload-button'
+											style={{ display: "none" }}
+											onChange={()=>this.fileUplaodChange()}
+										/>
+										<button
+											disabled={!this.state.newcomment}
+											className='ml-16 send-btn'
+											onClick={() => this.submit()}
+										>
 											<SendIcon />
 										</button>
 									</div>
@@ -116,7 +133,7 @@ class CoachCommentsPage extends React.Component<IProps, IStates> {
 					</div>
 				</div>
 			</>
-		)
+		);
 	}
 
 }

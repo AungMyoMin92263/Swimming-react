@@ -2,7 +2,9 @@ export interface InitialIconInterface {
 	initials: string;
 	isFooterMenu: boolean;
 	isInitialIcon?: boolean;
-	isBig?: boolean
+	isBig?: boolean;
+	isXs?: boolean;
+	isMid?: boolean;
 }
 export const InitialIcon = (props: InitialIconInterface) => {
 	var colors = [
@@ -31,20 +33,26 @@ export const InitialIcon = (props: InitialIconInterface) => {
 					justifyContent: "center",
 					textAlign: 'center',
 					borderRadius: "50%",
-					width: 24,
-					height: 24,
+					width:  props.isXs ? 16 : 24,
+					height: props.isXs ? 16 : 24,
 				}}
 			>
-				<span style={{ color: "white", fontSize: '14px' }}>{props.initials ? props.initials : ''}</span>
+				<span style={{ color: "white", fontSize: props.isXs ? '12px' : '14px' }}>{props.initials ? props.initials : ''}</span>
 			</div>
 		);
 	} else
 		return (
 			<div
-				className={`${props.isInitialIcon ? "initial-big-icon cursor mb-8" : "initial-icon"} isBig-${props.isBig}`}
+				className={`${
+					props.isInitialIcon ? "initial-big-icon cursor mb-8" : "initial-icon"
+				} isBig-${props.isBig} isMid-${props.isMid}`}
 				style={{ backgroundColor: random_color }}
 			>
-				<span style={{ color: "white", fontSize: props.isInitialIcon ? 50 : 20 }}>{props.initials ? props.initials : ''}</span>
+				<span
+					style={{ color: "white", fontSize: props.isInitialIcon ? 50 : 20 }}
+				>
+					{props.initials ? props.initials : ""}
+				</span>
 			</div>
 		);
 };

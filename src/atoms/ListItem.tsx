@@ -2,7 +2,7 @@ import React from 'react';
 import "./ListItem.css"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 export interface IListItem {
-  text: string,
+  text?: string,
   icon?: JSX.Element,
   callback: Function,
   isBigIcon?: boolean
@@ -13,6 +13,7 @@ export interface IListItem {
   arrowRight?: boolean
   checked?: boolean
   chooseCallBack?: Function
+  noMainText?: boolean
 }
 const ListItem = (props: IListItem) => {
   return (
@@ -22,13 +23,15 @@ const ListItem = (props: IListItem) => {
       }
     }}>
       <div className={props.isBigIcon ? 'item-text bigicon' : 'item-text'}>
-        <div className='main-text'>
-          {props.icon ? (<div className={props.isBigIcon ? "text-icon isBig" : "text-icon"}>{props.icon}</div>) : <></>}
-          <div className='title-text'>
-            {props.text}
-            <small className='small-text'>{props.smallText}</small>
+        {props.noMainText ? <></> :
+          <div className='main-text'>
+            {props.icon ? (<div className={props.isBigIcon ? "text-icon isBig" : "text-icon"}>{props.icon}</div>) : <></>}
+            <div className='title-text'>
+              {props.text}
+              <small className='small-text'>{props.smallText}</small>
+            </div>
           </div>
-        </div>
+        }
         <div className={props.icon ? 'second-text' : 'second-text no-p-left'}>
           {props.secondryText ? props.children : <></>}
         </div>

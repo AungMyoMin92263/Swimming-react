@@ -101,7 +101,7 @@ class StudentLoginPage extends React.Component<IProps, IStates> {
 			<div className='wrapper-mobile'>
 				<div className='content-mobile-cus center col-sm-12'>
 					{authUser.isSignedIn && (
-						<Navigate to='/coach/welcome' replace={true} />
+						<Navigate to='/student/welcome' replace={true} />
 					)}
 					<CoachMobileHeader title={true}></CoachMobileHeader>
 					<span className='f-10 pt-40'>Student's</span>
@@ -162,7 +162,7 @@ class StudentLoginPage extends React.Component<IProps, IStates> {
 
 					<div className='center mb-16 mt-120 fw-500'>
 						<Link
-							to='/coach/recover-password'
+							to='/student/recover-password'
 							style={{ textDecoration: "none" }}
 						>
 							<span className='f-14 primary'>Forgot password?</span>

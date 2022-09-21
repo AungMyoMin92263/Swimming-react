@@ -93,7 +93,7 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 				id: userObj.id,
 				name: userObj.name,
 				logo: userObj.avatar,
-				mobile: userObj.phone? userObj.phone: "",
+				mobile: userObj.phone != "null"? userObj.phone: "",
 				email: userObj.email,
 			});
 		}

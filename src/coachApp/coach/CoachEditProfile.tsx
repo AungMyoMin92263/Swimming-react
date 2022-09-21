@@ -202,7 +202,7 @@ class CoachEditProfilePage extends React.Component<IProps, IStates> {
 								label='Bio'
 								placeholder={"Enter your bio"}
 								warning={""}
-								type='text'
+								type='textarea'
 								showWarning={false}
 								isDropdown={false}
 								callback={(value: string) => {
@@ -292,11 +292,14 @@ class CoachEditProfilePage extends React.Component<IProps, IStates> {
 
 const mapStateToProps = ({
 	authUser,
+	response
 }: StoreState): {
 	authUser: AuthInterface;
+	response:any;
 } => {
 	return {
 		authUser,
+		response
 	};
 };
 

@@ -65,6 +65,7 @@ import StudentDailyProgramPage from "../studentApp/student/StudentDailyProgramme
 import StudentCommentsPage from "../studentApp/student/StudentComments";
 import StudentEnterCommentsPage from "../studentApp/student/StudentEnterCommentsPage";
 import StudentViewProfile from "../studentApp/student/StudentMeProfileDetails";
+import StudentEventsDetailPage from "../studentApp/student/StudentEventsDetailPage";
 
 //coach
 import CoachLoginPage from "../coachApp/coach/CoachLogin";
@@ -113,6 +114,12 @@ import EditClass from "../managerApp/manager/EditClass";
 import EditSetDateTime from "../managerApp/manager/EditSetDateTime";
 import EditSchoolPage from "../managerApp/admin/EditSchoolPage";
 import ManagerAllCommentStudent from "../managerApp/manager/ManagerAllCommentStudent";
+import ManagerAllCommentClass from "../managerApp/manager/ManagerAllCommentClass";
+import ManagerAllBadgetsStudent from "../managerApp/manager/ManagerAllBadgetsStudent";
+import ManagerAllAttendancesStudent from "../managerApp/manager/ManagerAllAttendancesStudent";
+import ManagerAllEventsStudent from "../managerApp/manager/ManagerAllEventsStudent";
+import StudentAttendanceList from "../studentApp/student/StudentAttendanceList";
+import StudentCoacheProfile from "../studentApp/student/StudentCoacheProfile";
 
 
 const windowHistory = createBrowserHistory({ window });
@@ -602,7 +609,7 @@ const routes = [
 				isMobileFooter: false,
 			},
 			{
-				path: "coach-detail/:id",
+				path: "coach-detail/:id/class/:classId",
 				sideBar: (props: any) => (
 					<>
 						<ManagerSideBar {...props} />
@@ -611,6 +618,22 @@ const routes = [
 				main: (props: any) => (
 					<>
 						<ManagerCoachDetailPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "student-detail/:id/class/:classId",
+				sideBar: (props: any) => (
+					<>
+						<ManagerSideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<ManagerStudentDetailPage {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
@@ -682,15 +705,87 @@ const routes = [
 				isMobileFooter: false,
 			},
 			{
-				path: "all-comments/user/:id",
-				sideBar: (props: any) => <></>,
+				path: "all-comments/user/:id/class/:classId",
+				sideBar: (props: any) => (
+					<>
+						<ManagerSideBar {...props} />
+					</>
+				),
 				main: (props: any) => (
 					<>
 						<ManagerAllCommentStudent {...props} />
 					</>
 				),
+				footer: (props: any) => (
+					<>
+						<ManagerSideBar {...props} />
+					</>
+				),
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "all-comments/class/:id",
+				sideBar: (props: any) => (
+					<>
+						<ManagerSideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<ManagerAllCommentClass {...props} />
+					</>
+				),
 				footer: (props: any) => <></>,
-				isSideBar: false,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "all-badgets/user/:id/class/:classId",
+				sideBar: (props: any) => (
+					<>
+						<ManagerSideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<ManagerAllBadgetsStudent {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "all-attendances/user/:id/class/:classId",
+				sideBar: (props: any) => (
+					<>
+						<ManagerSideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<ManagerAllAttendancesStudent {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "all-events/user/:id/class/:classId",
+				sideBar: (props: any) => (
+					<>
+						<ManagerSideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<ManagerAllEventsStudent {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
 				isMobileFooter: false,
 			},
 		],
@@ -807,7 +902,7 @@ const routes = [
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<StudentEventsPage />
+						<StudentEventsPage {...props} />
 					</>
 				),
 				footer: (props: any) => (
@@ -850,7 +945,7 @@ const routes = [
 				isSideBar: false,
 				isMobileFooter: true,
 			},
-			
+
 			{
 				path: "dashboard/daily-program",
 				sideBar: (props: any) => <></>,
@@ -869,6 +964,22 @@ const routes = [
 			},
 			{
 				path: "dashboard/daily-program/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentDailyProgramPage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "class-list/daily-program/:id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
@@ -960,11 +1071,103 @@ const routes = [
 				isMobileFooter: false,
 			},
 			{
+				path: "dashboard/enter-comments/:id/user",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentEnterCommentsPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
 				path: "me/profile-detail/:id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<StudentViewProfile {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "event/detail/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentEventsDetailPage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "me/attendance/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachStudentAttendanceList {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "dashboard/all-comments/:id/user",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentCommentsPage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "student/attendance/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentAttendanceList {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "coach/profile/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentCoacheProfile {...props} />
 					</>
 				),
 				footer: (props: any) => (

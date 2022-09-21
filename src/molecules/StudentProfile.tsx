@@ -38,9 +38,8 @@ class StudentProfilePage extends React.Component<IProps, IStates> {
   }
 
   getDetailAll = async () => {
-    let cmdUrl = "comment/by-student/" + this.props.user_id;
     let eventUrl = "assigned/event/by-users/" + this.props.user_id;
-    await Promise.all([this.props.getUserInfo(this.props.user_id, true), this.props.getAllComment(cmdUrl), this.props.getAllEvents(eventUrl)])
+    await Promise.all([this.props.getUserInfo(this.props.user_id, true), this.props.getAllEvents(eventUrl)])
   }
 
   goGiveBadge = (id: number) => {
@@ -98,7 +97,7 @@ class StudentProfilePage extends React.Component<IProps, IStates> {
       <>
         <ProfileContainer {...profile} key={"profile-box"}></ProfileContainer>
         <div className="mb-8" key={'badge_box_wapper'}>
-          <ListBoxUI key={'badge_box'} title="BADGES" callback={() => { }} callback2={() => { this.goGiveBadge(this.props.authUser.otherUserinfo?.id) }} more={true} more2={true} moreText2={'Give Bagde'}>
+          <ListBoxUI key={'badge_box'} title="BADGES" callback={() => { }} callback2={() => {}}>
             {/* {badges.length > 0 ? */}
             <BadgeList badges={badgeData} key="st_badge_list"></BadgeList>
             {/* :

@@ -7,6 +7,7 @@ import WatchLaterIcon from "@mui/icons-material/WatchLater";
 
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 
 import ListItem, { IListItem } from "../../atoms/ListItem";
 import CommentItem, { ICommentItem } from "../../atoms/Comment";
@@ -51,7 +52,11 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
   id: any;
   urlComments: any;
   urlEnterComment: any;
-
+  minuteObj: any = {
+    "first_slot": 0,
+    "second_slot": 10,
+    "third_slot": 20
+  }
   constructor(props: any) {
     super(props);
     let path = window.location.pathname.split("/");
@@ -231,13 +236,14 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
   };
 
 
-  createProfile = (image_url: string, name: string) => {
+  createProfile = (image_url: string, name: string,isXs?: boolean) => {
     if (image_url) {
       return <img src={"/assets/icons/logo.png"} className="logo-icon" />
     } else {
       return <InitialIcon
         initials={name.substr(0, 1).toUpperCase()}
         isFooterMenu={true}
+        isXs={true}
       />
     }
   }
@@ -318,6 +324,39 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
                 </div>
                 : <></>
             }
+            <div className="mb-8">
+              <ListBoxUI
+                title="Post-Class Slots"
+                callback={() => this.goToAllComments(this.state.classe.id)}
+                callback2={() => { }}
+                noBtn={true}
+              // more2={true}
+              >
+                <>
+                  {classe?.class_slot?.map((slot: any, index: any) => {
+                    let min: number = this.minuteObj[slot?.slot_type] || 0
+                    return <ListItem key={`classSlot${index}`} callback={() => { }} noMainText={true} secondryText={true}>
+                      <>
+                        <div className="slot-label">
+                          <AccessTimeOutlinedIcon fontSize="small" />
+                          <label>
+                            {moment(`${classe.start_date} ${classe.end_time}`).add(min, 'minutes').format("hh:mm A")}
+                            &nbsp;with Coach
+                          </label>
+                        </div>
+                        {slot.user_id ?
+                          <div className="slot-label">
+                            {this.createProfile("", slot.user.student.parent_name,true)}
+                            <label>{slot.user.student.parent_name} booked this slot</label>
+                          </div>
+                          : <label>Available</label>}
+                      </>
+                    </ListItem>
+
+                  })}
+                </>
+              </ListBoxUI>
+            </div>
             <div className="mb-8">
               <ListBoxUI
                 title="Class Comments"

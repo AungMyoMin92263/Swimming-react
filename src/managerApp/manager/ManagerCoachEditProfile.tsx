@@ -7,7 +7,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { Link, Navigate } from "react-router-dom";
 import InputFormAtom from "../../atoms/InputFormAtom";
-import { putUser, LoadingActionFunc, getUserInfo } from "../../stores/actions";
+import { putCoach, LoadingActionFunc, getUserInfo } from "../../stores/actions";
 import { getItem, setItemWithObject } from "../../auth/LocalStorage";
 import { InitialIcon } from "../../atoms/InitialIcon";
 import { InputPhoneNumber } from "../../atoms/InputPhoneNumber";
@@ -27,7 +27,7 @@ interface IStates {
 	image: any;
 	logo: string;
 	mobile: string;
-	age: string;
+	bio: string;
 	gender: string;
 	favourite: string;
 	email: string;
@@ -36,12 +36,14 @@ interface IStates {
 	isCompleted: boolean;
 	isChangeLogo: boolean;
 	errorMsg: string;
+
 }
 
 interface IProps {
 	match: any;
 	user: any;
-	putStudent: Function;
+	response: any;
+	putCoach: Function;
 	LoadingActionFunc: Function;
 	getUserInfo: Function;
 }
@@ -60,7 +62,7 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 			image: { preview: "", raw: "" },
 			logo: "",
 			mobile: "",
-			age: "",
+			bio: "",
 			email: "",
 			gender: "Male",
 			favourite: "",
@@ -95,6 +97,7 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 				logo: userObj.avatar,
 				mobile: userObj.phone ? userObj.phone : "",
 				email: userObj.email,
+				bio:userObj.favorite
 			});
 		}
 	};
@@ -122,11 +125,6 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 		if (this.state.name === "" || this.state.logo === "") return false;
 		else return true;
 	};
-	handleChangeAge = (event: SelectChangeEvent) => {
-		this.setState({
-			age: event.target.value,
-		});
-	};
 
 	submit = async () => {
 		if (this.isValid()) {
@@ -134,15 +132,12 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 			formData.append("name", this.state.name);
 			formData.append("phone", this.state.mobile);
 			formData.append("email", this.state.email);
-			formData.append("parent_email", this.state.parentEmail);
-			formData.append("age", this.state.age);
-			formData.append("gender", this.state.gender);
-			formData.append("favorite", this.state.favourite);
+			formData.append("favorite", this.state.bio);
 			// formData.append("password", this.state.password);
 			if (this.state.logo) formData.append("avatar", this.state.logo);
 			this.props.LoadingActionFunc(true);
 
-			await this.props.putStudent(formData, "student", this.state.id);
+			await this.props.putCoach(formData, "users", this.state.id);
 
 			if (this.props.user.error) {
 				this.setState({
@@ -151,7 +146,7 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 				});
 				this.props.LoadingActionFunc(false);
 			} else {
-				if (this.props.user.userInfo) {
+				if (this.props.response) {
 					// setItemWithObject("authUser", this.props.user);
 					let userObj = this.props.user.userInfo;
 					this.setState({
@@ -283,161 +278,71 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 							</div>
 
 							<div className='f-32 fw-500 mb-8'>
-								<span>Edit Student.</span>
+								<span>Edit Coach.</span>
 							</div>
 							<div className='f-16 mb-16 fw-500 mb-32'>
 								<span>Profile Details</span>
 							</div>
 							<div className='mb-16'>{this.renderImageUpload()}</div>
 
-							<div className='fw-400 mb-16'>
+							<div className='mb-16'>
 								<InputFormAtom
 									label='Name'
 									placeholder={"Enter your name"}
-									warning={nameMsg}
-									type='text'
-									showWarning={isManagerNameEmpty || !isStudentNameValid}
-									isDropdown={false}
-									callback={(value: string) => {
-										this.setState({
-											name: value,
-										});
-									}}
-									id='addManagerName'
-									name='addManagerName'
-									value={name}
-									required={true}
-									maxLength={200}
-									className=''
-									clickCallback={() => {}}
-									focusCallback={() => {
-										// this.setState({
-										//   isManagerNameEmpty: false,
-										//   isStudentNameValid: true,
-										// });
-									}}
-								/>
-							</div>
-
-							<div className='flex mb-16'>
-								<div className='col-5'>
-									<InputFormAtom
-										label='Age'
-										placeholder={"Age"}
-										warning={nameMsg}
-										type='text'
-										showWarning={isManagerNameEmpty || !isStudentNameValid}
-										isDropdown={false}
-										callback={(value: string) => {
-											this.setState({
-												age: value,
-											});
-										}}
-										id='age'
-										name='age'
-										value={this.state.age}
-										required={true}
-										maxLength={200}
-										className=''
-										clickCallback={() => {}}
-										focusCallback={() => {
-											// this.setState({
-											//   isManagerNameEmpty: false,
-											//   isStudentNameValid: true,
-											// });
-										}}
-									/>
-								</div>
-								<div className='col-2'></div>
-								<div className='col-5'>
-									<div className={`input-form-atom`}>
-										<div className='label-con'>
-											<label>Gender</label>
-										</div>
-										<div className='dropdown-box cursor'>
-											<select
-												name='filter-class'
-												id='filterClass'
-												value={this.state.gender}
-												onChange={(e) => {
-													this.setState({
-														gender: e.currentTarget.value,
-													});
-												}}
-											>
-												<option value={"Male"}>Male</option>
-												<option value={"Female"}>Female</option>
-											</select>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div className='fw-400 mb-16'>
-								<InputFormAtom
-									label='Favourite Stroke'
-									placeholder={"Favourite Stroke"}
 									warning={""}
 									type='text'
 									showWarning={false}
 									isDropdown={false}
 									callback={(value: string) => {
+										
 										this.setState({
-											favourite: value,
-										});
-									}}
-									id='favaourite'
-									name='favaourite'
-									value={this.state.favourite}
-									required={false}
-									maxLength={200}
-									className=''
-									clickCallback={() => {}}
-									focusCallback={() => {
-										// this.setState({
-										//   isManagerNameEmpty: false,
-										//   isStudentNameValid: true,
-										// });
-									}}
-								/>
-							</div>
-
-							<div className='mb-16'>
-								<span className='f-16 fw-500'>Contact Details</span>
-							</div>
-
-							<div className='pb-16'>
-								<InputFormAtom
-									label='Email'
-									placeholder={"Enter your email"}
-									warning={""}
-									type='text'
-									showWarning={false}
-									isDropdown={false}
-									callback={(value: string) => {
-										this.setState({
-											email: value,
+											name:value
 										});
 									}}
 									id='name'
 									name='name'
-									value={email}
+									value={this.state.name}
 									required={true}
 									maxLength={200}
 									className=''
-									disabled={false}
 									clickCallback={() => {}}
 								/>
 							</div>
+							<div className='mb-32'>
+								<InputFormAtom
+									label='Bio'
+									placeholder={"Enter your bio"}
+									warning={""}
+									type='textarea'
+									showWarning={false}
+									isDropdown={false}
+									callback={(value: string) => {
 
+										this.setState({
+											bio:value
+										});
+									}}
+									id='bio'
+									name='bio'
+									value={this.state.bio}
+									required={true}
+									maxLength={200}
+									className=''
+									clickCallback={() => {}}
+								/>
+							</div>
+							<div className='mb-16'>
+								<span className='f-16 fw-500'>Contact Details</span>
+							</div>
 							<div className='mb-16'>
 								<InputPhoneNumber
-									label='Student Mobile'
-									placeholder={"Enter mobile number"}
+									label='Mobile'
+									placeholder={"Enter your mobile"}
 									warning={""}
 									showWarning={false}
 									callback={(value: string) => {
 										this.setState({
-											mobile: value,
+											mobile:value
 										});
 									}}
 									id='mobile'
@@ -446,58 +351,35 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 									required={true}
 									maxLength={200}
 									className=''
+									// disabled={true}
 									clickCallback={() => {}}
 								/>
-							</div>
-							<div className='mb-16'>
-								<span className='f-16 fw-500'>Parent Details</span>
 							</div>
 
 							<div className='pb-16'>
 								<InputFormAtom
-									label='Parent Email'
-									placeholder={"Enter email"}
+									label='email'
+									placeholder={"Enter your email"}
 									warning={""}
 									type='text'
 									showWarning={false}
 									isDropdown={false}
 									callback={(value: string) => {
 										this.setState({
-											parentEmail: value,
+											email:value
 										});
 									}}
 									id='name'
 									name='name'
-									value={this.state.parentEmail}
+									value={this.state.email}
 									required={true}
 									maxLength={200}
 									className=''
-									disabled={false}
+									disabled={true}
 									clickCallback={() => {}}
 								/>
 							</div>
-
-							<div className='mb-16'>
-								<InputPhoneNumber
-									label='Parent Mobile'
-									placeholder={"Enter mobile number"}
-									warning={""}
-									showWarning={false}
-									callback={(value: string) => {
-										this.setState({
-											parentMobile: value,
-										});
-									}}
-									id='mobile'
-									name='mobile'
-									value={this.state.parentMobile}
-									required={true}
-									maxLength={200}
-									className=''
-									// disabled={true}
-									clickCallback={() => {}}
-								/>
-							</div>
+							
 
 							{errorMsg && <p className='text-danger'>{errorMsg}</p>}
 							<div className='right flex-center'>{this.renderBtn()}</div>
@@ -512,18 +394,21 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 const mapStateToProps = ({
 	schools,
 	user,
+	response,
 }: StoreState): {
 	schools: any;
 	user: any;
+	response:any;
 } => {
 	return {
 		schools,
 		user,
+		response,
 	};
 };
 
 export default connect(mapStateToProps, {
-	putStudent,
+	putCoach,
 	getUserInfo,
 	LoadingActionFunc,
 })(ManagerStudentEditProfilePage);
