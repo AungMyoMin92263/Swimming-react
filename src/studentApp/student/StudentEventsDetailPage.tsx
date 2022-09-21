@@ -119,7 +119,9 @@ class StudentEventsDetailPage extends React.Component<IProps, IStates> {
 					<div className='mb-8'>
 						<ListBoxUI
 							title='You'
-							callback={() => {this.props.history.push("/me/profile-detail/"+this.state.userInfo?.id)}}
+							callback={() => {this.props.history.push(
+								"/student/me/profile-detail/" + this.state.userInfo?.id
+							);}}
 							callback2={() => {}}
 							more={true}
 							moreText='View Profile'
