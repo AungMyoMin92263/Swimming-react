@@ -31,12 +31,11 @@ import AddClass from "../managerApp/manager/AddClass";
 import SetDateTime from "../managerApp/manager/SetDateTime";
 import InviteCoachPage from "../managerApp/manager/InviteCoach";
 import InviteStudentPage from "../managerApp/manager/InviteStudent";
-import InvitedStudentSummaryPage from "../managerApp/manager/InvitedStudentSummary";
 import ManagerCreatePasswordPage from "../managerApp/manager/ManagerCreatePasswordPage";
 import AddManagerNamePage from "../managerApp/manager/AddManagerName";
 import ManagerEditProfilePage from "../managerApp/manager/ManagerEditProfile";
-import ManagerInviteCoachSummaryPage from "../managerApp/manager/ManagerInviteCoachSummaryPage"
-import ManagerInviteStudentSummaryPage from "../managerApp/manager/ManagerInviteStudentSummaryPage"
+import ManagerInviteCoachSummaryPage from "../managerApp/manager/ManagerInviteCoachSummaryPage";
+import ManagerInviteStudentSummaryPage from "../managerApp/manager/ManagerInviteStudentSummaryPage";
 
 
 import AssignStudentPage from "../managerApp/manager/AssignStudent";
@@ -45,6 +44,7 @@ import PeopleListPage from "../managerApp/manager/PeopleListPage";
 import ManagerLoginPage from "../managerApp/manager/ManagerLogin";
 import ManagerClassDetailPage from "../managerApp/manager/ManagerClassDetailPage";
 import ManagerWelcomePage from "../managerApp/manager/ManagerWelcome";
+
 
 //student
 import StudentLoginPage from "../studentApp/student/StudentLogin";
@@ -492,6 +492,7 @@ const routes = [
 				isSideBar: false,
 				isMobileFooter: false,
 			},
+			
 			{
 				path: "invite-coach",
 				sideBar: (props: any) => <></>,
@@ -505,6 +506,19 @@ const routes = [
 				isMobileFooter: false,
 			},
 			{
+				path: "invite-coach/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<InviteCoachPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			
+			{
 				path: "invite-student",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
@@ -516,12 +530,13 @@ const routes = [
 				isSideBar: false,
 				isMobileFooter: false,
 			},
+			
 			{
-				path: "invite-student-summary",
+				path: "invite-student/:id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
-						<InvitedStudentSummaryPage {...props} />
+						<InviteStudentPage {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
@@ -669,7 +684,31 @@ const routes = [
 				isMobileFooter: false,
 			},
 			{
+				path: "invite-coach-summary/new/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ManagerInviteCoachSummaryPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
 				path: "invite-student-summary/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ManagerInviteStudentSummaryPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "invite-student-summary/new/:id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
@@ -815,7 +854,7 @@ const routes = [
 				),
 				footer: (props: any) => <></>,
 				isSideBar: false,
-				isMobileFooter: true,
+				isMobileFooter: false,
 			},
 			{
 				path: "login",
@@ -839,7 +878,7 @@ const routes = [
 				),
 				footer: (props: any) => <></>,
 				isSideBar: false,
-				isMobileFooter: true,
+				isMobileFooter: false,
 			},
 			{
 				path: "recover-password",
@@ -851,7 +890,7 @@ const routes = [
 				),
 				footer: (props: any) => <></>,
 				isSideBar: false,
-				isMobileFooter: true,
+				isMobileFooter: false,
 			},
 			{
 				path: "welcome",
@@ -1688,7 +1727,7 @@ const routes = [
 				),
 				footer: (props: any) => <></>,
 				isSideBar: false,
-				isMobileFooter: true,
+				isMobileFooter: false,
 			},
 			{
 				path: "login",
@@ -1736,7 +1775,7 @@ const routes = [
 				),
 				footer: (props: any) => <></>,
 				isSideBar: false,
-				isMobileFooter: true,
+				isMobileFooter: false,
 			},
 		],
 	},

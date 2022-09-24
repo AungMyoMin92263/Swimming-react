@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { StoreState } from "../../stores/reducers";
-import { inviteStudent, LoadingActionFunc} from "../../stores/actions";
+import { inviteStudent, LoadingActionFunc,getClassObject} from "../../stores/actions";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddIcon from "@mui/icons-material/Add";
@@ -45,6 +45,7 @@ interface IStates {
   studentEmailMsg: string;
   parentEmailMsg: string;
   school_name: string;
+  school_id : any;
   classObj: any;
 }
 
@@ -53,16 +54,24 @@ interface IProps {
   classes: any;
   inviteStudent: Function;
   LoadingActionFunc : Function;
+  getClassObject: Function;
 }
 
 class InviteStudentPage extends React.Component<IProps, IStates> {
+	url : any;
+	backUrl: any;
+	id: any;
+
   constructor(props: any) {
     super(props);
+	let path = window.location.pathname.split("/");
+    this.id = path[3];
 
     this.state = {
       emails: [],
       student: [],
       isCompleted: false,
+	  isValid: false,
       students: [
         {
           studentName: "",
@@ -89,27 +98,53 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
       studentEmailMsg: "",
       parentEmailMsg: "",
       school_name: "",
+	  school_id : -1,
       classObj: null,
-      isValid: false,
     };
   }
   componentDidMount() {
+    this.authFromLocal();
+console.log(this.id,'id')
+  }
+
+  authFromLocal = async () => {
     const user = JSON.parse(getItem("authUser") || "null");
     if (user && user.userInfo && user.userInfo.assign_school) {
-      this.setState({
+      await this.setState({
         school_name: user.userInfo.assign_school.school.name,
+		school_id :  user.userInfo.assign_school.school.id,
       });
-    }
 
-    const classObject = JSON.parse(getItem("class") || "null");
-    if (classObject) {
-      this.setState({
-        classObj: classObject,
-      });
-    }
-	this.props.LoadingActionFunc(false);
+	  if (!this.id) {
+		console.log('this.id',this.id)
+        const classObject = JSON.parse(getItem("class") || "null");
+        if (classObject) {
+          this.id = classObject.id;
+          this.setState({
+            classObj: classObject,
+          });
+          this.url = "/manager/invite-student-summary/new/" + classObject.id;
+        }
+        this.backUrl = "/manager/invite-coach";
+      } else {
+        this.url = "/manager/invite-student-summary/" + this.id;
+        this.backUrl = "/manager/invite-student-summary/" + this.id;
+        this.getClass();
+      }
+	  this.props.LoadingActionFunc(false);
+    }else this.props.LoadingActionFunc(false);
+  };
 
-  }
+  getClass = async () => {
+    if (this.state.school_id && this.id) {
+      let url = "school/" + this.state.school_id + "/class/" + this.id;
+      await this.props.getClassObject(url);
+      if (this.props.classes && this.props.classes.result)
+        this.setState({
+          classObj: this.props.classes.result,
+        });
+    }
+  };
 
   addStudent = () => {
     let temp = this.state.students;
@@ -143,12 +178,12 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
       this.setState({ isValid: true });
       this.state.students.map((studentObject: any) => {
         if (
-          studentObject.isStudentNameEmpty ||
-          !studentObject.isStudentNameValid ||
+        //   studentObject.isStudentNameEmpty ||
+        //   !studentObject.isStudentNameValid ||
           studentObject.isStudentEmailEmpty ||
           !studentObject.isStudentEmailValid ||
-          studentObject.isParentNameEmpty ||
-          !studentObject.isParentNameValid ||
+        //   studentObject.isParentNameEmpty ||
+        //   !studentObject.isParentNameValid ||
           studentObject.isParentEmailEmpty ||
           !studentObject.isParentEmailValid
         ) {
@@ -178,7 +213,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
         emails: temp,
         student: tempStu,
       });
-      if (this.state.classObj) {
+      if (this.id) {
 		this.props.LoadingActionFunc(true);
         await this.props.inviteStudent({
           user_email: this.state.emails,
@@ -248,7 +283,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
     return (
 			<>
 				{this.state.isCompleted && (
-					<Navigate to='/manager/invite-student-summary' replace={true} />
+					<Navigate to={this.url} replace={true} />
 				)}
 				<div className='wrapper scroll-y'>
 					<div className='primary f-16 project-header'>
@@ -260,7 +295,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
 						<div className='content col-lg-6'>
 							<div className='f-14 mb-32'>
 								<Link
-									to='/manager/invite-coach'
+									to={this.id? "/manager/invite-student-summary/" + this.id : "/manager/invite-coach-summary"}
 									style={{ textDecoration: "none" }}
 								>
 									<ArrowBackIcon
@@ -313,7 +348,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
 												</div>
 											)}
 										</div>
-										<div className='fw-400 mb-16'>
+										{/* <div className='fw-400 mb-16'>
 											<InputFormAtom
 												label='Student Name'
 												placeholder={"Enter name of Student"}
@@ -349,7 +384,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
 													});
 												}}
 											/>
-										</div>
+										</div> */}
 										<div className='fw-400 mb-16'>
 											<InputFormAtom
 												label='Student Email'
@@ -389,7 +424,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
 											/>
 										</div>
 
-										<div className='fw-400 mb-16'>
+										{/* <div className='fw-400 mb-16'>
 											<InputFormAtom
 												label='Parent Name'
 												placeholder={"Enter name of parent"}
@@ -426,7 +461,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
 													});
 												}}
 											/>
-										</div>
+										</div> */}
 										<div className='fw-400 mb-16'>
 											<InputFormAtom
 												label='Parent Email'
@@ -505,4 +540,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { inviteStudent,LoadingActionFunc })(InviteStudentPage);
+export default connect(mapStateToProps, { inviteStudent,LoadingActionFunc,getClassObject })(InviteStudentPage);

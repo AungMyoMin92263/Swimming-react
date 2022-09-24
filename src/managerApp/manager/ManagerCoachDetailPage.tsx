@@ -148,7 +148,7 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 			display_item: [
 				{
 					title: "Bio",
-					value: this.props.authUser.otherUserinfo?.student?.age || "-",
+					value: this.props.authUser.otherUserinfo?.favorite || "-",
 				},
 			],
 		};
@@ -289,11 +289,17 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 											<div className='col-4 flex-column'>
 												<span className='f-16 fw-500'>
 													<LocalPhoneOutlinedIcon className='mr-8' />
+													<span>
+														{this.props.authUser.otherUserinfo?.phone || "-"}
+													</span>
 												</span>
 											</div>
 											<div className='col-4 flex-column'>
 												<span className='f-16 fw-500'>
 													<EmailOutlinedIcon className='mr-8' />
+													<span>
+														{this.props.authUser.otherUserinfo?.email || "-"}
+													</span>
 												</span>
 											</div>
 										</div>

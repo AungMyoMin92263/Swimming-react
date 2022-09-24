@@ -1,56 +1,53 @@
 import React from "react";
 import { connect } from "react-redux";
 import { StoreState } from "../../stores/reducers";
+import { inviteCoach, LoadingActionFunc } from "../../stores/actions";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { Link, Navigate } from "react-router-dom";
+import { getItem } from "../../auth/LocalStorage";
 import TagInput from "../../components/TagInput";
-import { getItem, removeItem } from "../../auth/LocalStorage";
 import placeholder from "./../../assets/images/place-holder.png";
-import { inviteEvent, LoadingActionFunc } from "../../stores/actions";
 import InputFormAtom from "../../atoms/InputFormAtom";
+
 interface IStates {
-  event: any;
   email: string;
   isCompleted: boolean;
-  logo: any;
+  school_name: string;
   errorMsg: string;
+  classObj: any;
 }
 
 interface IProps {
   emails: string[];
-  events: any;
-  inviteEvent: Function;
+  classes: any;
+  inviteCoach: Function;
   LoadingActionFunc: Function;
 }
-
-class InviteStudentEvent extends React.Component<IProps, IStates> {
-  schoolImage: string | undefined;
+class InviteCoachPage extends React.Component<IProps, IStates> {
   constructor(props: any) {
     super(props);
 
     this.state = {
-      event: "",
       email: "",
       isCompleted: false,
-      logo: "",
+      school_name: "",
       errorMsg: "",
+      classObj: null,
     };
   }
   componentDidMount() {
     const user = JSON.parse(getItem("authUser") || "null");
     if (user && user.userInfo && user.userInfo.assign_school) {
       this.setState({
-        logo: user.userInfo.assign_school.school.logo,
+        school_name: user.userInfo.assign_school.school.name,
       });
     }
-    let eventObj = JSON.parse(getItem("event") || "");
-    if (eventObj) {
-      this.setState({
-        event: eventObj,
-      });
-    }
+    const classObject = JSON.parse(getItem("class") || "null");
+    this.setState({
+      classObj: classObject,
+    });
     this.props.LoadingActionFunc(false);
   }
 
@@ -61,33 +58,32 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
   };
 
   isValid = () => {
-    // return true;
     if (this.state.email === "") return false;
     else return true;
   };
 
   submit = async () => {
-    console.log("clicked");
+    console.log("Clicked");
     if (this.isValid()) {
-      if (this.state.event) {
+      if (this.state.classObj) {
         this.props.LoadingActionFunc(true);
 		let temp = [];
         temp.push(this.state.email);
-        await this.props.inviteEvent({
+        await this.props.inviteCoach({
           user_email: temp,
-          event_id: this.state.event.id,
+          class_id: this.state.classObj.id,
         });
-        if (this.props.events.error) {
+
+        if (this.props.classes.error) {
           this.setState({
             isCompleted: false,
-            errorMsg: this.props.events.error,
+            errorMsg: this.props.classes.error,
           });
           this.props.LoadingActionFunc(false);
         } else {
           this.setState({
             isCompleted: true,
           });
-          removeItem("school");
         }
       }
     }
@@ -104,7 +100,7 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
       return (
         <>
           {this.state.isCompleted && (
-            <Navigate to="/manager/event-list" replace={true} />
+            <Navigate to="/manager/invite-student" replace={true} />
           )}
           <button
             type="submit"
@@ -118,7 +114,7 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
   };
 
   render() {
-    const { errorMsg, event, email } = this.state;
+    const { errorMsg, classObj, email } = this.state;
     return (
       <>
         <div className="wrapper">
@@ -131,7 +127,7 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
             <div className="content col-lg-6">
               <div className="f-14 mb-32">
                 <Link
-                  to="/manager/add-event"
+                  to="/manager/set-date-time"
                   style={{ textDecoration: "none" }}
                 >
                   <ArrowBackIcon
@@ -144,38 +140,29 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
               <div className="mb-16 align-center">
                 <img
                   src={
-                    this.state.logo
-                      ? process.env.REACT_APP_API_ENDPOINT +
-                        "/" +
-                        this.state.logo
+                    classObj && classObj.logo
+                      ? process.env.REACT_APP_API_ENDPOINT + "/" + classObj.logo
                       : placeholder
                   }
                   alt="logo"
-                  id="logo"
-                  className={`${this.state.logo ? "item-icon" : "w-48"}`}
+                  className={`${
+                    classObj && classObj.logo ? "item-icon" : "w-48"
+                  }`}
                 />
-
                 <span className="f-16">
-                  {this.state.event && this.state.event.name}(
-                  {this.state.event && this.state.event.gender === "male"
-                    ? "Male"
-                    : this.state.event.gender === "female"
-                    ? "Female"
-                    : "Mixed"}{" "}
-                  {this.state.event && this.state.event.from_age}-
-                  {this.state.event && this.state.event.to_age} y/o)
+                  {classObj && classObj.name} ({this.state.school_name})
                 </span>
               </div>
               <div className="hr mb-32"></div>
               <div className="f-32 fw-500">
-                <span>Assign Students.</span>
+                <span>Invite a Coach.</span>
               </div>
               <div className="f-16 mb-32">
-                <span>Assign students to your event.</span>
+                <span>Invite a coach to your class.</span>
               </div>
 
-              <div className="f-12">
-                <span>Student(s)</span>
+              <div className="f-16 fw-500 mb-16">
+                <span>Coach #1</span>
               </div>
               <div className="fw-400 mb-16">
                 {/* <TagInput
@@ -188,7 +175,7 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
 								/> */}
 
                 <InputFormAtom
-                  label="Student Email"
+                  label="Coach Email"
                   placeholder={"Enter Email"}
                   warning={""}
                   type="text"
@@ -209,9 +196,11 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
                   focusCallback={() => {}}
                 />
               </div>
+              {/* {this.isValid() && <p className='text-danger'>At least on manager invite</p>} */}
               <div>{errorMsg && <p className="text-danger">{errorMsg}</p>}</div>
-              <div className="right flex-center">
-                <span className="secondary">2 of 2</span>
+
+              <div className="right flex align-center">
+                <span className="secondary mr-16">3 of 4</span>
                 {this.renderBtn()}
               </div>
             </div>
@@ -223,15 +212,15 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
 }
 
 const mapStateToProps = ({
-  events,
+  classes,
 }: StoreState): {
-  events: any;
+  classes: any;
 } => {
   return {
-    events,
+    classes,
   };
 };
 
-export default connect(mapStateToProps, { inviteEvent, LoadingActionFunc })(
-  InviteStudentEvent
+export default connect(mapStateToProps, { inviteCoach, LoadingActionFunc })(
+  InviteCoachPage
 );

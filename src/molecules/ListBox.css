@@ -33,6 +33,7 @@
   font-weight: 500;
   padding: 16px;
 }
+
 .list-body>.comment-item:last-child,.list-body>.card-list-item:last-child{
   border-bottom: none;
 }

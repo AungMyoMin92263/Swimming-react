@@ -13,7 +13,7 @@ import placeholder from "./../../assets/images/place-holder.png";
 import { InitialIcon } from "../../atoms/InitialIcon";
 import { getSchoolObj, LoadingActionFunc } from "../../stores/actions";
 import { getClassObject, getAll } from "../../stores/actions";
-import { deleteCoach } from "./../../stores/actions/coach-action";
+import { deleteStudent } from "./../../stores/actions/student-action";
 interface IStates {
 	school: any;
 	errorMsg: string;
@@ -24,7 +24,7 @@ interface IStates {
 	classId: any;
 	class_name: string;
 	class_logo: string;
-	coachList: string[];
+	studentList: string[];
 }
 
 interface IProps {
@@ -33,27 +33,27 @@ interface IProps {
 	getSchoolObj: Function;
 	getClassObject: Function;
 	classes: any;
-	deleteCoach: Function;
-	coach: any;
+	deleteStudent: Function;
+	student: any;
 }
-class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
+class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 	id: any;
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
-		this.id = path[3];
+		this.id = path[3] === 'new'? path[4] : path[3];
 
 		this.state = {
 			school: { name: "", logo: "", assign_user: [] },
 			errorMsg: "",
-			url: "",
+			url: path[3] === 'new' ? "/manager/dashboard" : "/manager/class/"+ this.id,
 			school_logo: "",
 			school_name: "",
 			schoolId: "",
 			classId: this.id,
 			class_name: "",
 			class_logo: "",
-			coachList: [],
+			studentList: [],
 		};
 	}
 	componentDidMount() {
@@ -76,27 +76,6 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 		this.props.LoadingActionFunc(false);
 	};
 
-	getSchool = async () => {
-		await this.props.getSchoolObj("schools/" + this.id);
-
-		if (this.props.schools.result) {
-			if (this.props.schools.error) {
-				this.setState({
-					errorMsg: this.props.schools.error,
-				});
-			} else {
-				let school1 = this.props.schools.result;
-				if (school1) {
-					this.setState({
-						school: school1,
-						url: "/admin/invite-manager/" + school1.id,
-					});
-					setItemWithObject("school", school1);
-				}
-			}
-			this.props.LoadingActionFunc(false);
-		}
-	};
 	getClass = async () => {
 		let url = "school/" + this.state.schoolId + "/class/" + this.state.classId;
 		await this.props.getClassObject(url);
@@ -104,7 +83,7 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 		if (this.props.classes && this.props.classes.viewClass) {
 			console.log("fffffffffffffffffffff");
 			this.setState({
-				coachList: this.props.classes.viewClass.assign_user,
+				studentList: this.props.classes.viewClass.assign_user,
 				class_logo: this.props.classes.viewClass.logo,
 				class_name: this.props.classes.viewClass.name,
 			});
@@ -116,28 +95,28 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 		) {
 			console.log("MMMMMMMMMM");
 			this.setState({
-				coachList: this.props.classes.result.assign_user,
+				studentList: this.props.classes.result.assign_user,
 				class_logo: this.props.classes.result.logo,
 				class_name: this.props.classes.result.name,
 			});
 		}
 	};
 	handleDelete = async (user_id: any) => {
-		let deleteCoachUrl = "assigned/class";
+		let deleteStudentUrl = "assigned/class";
 		console.log("user_id", user_id);
-		await this.props.deleteCoach(deleteCoachUrl, user_id);
+		await this.props.deleteStudent(deleteStudentUrl, user_id);
 
 		if (
-			this.props.coach &&
-			this.props.coach.result &&
-			this.props.coach.result.data.statusText === "success"
+			this.props.student &&
+			this.props.student.result &&
+			this.props.student.result.data.statusText === "success"
 		) {
 			console.log("deleteed");
 			this.getClass();
 		}
-		if (this.props.coach.error) {
+		if (this.props.student.error) {
 			this.setState({
-				errorMsg: this.props.coach.error,
+				errorMsg: this.props.student.error,
 			});
 		}
 	};
@@ -151,7 +130,7 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 			classId,
 			class_name,
 			class_logo,
-			coachList,
+			studentList,
 		} = this.state;
 		return (
 			<>
@@ -190,24 +169,24 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 							<div className='hr mb-32'></div>
 
 							<div className='f-32 fw-500 mb-32'>
-								<span>My Coaches.</span>
+								<span>My Students.</span>
 							</div>
 
-							{coachList &&
-								coachList.length > 0 &&
-								coachList.map((coach: any) => (
+							{studentList &&
+								studentList.length > 0 &&
+								studentList.map((student: any) => (
 									<>
 										<div className='f-16 mb-32 align-center justify-space-between'>
 											<div className='align-center'>
 												<InitialIcon
-													initials={(coach.user ? coach.user.email : "")
+													initials={(student.user ? student.user.email : "")
 														.substr(0, 1)
 														.toUpperCase()}
 													isFooterMenu={false}
 												/>
 												<span className='ml-16'>
-													{coach.user && coach.user.name
-														? coach.user.name
+													{student.user && student.user.name
+														? student.user.name
 														: "-"}
 												</span>
 											</div>
@@ -218,7 +197,7 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 														fontSize: 24,
 														cursor: "pointer",
 													}}
-													onClick={() => this.handleDelete(coach.id)}
+													onClick={() => this.handleDelete(student.id)}
 												></DeleteOutlineOutlinedIcon>
 											</div>
 										</div>
@@ -227,19 +206,20 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 									</>
 								))}
 							<Link
-								to={"/manager/invite-coach"}
+								// to={"/manager/invite-student"}
+								to={"/manager/invite-student/"+ this.id}
 								style={{ textDecoration: "none" }}
 							>
 								<div className='mb-16 align-center'>
 									<AddIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 									></AddIcon>
-									<span className='primary'>Add another coach</span>
+									<span className='primary'>Add another student</span>
 								</div>
 							</Link>
 
 							<div className='hr mb-32'></div>
-							<Link to='/admin/dashboard' style={{ textDecoration: "none" }}>
+							<Link to={url} style={{ textDecoration: "none" }}>
 								<button type='submit' className='primary-btn right'>
 									Done
 								</button>
@@ -255,16 +235,16 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 const mapStateToProps = ({
 	schools,
 	classes,
-	coach,
+	student,
 }: StoreState): {
 	schools: any;
 	classes: any;
-	coach: any;
+	student: any;
 } => {
 	return {
 		schools,
 		classes,
-		coach,
+		student,
 	};
 };
 
@@ -272,5 +252,5 @@ export default connect(mapStateToProps, {
 	LoadingActionFunc,
 	getSchoolObj,
 	getClassObject,
-	deleteCoach,
-})(ManagerInviteCoachSummaryPage);
+	deleteStudent,
+})(ManagerInviteStudentSummaryPage);

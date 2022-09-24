@@ -103,8 +103,13 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
 		};
 	}
 	componentDidMount() {
+		
+		this.authFromLocal();
+		console.log("authUser", this.props.authUser);
+		//loading
+	}
+	authFromLocal = async () => {
 		const user = JSON.parse(getItem("authUser") || "null");
-		console.log(user.userInfo);
 		if (user && user.userInfo) {
 			this.setState({
 				email: user.userInfo.email,
@@ -115,22 +120,16 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
 					? user.userInfo.assign_school.school.name
 					: "",
 				schoolId: user.userInfo.assign_school
-					? user.userInfo.assign_school.school.school_id
+					? user.userInfo.assign_school.school_id
 					: -1,
 			});
-		}
-		this.authFromLocal();
-		console.log("authUser", this.props.authUser);
-		//loading
-	}
-	authFromLocal = async () => {
-		let user = JSON.parse(getItem("authUser") || "null");
-		if (user && user.userInfo) {
-			await this.getClass();
+			
 			await this.getCoachesByClass();
 			await this.getAttendancesByClass();
 			await this.getClassProgram();
+			await this.getClass();
 		}
+			
 	};
 
 	getClass = async () => {

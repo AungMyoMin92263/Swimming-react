@@ -3,22 +3,27 @@ import { connect } from "react-redux";
 import { StoreState } from "../../stores/reducers";
 import { SchoolInterface } from "../../stores/model/school-interface";
 import { inviteManager } from "../../stores/actions/school-action";
-import { LoadingActionFunc,getSchoolObj } from "../../stores/actions";
+import { LoadingActionFunc, getSchoolObj } from "../../stores/actions";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { Navigate } from "react-router-dom";
 import TagInput from "../../components/TagInput";
-import { getItem, removeItem, setItemWithObject } from "../../auth/LocalStorage";
+import {
+  getItem,
+  removeItem,
+  setItemWithObject,
+} from "../../auth/LocalStorage";
 import placeholder from "./../../assets/images/place-holder.png";
+import InputFormAtom from "../../atoms/InputFormAtom";
 interface IStates {
-  emails: string[];
+  email: string;
   isCompleted: boolean;
   errorMsg: string;
   url: string;
-  managerUrl : string;
+  managerUrl: string;
   goBack: boolean;
-  goBackManager : boolean;
+  goBackManager: boolean;
   name: string;
   school_id: number;
   image: any;
@@ -30,26 +35,26 @@ interface IProps {
   schools: any;
   inviteManager: Function;
   LoadingActionFunc: Function;
-  getSchoolObj : Function;
+  getSchoolObj: Function;
 }
 
 class InviteManagerPage extends React.Component<IProps, IStates> {
   schoolImage: string | undefined;
   url = "/admin/add-school/";
-id : any;
+  id: any;
   constructor(props: any) {
     super(props);
-	let path = window.location.pathname.split("/");
+    let path = window.location.pathname.split("/");
     this.id = path[3];
 
     this.state = {
-      emails: [],
+      email: "",
       isCompleted: false,
       errorMsg: "",
       url: "",
-	  managerUrl : this.id? "/admin/invite-manager-summary/"+ this.id : "",
+      managerUrl: this.id ? "/admin/invite-manager-summary/" + this.id : "",
       goBack: false,
-	  goBackManager : false,
+      goBackManager: false,
       school_id: -1,
       image: "",
       logo: "",
@@ -57,22 +62,21 @@ id : any;
     };
   }
   componentDidMount() {
-	if (this.id) this.getSchool();
-	else {
-		
-		let school = getItem("school");
-		if (school) {
-		  let school1 = JSON.parse(school);
-		  if (school1) {
-			this.setState({
-			  logo: school1.logo,
-			  school_id: school1.id,
-			  name: school1.name,
-			});
-		  }
-		}
-		this.props.LoadingActionFunc(false);
-	}
+    if (this.id) this.getSchool();
+    else {
+      let school = getItem("school");
+      if (school) {
+        let school1 = JSON.parse(school);
+        if (school1) {
+          this.setState({
+            logo: school1.logo,
+            school_id: school1.id,
+            name: school1.name,
+          });
+        }
+      }
+      this.props.LoadingActionFunc(false);
+    }
   }
 
   getSchool = async () => {
@@ -86,37 +90,39 @@ id : any;
       } else {
         let school1 = this.props.schools.result;
         if (school1) {
-			this.setState({
-				logo: school1.logo,
-				school_id: school1.id,
-				name: school1.name,
-			});
-		  setItemWithObject("school", school1);
+          this.setState({
+            logo: school1.logo,
+            school_id: school1.id,
+            name: school1.name,
+          });
+          setItemWithObject("school", school1);
         }
-
       }
       this.props.LoadingActionFunc(false);
     }
   };
 
-  handleChange = (tags: string[]) => {
+  handleChange = (tag: string) => {
     this.setState({
-      emails: tags,
+      email: tag,
     });
   };
 
   isValid = () => {
     // return true;
-    if (this.state.emails.length === 0) return false;
+    if (this.state.email === "") return false;
     else return true;
   };
 
   submit = async () => {
+    console.log('email',this.state.email)
     if (this.isValid()) {
       if (this.props.schools.result) {
         this.props.LoadingActionFunc(true);
+        let temp = [];
+        temp.push(this.state.email);
         await this.props.inviteManager({
-          user_email: this.state.emails,
+          user_email: temp,
           schoold_id: this.state.school_id,
         });
       }
@@ -125,14 +131,12 @@ id : any;
         this.setState({
           isCompleted: true,
         });
-
       } else {
         this.setState({
           isCompleted: false,
           errorMsg: this.props.schools.error.message[0],
         });
-		this.props.LoadingActionFunc(false);
-
+        this.props.LoadingActionFunc(false);
       }
     }
   };
@@ -141,7 +145,7 @@ id : any;
     this.setState({
       url: this.url + this.state.school_id,
       goBack: true,
-	  goBackManager : true
+      goBackManager: true,
     });
   };
 
@@ -171,18 +175,18 @@ id : any;
   };
 
   render() {
-    const { errorMsg, url, goBack,managerUrl,goBackManager } = this.state;
+    const { errorMsg, url, goBack, managerUrl, goBackManager, email } =
+      this.state;
     return (
       <>
         {goBack && <Navigate to={url} replace={true} />}
-		{goBackManager && <Navigate to={managerUrl} replace={true} />}
+        {goBackManager && <Navigate to={managerUrl} replace={true} />}
 
-		
         <div className="wrapper">
           {this.state.isCompleted && !this.id && (
             <Navigate to="/admin/add-more-school" replace={true} />
           )}
-		   {this.state.isCompleted && this.id && (
+          {this.state.isCompleted && this.id && (
             <Navigate to={managerUrl} replace={true} />
           )}
 
@@ -221,17 +225,39 @@ id : any;
               <div className="f-16 mb-32">
                 <span>Invite a manager to help you run your operations.</span>
               </div>
-              <div className="f-12">
+              {/* <div className="f-12">
                 <span>School Manager(s)</span>
-              </div>
+              </div> */}
               <div className="fw-400 mb-16">
-                <TagInput
+                {/* <TagInput
                   onInputChange={this.handleChange}
                   callback={(tags: string[]) => {
                     this.setState({
                       emails: tags,
                     });
                   }}
+                /> */}
+
+                <InputFormAtom
+                  label="School Manager Email"
+                  placeholder={"Enter Email"}
+                  warning={""}
+                  type="text"
+                  showWarning={false}
+                  isDropdown={false}
+                  callback={(tag: string) => {
+                    this.setState({
+                      email: tag,
+                    });
+                  }}
+                  id="email"
+                  name="email"
+                  value={email}
+                  required={true}
+                  maxLength={200}
+                  className=""
+                  clickCallback={() => {}}
+                  focusCallback={() => {}}
                 />
               </div>
               {errorMsg && <p className="text-danger">{errorMsg}</p>}
@@ -257,6 +283,8 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { inviteManager, LoadingActionFunc, getSchoolObj })(
-  InviteManagerPage
-);
+export default connect(mapStateToProps, {
+  inviteManager,
+  LoadingActionFunc,
+  getSchoolObj,
+})(InviteManagerPage);

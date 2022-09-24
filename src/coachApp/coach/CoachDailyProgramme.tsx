@@ -2,12 +2,18 @@ import React from "react";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
-import { getClassObject, getAll, getClassProgram, postClassProgram, getAssignUserByClass } from "../../stores/actions";
+import {
+  getClassObject,
+  getAll,
+  getClassProgram,
+  postClassProgram,
+  getAssignUserByClass,
+} from "../../stores/actions";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
 
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 
 import ListItem, { IListItem } from "../../atoms/ListItem";
 import CommentItem, { ICommentItem } from "../../atoms/Comment";
@@ -32,14 +38,14 @@ interface IStates {
   comments: any[];
   goAllComments: boolean;
   goEnterComment: boolean;
-  profile: IProfile
-  classProgram: any
+  profile: IProfile;
+  classProgram: any;
 }
 
 interface IProps {
   authUser: AuthInterface;
   getClassObject: Function;
-  postClassProgram: Function
+  postClassProgram: Function;
   getClassProgram: Function;
   getAssignUserByClass: Function;
   classes: any;
@@ -53,10 +59,10 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
   urlComments: any;
   urlEnterComment: any;
   minuteObj: any = {
-    "first_slot": 0,
-    "second_slot": 10,
-    "third_slot": 20
-  }
+    first_slot: 0,
+    second_slot: 10,
+    third_slot: 20,
+  };
   constructor(props: any) {
     super(props);
     let path = window.location.pathname.split("/");
@@ -83,21 +89,18 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
   authFromLocal = async () => {
     let user = JSON.parse(getItem("authUser") || "null");
     if (user && user.userInfo) {
-      if (
-        user.userInfo.assign_class &&
-        user.userInfo.assign_class.length > 0
-      ) {
+      if (user.userInfo.assign_class && user.userInfo.assign_class.length > 0) {
         if (user.userInfo.assign_class[0].classes) {
-					 await this.setState({
-							...this.state,
-							schoolId: user.userInfo.assign_class[0].classes.school_id,
-						});
+          await this.setState({
+            ...this.state,
+            schoolId: user.userInfo.assign_class[0].classes.school_id,
+          });
 
-						await this.getClass();
-						await this.getCoachesByClass();
-						await this.getAttendancesByClass();
-						await this.getClassProgram();
-				}
+          await this.getClass();
+          await this.getCoachesByClass();
+          await this.getAttendancesByClass();
+          await this.getClassProgram();
+        }
       }
     }
   };
@@ -106,43 +109,42 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
     let url = "school/" + this.state.schoolId + "/class/" + this.state.id;
     await this.props.getClassObject(url, true);
     if (this.props.classes && this.props.classes.viewClass) {
-      let comment = []
+      let comment = [];
       let profile: IProfile = {
         isLogo: true,
         logo: this.props.classes.viewClass.logo,
         title: this.props.classes.viewClass.name,
         display_item: [
           {
-            title: 'Date',
-            value: moment(this.props.classes.viewClass.start_date).format("D MMM YYYY")
+            title: "Date",
+            value: moment(this.props.classes.viewClass.start_date).format(
+              "D MMM YYYY"
+            ),
           },
           {
-            title: 'Time',
-            value: this.props.classes.viewClass.start_time
+            title: "Time",
+            value: this.props.classes.viewClass.start_time,
           },
           {
-            title: 'No. Student',
-            value: this.props.classes.viewClass.studentCount
-          }
-        ]
-      }
+            title: "No. Student",
+            value: this.props.classes.viewClass.studentCount,
+          },
+        ],
+      };
       // if(this.props.classes.viewClass.comments){
       //   comment
       // }
       this.setState({
         ...this.state,
         classe: this.props.classes.viewClass,
-        profile: profile
+        profile: profile,
       });
     }
-
-
   };
 
   getCoachesByClass = async () => {
     let url = "assigned/class/by-class/" + this.state.id;
     await this.props.getAssignUserByClass(url);
-
   };
 
   getAttendancesByClass = async () => {
@@ -160,11 +162,31 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
           text: tempAttendances[i].user.name,
           callback: () => console.log("log click item"),
           smallText: "",
-          icon: tempAttendances[i].user.avatar ? <img src={process.env.REACT_APP_API_ENDPOINT + "/" + tempAttendances[i].user.avatar} className="logo-icon" /> : <InitialIcon initials={(tempAttendances[i].user.name || tempAttendances[i].user.email || "User").substr(0, 1).toUpperCase()} isFooterMenu={true} />,
+          icon: tempAttendances[i].user.avatar ? (
+            <img
+              src={
+                process.env.REACT_APP_API_ENDPOINT +
+                "/" +
+                tempAttendances[i].user.avatar
+              }
+              className="logo-icon"
+            />
+          ) : (
+            <InitialIcon
+              initials={(
+                tempAttendances[i].user.name ||
+                tempAttendances[i].user.email ||
+                "User"
+              )
+                .substr(0, 1)
+                .toUpperCase()}
+              isFooterMenu={true}
+            />
+          ),
           secondryText: true,
           isBigIcon: false,
           selectable: true,
-          checked: tempAttendances[i].attend
+          checked: tempAttendances[i].attend,
         });
       }
       this.setState({
@@ -187,7 +209,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
         let temp = this.state.image;
         temp.preview = URL.createObjectURL(e.target.files[0]);
         temp.raw = e.target.files[0];
-        await this.postClassProgram(this.state.id, temp.raw)
+        await this.postClassProgram(this.state.id, temp.raw);
         // this.setState({
         //   image: temp,
         // });
@@ -196,38 +218,38 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
   };
 
   postClassProgram = async (id: number, file: any) => {
-    let url = "class-daily/" + id + "/program"
+    let url = "class-daily/" + id + "/program";
     let date = new Date().toISOString();
-    let oldId = this.state.classProgram ? this.state.classProgram.id : 0
+    let oldId = this.state.classProgram ? this.state.classProgram.id : 0;
     let postData: ClassProgramInterface = {
       logo: file,
       upload_date: date,
-      id: oldId
-    }
+      id: oldId,
+    };
 
-    await this.props.postClassProgram(postData, url)
+    await this.props.postClassProgram(postData, url);
     this.setState({
       ...this.state,
-      classProgram: this.props.classes.dailyProgram
-    })
-  }
+      classProgram: this.props.classes.dailyProgram,
+    });
+  };
 
   getClassProgram = async () => {
     let date = new Date().toISOString();
-    let url = "class-daily/" + this.state.id + "/program?req_date=" + date
-    await this.props.getClassProgram(url)
+    let url = "class-daily/" + this.state.id + "/program?req_date=" + date;
+    await this.props.getClassProgram(url);
     if (this.props.classes && this.props.classes.dailyProgram) {
       this.setState({
         ...this.state,
-        classProgram: this.props.classes.dailyProgram
-      })
+        classProgram: this.props.classes.dailyProgram,
+      });
     }
-  }
+  };
 
   goToAllComments = (id: any) => {
     // this.setState({ goAllComments: true });
     let cmdUrl = "/coach/dashboard/all-comments/" + id + "/class";
-    this.props.history.push(cmdUrl)
+    this.props.history.push(cmdUrl);
   };
 
   goToEnterComments = (id: any) => {
@@ -235,18 +257,19 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
     this.urlEnterComment = "/coach/dashboard/enter-comments/" + id + "/class";
   };
 
-
-  createProfile = (image_url: string, name: string,isXs?: boolean) => {
+  createProfile = (image_url: string, name: string, isXs?: boolean) => {
     if (image_url) {
-      return <img src={"/assets/icons/logo.png"} className="logo-icon" />
+      return <img src={"/assets/icons/logo.png"} className="logo-icon" />;
     } else {
-      return <InitialIcon
-        initials={name.substr(0, 1).toUpperCase()}
-        isFooterMenu={true}
-        isXs={true}
-      />
+      return (
+        <InitialIcon
+          initials={name.substr(0, 1).toUpperCase()}
+          isFooterMenu={true}
+          isXs={true}
+        />
+      );
     }
-  }
+  };
 
   render() {
     let item: IListItem = {
@@ -265,94 +288,162 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
     let comment: ICommentItem = {
       message: "Hello Testing Comment",
       profile: <img src={"/assets/icons/logo.png"} className="logo-icon" />,
-      callback: () => { },
+      callback: () => {},
       timeString: "You at 00:00 PM",
       showReply: true,
       reply: 0,
     };
 
-    const { classe, attendances, coaches, goAllComments, goEnterComment, profile, classProgram } = this.state;
+    const {
+      classe,
+      attendances,
+      coaches,
+      goAllComments,
+      goEnterComment,
+      profile,
+      classProgram,
+    } = this.state;
 
     return (
       <>
         {goAllComments && <Navigate to={this.urlComments} replace={true} />}
-        {goEnterComment && <Navigate to={this.urlEnterComment} replace={true} />}
+        {goEnterComment && (
+          <Navigate to={this.urlEnterComment} replace={true} />
+        )}
 
         <div className="wrapper-mobile bg-w">
           <div className="content-mobile-cus-space col-sm-12">
             <CoachMobileHeader backBtn={true}></CoachMobileHeader>
             <ProfileContainer {...profile}></ProfileContainer>
             <div className="mb-8">
-              <ListBoxUI title="Daily Program" callback={() => { }} callback2={() => { }} noBtn={true}>
+              <ListBoxUI
+                title="Daily Program"
+                callback={() => {}}
+                callback2={() => {}}
+                noBtn={true}
+              >
                 {classProgram && classProgram.image_url !== "" ? (
                   <>
                     <label htmlFor="fileUpload" className="cursor-pointer">
                       <img
-                        src={process.env.REACT_APP_API_ENDPOINT + "/" + classProgram.image_url}
+                        src={
+                          process.env.REACT_APP_API_ENDPOINT +
+                          "/" +
+                          classProgram.image_url
+                        }
                         alt="preview"
                         className="daily-programme-image"
                       />
-                      <input type="file" id="fileUpload" style={{ display: 'none' }} onChange={this.handleChange} />
+                      <input
+                        type="file"
+                        id="fileUpload"
+                        style={{ display: "none" }}
+                        onChange={this.handleChange}
+                      />
                     </label>
                   </>
-                ) :
+                ) : (
                   <div className="file-upload">
-                    <label htmlFor="fileUpload" className="cursor-pointer">Tap to Upload</label>
+                    <label htmlFor="fileUpload" className="cursor-pointer">
+                      Tap to Upload
+                    </label>
                     <FileUploadOutlinedIcon />
-                    <input type="file" id="fileUpload" style={{ display: 'none' }} onChange={this.handleChange} />
+                    <input
+                      type="file"
+                      id="fileUpload"
+                      style={{ display: "none" }}
+                      onChange={this.handleChange}
+                    />
                   </div>
-                }
+                )}
               </ListBoxUI>
             </div>
-            {
-              this.props.classes.assignUser.length > 0 ?
-                <div className="mb-8">
-                  <ListBoxUI title="Coaches" callback={() => { }} callback2={() => { }} noBtn={true}>
-                    <>
-                      {this.props.classes.assignUser?.filter((coach:any) => coach.type == 'coache').map((coach: any, index: any) => {
-                        return (<ListItem text={coach.user.name || coach.user.email} callback={() => { }} key={`coache${index}`} icon={<>
-                          <InitialIcon isFooterMenu={true}
-                            initials={(coach.user.name || coach.user.email || "User")
-                              .substr(0, 1)
-                              .toUpperCase()}
-
+            {this.props.classes.assignUser.length > 0 ? (
+              <div className="mb-8">
+                <ListBoxUI
+                  title="Coaches"
+                  callback={() => {}}
+                  callback2={() => {}}
+                  noBtn={true}
+                >
+                  <>
+                    {this.props.classes.assignUser
+                      ?.filter((coach: any) => coach.type == "coache")
+                      .map((coach: any, index: any) => {
+                        return (
+                          <ListItem
+                            text={coach.user.name || coach.user.email}
+                            callback={() => {}}
+                            key={`coache${index}`}
+                            icon={
+                              <>
+                                <InitialIcon
+                                  isFooterMenu={true}
+                                  initials={(
+                                    coach.user.name ||
+                                    coach.user.email ||
+                                    "User"
+                                  )
+                                    .substr(0, 1)
+                                    .toUpperCase()}
+                                />
+                              </>
+                            }
+                            arrowRight={false}
                           />
-                        </>} arrowRight={true} />)
+                        );
                       })}
-                    </>
-                  </ListBoxUI>
-                </div>
-                : <></>
-            }
+                  </>
+                </ListBoxUI>
+              </div>
+            ) : (
+              <></>
+            )}
             <div className="mb-8">
               <ListBoxUI
                 title="Post-Class Slots"
                 callback={() => this.goToAllComments(this.state.classe.id)}
-                callback2={() => { }}
+                callback2={() => {}}
                 noBtn={true}
-              // more2={true}
+                // more2={true}
               >
                 <>
                   {classe?.class_slot?.map((slot: any, index: any) => {
-                    let min: number = this.minuteObj[slot?.slot_type] || 0
-                    return <ListItem key={`classSlot${index}`} callback={() => { }} noMainText={true} secondryText={true}>
-                      <>
-                        <div className="slot-label">
-                          <AccessTimeOutlinedIcon fontSize="small" />
-                          <label>
-                            {moment(`${classe.start_date} ${classe.end_time}`).add(min, 'minutes').format("hh:mm A")}
-                            &nbsp;with Coach
-                          </label>
-                        </div>
-                        {slot.user_id ?
+                    let min: number = this.minuteObj[slot?.slot_type] || 0;
+                    return (
+                      <ListItem
+                        key={`classSlot${index}`}
+                        callback={() => {}}
+                        noMainText={true}
+                        secondryText={true}
+                      >
+                        <>
                           <div className="slot-label">
-                            {this.createProfile("", slot.user.student.parent_name,true)}
-                            <label>{slot.user.student.parent_name} booked this slot</label>
+                            <AccessTimeOutlinedIcon fontSize="small" />
+                            <label>
+                              {moment(`${classe.start_date} ${classe.end_time}`)
+                                .add(min, "minutes")
+                                .format("hh:mm A")}
+                              &nbsp;with Coach
+                            </label>
                           </div>
-                          : <label>Available</label>}
-                      </>
-                    </ListItem>
-
+                          {slot.user_id ? (
+                            <div className="slot-label">
+                              {this.createProfile(
+                                "",
+                                slot.user.student.parent_name,
+                                true
+                              )}
+                              <label>
+                                {slot.user.student.parent_name} booked this slot
+                              </label>
+                            </div>
+                          ) : (
+                            <label>Available</label>
+                          )}
+                        </>
+                      </ListItem>
+                    );
                   })}
                 </>
               </ListBoxUI>
@@ -361,45 +452,68 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
               <ListBoxUI
                 title="Class Comments"
                 callback={() => this.goToAllComments(this.state.classe.id)}
-                callback2={() => { }}
+                callback2={() => {}}
                 more={true}
                 // more2={true}
                 moreText2="Add Comment"
               >
-                {classe.comments ? <>
-                  {classe.comments.slice(0, 3).map((res: any, index: number) => {
-                    return (
-                      <CommentItem
-                        profile={this.createProfile(res.user_info.avatar, res.user_info.name)}
-                        message={res.message}
-                        callback={() => { }}
-                        timeString={res.user_info.name + " at " + moment(res.created_at).format("DD MMM, h:mm a")}
-                        key={`cmd-${index}`}></CommentItem>
-                    )
-                  })}
-                </> : <></>}
+                {classe.comments ? (
+                  <>
+                    {classe.comments
+                      .slice(0, 3)
+                      .map((res: any, index: number) => {
+                        return (
+                          <CommentItem
+                            profile={this.createProfile(
+                              res.user_info.avatar,
+                              res.user_info.name
+                            )}
+                            message={res.message}
+                            callback={() => {}}
+                            timeString={
+                              res.user_info.name +
+                              " at " +
+                              moment(res.created_at).format("DD MMM, h:mm a")
+                            }
+                            key={`cmd-${index}`}
+                            showRightArr={false}
+                            isFileIncluded={
+                              res.attachment && res.attachment !== ""
+                                ? true
+                                : false
+                            }
+                            file={res.attachment}
+                          ></CommentItem>
+                        );
+                      })}
+                  </>
+                ) : (
+                  <></>
+                )}
               </ListBoxUI>
             </div>
-            {attendances.length > 0 ?
+            {attendances.length > 0 ? (
               <div className="mb-8">
                 <ListBoxUI
                   title="Attendance"
                   callback={() => {
-                    this.props.history.push("/coach/class/attendance/" + this.state.classe.id)
+                    this.props.history.push(
+                      "/coach/class/attendance/" + this.state.classe.id
+                    );
                   }}
                   more={true}
                   moreText="View All"
                 >
                   <>
                     {attendances.slice(0, 5).map((attend, index) => {
-                      return <ListItem {...attend} key={`attend${index}`} />
+                      return <ListItem {...attend} key={`attend${index}`} />;
                     })}
                   </>
                 </ListBoxUI>
               </div>
-              : <></>}
-
-
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </>
@@ -423,6 +537,10 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { getClassObject, getAll, postClassProgram, getClassProgram, getAssignUserByClass })(
-  CoachDailyProgramPage
-);
+export default connect(mapStateToProps, {
+  getClassObject,
+  getAll,
+  postClassProgram,
+  getClassProgram,
+  getAssignUserByClass,
+})(CoachDailyProgramPage);

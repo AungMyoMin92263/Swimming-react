@@ -41,12 +41,12 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
-		this.id = path[3];
+		this.id = path[3] === 'new'? path[4] : path[3];
 
 		this.state = {
 			school: { name: "", logo: "", assign_user: [] },
 			errorMsg: "",
-			url: "",
+			url: path[3] === 'new' ? "/manager/invite-student" : "/manager/class/"+ this.id,
 			school_logo: "",
 			school_name: "",
 			schoolId: "",
@@ -76,33 +76,10 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 		this.props.LoadingActionFunc(false);
 	}
 
-	getSchool = async () => {
-		await this.props.getSchoolObj("schools/" + this.id);
-
-		if (this.props.schools.result) {
-			if (this.props.schools.error) {
-				this.setState({
-					errorMsg: this.props.schools.error,
-				});
-			} else {
-				let school1 = this.props.schools.result;
-				if (school1) {
-					this.setState({
-						school: school1,
-						url: "/admin/invite-manager/" + school1.id,
-					});
-					setItemWithObject("school", school1);
-				}
-			}
-			this.props.LoadingActionFunc(false);
-		}
-	};
 	getClass = async () => {
 		let url = "school/" + this.state.schoolId + "/class/" + this.state.classId;
 		await this.props.getClassObject(url);
-		console.log(this.props)
 		if (this.props.classes && this.props.classes.viewClass) {
-			console.log('fffffffffffffffffffff')
 			this.setState({
 				coachList: this.props.classes.viewClass.assign_user,
 				class_logo: this.props.classes.viewClass.logo,
@@ -114,7 +91,6 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 			this.props.classes.result &&
 			this.props.classes.result.assign_user
 		) {
-			console.log('MMMMMMMMMM')
 			this.setState({
 				coachList: this.props.classes.result.assign_user,
 				class_logo: this.props.classes.result.logo,
@@ -124,7 +100,6 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 	};
 	handleDelete = async (user_id:any) =>{
 		let deleteCoachUrl = "assigned/class" 
-		console.log("user_id", user_id)
 		await this.props.deleteCoach(deleteCoachUrl, user_id)
 
 		if (
@@ -132,7 +107,6 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 			this.props.coach.result &&
 			this.props.coach.result.data.statusText === "success"
 		){
-			console.log("deleteed")
 			this.getClass()
 		}
 			if (this.props.coach.error) {
@@ -228,7 +202,7 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 										<div className='hr mb-16'></div>
 									</>
 								))}
-							<Link to={"/manager/invite-coach"} style={{ textDecoration: "none" }}>
+							<Link to={"/manager/invite-coach/"+ this.id} style={{ textDecoration: "none" }}>
 								<div className='mb-16 align-center'>
 									<AddIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
@@ -238,7 +212,7 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 							</Link>
 
 							<div className='hr mb-32'></div>
-							<Link to='/admin/dashboard' style={{ textDecoration: "none" }}>
+							<Link to={url} style={{ textDecoration: "none" }}>
 								<button type='submit' className='primary-btn right'>
 									Done
 								</button>

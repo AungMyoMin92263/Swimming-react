@@ -5,7 +5,7 @@ import PoolIcon from '@mui/icons-material/Pool';
 import AddIcon from '@mui/icons-material/Add';
 import placeholder from "../assets/images/place-holder.png";
 
-import './MenuSideBar.css';
+import './menuSideBar.css';
 import { getItem } from '../auth/LocalStorage';
 
 const ManagerSideBar = (props: IPageProp) => {
@@ -24,8 +24,10 @@ const ManagerSideBar = (props: IPageProp) => {
 
   return (
     <div className="side-bar">
-      <h1 className="aside-title primary cursor" onClick={() => props.history.push('dashboard')}>My Report Cards</h1>
-      <div className="active-school" onClick={() => props.history.push('dashboard')}>
+      {/* <h1 className="aside-title primary cursor" onClick={() => props.history.push('dashboard')}>My Report Cards</h1>
+      <div className="active-school" onClick={() => props.history.push('dashboard')}> */}
+      <h1 className="aside-title primary cursor" onClick={() => props.history.push('/manager/dashboard')}>My Report Cards</h1>
+      <div className="active-school" onClick={() => props.history.push('/manager/dashboard')}>
         <div className={`list-item ${path[2] === 'dashboard' ? "active" : ""}`}>
           <img
                       src={

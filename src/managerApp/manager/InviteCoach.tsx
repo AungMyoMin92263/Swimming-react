@@ -1,201 +1,360 @@
 import React from "react";
 import { connect } from "react-redux";
 import { StoreState } from "../../stores/reducers";
-import { inviteCoach, LoadingActionFunc } from "../../stores/actions";
+import {
+  inviteCoach,
+  LoadingActionFunc,
+  getClassObject,
+} from "../../stores/actions";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
+import AddIcon from "@mui/icons-material/Add";
 import { Link, Navigate } from "react-router-dom";
-import { getItem } from "../../auth/LocalStorage";
-import TagInput from "../../components/TagInput";
+import InputFormAtom from "../../atoms/InputFormAtom";
+import {
+  getItem,
+  removeItem,
+  setItemWithObject,
+} from "../../auth/LocalStorage";
 import placeholder from "./../../assets/images/place-holder.png";
 
+interface CoachViewModel {
+  coachEmail: string;
+  iscoachEmailValid: boolean;
+  iscoachEmailEmpty: boolean;
+  coachEmailMsg: string;
+}
+
 interface IStates {
-	emails: string[];
-	isCompleted: boolean;
-	school_name: string;
-	errorMsg: string;
-	classObj: any;
+  emails: string[];
+  isCompleted: boolean;
+  isValid: boolean;
+  coaches: CoachViewModel[];
+  coachEmailMsg: string;
+  school_name: string;
+  school_id: any;
+  classObj: any;
 }
 
 interface IProps {
-	emails: string[];
-	classes: any;
-	inviteCoach: Function;
-	LoadingActionFunc : Function;
+  emails: string[];
+  classes: any;
+  inviteCoach: Function;
+  LoadingActionFunc: Function;
+  getClassObject: Function;
 }
+
 class InviteCoachPage extends React.Component<IProps, IStates> {
-	constructor(props: any) {
-		super(props);
+  backUrl: any;
+  url: any;
+  id: any;
+  constructor(props: any) {
+    super(props);
+    
+    this.state = {
+      emails: [],
+      isCompleted: false,
+      coaches: [
+        {
+          coachEmail: "",
+          iscoachEmailValid: false,
+          iscoachEmailEmpty: true,
+          coachEmailMsg: "",
+        },
+      ],
+      coachEmailMsg: "",
+      school_name: "",
+      school_id: null,
+      classObj: null,
+      isValid: false,
+    };
+  }
+  componentDidMount() {
+    let path = window.location.pathname.split("/");
+    this.id = path[3];
+    this.authFromLocal();
+  }
 
-		this.state = {
-			emails: [],
-			isCompleted: false,
-			school_name: "",
-			errorMsg: "",
-			classObj: null,
-		};
-	}
-	componentDidMount() {
-		const user = JSON.parse(getItem("authUser") || "null");
-		if (user && user.userInfo && user.userInfo.assign_school) {
-			this.setState({
-				school_name: user.userInfo.assign_school.school.name,
-			});
-		}
-		const classObject = JSON.parse(getItem("class") || "null");
-		this.setState({
-			classObj: classObject,
-		});
-		this.props.LoadingActionFunc(false);
-	}
+  authFromLocal = async () => {
+    const user = JSON.parse(getItem("authUser") || "null");
+    if (user && user.userInfo && user.userInfo.assign_school) {
+      await this.setState({
+        school_name: user.userInfo.assign_school.school.name,
+        school_id: user.userInfo.assign_school.school.id,
+      });
 
-	handleChange = (tags: string[]) => {
-		this.setState({
-			emails: tags,
-		});
-	};
+      if (!this.id) {
+        const classObject = JSON.parse(getItem("class") || "null");
+        if (classObject) {
+          this.id = classObject.id;
+          this.setState({
+            classObj: classObject,
+          });
+          this.url = "/manager/invite-coach-summary/new/" + classObject.id;
+        }
+        this.backUrl = "/manager/set-date-time";
+      } else {
+        this.url = "/manager/invite-coach-summary/" + this.id;
+        this.backUrl = "/manager/invite-coach-summary/" + this.id;
+        this.getClass();
+      }
+      this.props.LoadingActionFunc(false);
+    } else this.props.LoadingActionFunc(false);
+  };
 
-	isValid = () => {
-		if (this.state.emails.length === 0) return false;
-		else return true;
-	};
+  getClass = async () => {
+    if (this.state.school_id && this.id) {
+      let url = "school/" + this.state.school_id + "/class/" + this.id;
+      await this.props.getClassObject(url);
+      if (this.props.classes && this.props.classes.result)
+        this.setState({
+          classObj: this.props.classes.result,
+        });
+    }
+  };
 
-	submit = async () => {
-		console.log("Clicked")
-		if (this.isValid()) {
-			if (this.state.classObj) {
-				this.props.LoadingActionFunc(true);
+  addCoach = () => {
+    let temp = this.state.coaches;
+    temp.push({
+      coachEmail: "",
+      iscoachEmailValid: false,
+      iscoachEmailEmpty: true,
+      coachEmailMsg: "",
+    });
+    this.setState({
+      coaches: temp,
+      isValid: false,
+    });
+  };
 
-				await this.props.inviteCoach({
-					user_email: this.state.emails,
-					class_id: this.state.classObj.id,
-				});
+  isValidated = () => {
+    if (this.state.coaches.length > 0) {
+      this.setState({ isValid: true });
+      this.state.coaches.map((coachObject: any) => {
+        if (coachObject.iscoachEmailEmpty || !coachObject.iscoachEmailValid) {
+          this.setState({ isValid: false });
+        }
+      });
+    } else {
+      this.setState({ isValid: false });
+    }
+  };
 
-				if (this.props.classes.error) {
-					this.setState({
-						isCompleted: false,
-						errorMsg: this.props.classes.error,
-					});
-					this.props.LoadingActionFunc(false);
+  submit = async () => {
+    if (this.state.isValid) {
+      let temp = [];
+      for (let i = 0; i < this.state.coaches.length; i++) {
+        temp.push(this.state.coaches[i].coachEmail);
+      }
+      await this.setState({
+        emails: temp,
+      });
+      if (this.id) {
+        console.log("this.state.emails", this.state.emails, this.id);
 
-				} else {
-					this.setState({
-						isCompleted: true,
-					});
-				}
-			}
-		}
-	};
+        this.props.LoadingActionFunc(true);
+        await this.props.inviteCoach({
+          user_email: this.state.emails,
+          class_id: this.id,
+        });
 
-	renderBtn = () => {
-		if (!this.isValid()) {
-			return (
-				<button type='submit' className='idle-btn fw-600 ml-16'>
-					Done
-				</button>
-			);
-		} else
-			return (
-				<>
-					{this.state.isCompleted && (
-						<Navigate to='/manager/invite-student' replace={true} />
-					)}
-					<button
-						type='submit'
-						className='primary-btn fw-600 ml-16'
-						onClick={this.submit}
-					>
-						Done
-					</button>
-				</>
-			);
-	};
+        if (this.props.classes.error) {
+          console.log(this.props.classes.error);
+          this.setState({
+            isCompleted: false,
+          });
+          this.props.LoadingActionFunc(false);
+        } else {
+          const coach = JSON.parse(getItem("coaches") || "null");
+          if (coach) {
+            setItemWithObject("coaches", coach.concat(this.state.coaches));
+          } else setItemWithObject("coaches", this.state.coaches);
 
-	render() {
-		const { errorMsg, classObj } = this.state;
-		return (
-			<>
-				<div className='wrapper'>
-					<div className='primary f-16 project-header'>
-						<Link to='/manager/dashboard'>
-							<span>My Report Cards</span>
-						</Link>
-					</div>
-					<div className='container-cus'>
-						<div className='content col-lg-6'>
-							<div className='f-14 mb-32'>
-								<Link
-									to='/manager/set-date-time'
-									style={{ textDecoration: "none" }}
-								>
-									<ArrowBackIcon
-										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-									></ArrowBackIcon>
-									<span>Back</span>
-								</Link>
-							</div>
+          this.setState({
+            isCompleted: true,
+          });
+        }
+      }
+    }
+  };
 
-							<div className='mb-16 align-center'>
-								<img
-									src={
-										classObj && classObj.logo
-											? process.env.REACT_APP_API_ENDPOINT + "/" + classObj.logo
-											: placeholder
-									}
-									alt='logo'
-									className={`${
-										classObj && classObj.logo ? "item-icon" : "w-48"
-									}`}
-								/>
-								<span className='f-16'>
-									{classObj && classObj.name} ({this.state.school_name})
-								</span>
-							</div>
-							<div className='hr mb-32'></div>
-							<div className='f-32 fw-500'>
-								<span>Invite a Coach.</span>
-							</div>
-							<div className='f-16 mb-32'>
-								<span>Invite a coach to your class.</span>
-							</div>
+  renderBtn = () => {
+    if (!this.state.isValid) {
+      return (
+        <button type="submit" className="idle-btn fw-600 ml-16">
+          Done
+        </button>
+      );
+    } else
+      return (
+        <>
+          <button
+            type="submit"
+            className="primary-btn fw-600 ml-16"
+            onClick={this.submit}
+          >
+            Done
+          </button>
+        </>
+      );
+  };
 
-							<div className='f-12'>
-								<span>Coach(es)</span>
-							</div>
-							<div className='fw-400 mb-16'>
-								<TagInput
-									onInputChange={this.handleChange}
-									callback={(tags: string[]) => {
-										this.setState({
-											emails: tags,
-										});
-									}}
-								/>
-							</div>
-							{/* {this.isValid() && <p className='text-danger'>At least on manager invite</p>} */}
-							<div>{errorMsg && <p className='text-danger'>{errorMsg}</p>}</div>
+  removeCoach = (index: number) => {
+    let temp = this.state.coaches;
+    temp.splice(index, 1);
+    this.setState({
+      coaches: temp,
+    });
+  };
 
-							<div className='right flex align-center'>
-								<span className='secondary mr-16'>3 of 4</span>
-								{this.renderBtn()}
-							</div>
-						</div>
-					</div>
-				</div>
-			</>
-		);
-	}
+  render() {
+    const { coaches, coachEmailMsg, school_name, classObj } = this.state;
+    return (
+      <>
+        {this.state.isCompleted && <Navigate to={this.url} replace={true} />}
+        <div className="wrapper scroll-y">
+          <div className="primary f-16 project-header">
+            <Link to="/manager/dashboard">
+              <span>My Report Cards</span>
+            </Link>
+          </div>
+          <div className="container-cus">
+            <div className="content col-lg-6">
+              <div className="f-14 mb-32">
+                <Link
+                  to={this.id? "/manager/invite-coach-summary/" + this.id : "/manager/set-date-time"}
+                  style={{ textDecoration: "none" }}
+                >
+                  <ArrowBackIcon
+                    sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+                  ></ArrowBackIcon>
+                  <span>Back</span>
+                </Link>
+              </div>
+
+              <div className="mb-16 align-center">
+                <img
+                  src={
+                    classObj && classObj.logo
+                      ? process.env.REACT_APP_API_ENDPOINT + "/" + classObj.logo
+                      : placeholder
+                  }
+                  alt="logo"
+                  className={`${
+                    classObj && classObj.logo ? "item-icon" : "w-48"
+                  }`}
+                />
+                <span className="f-16">
+                  {classObj && classObj.name} ({school_name})
+                </span>
+              </div>
+              <div className="hr mb-32"></div>
+              <div className="f-32 fw-500">
+                <span>Invite a Coach.</span>
+              </div>
+              <div className="f-16 mb-32">
+                <span>Invite a coach to your class.</span>
+              </div>
+              {coaches &&
+                coaches.length > 0 &&
+                coaches.map((coach: any, index) => (
+                  <>
+                    <div>
+                      <div className="f-16 mb-16 fw-500 flex justify-space-between">
+                        <span>Coach #{index + 1}</span>
+                        {index > 0 && (
+                          <div
+                            onClick={() => {
+                              this.removeCoach(index);
+                              this.isValidated();
+                            }}
+                            className="fc-primary cursor"
+                          >
+                            Clear
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="fw-400 mb-16">
+                        <InputFormAtom
+                          label="Coach Email"
+                          placeholder={"Enter Email"}
+                          warning={coachEmailMsg}
+                          type="text"
+                          // showWarning={
+                          // 	student.isStudentEmailEmpty ||
+                          // 	!student.isStudentEmailValid
+                          // }
+                          showWarning={false}
+                          isDropdown={false}
+                          callback={(value: string) => {
+                            this.isValidated();
+                            let temp = coaches;
+                            temp[index].coachEmail = value;
+                            this.setState({
+                              coaches: temp,
+                            });
+                          }}
+                          id="inviteCoachEmail"
+                          name="inviteCoachEmail"
+                          value={coach.coachEmail}
+                          required={true}
+                          maxLength={200}
+                          className=""
+                          clickCallback={() => {}}
+                          focusCallback={() => {
+                            let temp = coaches;
+                            temp[index].iscoachEmailEmpty = false;
+                            temp[index].iscoachEmailValid = true;
+
+                            this.setState({
+                              coaches: temp,
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </>
+                ))}
+
+              <div className="flex-center justify-space-between">
+                <div className="flex-center">
+                  <div onClick={this.addCoach} className="cursor">
+                    <AddIcon
+                      sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+                    ></AddIcon>
+                    <span className="primary">Add another coach</span>
+                  </div>
+                </div>
+
+                <div className="flex-center">
+                  <span className="secondary">4 of 4</span>
+                  {this.renderBtn()}
+                </div>
+              </div>
+              {this.props.classes.error && (
+                <p className="text-danger">{this.props.classes.error}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 }
 
 const mapStateToProps = ({
-	classes,
+  classes,
 }: StoreState): {
-	classes: any;
+  classes: any;
 } => {
-	return {
-		classes,
-	};
+  return {
+    classes,
+  };
 };
 
-export default connect(mapStateToProps, { inviteCoach,LoadingActionFunc })(InviteCoachPage);
+export default connect(mapStateToProps, {
+  inviteCoach,
+  LoadingActionFunc,
+  getClassObject,
+})(InviteCoachPage);

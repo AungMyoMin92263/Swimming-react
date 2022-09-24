@@ -87,9 +87,7 @@ class CoachEditProfilePage extends React.Component<IProps, IStates> {
                   className="big-icon cursor mb-8"
                 /> */}
 								<InitialIcon
-									initials={(userInfo?.name || "User")
-										.substr(0, 1)
-										.toUpperCase()}
+									initials={(userInfo?.name || "User").substring(0, 1).toUpperCase()}
 									isFooterMenu={false}
 									isInitialIcon={true}
 								/>

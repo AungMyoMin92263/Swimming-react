@@ -53,15 +53,14 @@ class CoachEventsPage extends React.Component<IProps, IStates> {
 
   getEventList = async (user: any) => {
     let schoolId = user?.assign_class[0]?.classes?.school_id
-    console.log(user);
 
     let url = `school/${schoolId}/event`
-    console.log(url);
 
     await this.props.getAllEvents(url)
   }
 
   goEventDetail = async (event: any) => {
+    console.log('event',event)
     await this.props.getDetailEvents(event.school_id, event.id)
     this.props.history.push("/coach/event/detail/" + event.id)
   }
@@ -83,7 +82,7 @@ class CoachEventsPage extends React.Component<IProps, IStates> {
               <span> Events </span>
             </div>
 
-            <div className="mb-8">
+            {/* <div className="mb-8">
               <ListBoxUI
                 title="Upcoming Competitons"
                 callback={() => { }}
@@ -96,7 +95,8 @@ class CoachEventsPage extends React.Component<IProps, IStates> {
                   </>
                 </ListItem>
               </ListBoxUI>
-            </div>
+            </div> */}
+
             <div className="mb-8">
               <ListBoxUI
                 title="My Events"

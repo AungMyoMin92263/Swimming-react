@@ -71,8 +71,10 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 
   getUsers = async () => {
     await this.props.getAllUsers();
+	let filtered = this.props.users.result.filter((u : any) => u.role !== 'admin');
+
     this.setState({
-      users: this.props.users.result,
+      users: filtered,
     });
     this.props.LoadingActionFunc(false);
   };
