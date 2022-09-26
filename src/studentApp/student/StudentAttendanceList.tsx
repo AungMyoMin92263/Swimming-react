@@ -5,7 +5,7 @@ import ProfileContainer from "../../atoms/ProfileContainer";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { Modal } from "react-bootstrap";
-import { getMyAttendByClass } from "../../stores/actions";
+import { getMyAttendByRange } from "../../stores/actions";
 import { CreateProfile } from "../../atoms/createProfile";
 import moment from "moment";
 import ListBoxUI from "../../molecules/ListBox";
@@ -22,7 +22,7 @@ interface IProps {
   authUser: AuthInterface
   classe: any
   attendance: any
-  getMyAttendByClass: Function
+  getMyAttendByRange: Function
   history: any;
 }
 
@@ -61,7 +61,7 @@ class StudentAttendanceList extends React.Component<IProps, IStates> {
 					selectedClass: selected,
 					selectBox: selected.id,
 				});
-				await this.props.getMyAttendByClass(student.id, selected.id, date);
+				await this.props.getMyAttendByRange(student.id, selected.id, date);
       }
     }
   }
@@ -207,5 +207,5 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { getMyAttendByClass })(StudentAttendanceList);
+export default connect(mapStateToProps, { getMyAttendByRange })(StudentAttendanceList);
 // export default CoachCommentsPage;

@@ -44,6 +44,7 @@ interface IProps {
 	putStudent: Function;
 	LoadingActionFunc: Function;
 	getUserInfo: Function;
+	history: any;
 }
 class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 	id: any;
@@ -90,11 +91,15 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 		if (this.props.user && this.props.user.otherUserinfo) {
 			let userObj = this.props.user.otherUserinfo;
 			this.setState({
-				id: userObj.id,
+				id: userObj.student.id,
 				name: userObj.name,
 				logo: userObj.avatar,
-				mobile: userObj.phone != "null"? userObj.phone: "",
+				mobile: userObj.phone != "null" ? userObj.phone : "",
 				email: userObj.email,
+				parentEmail: userObj.student.parent_email,
+				parentMobile: userObj.student.parent_name,
+				favourite: userObj.favorite,
+				age: userObj.student.age
 			});
 		}
 	};
@@ -135,6 +140,7 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 			formData.append("phone", this.state.mobile);
 			formData.append("email", this.state.email);
       formData.append("parent_email", this.state.parentEmail);
+	  formData.append('parent_phone',this.state.parentMobile)
       formData.append("age", this.state.age);
       formData.append("gender", this.state.gender)
       formData.append("favorite", this.state.favourite);
@@ -152,16 +158,11 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 				this.props.LoadingActionFunc(false);
 			} else {
 				if (this.props.user.userInfo) {
-					// setItemWithObject("authUser", this.props.user);
-					let userObj = this.props.user.userInfo;
-					this.setState({
-						isCompleted: true,
-						name: userObj.name,
-						logo: userObj.logo,
-						mobile: userObj.phone,
-						email: userObj.email,
-					});
+					// setItemWithObject("authUser", this.props.user)
+					this.props.LoadingActionFunc(false);
+					this.props.history.back();
 				}
+				
 			}
 		}
 	};
@@ -176,9 +177,7 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 		} else
 			return (
 				<>
-					{this.state.isCompleted && (
-						<Navigate to='/manager/dashboard' replace={true} />
-					)}
+
 					<button
 						type='submit'
 						className='primary-btn fw-600 ml-16'
@@ -424,7 +423,7 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 									required={true}
 									maxLength={200}
 									className=''
-									disabled={false}
+									disabled={true}
 									clickCallback={() => {}}
 								/>
 							</div>
@@ -472,7 +471,7 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 									required={true}
 									maxLength={200}
 									className=''
-									disabled={false}
+									disabled={true}
 									clickCallback={() => {}}
 								/>
 							</div>

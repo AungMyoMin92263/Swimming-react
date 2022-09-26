@@ -32,12 +32,12 @@ export const getMyAttend = (student_id: number) => {
   };
 };
 
-export const getMyAttendByClass = (studentId: number, classId: number, month: string) => {
+export const getMyAttendByRange = (studentId: number,month?: string) => {
   let options = refreshHeaderOptionToken();
   return async (dispatch: Dispatch) => {
     try {
       dispatch({ type: ActionTypes.loading, payload: true })
-      const response = await apiServer.get<GetMyAttendanceAction>(`attendance/student/${studentId}/class/${classId}?month=${month}`, options?.option);
+      const response = await apiServer.get<GetMyAttendanceAction>(`attendance/student/${studentId}/range?month=${month}`, options?.option);
       dispatch<GetMyAttendanceAction>({
         type: ActionTypes.getMyAttendance,
         payload: response.data,

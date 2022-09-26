@@ -5,7 +5,7 @@ import ProfileContainer from "../../atoms/ProfileContainer";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { Modal } from "react-bootstrap";
-import { getMyAttendByClass } from "../../stores/actions";
+import { getMyAttendByRange } from "../../stores/actions";
 import { CreateProfile } from "../../atoms/createProfile";
 import moment from "moment";
 import ListBoxUI from "../../molecules/ListBox";
@@ -22,7 +22,7 @@ interface IProps {
   authUser: AuthInterface
   classe: any
   attendance: any
-  getMyAttendByClass: Function
+  getMyAttendByRange: Function
   history: any;
 }
 
@@ -52,16 +52,16 @@ class CoachStudentAttendanceList extends React.Component<IProps, IStates> {
     let date = moment().format("YYYY-MM-DD")
     const student = this.props.authUser.otherUserinfo
     if (this.props && this.props.authUser.userInfo?.assign_class.length > 0) {
-      if (this.props.authUser.userInfo?.assign_class[0].classes){
-				const selected = this.state.selectedClass?.id
-					? this.state.selectedClass
-					: this.props.authUser.userInfo?.assign_class[0].classes;
-				this.setState({
-					...this.state,
-					selectedClass: selected,
-					selectBox: selected.id,
-				});
-				await this.props.getMyAttendByClass(student.id, selected.id, date);
+      if (this.props.authUser.userInfo?.assign_class[0].classes) {
+        const selected = this.state.selectedClass?.id
+          ? this.state.selectedClass
+          : this.props.authUser.userInfo?.assign_class[0].classes;
+        this.setState({
+          ...this.state,
+          selectedClass: selected,
+          selectBox: selected.id,
+        });
+        await this.props.getMyAttendByRange(student.id, date);
       }
     }
   }
@@ -162,13 +162,13 @@ class CoachStudentAttendanceList extends React.Component<IProps, IStates> {
                     }}>
                       {userInfo?.assign_class?.map((classData: any, index: any) => {
                         return (
-													<option
-														value={classData.classes && classData.classes.id}
-														key={`classId${index}`}
-													>
-														{classData.classes && classData.classes.name}
-													</option>
-												);
+                          <option
+                            value={classData.classes && classData.classes.id}
+                            key={`classId${index}`}
+                          >
+                            {classData.classes && classData.classes.name}
+                          </option>
+                        );
                       })}
                     </select>
                   </div>
@@ -207,5 +207,5 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { getMyAttendByClass })(CoachStudentAttendanceList);
+export default connect(mapStateToProps, { getMyAttendByRange })(CoachStudentAttendanceList);
 // export default CoachCommentsPage;

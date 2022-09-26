@@ -111,7 +111,7 @@ class CoachCommentsPage extends React.Component<IProps, IStates> {
 		formData.append("message", this.state.newcomment);
 		formData.append("type", this.state.commentType);
 		// formData.append("parent_id", null);
-		formData.append("attachment", this.state.commetFile[0].file);
+		formData.append("attachment", this.state.commetFile.length >  0 ?this.state.commetFile[0].file: null);
 
     await this.props.postComment(formData);
     if (!this.props.comments?.error) {

@@ -30,23 +30,27 @@ interface IStates {
 interface IProps {
 	LoadingActionFunc: Function;
 	schools: any;
+	getAll: Function;
+	response: any;
 	getSchoolObj: Function;
 	getClassObject: Function;
 	classes: any;
 	deleteStudent: Function;
 	student: any;
+	history:any
 }
 class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 	id: any;
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
-		this.id = path[3] === 'new'? path[4] : path[3];
+		this.id = path[3] === "new" ? path[4] : path[3];
 
 		this.state = {
 			school: { name: "", logo: "", assign_user: [] },
 			errorMsg: "",
-			url: path[3] === 'new' ? "/manager/dashboard" : "/manager/class/"+ this.id,
+			url:
+				path[3] === "new" ? "/manager/dashboard" : "/manager/class/" + this.id,
 			school_logo: "",
 			school_name: "",
 			schoolId: "",
@@ -81,9 +85,8 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 		await this.props.getClassObject(url);
 		console.log(this.props);
 		if (this.props.classes && this.props.classes.viewClass) {
-			console.log("fffffffffffffffffffff");
 			this.setState({
-				studentList: this.props.classes.viewClass.assign_user,
+				studentList: this.props.classes.assignUser,
 				class_logo: this.props.classes.viewClass.logo,
 				class_name: this.props.classes.viewClass.name,
 			});
@@ -93,14 +96,14 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 			this.props.classes.result &&
 			this.props.classes.result.assign_user
 		) {
-			console.log("MMMMMMMMMM");
+		
 			this.setState({
-				studentList: this.props.classes.result.assign_user,
 				class_logo: this.props.classes.result.logo,
 				class_name: this.props.classes.result.name,
 			});
 		}
 	};
+
 	handleDelete = async (user_id: any) => {
 		let deleteStudentUrl = "assigned/class";
 		console.log("user_id", user_id);
@@ -175,6 +178,7 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 							{studentList &&
 								studentList.length > 0 &&
 								studentList.map((student: any) => (
+									student.type === 'student' && 
 									<>
 										<div className='f-16 mb-32 align-center justify-space-between'>
 											<div className='align-center'>
@@ -207,7 +211,7 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 								))}
 							<Link
 								// to={"/manager/invite-student"}
-								to={"/manager/invite-student/"+ this.id}
+								to={"/manager/invite-student/" + this.id}
 								style={{ textDecoration: "none" }}
 							>
 								<div className='mb-16 align-center'>
@@ -236,20 +240,24 @@ const mapStateToProps = ({
 	schools,
 	classes,
 	student,
+	response,
 }: StoreState): {
 	schools: any;
 	classes: any;
 	student: any;
+	response:any
 } => {
 	return {
 		schools,
 		classes,
 		student,
+		response
 	};
 };
 
 export default connect(mapStateToProps, {
 	LoadingActionFunc,
+	getAll,
 	getSchoolObj,
 	getClassObject,
 	deleteStudent,

@@ -6,10 +6,11 @@ import { CreateProfile } from "../atoms/createProfile";
 import { InitialIcon } from "../atoms/InitialIcon";
 import ListItem from "../atoms/ListItem";
 import ProfileContainer, { IProfile } from "../atoms/ProfileContainer";
-import { getAllComment, getAllEvents, getDetailEvents, getUserInfo } from "../stores/actions";
+import { getAllComment, getAllEvents, getDetailEvents, getMyAttendByRange, getUserInfo } from "../stores/actions";
 import { StoreState } from "../stores/reducers";
 import BadgeList from "./BadgeList";
 import ListBoxUI from "./ListBox";
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 
 interface IStates {
 
@@ -19,11 +20,14 @@ interface IProps {
   authUser: any;
   getUserInfo: Function
   getAllComment: Function
+  byCoach?: boolean
   history: any,
   comments: any,
   eventList: any
+  attendance: any
   getAllEvents: Function
   getDetailEvents: Function
+  getMyAttendByRange: Function
   defaultPath: string
 }
 
@@ -38,12 +42,17 @@ class StudentProfilePage extends React.Component<IProps, IStates> {
   }
 
   getDetailAll = async () => {
+    let cmdUrl = "comment/by-student/" + this.props.user_id;
     let eventUrl = "assigned/event/by-users/" + this.props.user_id;
-    await Promise.all([this.props.getUserInfo(this.props.user_id, true), this.props.getAllEvents(eventUrl)])
+    await Promise.all([this.props.getUserInfo(this.props.user_id, true), this.props.getAllComment(cmdUrl), this.props.getAllEvents(eventUrl), this.getAttendance()])
   }
 
   goGiveBadge = (id: number) => {
     this.props.history.push(this.props.defaultPath + '/dashboard/give-badges/' + id)
+  }
+
+  getAttendance = async () => {
+    await this.props.getMyAttendByRange(this.props.user_id, "");
   }
 
   goToAllComments = (id: any) => {
@@ -81,6 +90,8 @@ class StudentProfilePage extends React.Component<IProps, IStates> {
         }
       ]
     }
+    console.log(this.props.authUser.otherUserinfo);
+
     const badgeData: any[] = this.props.authUser.otherUserinfo?.own_badges.map((res: any) => {
       return {
         text: res.badge.name,
@@ -92,12 +103,22 @@ class StudentProfilePage extends React.Component<IProps, IStates> {
 
     const comments = this.props.comments?.result || []
     const events = this.props.eventList?.result || []
-
+    const attendance = this.props.attendance?.attandance_list || []
     return (
       <>
         <ProfileContainer {...profile} key={"profile-box"}></ProfileContainer>
         <div className="mb-8" key={'badge_box_wapper'}>
-          <ListBoxUI key={'badge_box'} title="BADGES" callback={() => {this.goGiveBadge(this.props.user_id);}} callback2={() => {this.goGiveBadge(this.props.user_id);}} more={true} more2={true} moreText2={'Give Badges'}>
+          <ListBoxUI key={'badge_box'} title="BADGES"
+            callback={() => {
+              this.goGiveBadge(this.props.user_id);
+            }}
+            callback2={() => {
+              this.goGiveBadge(this.props.user_id);
+            }}
+            more={this.props.byCoach}
+            more2={this.props.byCoach}
+            moreText2={"Give Badges"}
+          >
             {/* {badges.length > 0 ? */}
             <BadgeList badges={badgeData} key="st_badge_list"></BadgeList>
             {/* :
@@ -123,8 +144,6 @@ class StudentProfilePage extends React.Component<IProps, IStates> {
                       message={res.message}
                       callback={() => { }}
                       timeString={res.user_info.name + " at " + moment(res.created_at).format("DD MMM, h:mm a")}
-                      isFileIncluded={res.attachment && res.attachment !== ""? true : false}
-                      file={res.attachment}
                     ></CommentItem>
                   )
                 })}
@@ -143,7 +162,26 @@ class StudentProfilePage extends React.Component<IProps, IStates> {
             more={true}
             key={'attendance_box'}
           >
-            <></>
+            {attendance?.length > 0 ?
+              <>
+                {attendance.map((attend: any, index: any) => {
+                  return (<ListItem
+                    text={attend.classes?.name}
+                    callback={() => { }}
+                    icon={<CreateProfile image_url={attend.classes?.logo} name={attend.classes?.name || ""} />}
+                    secondryText={true}
+                    selectable={true}
+                    checked={attend.attend}
+                    key={`student${index}`} >
+                    <>
+                      <AccessTimeOutlinedIcon fontSize="small" />
+                      <label>{moment(attend.record_date).format('D MMM')}</label>
+                    </>
+                  </ListItem>)
+                })}
+              </>
+              :
+              <></>}
           </ListBoxUI>
         </div>
         <div className="mb-8" key={'event_box_wapper'}>
@@ -158,7 +196,7 @@ class StudentProfilePage extends React.Component<IProps, IStates> {
               <>
                 {events.map((event: any, index: number) => {
                   return (
-                    <ListItem key={`st_event${index}`} text={event.event && event.event.name} smallText={`${event.event && event.event.gender}, ${event.event && event.event.from_age}-${event.event && event.event.to_age} y/o`} callback={() => { this.goEventDetail(event.event) }} arrowRight={true} />
+                    <ListItem key={`st_event${index}`} text={event?.event?.name} smallText={`${event?.event?.gender}, ${event?.event?.from_age}-${event?.event?.to_age} y/o`} callback={() => { this.goEventDetail(event?.event) }} arrowRight={true} />
                   )
                 })}
               </>
@@ -175,17 +213,20 @@ class StudentProfilePage extends React.Component<IProps, IStates> {
 const mapStateToProps = ({
   authUser,
   comments,
-  eventList
+  eventList,
+  attendance
 }: StoreState): {
   authUser: any;
   comments: any
   eventList: any
+  attendance: any
 } => {
   return {
     authUser,
     comments,
-    eventList
+    eventList,
+    attendance
   };
 };
 
-export default connect(mapStateToProps, { getUserInfo, getAllComment, getAllEvents, getDetailEvents })(StudentProfilePage)
+export default connect(mapStateToProps, { getUserInfo, getAllComment, getAllEvents, getDetailEvents, getMyAttendByRange })(StudentProfilePage)

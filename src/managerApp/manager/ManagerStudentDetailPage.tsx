@@ -384,16 +384,16 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 										return (
 											<tr className='flex'>
 												<td className='col-4 f-10'>
-													<span className='f-16'>{event.name}</span>
+													<span className='f-16'>{event.event.name}</span>
 												</td>
 												<td className='col-3 f-10'>
 													<span className='f-16 fc-second'>
-														{event.gender}
+														{event.event.gender}
 													</span>
 												</td>
 												<td className='col-3 f-10'>
 													<span className='f-16 fc-second'>
-														{event.from_age} - {event.to_age} y/o
+														{event.event.from_age} - {event.event.to_age} y/o
 													</span>
 												</td>
 												<td className='col-2 f-10'>
@@ -463,10 +463,12 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 									</span>
 									<span className='ml-16 fc-second'>
 										{this.props.classes &&
-											this.props.classes.viewClass?.name &&(
+											this.props.classes.viewClass?.name && (
 												<span className='ml-16 fc-second'>/</span>
 											)}
-										{this.props.classes && this.props.classes.viewClass?.name}
+										<span className="ml-16">
+											{this.props.classes && this.props.classes.viewClass?.name}
+										</span>
 									</span>
 								</div>
 

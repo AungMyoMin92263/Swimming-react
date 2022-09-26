@@ -18,6 +18,7 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import { putStudent } from "./../../stores/actions/student-action";
 import StudentMobileHeader from "../../atoms/StudentMobileHeader";
+
 interface IStates {
   id: number;
   name: string;
@@ -39,11 +40,11 @@ interface IStates {
 }
 
 interface IProps {
-  match: any;
-  user: any;
-  putStudent: Function;
-  LoadingActionFunc: Function;
-  getUserInfo: Function;
+	match: any;
+	user: any;
+	putStudent: Function;
+	LoadingActionFunc: Function;
+	getUserInfo: Function;
 }
 
 class StudentEditProfilePage extends React.Component<IProps, IStates> {
@@ -94,12 +95,13 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
     if (this.props.user && this.props.user.otherUserinfo) {
       let userObj = this.props.user.otherUserinfo;
       this.setState({
-        id: userObj.id,
-        name: userObj.name,
-        logo: userObj.avatar,
-        mobile: userObj.phone ? userObj.phone : "",
-        email: userObj.email,
-      });
+				id: userObj.id,
+				name: userObj.name,
+				logo: userObj.avatar,
+				mobile: userObj.phone ? userObj.phone : "",
+				email: userObj.email,
+				parentEmail: userObj.parent_email,
+			});
     }
   };
 
@@ -156,17 +158,8 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
         });
         this.props.LoadingActionFunc(false);
       } else {
-        if (this.props.user.userInfo) {
-          // setItemWithObject("authUser", this.props.user);
-          let userObj = this.props.user.userInfo;
-          this.setState({
-            isCompleted: true,
-            name: userObj.name,
-            logo: userObj.logo,
-            mobile: userObj.phone,
-            email: userObj.email,
-          });
-        }
+        
+          this.props.LoadingActionFunc(false);
       }
     }
   };
@@ -398,7 +391,7 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
                 required={true}
                 maxLength={200}
                 className=""
-                disabled={false}
+                disabled={true}
                 clickCallback={() => {}}
               />
             </div>
@@ -446,7 +439,7 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
                 required={true}
                 maxLength={200}
                 className=""
-                disabled={false}
+                disabled={true}
                 clickCallback={() => {}}
               />
             </div>
@@ -496,7 +489,7 @@ const mapStateToProps = ({
 };
 
 export default connect(mapStateToProps, {
-  putStudent,
-  getUserInfo,
-  LoadingActionFunc,
+	putStudent,
+	getUserInfo,
+	LoadingActionFunc,
 })(StudentEditProfilePage);
