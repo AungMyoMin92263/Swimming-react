@@ -19,17 +19,23 @@ export interface ICommentItem {
   file?: string;
 }
 
-const downloadFile = () => {
-  fetch("http://localhost:3000/comment/download").then((response) => {
+const downloadFile = (url :string,fileName : string) => {
+  console.log('url',url)
+  fetch(url).then((response) => {
     response.blob().then((blob) => {
-      let url = window.URL.createObjectURL(blob);
-      let a = document.createElement("a");
-      a.href = url;
-      a.download = "comment-file-download" + new Date();
-      a.click();
+      setDownloadFile(blob,fileName)
     });
-    //window.location.href = response.url;
   });
+};
+
+const setDownloadFile = (blob : any, fileName : string) => {
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(link.href), 7000);
 };
 
 const displayFile = (file: any) => {
@@ -65,6 +71,13 @@ const displayFile = (file: any) => {
 };
 
 const CommentItem = (props: ICommentItem) => {
+  let downloadURL : any;
+  let file : any;
+  if(props.file){
+    file = props.file.split("/");
+    downloadURL = process.env.REACT_APP_API_ENDPOINT +'/upload/download/'+ file[1]+'/'+file[2];
+  }
+
   return (
     <div className="comment-item">
       <div className="message-area">
@@ -73,9 +86,8 @@ const CommentItem = (props: ICommentItem) => {
           <div className="photo-box align-center mt-8 mb-8">
             {displayFile(props.file)}
 
-            <div onClick={downloadFile} className="flex ml-8">
+            <div className="flex ml-8" onClick={()=> downloadFile(downloadURL,file[2])}>
               <label
-                htmlFor="fileUpload"
                 className="cursor-pointer f-10 primary mr-8"
               >
                 Download
