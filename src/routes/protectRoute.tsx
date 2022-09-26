@@ -25,9 +25,11 @@ const ProtectedRoute = (prop: CustomRouteInterface) => {
   if (prop.path === '/login' && token) {
     return <Navigate to={prop.appname} replace />;
   }
-  if ("/"+userObj.userInfo.role != appName) {
-    let redUrl = roleByUrl[userObj.userInfo.role]
-    return <Navigate to={redUrl} replace />;
+  if(userObj){
+    if ("/"+userObj.userInfo.role != appName) {
+      let redUrl = roleByUrl[userObj.userInfo.role]
+      return <Navigate to={redUrl} replace />;
+    }
   }
   if (!token && !allows.includes(prop.path)) {
     return <Navigate to={prop.appname + "/login"} replace />;
