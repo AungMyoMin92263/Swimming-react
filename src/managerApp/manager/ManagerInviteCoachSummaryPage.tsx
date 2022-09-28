@@ -99,15 +99,15 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 		}
 	};
 	handleDelete = async (user_id:any) =>{
-		let deleteCoachUrl = "assigned/class" 
+		let deleteCoachUrl = "assigned/class";
 		await this.props.deleteCoach(deleteCoachUrl, user_id)
-
 		if (
 			this.props.coach &&
 			this.props.coach.result &&
 			this.props.coach.result.data.statusText === "success"
 		){
-			this.getClass()
+			console.log('this.props.coach',this.props.coach)
+			this.getClass();
 		}
 			if (this.props.coach.error) {
 				this.setState({
@@ -187,7 +187,6 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 												</span>
 											</div>
 											<div>
-												
 												<DeleteOutlineOutlinedIcon
 													sx={{
 														color: "#0070F8",
@@ -202,7 +201,10 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 										<div className='hr mb-16'></div>
 									</>
 								))}
-							<Link to={"/manager/invite-coach/"+ this.id} style={{ textDecoration: "none" }}>
+							<Link
+								to={"/manager/invite-coach/" + this.id}
+								style={{ textDecoration: "none" }}
+							>
 								<div className='mb-16 align-center'>
 									<AddIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
@@ -212,6 +214,7 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 							</Link>
 
 							<div className='hr mb-32'></div>
+							{this.state.errorMsg && <p className='text-danger'>{this.state.errorMsg}</p>}
 							<Link to={url} style={{ textDecoration: "none" }}>
 								<button type='submit' className='primary-btn right'>
 									Done

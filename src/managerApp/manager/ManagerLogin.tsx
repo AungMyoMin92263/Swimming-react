@@ -91,16 +91,10 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 			role: "manager",
 			password: password,
 		});
+		if (this.props.authUser.isSignedIn){
 		setItemWithObject("authUser", this.props.authUser);
+		}
 		if (this.props.authUser.error) this.props.LoadingActionFunc(false);
-		// if(this.props.authUser.isSignedIn){
-		// 	this.props.refreshToken();
-		// 	await this.props.getClasses();
-		// this.setState({
-		// 	isNewUser : this.props.schoolList.result && this.props.schoolList.result.length > 0 ? 'f' : 't'
-		// });
-		// }
-		// console.log('isNewUser',this.state.isNewUser)
 	};
 
 	validateEmail = (email: string) => {

@@ -296,7 +296,7 @@ export const inviteStudent = (emails: any) => {
       if (err) {
         dispatch<inviteStudentAction>({
           type: ActionTypes.getError,
-          payload: err.response.data.message[0],
+          payload: err.response.data.message,
         });
       } else {
         console.log("Unexpected error", err);
@@ -328,9 +328,10 @@ export const inviteCoach = (emails: any) => {
     } catch (err: any) {
       dispatch({ type: ActionTypes.loading, payload: false })
       if (err) {
+        console.log('err',err)
         dispatch<inviteCoachAction>({
           type: ActionTypes.getError,
-          payload: err.response.data.message[0],
+          payload: err.response.status === 400? err.response.data.message[0] : err.response.data.message,
         });
       } else {
         console.log("Unexpected error", err);

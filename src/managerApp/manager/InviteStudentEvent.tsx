@@ -71,12 +71,10 @@ class InviteStudentEvent extends React.Component<IProps, IStates> {
     if (this.isValid()) {
       if (this.state.event) {
         this.props.LoadingActionFunc(true);
-		let temp = [];
-        temp.push(this.state.email);
         await this.props.inviteEvent({
-          user_email: temp,
-          event_id: this.state.event.id,
-        });
+					user_email: this.state.email,
+					event_id: this.state.event.id,
+				});
         if (this.props.events.error) {
           this.setState({
             isCompleted: false,

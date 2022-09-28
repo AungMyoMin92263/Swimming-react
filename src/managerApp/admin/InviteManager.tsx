@@ -36,6 +36,7 @@ interface IProps {
   inviteManager: Function;
   LoadingActionFunc: Function;
   getSchoolObj: Function;
+  history: any
 }
 
 class InviteManagerPage extends React.Component<IProps, IStates> {
@@ -115,38 +116,38 @@ class InviteManagerPage extends React.Component<IProps, IStates> {
   };
 
   submit = async () => {
-    console.log('email',this.state.email)
     if (this.isValid()) {
       if (this.props.schools.result) {
         this.props.LoadingActionFunc(true);
-        let temp = [];
-        temp.push(this.state.email);
+        // let temp = [];
+        // temp.push(this.state.email);
         await this.props.inviteManager({
-          user_email: temp,
+          user_email: this.state.email,
           schoold_id: this.state.school_id,
         });
       }
-      console.log(this.props.schools);
-      if (!this.props.schools.error) {
+
+      if (this.props.schools.error && this.props.schools.error !== '') {
+        this.setState({
+          isCompleted: false,
+          errorMsg: this.props.schools.error,
+        });
+        this.props.LoadingActionFunc(false);
+      }else{
         this.setState({
           isCompleted: true,
         });
-      } else {
-        this.setState({
-          isCompleted: false,
-          errorMsg: this.props.schools.error.message[0],
-        });
-        this.props.LoadingActionFunc(false);
       }
     }
   };
 
   back = () => {
-    this.setState({
-      url: this.url + this.state.school_id,
-      goBack: true,
-      goBackManager: true,
-    });
+    this.props.history.back()
+    // this.setState({
+    //   url: this.url + this.state.school_id,
+    //   goBack: true,
+    //   goBackManager: true,
+    // });
   };
 
   renderBtn = () => {

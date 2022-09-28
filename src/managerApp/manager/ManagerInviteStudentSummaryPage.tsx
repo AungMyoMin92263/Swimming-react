@@ -11,7 +11,11 @@ import { Link } from "react-router-dom";
 import { getItem, setItemWithObject } from "../../auth/LocalStorage";
 import placeholder from "./../../assets/images/place-holder.png";
 import { InitialIcon } from "../../atoms/InitialIcon";
-import { getSchoolObj, LoadingActionFunc } from "../../stores/actions";
+import {
+	getSchoolObj,
+	LoadingActionFunc,
+	getAssignUserByClass,
+} from "../../stores/actions";
 import { getClassObject, getAll } from "../../stores/actions";
 import { deleteStudent } from "./../../stores/actions/student-action";
 interface IStates {
@@ -33,11 +37,12 @@ interface IProps {
 	getAll: Function;
 	response: any;
 	getSchoolObj: Function;
+	getAssignUserByClass: Function;
 	getClassObject: Function;
 	classes: any;
 	deleteStudent: Function;
 	student: any;
-	history:any
+	history: any;
 }
 class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 	id: any;
@@ -81,14 +86,29 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 	};
 
 	getClass = async () => {
-		let url = "school/" + this.state.schoolId + "/class/" + this.state.classId;
-		await this.props.getClassObject(url);
+		let classurl =
+			"school/" + this.state.schoolId + "/class/" + this.state.classId;
+		await this.props.getClassObject(classurl);
+		let url = "assigned/class/by-class/" + this.id;
+		await this.props.getAssignUserByClass(url);
 		console.log(this.props);
 		if (this.props.classes && this.props.classes.viewClass) {
+			console.log("asign");
+
 			this.setState({
-				studentList: this.props.classes.assignUser,
 				class_logo: this.props.classes.viewClass.logo,
 				class_name: this.props.classes.viewClass.name,
+			});
+		}
+		if (this.props.classes) {
+			let studentTemp = [];
+			for (let i = 0; i < this.props.classes.assignUser.length; i++) {
+				if (this.props.classes.assignUser[i].type === "student") {
+					studentTemp.push(this.props.classes.assignUser[i]);
+				}
+			}
+			this.setState({
+				studentList: studentTemp,
 			});
 		}
 		if (
@@ -96,7 +116,6 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 			this.props.classes.result &&
 			this.props.classes.result.assign_user
 		) {
-		
 			this.setState({
 				class_logo: this.props.classes.result.logo,
 				class_name: this.props.classes.result.name,
@@ -114,8 +133,7 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 			this.props.student.result &&
 			this.props.student.result.data.statusText === "success"
 		) {
-			console.log("deleteed");
-			this.getClass();
+			this.getClass()
 		}
 		if (this.props.student.error) {
 			this.setState({
@@ -178,7 +196,6 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 							{studentList &&
 								studentList.length > 0 &&
 								studentList.map((student: any) => (
-									student.type === 'student' && 
 									<>
 										<div className='f-16 mb-32 align-center justify-space-between'>
 											<div className='align-center'>
@@ -245,13 +262,13 @@ const mapStateToProps = ({
 	schools: any;
 	classes: any;
 	student: any;
-	response:any
+	response: any;
 } => {
 	return {
 		schools,
 		classes,
 		student,
-		response
+		response,
 	};
 };
 
@@ -261,4 +278,5 @@ export default connect(mapStateToProps, {
 	getSchoolObj,
 	getClassObject,
 	deleteStudent,
+	getAssignUserByClass,
 })(ManagerInviteStudentSummaryPage);

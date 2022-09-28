@@ -21,12 +21,12 @@ const allows = ['login', 'create-password', 'recover-password', 'change-password
 const ProtectedRoute = (prop: CustomRouteInterface) => {
   let token = getItem('userToken')
   let userObj = JSON.parse(getItem('authUser') || "null")
-  let appName =  prop?.appname == "/coach" ? "/coache" : prop?.appname
+  let appName =  prop?.appname === "/coach" ? "/coache" : prop?.appname
   if (prop.path === '/login' && token) {
     return <Navigate to={prop.appname} replace />;
   }
-  if(userObj){
-    if ("/"+userObj.userInfo.role != appName) {
+  if(userObj && userObj.userInfo){
+    if ("/"+userObj.userInfo.role !== appName) {
       let redUrl = roleByUrl[userObj.userInfo.role]
       return <Navigate to={redUrl} replace />;
     }

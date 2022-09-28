@@ -220,7 +220,8 @@ export const inviteManager = (emails : any) => {
       if (err) {
         dispatch<inviteManagerAction>({
           type: ActionTypes.getError,
-          payload: err.response.data,
+          payload: err.response.status === 400 ? err.response.data.message: err.response.data.message[0],
+
         });
       } else {
         console.log("Unexpected error", err);
@@ -229,3 +230,34 @@ export const inviteManager = (emails : any) => {
   };
 };
 
+
+export interface deleteManagerAction {
+  type: ActionTypes.deleteManager | ActionTypes.getError;
+  payload: any;
+}
+
+export const deleteManager = (url: string, id: number) => {
+  refreshToken();
+
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.delete<any>(url + "/" + id, option);
+      dispatch<deleteManagerAction>({
+        type: ActionTypes.deleteManager,
+        payload: response,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err: any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err) {
+        dispatch<deleteManagerAction>({
+          type: ActionTypes.getError,
+          payload: err.response.data.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};

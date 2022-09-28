@@ -144,7 +144,11 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 		const profile: IProfile = {
 			isLogo: true,
 			logo: this.props.authUser.otherUserinfo?.avatar,
-			title: this.props.authUser.otherUserinfo?.name,
+			title: this.props.authUser.otherUserinfo
+				? this.props.authUser.otherUserinfo.name
+					? this.props.authUser.otherUserinfo.name
+					: this.props.authUser.otherUserinfo.email.substr(0, 6)
+				: "",
 			display_item: [
 				{
 					title: "Bio",
@@ -210,10 +214,20 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 							<div className='justify-center'>
 								<div className='col-8 col-md-8 justify-start align-center'>
 									<div className='mr-16'>
-										{profile.title ? (
+										{profile.logo ? (
+											<img
+												src={
+													process.env.REACT_APP_API_ENDPOINT +
+													"/" +
+													profile.logo
+												}
+												alt=''
+											/>
+										) : profile.title ? (
 											<InitialIcon
-												initials={profile.title.substr(0, 1).toUpperCase()}
+												initials={profile?.title.substr(0, 1).toUpperCase()}
 												isFooterMenu={false}
+												isMid={true}
 											/>
 										) : (
 											<></>
@@ -221,7 +235,7 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 									</div>
 
 									<div className='f-40 fw-500'>
-										<span>{profile.title}</span>
+										<span>{profile?.title}</span>
 									</div>
 								</div>
 								<div className='col-4 col-md-4 justify-end'>

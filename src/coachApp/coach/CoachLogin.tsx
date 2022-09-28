@@ -81,6 +81,9 @@ class CoachLoginPage extends React.Component<IProps, IStates> {
 			role: "coache",
 			password: password,
 		});
+		if (this.props.authUser.isSignedIn) {
+			setItemWithObject("authUser", this.props.authUser);
+		}
 	};
 
 	validateEmail = (email: string) => {

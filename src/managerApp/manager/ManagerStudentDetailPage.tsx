@@ -418,7 +418,9 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 		const profile: IProfile = {
 			isLogo: true,
 			logo: this.props.authUser.otherUserinfo?.avatar,
-			title: this.props.authUser.otherUserinfo?.name,
+			title: this.props.authUser.otherUserinfo? this.props.authUser.otherUserinfo.name
+				? this.props.authUser.otherUserinfo.name
+				: this.props.authUser.otherUserinfo.email.substr(0,6): '',
 			display_item: [
 				{
 					title: "Age",

@@ -1,7 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { StoreState } from "../../stores/reducers";
-import { inviteStudent, LoadingActionFunc,getClassObject} from "../../stores/actions";
+import {
+  inviteStudent,
+  LoadingActionFunc,
+  getClassObject,
+} from "../../stores/actions";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddIcon from "@mui/icons-material/Add";
@@ -15,20 +19,21 @@ import {
 import placeholder from "./../../assets/images/place-holder.png";
 
 interface StudentViewModel {
-  studentName: string;
-  isStudentNameValid: boolean;
-  isStudentNameEmpty: boolean;
-  studentNameMsg: string;
-  parentName: string;
-  isParentNameValid: boolean;
-  isParentNameEmpty: boolean;
-  parentNameMsg: string;
+  name: string;
+  phone: string;
+  email: string;
+  parent_name: string;
+  age: number;
+  gender: string;
+  favorite: string;
+  parent_email: string;
+  parent_phone: string;
+  avatar: any;
+  status: string;
 
-  studentEmail: string;
   isStudentEmailValid: boolean;
   isStudentEmailEmpty: boolean;
   studentEmailMsg: string;
-  parentEmail: string;
   isParentEmailValid: boolean;
   isParentEmailEmpty: boolean;
   parentEmailMsg: string;
@@ -45,7 +50,7 @@ interface IStates {
   studentEmailMsg: string;
   parentEmailMsg: string;
   school_name: string;
-  school_id : any;
+  school_id: any;
   classObj: any;
 }
 
@@ -53,41 +58,42 @@ interface IProps {
   emails: string[];
   classes: any;
   inviteStudent: Function;
-  LoadingActionFunc : Function;
+  LoadingActionFunc: Function;
   getClassObject: Function;
 }
 
 class InviteStudentPage extends React.Component<IProps, IStates> {
-	url : any;
-	backUrl: any;
-	id: any;
+  url: any;
+  backUrl: any;
+  id: any;
 
   constructor(props: any) {
     super(props);
-	let path = window.location.pathname.split("/");
+    let path = window.location.pathname.split("/");
     this.id = path[3];
 
     this.state = {
       emails: [],
       student: [],
       isCompleted: false,
-	  isValid: false,
+      isValid: false,
       students: [
         {
-          studentName: "",
-          isStudentNameValid: false,
-          isStudentNameEmpty: true,
-          studentNameMsg: "",
-          parentName: "",
-          isParentNameValid: false,
-          isParentNameEmpty: true,
-          parentNameMsg: "",
-
-          studentEmail: "",
+		  name: '',
+		  phone: '',
+		  email: '',
+		  parent_name: '',
+		  age: 0,
+		  gender: '',
+		  favorite: '',
+		  parent_email: '',
+		  parent_phone: '',
+		  avatar: null,
+          status: "init",
+		
           isStudentEmailValid: false,
           isStudentEmailEmpty: true,
           studentEmailMsg: "",
-          parentEmail: "",
           isParentEmailValid: false,
           isParentEmailEmpty: true,
           parentEmailMsg: "",
@@ -98,13 +104,12 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
       studentEmailMsg: "",
       parentEmailMsg: "",
       school_name: "",
-	  school_id : -1,
+      school_id: -1,
       classObj: null,
     };
   }
   componentDidMount() {
     this.authFromLocal();
-console.log(this.id,'id')
   }
 
   authFromLocal = async () => {
@@ -112,11 +117,11 @@ console.log(this.id,'id')
     if (user && user.userInfo && user.userInfo.assign_school) {
       await this.setState({
         school_name: user.userInfo.assign_school.school.name,
-		school_id :  user.userInfo.assign_school.school.id,
+        school_id: user.userInfo.assign_school.school.id,
       });
 
-	  if (!this.id) {
-		console.log('this.id',this.id)
+      if (!this.id) {
+        console.log("this.id", this.id);
         const classObject = JSON.parse(getItem("class") || "null");
         if (classObject) {
           this.id = classObject.id;
@@ -131,8 +136,8 @@ console.log(this.id,'id')
         this.backUrl = "/manager/invite-student-summary/" + this.id;
         this.getClass();
       }
-	  this.props.LoadingActionFunc(false);
-    }else this.props.LoadingActionFunc(false);
+      this.props.LoadingActionFunc(false);
+    } else this.props.LoadingActionFunc(false);
   };
 
   getClass = async () => {
@@ -149,24 +154,25 @@ console.log(this.id,'id')
   addStudent = () => {
     let temp = this.state.students;
     temp.push({
-      studentName: "",
-      isStudentNameValid: false,
-      isStudentNameEmpty: true,
-      studentNameMsg: "",
-      parentName: "",
-      isParentNameValid: false,
-      isParentNameEmpty: true,
-      parentNameMsg: "",
-
-      studentEmail: "",
-      isStudentEmailValid: false,
-      isStudentEmailEmpty: true,
-      studentEmailMsg: "",
-      parentEmail: "",
-      isParentEmailValid: false,
-      isParentEmailEmpty: true,
-      parentEmailMsg: "",
-    });
+		name: '',
+		phone: '',
+		email: '',
+		parent_name: '',
+		age: 0,
+		gender: '',
+		favorite: '',
+		parent_email: '',
+		parent_phone: '',
+		avatar: null,
+		status: "init",
+	  
+		isStudentEmailValid: false,
+		isStudentEmailEmpty: true,
+		studentEmailMsg: "",
+		isParentEmailValid: false,
+		isParentEmailEmpty: true,
+		parentEmailMsg: "",
+	  });
     this.setState({
       students: temp,
       isValid: false,
@@ -178,12 +184,8 @@ console.log(this.id,'id')
       this.setState({ isValid: true });
       this.state.students.map((studentObject: any) => {
         if (
-        //   studentObject.isStudentNameEmpty ||
-        //   !studentObject.isStudentNameValid ||
           studentObject.isStudentEmailEmpty ||
           !studentObject.isStudentEmailValid ||
-        //   studentObject.isParentNameEmpty ||
-        //   !studentObject.isParentNameValid ||
           studentObject.isParentEmailEmpty ||
           !studentObject.isParentEmailValid
         ) {
@@ -191,22 +193,29 @@ console.log(this.id,'id')
         }
       });
     } else {
-      this.setState({ isValid: false });
+      this.setState({ isValid: true });
     }
   };
+
+
 
   submit = async () => {
     if (this.state.isValid) {
       let temp = this.state.emails;
       let tempStu = this.state.student;
       for (let i = 0; i < this.state.students.length; i++) {
-        temp.push(this.state.students[i].studentEmail);
+        temp.push(this.state.students[i].email);
         tempStu.push({
-          name: this.state.students[i].studentName,
-          email: this.state.students[i].studentEmail,
-          parent_name: this.state.students[i].parentName,
-          parent_email: this.state.students[i].parentEmail,
-          avatar: null,
+          // name: this.state.students[i].name,
+          // phone: this.state.students[i].phone,
+          email: this.state.students[i].email,
+          // parent_name: this.state.students[i].parent_name,
+          // age: this.state.students[i].age,
+          // gender: this.state.students[i].gender,
+          // favorite: this.state.students[i].favorite,
+          parent_email: this.state.students[i].parent_email,
+          // parent_phone: this.state.students[i].parent_phone,
+          // avatar: null,
         });
       }
       await this.setState({
@@ -214,29 +223,37 @@ console.log(this.id,'id')
         student: tempStu,
       });
       if (this.id) {
-		this.props.LoadingActionFunc(true);
-        await this.props.inviteStudent({
-          user_email: this.state.emails,
-          student: this.state.student,
-          class_id: this.state.classObj.id,
-        });
+        this.props.LoadingActionFunc(true);
+        for (let i = 0; i < this.state.students.length; i++) {
+          if (this.state.students[i].status === "init") {
+            await this.props.inviteStudent({
+							user_email: this.state.students[i].email,
+							student: this.state.students[i],
+							class_id: this.state.classObj.id,
+						});
+            if (this.props.classes.error) {
+              let temp = this.state.students;
+              temp[i].status = "error";
+              this.setState({
+                isCompleted: false,
+                students: temp,
+              });
+            } else {
+              const coach = JSON.parse(getItem("students") || "null");
+              let temp = this.state.students;
+              temp[i].status = "success";
+              if (coach) {
+                setItemWithObject("students", coach.concat(temp));
+              } else setItemWithObject("students", temp);
 
-        if (this.props.classes.error) {
-          console.log(this.props.classes.error);
-          this.setState({
-            isCompleted: false,
-          });
-		  this.props.LoadingActionFunc(false);
-        } else {
-          const student = JSON.parse(getItem("students") || "null");
-          if (student) {
-            setItemWithObject("students", student.concat(this.state.students));
-          } else setItemWithObject("students", this.state.students);
-
-          this.setState({
-            isCompleted: true,
-          });
+              this.setState({
+                isCompleted: true,
+                students: temp,
+              });
+            }
+          }
         }
+        this.props.LoadingActionFunc(false);
       }
     }
   };
@@ -268,87 +285,93 @@ console.log(this.id,'id')
     this.setState({
       students: temp,
     });
+    this.getClass()
+   
   };
 
   render() {
     const {
-			students,
-			studentNameMsg,
-			parentNameMsg,
-			studentEmailMsg,
-			parentEmailMsg,
-			school_name,
-			classObj,
-		} = this.state;
+      students,
+      studentNameMsg,
+      parentNameMsg,
+      studentEmailMsg,
+      parentEmailMsg,
+      school_name,
+      classObj,
+    } = this.state;
     return (
-			<>
-				{this.state.isCompleted && (
-					<Navigate to={this.url} replace={true} />
-				)}
-				<div className='wrapper scroll-y'>
-					<div className='primary f-16 project-header'>
-						<Link to='/manager/dashboard'>
-							<span>My Report Cards</span>
-						</Link>
-					</div>
-					<div className='container-cus'>
-						<div className='content col-lg-6'>
-							<div className='f-14 mb-32'>
-								<Link
-									to={this.id? "/manager/invite-student-summary/" + this.id : "/manager/invite-coach-summary"}
-									style={{ textDecoration: "none" }}
-								>
-									<ArrowBackIcon
-										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-									></ArrowBackIcon>
-									<span>Back</span>
-								</Link>
-							</div>
+      <>
+        {this.state.isCompleted && <Navigate to={this.url} replace={true} />}
+        <div className="wrapper scroll-y">
+          <div className="primary f-16 project-header">
+            <Link to="/manager/dashboard">
+              <span>My Report Cards</span>
+            </Link>
+          </div>
+          <div className="container-cus">
+            <div className="content col-lg-6">
+              <div className="f-14 mb-32">
+                <Link
+                  to={
+                    this.id
+                      ? "/manager/invite-student-summary/" + this.id
+                      : "/manager/invite-coach-summary"
+                  }
+                  style={{ textDecoration: "none" }}
+                >
+                  <ArrowBackIcon
+                    sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+                  ></ArrowBackIcon>
+                  <span>Back</span>
+                </Link>
+              </div>
 
-							<div className='mb-16 align-center'>
-								<img
-									src={
-										classObj && classObj.logo
-											? process.env.REACT_APP_API_ENDPOINT + "/" + classObj.logo
-											: placeholder
-									}
-									alt='logo'
-									className={`${
-										classObj && classObj.logo ? "item-icon" : "w-48"
-									}`}
-								/>
-								<span className='f-16'>
-									{classObj && classObj.name} ({school_name})
-								</span>
-							</div>
-							<div className='hr mb-32'></div>
-							<div className='f-32 fw-500'>
-								<span>Invite Students.</span>
-							</div>
-							<div className='f-16 mb-32'>
-								<span>
-									Invite students to your class. You can add more details in
-									their profiles later.
-								</span>
-							</div>
-							{students && students.length > 0 && students.map((student: any, index) => (
-								<>
-									<div>
-										<div className='f-16 mb-16 fw-500 flex justify-space-between'>
-											<span>Student #{index + 1}</span>
-											{index > 0 && (
-												<div
-													onClick={() => {
-														this.removeStudent(index);
-														this.isValidated();
-													}}
-													className='fc-primary cursor'
-												>
-													Clear
-												</div>
-											)}
-										</div>
-										{/* <div className='fw-400 mb-16'>
+              <div className="mb-16 align-center">
+                <img
+                  src={
+                    classObj && classObj.logo
+                      ? process.env.REACT_APP_API_ENDPOINT + "/" + classObj.logo
+                      : placeholder
+                  }
+                  alt="logo"
+                  className={`${
+                    classObj && classObj.logo ? "item-icon" : "w-48"
+                  }`}
+                />
+                <span className="f-16">
+                  {classObj && classObj.name} ({school_name})
+                </span>
+              </div>
+              <div className="hr mb-32"></div>
+              <div className="f-32 fw-500">
+                <span>Invite Students.</span>
+              </div>
+              <div className="f-16 mb-32">
+                <span>
+                  Invite students to your class. You can add more details in
+                  their profiles later.
+                </span>
+              </div>
+              {students &&
+                students.length > 0 &&
+                students.map((student: any, index) => (
+                  <>
+                    <div>
+                      <div className="f-16 mb-16 fw-500 flex justify-space-between">
+                        <span>Student #{index + 1}</span>
+                        {index >= 0 && (
+                          <div
+                            onClick={() => {
+                              this.removeStudent(index);
+                              this.isValidated();
+                            }}
+                            className="fc-primary cursor"
+                          >
+                            Clear
+                          </div>
+                        )}
+                      </div>
+                      {/* <div className='fw-400 mb-16'>
 											<InputFormAtom
 												label='Student Name'
 												placeholder={"Enter name of Student"}
@@ -385,46 +408,48 @@ console.log(this.id,'id')
 												}}
 											/>
 										</div> */}
-										<div className='fw-400 mb-16'>
-											<InputFormAtom
-												label='Student Email'
-												placeholder={"Enter email of Student"}
-												warning={studentEmailMsg}
-												type='text'
-												// showWarning={
-												// 	student.isStudentEmailEmpty ||
-												// 	!student.isStudentEmailValid
-												// }
-												showWarning={false}
-												isDropdown={false}
-												callback={(value: string) => {
-													this.isValidated();
-													let temp = students;
-													temp[index].studentEmail = value;
-													this.setState({
-														students: temp,
-													});
-												}}
-												id='inviteStudentEmail'
-												name='inviteStudentEmail'
-												value={student.studentEmail}
-												required={true}
-												maxLength={200}
-												className=''
-												clickCallback={() => {}}
-												focusCallback={() => {
-													let temp = students;
-													temp[index].isStudentEmailEmpty = false;
-													temp[index].isStudentEmailValid = true;
+                      <div className="fw-400 mb-16">
+                        <InputFormAtom
+                          label="Student Email"
+                          placeholder={"Enter email of Student"}
+                          warning={studentEmailMsg}
+                          type="text"
+                          // showWarning={
+                          // 	student.isStudentEmailEmpty ||
+                          // 	!student.isStudentEmailValid
+                          // }
+                          showWarning={false}
+                          isDropdown={false}
+                          callback={(value: string) => {
+                            this.isValidated();
+                            let temp = students;
+                            temp[index].email = value;
+                            this.setState({
+                              students: temp,
+                            });
+                          }}
+                          id="inviteStudentEmail"
+                          name="inviteStudentEmail"
+                          value={student.studentEmail}
+                          required={true}
+                          maxLength={200}
+                          className=""
+                          clickCallback={() => {}}
+                          focusCallback={() => {
+                            let temp = students;
+                            temp[index].isStudentEmailEmpty = false;
+                            temp[index].isStudentEmailValid = true;
+                            temp[index].status = "init";
 
-													this.setState({
-														students: temp,
-													});
-												}}
-											/>
-										</div>
+                            this.setState({
+                              students: temp,
+                            });
+                          }}
+						  status={student.status}
+                        />
+                      </div>
 
-										{/* <div className='fw-400 mb-16'>
+                      {/* <div className='fw-400 mb-16'>
 											<InputFormAtom
 												label='Parent Name'
 												placeholder={"Enter name of parent"}
@@ -462,71 +487,73 @@ console.log(this.id,'id')
 												}}
 											/>
 										</div> */}
-										<div className='fw-400 mb-16'>
-											<InputFormAtom
-												label='Parent Email'
-												placeholder={"Enter email of parent"}
-												warning={parentEmailMsg}
-												type='text'
-												// showWarning={
-												// 	student.isParentEmailEmpty ||
-												// 	!student.isParentEmailValid
-												// }
-												showWarning={false}
-												isDropdown={false}
-												callback={(value: string) => {
-													this.isValidated();
-													let temp = students;
-													temp[index].parentEmail = value;
-													this.setState({
-														students: temp,
-													});
-												}}
-												id='inviteParentEmail'
-												name='inviteParentEmail'
-												value={student.parentEmail}
-												required={true}
-												maxLength={200}
-												className=''
-												clickCallback={() => {}}
-												focusCallback={() => {
-													let temp = students;
-													temp[index].isParentEmailEmpty = false;
-													temp[index].isParentEmailValid = true;
+                      <div className="fw-400 mb-16">
+                        <InputFormAtom
+                          label="Parent Email"
+                          placeholder={"Enter email of parent"}
+                          warning={parentEmailMsg}
+                          type="text"
+                          // showWarning={
+                          // 	student.isParentEmailEmpty ||
+                          // 	!student.isParentEmailValid
+                          // }
+                          showWarning={false}
+                          isDropdown={false}
+                          callback={(value: string) => {
+                            this.isValidated();
+                            let temp = students;
+                            temp[index].parent_email = value;
+                            this.setState({
+                              students: temp,
+                            });
+                          }}
+                          id="inviteParentEmail"
+                          name="inviteParentEmail"
+                          value={student.parentEmail}
+                          required={true}
+                          maxLength={200}
+                          className=""
+                          clickCallback={() => {}}
+                          focusCallback={() => {
+                            let temp = students;
+                            temp[index].isParentEmailEmpty = false;
+                            temp[index].isParentEmailValid = true;
+                            temp[index].status = "init";
 
-													this.setState({
-														students: temp,
-													});
-												}}
-											/>
-										</div>
-									</div>
-								</>
-							))}
+                            this.setState({
+                              students: temp,
+                            });
+                          }}
+						  status={student.status}
+                        />
+                      </div>
+                    </div>
+                  </>
+                ))}
 
-							<div className='flex-center justify-space-between'>
-								<div className='flex-center'>
-									<div onClick={this.addStudent} className='cursor'>
-										<AddIcon
-											sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-										></AddIcon>
-										<span className='primary'>Add another Student</span>
-									</div>
-								</div>
+              <div className="flex-center justify-space-between">
+                <div className="flex-center">
+                  <div onClick={this.addStudent} className="cursor">
+                    <AddIcon
+                      sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+                    ></AddIcon>
+                    <span className="primary">Add another Student</span>
+                  </div>
+                </div>
 
-								<div className='flex-center'>
-									<span className='secondary'>4 of 4</span>
-									{this.renderBtn()}
-								</div>
-							</div>
-							{this.props.classes.error && (
-								<p className='text-danger'>{this.props.classes.error}</p>
-							)}
-						</div>
-					</div>
-				</div>
-			</>
-		);
+                <div className="flex-center">
+                  <span className="secondary">4 of 4</span>
+                  {this.renderBtn()}
+                </div>
+              </div>
+              {this.props.classes.error && (
+                <p className="text-danger">{this.props.classes.error}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      </>
+    );
   }
 }
 
@@ -540,4 +567,8 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { inviteStudent,LoadingActionFunc,getClassObject })(InviteStudentPage);
+export default connect(mapStateToProps, {
+  inviteStudent,
+  LoadingActionFunc,
+  getClassObject,
+})(InviteStudentPage);

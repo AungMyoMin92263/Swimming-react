@@ -112,8 +112,11 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 			role: "admin",
 			password: password,
 		});
+		if (this.props.authUser.isSignedIn){
 		setItemWithObject("authUser", this.props.authUser);
 		await this.setItems();
+		}
+
 		this.props.LoadingActionFunc(false);
 	};
 

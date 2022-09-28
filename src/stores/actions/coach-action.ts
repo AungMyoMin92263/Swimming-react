@@ -180,12 +180,12 @@ export const deleteCoach = (url: string, id: number) => {
         payload: response,
       });
       dispatch({ type: ActionTypes.loading, payload: false })
-    } catch (err) {
+    } catch (err: any) {
       dispatch({ type: ActionTypes.loading, payload: false })
-      if (err instanceof Error) {
+      if (err ) {
         dispatch<deleteCoachAction>({
           type: ActionTypes.getError,
-          payload: err.message,
+          payload: err.response.data.message,
         });
       } else {
         console.log("Unexpected error", err);

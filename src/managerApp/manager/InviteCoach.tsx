@@ -23,10 +23,11 @@ interface CoachViewModel {
   iscoachEmailValid: boolean;
   iscoachEmailEmpty: boolean;
   coachEmailMsg: string;
+  status: string;
+  errorMsg : string;
 }
 
 interface IStates {
-  emails: string[];
   isCompleted: boolean;
   isValid: boolean;
   coaches: CoachViewModel[];
@@ -37,7 +38,6 @@ interface IStates {
 }
 
 interface IProps {
-  emails: string[];
   classes: any;
   inviteCoach: Function;
   LoadingActionFunc: Function;
@@ -50,9 +50,8 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
   id: any;
   constructor(props: any) {
     super(props);
-    
+
     this.state = {
-      emails: [],
       isCompleted: false,
       coaches: [
         {
@@ -60,6 +59,8 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
           iscoachEmailValid: false,
           iscoachEmailEmpty: true,
           coachEmailMsg: "",
+          status: "init",
+          errorMsg : '',
         },
       ],
       coachEmailMsg: "",
@@ -120,6 +121,8 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
       iscoachEmailValid: false,
       iscoachEmailEmpty: true,
       coachEmailMsg: "",
+      status: "init",
+      errorMsg : '',
     });
     this.setState({
       coaches: temp,
@@ -136,47 +139,54 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
         }
       });
     } else {
-      this.setState({ isValid: false });
+      this.setState({ isValid: true });
     }
   };
 
   submit = async () => {
     if (this.state.isValid) {
-      let temp = [];
-      for (let i = 0; i < this.state.coaches.length; i++) {
-        temp.push(this.state.coaches[i].coachEmail);
-      }
-      await this.setState({
-        emails: temp,
-      });
       if (this.id) {
-        console.log("this.state.emails", this.state.emails, this.id);
-
-        this.props.LoadingActionFunc(true);
-        await this.props.inviteCoach({
-          user_email: this.state.emails,
-          class_id: this.id,
-        });
-
-        if (this.props.classes.error) {
-          console.log(this.props.classes.error);
-          this.setState({
-            isCompleted: false,
-          });
-          this.props.LoadingActionFunc(false);
-        } else {
-          const coach = JSON.parse(getItem("coaches") || "null");
-          if (coach) {
-            setItemWithObject("coaches", coach.concat(this.state.coaches));
-          } else setItemWithObject("coaches", this.state.coaches);
-
-          this.setState({
-            isCompleted: true,
-          });
+        if (this.state.coaches.length === 0){
+          this.setState({isCompleted:true})
         }
+        this.props.LoadingActionFunc(true);
+        for (let i = 0; i < this.state.coaches.length; i++) {
+          if (this.state.coaches[i].status === "init") {
+            // let temp = [];
+            // temp.push(this.state.coaches[i].coachEmail);
+            await this.props.inviteCoach({
+              user_email: this.state.coaches[i].coachEmail,
+              class_id: this.id,
+            });
+            if (this.props.classes.error) {
+              console.log('this.props.classes',this.props.classes)
+              let temp = this.state.coaches;
+              temp[i].status = "error";
+              temp[i].errorMsg = this.props.classes.error;
+              this.setState({
+                isCompleted: false,
+                coaches: temp,
+              });
+            } else {
+              const coach = JSON.parse(getItem("coaches") || "null");
+              let temp = this.state.coaches;
+              temp[i].status = "success";
+              if (coach) {
+                setItemWithObject("coaches", coach.concat(temp));
+              } else setItemWithObject("coaches", temp);
+
+              this.setState({
+                isCompleted: true,
+                coaches: temp,
+              });
+            }
+          }
+        }
+        this.props.LoadingActionFunc(false);
       }
     }
   };
+
 
   renderBtn = () => {
     if (!this.state.isValid) {
@@ -205,6 +215,7 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
     this.setState({
       coaches: temp,
     });
+
   };
 
   render() {
@@ -222,7 +233,11 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
             <div className="content col-lg-6">
               <div className="f-14 mb-32">
                 <Link
-                  to={this.id? "/manager/invite-coach-summary/" + this.id : "/manager/set-date-time"}
+                  to={
+                    this.id
+                      ? "/manager/invite-coach-summary/" + this.id
+                      : "/manager/set-date-time"
+                  }
                   style={{ textDecoration: "none" }}
                 >
                   <ArrowBackIcon
@@ -262,7 +277,7 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
                     <div>
                       <div className="f-16 mb-16 fw-500 flex justify-space-between">
                         <span>Coach #{index + 1}</span>
-                        {index > 0 && (
+                        {index >= 0 && (
                           <div
                             onClick={() => {
                               this.removeCoach(index);
@@ -279,12 +294,9 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
                         <InputFormAtom
                           label="Coach Email"
                           placeholder={"Enter Email"}
-                          warning={coachEmailMsg}
+                          warning={coach.errorMsg}
                           type="text"
-                          // showWarning={
-                          // 	student.isStudentEmailEmpty ||
-                          // 	!student.isStudentEmailValid
-                          // }
+                          // showWarning={coach.status === 'error'}
                           showWarning={false}
                           isDropdown={false}
                           callback={(value: string) => {
@@ -306,14 +318,22 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
                             let temp = coaches;
                             temp[index].iscoachEmailEmpty = false;
                             temp[index].iscoachEmailValid = true;
-
+                            temp[index].status = "init";
                             this.setState({
                               coaches: temp,
                             });
                           }}
+                          status={coach.status}
                         />
                       </div>
+                      {coach.status === 'error' && (
+                        <p className="text-danger">
+                          {coach.errorMsg}
+                        </p>
+                      )}
                     </div>
+                    <div className='hr'></div>
+
                   </>
                 ))}
 
@@ -328,13 +348,10 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
                 </div>
 
                 <div className="flex-center">
-                  <span className="secondary">4 of 4</span>
+                  <span className="secondary">3 of 4</span>
                   {this.renderBtn()}
                 </div>
               </div>
-              {this.props.classes.error && (
-                <p className="text-danger">{this.props.classes.error}</p>
-              )}
             </div>
           </div>
         </div>

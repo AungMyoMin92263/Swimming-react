@@ -15,7 +15,7 @@ import placeholder from "./../../assets/images/place-holder.png";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-
+import Dropdown from "react-bootstrap/Dropdown";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
@@ -251,7 +251,33 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
 												</td>
 
 												<td>
-													<div className='flex justify-space-around'>
+													<div className='flex '>
+														<span>{classe.studentCount}</span>
+													</div>
+													<Dropdown className='more-dropdown'>
+														<Dropdown.Toggle
+															id='dropdown-basic'
+															className='more-list-btn'
+														>
+															<MoreVertIcon />
+														</Dropdown.Toggle>
+														<Dropdown.Menu>
+															{classe && classes.length > 0 && (
+																<Dropdown.Item
+																	href={"/manager/class/" + classe.id}
+																>
+																	<span>Edit</span>
+																</Dropdown.Item>
+															)}
+
+															<div className='dropdown-divider'></div>
+
+															<Dropdown.Item onClick={() => this.remove(index)}>
+																<span>Remove</span>
+															</Dropdown.Item>
+														</Dropdown.Menu>
+													</Dropdown>
+													{/* <div className='flex justify-space-around'>
 														<span>{classe.studentCount}</span>
 														<div className='dropdownMore'>
 															<MoreVertIcon
@@ -284,7 +310,7 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
 																</div>
 															</div>
 														</div>
-													</div>
+													</div> */}
 												</td>
 											</tr>
 										))}

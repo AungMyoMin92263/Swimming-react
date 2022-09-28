@@ -80,7 +80,9 @@ class StudentLoginPage extends React.Component<IProps, IStates> {
 			role: "student",
 			password: password,
 		});
-		setItemWithObject("authUser", this.props.authUser);
+		if (this.props.authUser.isSignedIn) {
+			setItemWithObject("authUser", this.props.authUser);
+		}
 	};
 
 	validateEmail = (email: string) => {

@@ -90,16 +90,17 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 		await this.props.getUserInfo(this.state.id);
 		if (this.props.user && this.props.user.otherUserinfo) {
 			let userObj = this.props.user.otherUserinfo;
+			console.log("userboo", userObj)
 			this.setState({
 				id: userObj.student.id,
 				name: userObj.name,
 				logo: userObj.avatar,
 				mobile: userObj.phone != "null" ? userObj.phone : "",
 				email: userObj.email,
-				parentEmail: userObj.student.parent_email,
-				parentMobile: userObj.student.parent_name,
+				parentEmail: userObj.parent_email,
+				parentMobile: userObj.parent_name,
 				favourite: userObj.favorite,
-				age: userObj.student.age
+				age: userObj.age
 			});
 		}
 	};
