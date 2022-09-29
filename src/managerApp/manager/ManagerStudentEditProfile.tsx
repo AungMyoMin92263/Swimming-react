@@ -98,9 +98,9 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 				mobile: userObj.phone != "null" ? userObj.phone : "",
 				email: userObj.email,
 				parentEmail: userObj.parent_email,
-				parentMobile: userObj.parent_name,
+				parentMobile: userObj.student.parent_phone,
 				favourite: userObj.favorite,
-				age: userObj.age
+				age: userObj.student.age
 			});
 		}
 	};
