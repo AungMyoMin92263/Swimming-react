@@ -73,7 +73,7 @@ class CoachViewStudent extends React.Component<IProps, IStates> {
 				<div className='content-mobile-cus-space col-sm-12'>
 					<CoachMobileHeader backBtn={true}></CoachMobileHeader>
 					<StudentProfile
-						byCoach={false}
+						byCoach={true}
 						user_id={this.state.userId}
 						history={this.props.history}
 						defaultPath={"/coach"}

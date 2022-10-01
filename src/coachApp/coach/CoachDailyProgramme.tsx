@@ -10,7 +10,8 @@ import {
   getAssignUserByClass,
 } from "../../stores/actions";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
-
+import OpenInFullIcon from "@mui/icons-material/OpenInFull";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
@@ -27,6 +28,7 @@ import ProfileContainer, { IProfile } from "../../atoms/ProfileContainer";
 import { ClassProgramInterface } from "../../stores/model/class-interface";
 import moment from "moment";
 import ListBoxUI from "../../molecules/ListBox";
+import { Button } from "react-bootstrap";
 interface IStates {
   step: number;
   image: any;
@@ -40,6 +42,7 @@ interface IStates {
   goEnterComment: boolean;
   profile: IProfile;
   classProgram: any;
+  isPreview: boolean;
 }
 
 interface IProps {
@@ -80,6 +83,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
       goAllComments: false,
       goEnterComment: false,
       profile: { title: "Dummy" },
+      isPreview: false,
     };
   }
   componentDidMount() {
@@ -107,6 +111,8 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 
   getClass = async () => {
     let url = "school/" + this.state.schoolId + "/class/" + this.state.id;
+    const urlParams = new URLSearchParams(window.location.search);
+    let date = urlParams.get("date") || new Date().toISOString();
     await this.props.getClassObject(url, true);
     if (this.props.classes && this.props.classes.viewClass) {
       let comment = [];
@@ -117,17 +123,25 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
         display_item: [
           {
             title: "Date",
-            value: moment(this.props.classes.viewClass.start_date).format(
-              "D MMM YYYY"
-            ),
+            value: moment(date, "YYYY-MM-DD").format("D MMM YYYY"),
           },
           {
-            title: "Time",
-            value: this.props.classes.viewClass.start_time,
+            title: "Start Time",
+            value: moment(
+              this.props.classes.viewClass.start_time,
+              "hh:mm"
+            ).format("hh:mm A"),
           },
           {
             title: "No. Student",
             value: this.props.classes.viewClass.studentCount,
+          },
+          {
+            title: "End Time",
+            value: moment(
+              this.props.classes.viewClass.end_time,
+              "hh:mm"
+            ).format("hh:mm A"),
           },
         ],
       };
@@ -148,7 +162,9 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
   };
 
   getAttendancesByClass = async () => {
-    let url = "attendance/byClass/" + this.state.id;
+    const urlParams = new URLSearchParams(window.location.search);
+    let date = urlParams.get("date") || new Date().toISOString();
+    let url = "attendance/byClass/" + this.state.id + "?record_date=" + date;
     await this.props.getAll(url);
     if (
       this.props.response &&
@@ -219,11 +235,14 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 
   postClassProgram = async (id: number, file: any) => {
     let url = "class-daily/" + id + "/program";
-    let date = new Date().toISOString();
+    const urlParams = new URLSearchParams(window.location.search);
+    let date = urlParams.get("date")
+      ? urlParams.get("date")
+      : new Date().toISOString();
     let oldId = this.state.classProgram ? this.state.classProgram.id : 0;
     let postData: ClassProgramInterface = {
       logo: file,
-      upload_date: date,
+      upload_date: date || "",
       id: oldId,
     };
 
@@ -235,7 +254,10 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
   };
 
   getClassProgram = async () => {
-    let date = new Date().toISOString();
+    const urlParams = new URLSearchParams(window.location.search);
+    let date = urlParams.get("date")
+      ? urlParams.get("date")
+      : new Date().toISOString();
     let url = "class-daily/" + this.state.id + "/program?req_date=" + date;
     await this.props.getClassProgram(url);
     if (this.props.classes && this.props.classes.dailyProgram) {
@@ -259,7 +281,13 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 
   createProfile = (image_url: string, name: string, isXs?: boolean) => {
     if (image_url) {
-      return <img src={"/assets/icons/logo.png"} className="logo-icon" />;
+      return (
+				<img
+					src={image_url? process.env.REACT_APP_API_ENDPOINT + "/" + image_url : ""}
+					className='logo-icon'
+          alt=""
+				/>
+			);
     } else {
       return (
         <InitialIcon
@@ -285,15 +313,6 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
       isBigIcon: false,
     };
 
-    let comment: ICommentItem = {
-      message: "Hello Testing Comment",
-      profile: <img src={"/assets/icons/logo.png"} className="logo-icon" />,
-      callback: () => {},
-      timeString: "You at 00:00 PM",
-      showReply: true,
-      reply: 0,
-    };
-
     const {
       classe,
       attendances,
@@ -302,6 +321,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
       goEnterComment,
       profile,
       classProgram,
+      isPreview,
     } = this.state;
 
     return (
@@ -324,16 +344,34 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
               >
                 {classProgram && classProgram.image_url !== "" ? (
                   <>
-                    <label htmlFor="fileUpload" className="cursor-pointer">
-                      <img
-                        src={
-                          process.env.REACT_APP_API_ENDPOINT +
-                          "/" +
-                          classProgram.image_url
-                        }
-                        alt="preview"
-                        className="daily-programme-image"
-                      />
+                    <Button
+                      className="preview-icon-btn"
+                      onClick={() => this.setState({ isPreview: true })}
+                    >
+                      <OpenInFullIcon
+                        sx={{ color: "#FFF", fontSize: 24, m: "auto" }}
+                      ></OpenInFullIcon>
+                    </Button>
+                    <img
+                      src={
+                        process.env.REACT_APP_API_ENDPOINT +
+                        "/" +
+                        classProgram.image_url
+                      }
+                      alt="preview"
+                      className="daily-programme-image"
+                    />
+
+                    <div style={{ marginTop : '-60px', paddingBottom: '16px' }}>
+                    <label htmlFor="fileUpload" className="width-100">
+                      <div className="width-100 flex justify-space-around cursor-pointer  center">
+                        <div className="shadow pt-2 pb-2 pl-3 pr-3 bg-white round-btn" style={{ marginTop : '-16px' }}>
+                          <span className="primary f-14">Reupload</span>{" "}
+                          <FileUploadOutlinedIcon
+                            sx={{ color: "#0070F8", ml: 0.5 }}
+                          />
+                        </div>
+                      </div>
                       <input
                         type="file"
                         id="fileUpload"
@@ -341,6 +379,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
                         onChange={this.handleChange}
                       />
                     </label>
+                    </div>
                   </>
                 ) : (
                   <div className="file-upload">
@@ -368,7 +407,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
                 >
                   <>
                     {this.props.classes.assignUser
-                      ?.filter((coach: any) => coach.type == "coache")
+                      ?.filter((coach: any) => coach.type === "coache")
                       .map((coach: any, index: any) => {
                         return (
                           <ListItem
@@ -463,28 +502,29 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
                       .slice(0, 3)
                       .map((res: any, index: number) => {
                         return (
-                          <CommentItem
-                            profile={this.createProfile(
-                              res.user_info.avatar,
-                              res.user_info.name
-                            )}
-                            message={res.message}
-                            callback={() => {}}
-                            timeString={
-                              res.user_info.name +
-                              " at " +
-                              moment(res.created_at).format("DD MMM, h:mm a")
-                            }
-                            key={`cmd-${index}`}
-                            showRightArr={false}
-                            isFileIncluded={
-                              res.attachment && res.attachment !== ""
-                                ? true
-                                : false
-                            }
-                            file={res.attachment}
-                          ></CommentItem>
-                        );
+													<CommentItem
+														profile={this.createProfile(
+															res.user_info.avatar,
+															res.user_info.name
+														)}
+														message={res.message}
+														callback={() => {}}
+														timeString={
+															res.user_info.name +
+															" at " +
+															moment(res.created_at).format("DD MMM, h:mm a")
+														}
+														key={`cmd-${index}`}
+														showRightArr={false}
+														isFileIncluded={
+															res.attachment && res.attachment !== ""
+																? true
+																: false
+														}
+														file={res.attachment}
+														reply={res.children && res.children.length}
+													></CommentItem>
+												);
                       })}
                   </>
                 ) : (
@@ -516,6 +556,24 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
             )}
           </div>
         </div>
+
+        {isPreview && (
+          <div className="preview-div">
+			<CloseOutlinedIcon sx={{ color : '#FFF',fontSize : 24,mr : 3,mt:3 }} className="cursor-pointer right"
+			onClick={()=> this.setState({ isPreview : false })}/>
+			<div className="img-div flex-center">	
+            <img
+              src={
+                process.env.REACT_APP_API_ENDPOINT +
+                "/" +
+                classProgram.image_url
+              }
+              alt="preview"
+              className="preview-image"
+            />
+			</div>
+          </div>
+        )}
       </>
     );
   }

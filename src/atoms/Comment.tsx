@@ -6,7 +6,7 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import placeholder from "../assets/images/place-holder.png";
 
 import { Player } from "video-react";
-
+import { setItemWithObject } from "../auth/LocalStorage";
 export interface ICommentItem {
   message: string;
   profile?: JSX.Element;
@@ -17,6 +17,7 @@ export interface ICommentItem {
   showRightArr?: boolean;
   isFileIncluded?: boolean;
   file?: string;
+  comment ?: any;
 }
 
 const downloadFile = (url :string,fileName : string) => {
@@ -78,6 +79,11 @@ const CommentItem = (props: ICommentItem) => {
     downloadURL = process.env.REACT_APP_API_ENDPOINT +'/upload/download/'+ file[1]+'/'+file[2];
   }
 
+  const clickComment = () => {
+    if(props.comment)setItemWithObject('comment',props.comment);
+    props.callback();
+  }
+
   return (
     <div className="comment-item">
       <div className="message-area">
@@ -111,7 +117,7 @@ const CommentItem = (props: ICommentItem) => {
         </div>
       </div>
       {props.showRightArr ? (
-        <div className="item-icon" onClick={() => props.callback()}>
+        <div className="item-icon" onClick={clickComment}>
           <ArrowForwardIosIcon></ArrowForwardIosIcon>
         </div>
       ) : (

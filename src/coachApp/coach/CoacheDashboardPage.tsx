@@ -176,7 +176,9 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
 				let temp = [];
 				for (let i = 0; i < this.props.studentList.result.length; i++) {
 					temp.push({
-						text: this.props.studentList.result[i].name,
+						text: this.props.studentList.result[i].name
+							? this.props.studentList.result[i].name
+							: this.props.studentList.result[i].email,
 						callback: () =>
 							this.studentCallback(this.props.studentList.result[i].id),
 						smallText: "",
@@ -233,10 +235,15 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
 												{...classe.obj}
 												key={`classOb${index}`}
 												arrowRight={true}
+												
 											>
 												<>
 													<AccessTimeOutlinedIcon fontSize='small' />
-													<label>{classe.start_time}</label>
+													<label>
+														{moment(classe.start_time, "hh:mm").format(
+															"hh:mm A"
+														)}
+													</label>
 												</>
 											</ListItem>
 										))}

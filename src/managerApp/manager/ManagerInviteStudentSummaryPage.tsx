@@ -18,6 +18,7 @@ import {
 } from "../../stores/actions";
 import { getClassObject, getAll } from "../../stores/actions";
 import { deleteStudent } from "./../../stores/actions/student-action";
+import { Modal } from "react-bootstrap";
 interface IStates {
 	school: any;
 	errorMsg: string;
@@ -28,7 +29,9 @@ interface IStates {
 	classId: any;
 	class_name: string;
 	class_logo: string;
-	studentList: string[];
+	studentList: any[];
+	modalShow : boolean;
+	removeIndex : number;
 }
 
 interface IProps {
@@ -63,6 +66,8 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 			class_name: "",
 			class_logo: "",
 			studentList: [],
+			modalShow : false,
+			removeIndex : -1,
 		};
 	}
 	componentDidMount() {
@@ -123,16 +128,18 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 		}
 	};
 
-	handleDelete = async (user_id: any) => {
+	handleDelete = async () => {
 		let deleteStudentUrl = "assigned/class";
-		console.log("user_id", user_id);
-		await this.props.deleteStudent(deleteStudentUrl, user_id);
+		await this.props.deleteStudent(deleteStudentUrl, this.state.studentList[this.state.removeIndex].id);
 
 		if (
 			this.props.student &&
 			this.props.student.result &&
 			this.props.student.result.data.statusText === "success"
 		) {
+			this.setState({
+				modalShow : this.state.modalShow? false : this.state.modalShow,
+			  });
 			this.getClass()
 		}
 		if (this.props.student.error) {
@@ -152,6 +159,7 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 			class_name,
 			class_logo,
 			studentList,
+			removeIndex
 		} = this.state;
 		return (
 			<>
@@ -195,7 +203,7 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 
 							{studentList &&
 								studentList.length > 0 &&
-								studentList.map((student: any) => (
+								studentList.map((student: any,index : number) => (
 									<>
 										<div className='f-16 mb-32 align-center justify-space-between'>
 											<div className='align-center'>
@@ -218,7 +226,13 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 														fontSize: 24,
 														cursor: "pointer",
 													}}
-													onClick={() => this.handleDelete(student.id)}
+													// onClick={() => this.handleDelete(student.id)}
+													onClick={() =>
+														this.setState({
+														  removeIndex: index,
+														  modalShow: true,
+														})
+													  }
 												></DeleteOutlineOutlinedIcon>
 											</div>
 										</div>
@@ -247,6 +261,55 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 							</Link>
 						</div>
 					</div>
+
+					<Modal
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            dialogClassName={"confirm-modal"}
+            show={this.state.modalShow}
+            onHide={() => {
+              this.setState({
+                ...this.state,
+                modalShow: false,
+              });
+            }}
+          >
+            <div className="mb-16">
+              <span className="f-20 fw-500">
+                Remove Student {''}‘
+                {studentList[removeIndex] && studentList[removeIndex].user && (studentList[removeIndex].user.name? 
+				studentList[removeIndex].user.name : studentList[removeIndex].user.email)} ’?
+              </span>
+            </div>
+            <div className="mb-16">
+              <span className="f-16">
+                This action cannot be undone. This action will only remove the
+                coach from this class, not your school.
+              </span>
+            </div>
+            <div className="flex-center">
+              <button
+                type="submit"
+                className="secondary-btn mr-8"
+                onClick={() =>
+                  this.setState({
+                    ...this.state,
+                    modalShow: false,
+                  })
+                }
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="secondary-btn"
+                style={{ color: "#F80000", borderColor: "#F80000" }}
+                onClick={this.handleDelete}
+              >
+                Remove
+              </button>
+            </div>
+          </Modal>
 				</div>
 			</>
 		);

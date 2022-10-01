@@ -209,7 +209,17 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 
 	createProfile = (image_url: string, name: string) => {
 		if (image_url) {
-			return <img src={"/assets/icons/logo.png"} className='logo-icon' />;
+			 return (
+					<img
+						src={
+							image_url
+								? process.env.REACT_APP_API_ENDPOINT + "/" + image_url
+								: ""
+						}
+						className='logo-icon'
+						alt=''
+					/>
+				);
 		} else {
 			return (
 				<InitialIcon

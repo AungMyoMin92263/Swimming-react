@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import CoachMobileHeader from "../../atoms/CoachMobileHeader";
+import { getItem } from "../../auth/LocalStorage";
 import CommentListPage from "../../molecules/CommentPage"
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
@@ -38,16 +39,23 @@ class StudentCommentsPage extends React.Component<IProps, IStates> {
     }
   }
 
+  commentBack = () => {
+    let comment = JSON.parse(getItem("comment") || "null");
+    if(comment){
+      this.props.history.push("/student/dashboard/enter-comments/" + this.state.classId + "/" + this.state.commentType+'/'+ comment.id)
+    }
+  }
+
   render() {
     const { classId } = this.state
     return (
       <div className="wrapper-mobile bg-w">
         <div className="content-mobile-cus-space col-sm-12">
-          <CoachMobileHeader backBtn={true} addBtn={true} callback={() => {
+          <CoachMobileHeader backBtn={true} addBtn={false} callback={() => {
             this.props.history.push("/student/dashboard/enter-comments/" + classId + "/" + this.state.commentType)
           }}></CoachMobileHeader>
           <div className='page-tile pt-24 pb-40'>All Comments</div>
-          <CommentListPage receiverId={classId} isClass={this.state.commentType === 'class'} showRightArr={true} ></CommentListPage>
+          <CommentListPage receiverId={classId} isClass={this.state.commentType === 'class'} showRightArr={true} callback={() => this.commentBack()}></CommentListPage>
         </div>
       </div>
     )

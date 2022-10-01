@@ -16,14 +16,18 @@ interface ICoachMobileHeader {
   filterBtn?: boolean
   editBtn?: boolean
   callback?: Function
+  isStudent?: boolean
 }
-function logoutFun () {
-  removeItem('authUser')
-  window.location.replace('/coach/login')
-}
+
 const CoachMobileHeader = (props: ICoachMobileHeader) => {
   const navigate = useNavigate();
  
+  function logoutFun () {
+    removeItem('authUser')
+    if(props.isStudent)window.location.replace('/student/login')
+    else window.location.replace('/coach/login')
+  }
+  
   return (
     <div className="header-box primary f-16 fw-500 text-center pt-16 pb-16 ">
       {props.backBtn ? <>

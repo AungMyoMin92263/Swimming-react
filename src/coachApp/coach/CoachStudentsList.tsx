@@ -116,9 +116,22 @@ class CoachStudentsList extends React.Component<IProps, IStates> {
                     return (student.name || "").toLowerCase().startsWith(filterText.toLowerCase())
                   }
                 }).map((student: any, index: any) => {
-                  return <ListItem icon={<CreateProfile image_url={student.avatar} name={student.name} />} text={student.name} callback={() => {
-                    this.studentCallback(student.id)
-                  }} arrowRight={true} key={`student${index}`} />
+                  return (
+										<ListItem
+											icon={
+												<CreateProfile
+													image_url={student.avatar}
+													name={student.name ? student.name : student.email}
+												/>
+											}
+											text={student.name ? student.name : student.email}
+											callback={() => {
+												this.studentCallback(student.id);
+											}}
+											arrowRight={true}
+											key={`student${index}`}
+										/>
+									);
                 })}
               </>
               : <></>}

@@ -82,12 +82,12 @@ import CoachEventsPage from "../coachApp/coach/CoachEvents";
 import CoachCommentsPage from "../coachApp/coach/CoachComments";
 import CoachClassesPage from "../coachApp/coach/CoachClasses";
 import CoachEnterCommentsPage from "../coachApp/coach/CoachEnterCommentsPage";
-import CoachMePage from "../coachApp/coach/CoachMe";
 import CoachEditProfilePage from "../coachApp/coach/CoachEditProfile";
 import CoacheDashboardPage from "../coachApp/coach/CoacheDashboardPage";
 import CoachRecoverPasswordPage from "../coachApp/coach/CoachRecoverPasswordPage";
 import CoachChangePasswordPage from "../coachApp/coach/CoachChangePasswordPage";
 import CoachAddInfoPage from "../coachApp/coach/CoachAddInfo";
+import CoachReplyCommentsPage from "../coachApp/coach/CoachReplyCommentsPage";
 
 //parent
 import ParentCreatePasswordPage from "../studentApp/parent/ParentCreatePasswordPage";
@@ -120,7 +120,10 @@ import ManagerAllAttendancesStudent from "../managerApp/manager/ManagerAllAttend
 import ManagerAllEventsStudent from "../managerApp/manager/ManagerAllEventsStudent";
 import StudentAttendanceList from "../studentApp/student/StudentAttendanceList";
 import StudentCoacheProfile from "../studentApp/student/StudentCoacheProfile";
-
+import ManagerEventDetailPage from "../managerApp/manager/ManagerEventDetailPage";
+import ManagerEditEventPage from "../managerApp/manager/ManagerEditEventPage";
+import ManagerEventSummaryPage from "../managerApp/manager/ManagerEventSummaryPage";
+import ManagerEventEditInvitePage from "../managerApp/manager/ManagerEventEditInvitePage";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -492,7 +495,7 @@ const routes = [
 				isSideBar: false,
 				isMobileFooter: false,
 			},
-			
+
 			{
 				path: "invite-coach",
 				sideBar: (props: any) => <></>,
@@ -517,7 +520,7 @@ const routes = [
 				isSideBar: false,
 				isMobileFooter: false,
 			},
-			
+
 			{
 				path: "invite-student",
 				sideBar: (props: any) => <></>,
@@ -530,7 +533,7 @@ const routes = [
 				isSideBar: false,
 				isMobileFooter: false,
 			},
-			
+
 			{
 				path: "invite-student/:id",
 				sideBar: (props: any) => <></>,
@@ -827,6 +830,58 @@ const routes = [
 				isSideBar: true,
 				isMobileFooter: false,
 			},
+			{
+				path: "event-detail/:id",
+				sideBar: (props: any) => (
+					<>
+						<ManagerSideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<ManagerEventDetailPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "edit-event/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ManagerEditEventPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "event-summary/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ManagerEventSummaryPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "edit-invite-student-event/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ManagerEventEditInvitePage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
 		],
 	},
 	{
@@ -1098,7 +1153,7 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
-				path: "dashboard/enter-comments/:id/class",
+				path: "dashboard/enter-comments/:id/class/:comment_id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
@@ -1110,7 +1165,7 @@ const routes = [
 				isMobileFooter: false,
 			},
 			{
-				path: "dashboard/enter-comments/:id/user",
+				path: "dashboard/enter-comments/:id/user/:comment_id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
@@ -1421,6 +1476,31 @@ const routes = [
 				main: (props: any) => (
 					<>
 						<CoachEnterCommentsPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+
+			{
+				path: "dashboard/reply-comments/:id/class/:comment_id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachReplyCommentsPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "dashboard/reply-comments/:id/user/:comment_id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachReplyCommentsPage {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,

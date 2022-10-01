@@ -605,6 +605,10 @@ body a {
   width: 48px;
 }
 
+.width-100 {
+  width: 100%;
+}
+
 .hr {
   width: 100%;
   height: 1px;
@@ -682,6 +686,7 @@ body a {
 .daily-programme-image {
   /* height: 135px; */
   width: 100%;
+  margin-top: -65px;
 }
 
 .back-btn {
@@ -890,6 +895,11 @@ body a {
   border: 1px solid #E5E5E5;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
   border-radius: 8px 8px 0px 0px;
+}
+
+.confirm-modal .modal-content{
+  padding:16px;
+  width : 375px;
 }
 
 .filter-tile {
@@ -1242,5 +1252,42 @@ td {
 
 .more-list-btn.dropdown-toggle:after {
   display: none !important;
+}
+
+/* 
+image preview */
+
+.preview-icon-btn{
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  float: right;
+  margin: 8px;
+  background-color: #000;
+  opacity: .3;
+}
+
+.preview-div{
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  background-color: #000;
+  opacity: .8;
+}
+
+.preview-image{
+  width: 100%;
+  height: auto;
+}
+
+.round-btn{
+  border-radius: 25px;
+  width: 135px;
+}
+
+.img-div{
+  width: 100%;
+  height: calc(100vh - 137px);
 }
 

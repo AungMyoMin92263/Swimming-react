@@ -3,15 +3,11 @@ import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import CommentItem, { ICommentItem } from "../../atoms/Comment";
-import { getItem } from "../../auth/LocalStorage";
 import {
-  getClassObject,
-  getAll,
   postComment,
   getSendComment,
 } from "../../stores/actions";
+
 import { InitialIcon } from "../../atoms/InitialIcon";
 import { Link } from "react-router-dom";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
@@ -321,6 +317,7 @@ class CoachCommentsPage extends React.Component<IProps, IStates> {
               isClass={this.state.commentType === "class"}
               isOwn={true}
               showRightArr={false}
+              callback={() => {}}
             ></CommentListPage>
 
             {this.renderComment()}

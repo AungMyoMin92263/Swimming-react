@@ -71,6 +71,7 @@ class StudentViewProfile extends React.Component<IProps, IStates> {
 					<StudentMobileHeader
 						backBtn={true}
 						editBtn={true}
+						isStudent={true}
 					></StudentMobileHeader>
 					<StudentProfile
 						byCoach={false}

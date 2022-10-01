@@ -270,15 +270,12 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 											</div>
 										</div>
 										<div className='class-detail-date-time mt-8'>
-											<div className='col-3 flex-column'>
+											<div className='col-12 flex-column'>
 												<span className='f-16 fw-500'>
 													{profile &&
 														profile.display_item &&
 														profile.display_item[0].value}
 												</span>
-											</div>
-											<div className='col-3 flex-column'>
-												<span className='f-16 fw-500'></span>
 											</div>
 										</div>
 									</div>

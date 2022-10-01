@@ -26,6 +26,7 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Dropdown from "react-bootstrap/Dropdown";
+import { Modal } from "react-bootstrap";
 
 interface IStates {
   schools: School[];
@@ -42,6 +43,8 @@ interface IStates {
   editStudentUrl: string;
   viewCoachUrl: string;
   editCoachUrl: string;
+  modalShow : boolean;
+  removeIndex : number;
 }
 interface UserSignInPage {
   signIn: Function;
@@ -84,6 +87,8 @@ class PeopleListPage extends React.Component<IProps, IStates> {
       editStudentUrl: "",
       viewCoachUrl: "",
       editCoachUrl: "",
+      modalShow : false,
+      removeIndex : -1,
     };
     this.props.LoadingActionFunc(true);
   }
@@ -96,18 +101,20 @@ class PeopleListPage extends React.Component<IProps, IStates> {
   setUserInfo = async () => {
     const user = JSON.parse(getItem("authUser") || "null");
     if (user && user.userInfo) {
-      await this.setState({
+      this.setState({
         email: user.userInfo.email,
-        school_id: user.userInfo.assign_school.school_id,
       });
       if (user.userInfo.assign_school) {
-        this.getUsers();
+        await this.setState({
+          school_id: user.userInfo.assign_school.school_id,
+        })
+        this.getUsers(user.userInfo.assign_school.school_id);
       }
     }
   };
 
-  getUsers = async () => {
-    let getUserUrl = "schools/all-user/" + this.state.school_id;
+  getUsers = async (id : number) => {
+    let getUserUrl = "schools/all-user/" + id;
     await this.props.getAll(getUserUrl);
     await this.setState({
       users: this.props.users.result,
@@ -162,21 +169,20 @@ class PeopleListPage extends React.Component<IProps, IStates> {
     await this.setState({
       search: e.target.value,
     });
-    if (e.target.value === "") {
-      this.setState({
-        filteredUsers: this.state.users,
-      });
-    } else {
-      console.log("this.state.users", this.state.users);
-      let array = this.state.users.filter(
-        (u) =>
-          u.name.toLowerCase().includes(e.target.value.trim().toLowerCase()) ||
-          u.role.toLowerCase().includes(e.target.value.trim().toLowerCase())
-      );
-      this.setState({
-        filteredUsers: array,
-      });
-    }
+    // if (e.target.value === "") {
+    //   this.setState({
+    //     filteredUsers: this.state.users,
+    //   });
+    // } else {
+    //   let array = this.state.users.filter(
+    //     (u) =>
+    //       u.name.toLowerCase().includes(e.target.value.trim().toLowerCase()) ||
+    //       u.role.toLowerCase().includes(e.target.value.trim().toLowerCase())
+    //   );
+    //   this.setState({
+    //     filteredUsers: array,
+    //   });
+    // }
   };
 
   toggleOpenMore = (index: number) => {
@@ -191,16 +197,21 @@ class PeopleListPage extends React.Component<IProps, IStates> {
     });
   };
 
-  remove = async (index: number) => {
+
+
+  remove = async () => {
     //this.removeUser(this.state.users[index].id,this.state.users[index].role);
-    await this.props.deleteUser("users", this.state.users[index].id);
+    await this.props.deleteUser("users", this.state.users[this.state.removeIndex].id);
     console.log("this.props.user", this.props.user);
     if (
       this.props.user &&
       this.props.user.result &&
       this.props.user.result.data.statusText === "success"
     ) {
-      this.getUsers();
+      this.setState({
+        modalShow : this.state.modalShow? false : this.state.modalShow,
+        });
+      this.getUsers(this.state.school_id);
     }
   };
 
@@ -235,7 +246,7 @@ class PeopleListPage extends React.Component<IProps, IStates> {
       this.props.student.result &&
       this.props.student.result.data.statusText === "success"
     ) {
-      this.getUsers();
+      this.getUsers(this.state.school_id);
     }
   };
 
@@ -245,7 +256,7 @@ class PeopleListPage extends React.Component<IProps, IStates> {
       this.props.coach.result &&
       this.props.coach.result.data.statusText === "success"
     ) {
-      this.getUsers();
+      this.getUsers(this.state.school_id);
     }
   };
 
@@ -263,6 +274,7 @@ class PeopleListPage extends React.Component<IProps, IStates> {
       editStudentUrl,
       viewCoachUrl,
       editCoachUrl,
+      removeIndex
     } = this.state;
     return (
       <>
@@ -354,7 +366,11 @@ class PeopleListPage extends React.Component<IProps, IStates> {
                         .filter((user: any) => {
                           if (!search) {
                             return true;
-                          } else {
+                          }else if(search.toLowerCase() === 'student' || search.toLowerCase() === 'coach')
+                          {
+                            return (user.role || "").toLowerCase() === (search.toLowerCase() === 'coach'? 'coache' : search.toLowerCase());
+                          }
+                          else {
                             return (user.name || "")
                               .toLowerCase()
                               .startsWith(search.toLowerCase());
@@ -369,15 +385,14 @@ class PeopleListPage extends React.Component<IProps, IStates> {
                               <td className="flex justify-center">
                                 <InitialIcon
                                   initials={
-                                    user && user.email
-                                      ? user.email.substr(0, 1).toUpperCase()
+                                    (user && user.email)? user.email.substring(0, 1).toUpperCase()
                                       : ""
                                   }
                                   isFooterMenu={false}
                                 />
                                 <span className="ml-16">
                                   {!user || !user.name || user.name === ""
-                                    ? "-"
+                                    ? user.email
                                     : user.name}
                                 </span>
                               </td>
@@ -455,19 +470,30 @@ class PeopleListPage extends React.Component<IProps, IStates> {
                                       <MoreVertIcon />
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
-                                      {user && user.role === "coache" ?
-                                      <Dropdown.Item href={"/manager/coach-edit-profile/"+ this.state.users[index].id }>
-                                      <span>Edit</span>
-                                    </Dropdown.Item> :<Dropdown.Item href={"/manager/student-edit-profile/"+ this.state.users[index].id }>
-                                      <span>Edit</span>
-                                    </Dropdown.Item>
-                                            }
-                                        
-                                      
-									  <div className='dropdown-divider'></div>
+                                      {user && user.role === "coache" ? (
+                                        <Dropdown.Item
+                                          href={
+                                            "/manager/coach-edit-profile/" +
+                                            this.state.users[index].id
+                                          }
+                                        >
+                                          <span>Edit</span>
+                                        </Dropdown.Item>
+                                      ) : (
+                                        <Dropdown.Item
+                                          href={
+                                            "/manager/student-edit-profile/" +
+                                            this.state.users[index].id
+                                          }
+                                        >
+                                          <span>Edit</span>
+                                        </Dropdown.Item>
+                                      )}
+
+                                      <div className="dropdown-divider"></div>
 
                                       <Dropdown.Item
-                                        onClick={() => this.remove(index)}
+                                        onClick={() => this.setState({ removeIndex : index, modalShow : true})}
                                       >
                                         <span>Remove</span>
                                       </Dropdown.Item>
@@ -484,6 +510,48 @@ class PeopleListPage extends React.Component<IProps, IStates> {
             </div>
           </div>
         </div>
+
+
+        <Modal
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+          dialogClassName={"confirm-modal"}
+              show={this.state.modalShow}
+              onHide={() => {
+                this.setState({
+                  ...this.state,
+                  modalShow: false,
+                });
+              }}
+        >
+          <div className="mb-16">
+            <span className="f-20 fw-500">Remove {users[removeIndex] && users[removeIndex].role} ‘ {users[removeIndex] && users[removeIndex].name} ’? </span>
+          </div>
+          <div className="mb-16">
+            <span className="f-16">
+              This action cannot be undone. This action will remove the
+              coach from this class and your school.
+            </span>
+          </div>
+          <div className="flex-center">
+            <button type="submit" className="secondary-btn mr-8" 
+            onClick={()=> this.setState({
+                  ...this.state,
+                  modalShow: false,
+                })
+              }>
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="secondary-btn"
+              style={{ color: "#F80000", borderColor: "#F80000" }}
+              onClick={this.remove}
+            >
+              Remove
+            </button>
+          </div>
+        </Modal>
       </>
     );
   }

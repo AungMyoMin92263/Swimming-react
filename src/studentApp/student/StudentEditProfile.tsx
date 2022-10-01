@@ -40,6 +40,7 @@ interface IStates {
 }
 
 interface IProps {
+	history:any;
 	match: any;
 	user: any;
 	putStudent: Function;
@@ -95,12 +96,15 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
     if (this.props.user && this.props.user.otherUserinfo) {
       let userObj = this.props.user.otherUserinfo;
       this.setState({
-				id: userObj.id,
+				id: userObj.student.id,
+        age:userObj.student.age,
+        favourite: userObj.favorite || '',
 				name: userObj.name,
 				logo: userObj.avatar,
 				mobile: userObj.phone ? userObj.phone : "",
 				email: userObj.email,
 				parentEmail: userObj.parent_email,
+        parentMobile: userObj.student.parent_phone,
 			});
     }
   };
@@ -158,8 +162,8 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
         });
         this.props.LoadingActionFunc(false);
       } else {
-        
           this.props.LoadingActionFunc(false);
+          this.props.history.back()
       }
     }
   };
@@ -180,7 +184,7 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
   renderImageUpload = () => {
     return (
       <div>
-        <label htmlFor="upload-button center">
+        <label htmlFor="upload-button">
           {this.state.image.preview ||
           (this.state.logo && this.state.logo !== "") ? (
             <>

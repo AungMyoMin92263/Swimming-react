@@ -198,15 +198,17 @@ class StudentDashboardPage extends React.Component<IProps, IStates> {
 											>
 												<>
 													<AccessTimeOutlinedIcon fontSize='small' />
-													<label>{classe.start_time}</label>
+													<label>
+														{moment(classe.start_time, "hh:mm").format(
+															"hh:mm A"
+														)}
+													</label>
 												</>
 											</ListItem>
 										))}
 								</>
 							</ListBoxUI>
 						</div>
-
-						
 					</div>
 				</div>
 			</>
