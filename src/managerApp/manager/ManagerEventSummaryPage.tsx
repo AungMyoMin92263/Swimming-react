@@ -115,6 +115,11 @@ class ManagerEventSummaryPage extends React.Component<IProps, IStates> {
 				modalShow: this.state.modalShow ? false : this.state.modalShow,
 			})
 			await this.getEventDetail();
+			if (this.props.events && this.props.events.eventDetail) {
+				this.setState({
+					studentList: this.props.events.eventDetail?.students,
+				});
+			}
 		}
 		else {
             await this.getEventDetail();
