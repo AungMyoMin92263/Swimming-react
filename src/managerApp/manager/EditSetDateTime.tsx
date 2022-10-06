@@ -291,6 +291,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
 						<div className='col-6 pad-0-16'>
 							<LocalizationProvider dateAdapter={AdapterDateFns}>
 								<DatePicker
+									inputFormat='dd/MM/yyyy'
 									label='Starting Date'
 									value={this.state.classObj.start_date}
 									onChange={(newValue) => {
@@ -307,6 +308,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
 						<div className='col-6 pad-0-16'>
 							<LocalizationProvider dateAdapter={AdapterDateFns}>
 								<DatePicker
+									inputFormat='dd/MM/yyyy'
 									label='Ending Date'
 									value={this.state.classObj.end_date}
 									onChange={(newValue) => {
@@ -330,6 +332,7 @@ class SetDateTime extends React.Component<IProps, IStates> {
 						<div className='col-6 pad-0-16'>
 							<LocalizationProvider dateAdapter={AdapterDateFns}>
 								<DatePicker
+									inputFormat='dd/MM/yyyy'
 									label='Class Date'
 									value={this.state.classObj.start_date}
 									onChange={(newValue) => {

@@ -308,83 +308,84 @@ class CoachCommentsPage extends React.Component<IProps, IStates> {
   render() {
     const { classId, commetFile } = this.state;
     return (
-      <>
-        <div className="wrapper-mobile bg-w">
-          <div className="content-mobile-cus-space col-sm-12" id="sendCmtList">
-            <CoachMobileHeader backBtn={true}></CoachMobileHeader>
-            <CommentListPage
-              receiverId={classId}
-              isClass={this.state.commentType === "class"}
-              isOwn={true}
-              showRightArr={false}
-              callback={() => {}}
-            ></CommentListPage>
+			<>
+				<div className='wrapper-mobile bg-w'>
+					<div className='content-mobile-cus-space col-sm-12' id='sendCmtList'>
+						<CoachMobileHeader backBtn={true}></CoachMobileHeader>
+						<CommentListPage
+							showReply={true}
+							receiverId={classId}
+							isClass={this.state.commentType === "class"}
+							isOwn={true}
+							showRightArr={false}
+							callback={() => {}}
+						></CommentListPage>
 
-            {this.renderComment()}
+						{this.renderComment()}
 
-            <Modal
-              dialogClassName={"custom-modal"}
-              show={this.state.modalShow}
-              fullscreen={true}
-              onHide={() => {
-                this.setState({
-                  ...this.state,
-                  modalShow: false,
-                });
-              }}
-            >
-              <Modal.Body className="p-16">
-                <div className="pl-8 pr-8">
-                  <div className="filter-tile pt-8 pb-8 mb-8">Upload</div>
-                  <div className={`input-form-atom`}>
-                    <div
-                      className="label-con cursor mb-8"
-                      onClick={() => this.choosed("file")}
-                    >
-                      <label className="align-center" htmlFor="upload-file">
-                        <AttachFileOutlinedIcon
-                          sx={{ color: "#0070F8", fontSize: 24, mr: 1 }}
-                          style={{ rotate: "45deg" }}
-                        ></AttachFileOutlinedIcon>
-                        <span className="f-16">File</span>
-                      </label>
+						<Modal
+							dialogClassName={"custom-modal"}
+							show={this.state.modalShow}
+							fullscreen={true}
+							onHide={() => {
+								this.setState({
+									...this.state,
+									modalShow: false,
+								});
+							}}
+						>
+							<Modal.Body className='p-16'>
+								<div className='pl-8 pr-8'>
+									<div className='filter-tile pt-8 pb-8 mb-8'>Upload</div>
+									<div className={`input-form-atom`}>
+										<div
+											className='label-con cursor mb-8'
+											onClick={() => this.choosed("file")}
+										>
+											<label className='align-center' htmlFor='upload-file'>
+												<AttachFileOutlinedIcon
+													sx={{ color: "#0070F8", fontSize: 24, mr: 1 }}
+													style={{ rotate: "45deg" }}
+												></AttachFileOutlinedIcon>
+												<span className='f-16'>File</span>
+											</label>
 
-                      <input
-                        type="file"
-                        id="upload-file"
-                        style={{ display: "none" }}
-                        onChange={this.handleFileChanged}
-                      />
-                    </div>
-                    <div className="hr mb-16"></div>
-                    <div
-                      className="label-con cursor"
-                      onClick={() => this.choosed("photovideo")}
-                    >
-                      <label
-                        className="align-center"
-                        htmlFor="upload-photo-video"
-                      >
-                        <PhotoOutlinedIcon
-                          sx={{ color: "#0070F8", fontSize: 24, mr: 1 }}
-                        ></PhotoOutlinedIcon>
-                        <span className="f-16">Photo or Video</span>
-                      </label>
-                      <input
-                        type="file"
-                        id="upload-photo-video"
-                        style={{ display: "none" }}
-                        onChange={this.handlePhotoVideoChanged}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </Modal.Body>
-            </Modal>
-          </div>
-        </div>
-      </>
-    );
+											<input
+												type='file'
+												id='upload-file'
+												style={{ display: "none" }}
+												onChange={this.handleFileChanged}
+											/>
+										</div>
+										<div className='hr mb-16'></div>
+										<div
+											className='label-con cursor'
+											onClick={() => this.choosed("photovideo")}
+										>
+											<label
+												className='align-center'
+												htmlFor='upload-photo-video'
+											>
+												<PhotoOutlinedIcon
+													sx={{ color: "#0070F8", fontSize: 24, mr: 1 }}
+												></PhotoOutlinedIcon>
+												<span className='f-16'>Photo or Video</span>
+											</label>
+											<input
+												type='file'
+												id='upload-photo-video'
+												style={{ display: "none" }}
+												onChange={this.handlePhotoVideoChanged}
+											/>
+										</div>
+									</div>
+								</div>
+							</Modal.Body>
+						</Modal>
+					</div>
+				</div>
+			</>
+		);
   }
 }
 

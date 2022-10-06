@@ -1,25 +1,34 @@
 import React from 'react';
 import "./ListItem.css"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { setItemWithObject } from './../auth/LocalStorage';
 export interface IListItem {
-  text?: string,
-  icon?: JSX.Element,
-  callback: Function,
-  isBigIcon?: boolean
-  smallText?: string
-  secondryText?: boolean
-  selectable?: boolean
-  children?: JSX.Element
-  arrowRight?: boolean
-  checked?: boolean
-  chooseCallBack?: Function
-  noMainText?: boolean
+	text?: string;
+	icon?: JSX.Element;
+	callback: Function;
+	isBigIcon?: boolean;
+	smallText?: string;
+	secondryText?: boolean;
+	selectable?: boolean;
+	children?: JSX.Element;
+	arrowRight?: boolean;
+	checked?: boolean;
+	chooseCallBack?: Function;
+	noMainText?: boolean;
+	isSlot?: boolean;
+  slot?: any;
+  isBooking?: boolean;
 }
 const ListItem = (props: IListItem) => {
   return (
-    <div className={`card-list-item ${props.selectable ? '' : 'pointer'}`} onClick={() => {
+    <div className={`${props.isBooking ? 'card-list-booking' : 'card-list-item '} ${props.selectable ? '' : 'pointer'}`} onClick={() => {
+      
       if (!props.selectable) {
-        props.callback()
+        if (!props.isSlot) props.callback();
+				else {
+          setItemWithObject("selected-slot", props.slot);
+          props.callback();
+				}
       }
     }}>
       <div className={props.isBigIcon ? 'item-text bigicon' : 'item-text'}>
@@ -32,7 +41,7 @@ const ListItem = (props: IListItem) => {
             </div>
           </div>
         }
-        <div className={props.icon ? 'second-text' : 'second-text no-p-left'}>
+        <div className={`${props.icon ? 'second-text' : 'second-text no-p-left'} ${props.isBooking ? 'text-left' : ''}`}>
           {props.secondryText ? props.children : <></>}
         </div>
       </div>

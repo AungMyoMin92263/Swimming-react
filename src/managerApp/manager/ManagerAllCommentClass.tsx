@@ -159,7 +159,15 @@ class ManagerAllCommentClass extends React.Component<IProps, IStates> {
 													/>
 												}
 												message={res.message}
-												callback={() => {}}
+												showReply={true}
+												reply={res.children.length}
+												showRightArr={true}
+												callback={() => {this.props.history.push(
+													"/manager/class/" +
+														this.id +
+														"/comment-detail/" +
+														res.id
+												);}}
 												timeString={
 													res.user_info.name +
 													" at " +

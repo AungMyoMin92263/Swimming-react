@@ -17,6 +17,15 @@
   /* border-top: 0px; */
 }
 
+.card-list-booking {
+  padding: 16px;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .pointer {
   cursor: pointer;
 }
@@ -117,7 +126,7 @@ svg {
 
 .cmd-second-text>img {
   width: 30px;
-  height : 30px;
+  height: 30px;
 }
 
 .cmd-second-text>svg {

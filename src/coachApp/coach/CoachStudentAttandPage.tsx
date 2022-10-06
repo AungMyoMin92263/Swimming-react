@@ -78,7 +78,7 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 			let tempAttendances = this.props.attendance.attandance_list;
 			let res = tempAttendances.map((attend: any) => {
 				return {
-					text: attend.user.name,
+					text: attend.user.name? attend.user.name: attend.user.email,
 					callback: () => console.log("log click item"),
 					smallText: "",
 					icon: (

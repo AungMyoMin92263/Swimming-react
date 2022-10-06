@@ -13,6 +13,7 @@ interface IStates {
 }
 interface IProps {
 	getAllComment: Function;
+	showReply: boolean;
 	receiverId: any;
 	isClass: boolean;
 	comments?: any;
@@ -122,11 +123,12 @@ class CommentListPage extends React.Component<IProps, IStates> {
 										(cmd.user_info && cmd.user_info.name
 											? cmd.user_info.name
 											: "") +
-											  " at " +
-											  moment(cmd.created_at).format("DD MMM, h:mm a")
+										" at " +
+										moment(cmd.created_at).format("DD MMM, h:mm a")
 									}
 									key={`cmd-item-${index}`}
 									showRightArr={this.props.showRightArr}
+									showReply={this.props.showReply}
 									isFileIncluded={
 										cmd.attachment && cmd.attachment !== "" ? true : false
 									}

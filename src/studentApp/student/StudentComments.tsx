@@ -55,7 +55,7 @@ class StudentCommentsPage extends React.Component<IProps, IStates> {
             this.props.history.push("/student/dashboard/enter-comments/" + classId + "/" + this.state.commentType)
           }}></CoachMobileHeader>
           <div className='page-tile pt-24 pb-40'>All Comments</div>
-          <CommentListPage receiverId={classId} isClass={this.state.commentType === 'class'} showRightArr={true} callback={() => this.commentBack()}></CommentListPage>
+          <CommentListPage receiverId={classId} isClass={this.state.commentType === 'class'} showRightArr={true} callback={() => this.commentBack()}   showReply={true}></CommentListPage>
         </div>
       </div>
     )

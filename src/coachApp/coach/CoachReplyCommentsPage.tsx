@@ -143,6 +143,8 @@ class CoachReplyCommentsPage extends React.Component<IProps, IStates> {
 								isOwn={true}
 								callback={() => {}}
 								commentList={comments}
+								showRightArr={false}
+								showReply={false}
 							></CommentListPage>
 						)}
 						<div className='comment-box'>

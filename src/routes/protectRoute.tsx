@@ -26,9 +26,16 @@ const ProtectedRoute = (prop: CustomRouteInterface) => {
     return <Navigate to={prop.appname} replace />;
   }
   if(userObj && userObj.userInfo){
-    if ("/"+userObj.userInfo.role !== appName) {
-      let redUrl = roleByUrl[userObj.userInfo.role]
-      return <Navigate to={redUrl} replace />;
+    if(userObj.userInfo.role !== 'parent'){
+
+      if ("/"+userObj.userInfo.role !== appName) {
+        let redUrl = roleByUrl[userObj.userInfo.role]
+        return <Navigate to={redUrl} replace />;
+      }
+    }else if (appName !== '/student' && appName !== '/parent'){
+      console.log('appname',appName,userObj.userInfo.role)
+        let redUrl = roleByUrl[userObj.userInfo.role]
+        return <Navigate to={redUrl} replace />;
     }
   }
   if (!token && !allows.includes(prop.path)) {

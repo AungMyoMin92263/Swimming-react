@@ -85,45 +85,49 @@ const CommentItem = (props: ICommentItem) => {
   }
 
   return (
-    <div className="comment-item">
-      <div className="message-area">
-        <div className="title-text">{props.message}</div>
-        {props.isFileIncluded ? (
-          <div className="photo-box align-center mt-8 mb-8">
-            {displayFile(props.file)}
+		<div className='comment-item cursor' onClick={clickComment}>
+			<div className='message-area'>
+				<div className='title-text'>{props.message}</div>
+				{props.isFileIncluded ? (
+					<div className='photo-box align-center mt-8 mb-8'>
+						{displayFile(props.file)}
 
-            <div className="flex ml-8" onClick={()=> downloadFile(downloadURL,file[2])}>
-              <label
-                className="cursor-pointer f-10 primary mr-8"
-              >
-                Download
-              </label>
-              <FileDownloadOutlinedIcon
-                sx={{ color: "#0070F8", fontSize: 16, mr: 0.5 }}
-              />
-            </div>
-          </div>
-        ) : (
-          <></>
-        )}
+						<div
+							className='flex ml-8'
+							onClick={() => downloadFile(downloadURL, file[2])}
+						>
+							<label className='cursor-pointer f-10 primary mr-8'>
+								Download
+							</label>
+							<FileDownloadOutlinedIcon
+								sx={{ color: "#0070F8", fontSize: 16, mr: 0.5 }}
+							/>
+						</div>
+					</div>
+				) : (
+					<></>
+				)}
 
-        <div className="cmd-second-text">
-          {props.profile}
-          <label>{props.timeString}</label>
-        </div>
-        <div className="cmd-second-text" id="replay-box">
-          <ReplyOutlinedIcon />
-          <label>{props.reply || 0} replies</label>
-        </div>
-      </div>
-      {props.showRightArr ? (
-        <div className="item-icon" onClick={clickComment}>
-          <ArrowForwardIosIcon></ArrowForwardIosIcon>
-        </div>
-      ) : (
-        <></>
-      )}
-    </div>
-  );
+				<div className='cmd-second-text'>
+					{props.profile}
+					<label>{props.timeString}</label>
+				</div>
+        {
+          props.showReply ?<div className='cmd-second-text' id='replay-box'>
+					<ReplyOutlinedIcon />
+					<label>{props.reply || 0} replies</label>
+				</div> :<></>
+        }
+				
+			</div>
+			{props.showRightArr ? (
+				<div className='item-icon'>
+					<ArrowForwardIosIcon></ArrowForwardIosIcon>
+				</div>
+			) : (
+				<></>
+			)}
+		</div>
+	);
 };
 export default CommentItem;

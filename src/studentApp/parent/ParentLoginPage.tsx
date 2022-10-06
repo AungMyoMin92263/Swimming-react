@@ -77,7 +77,7 @@ class ParentLoginPage extends React.Component<IProps, IStates> {
 		const { email, password }: IStates = this.state;
 		await this.props.signIn({
 			email: email,
-			role: "student",
+			role: "parent",
 			password: password,
 		});
 		if (this.props.authUser.isSignedIn) {

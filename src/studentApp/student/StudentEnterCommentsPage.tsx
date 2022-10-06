@@ -134,6 +134,7 @@ class StudentCommentsPage extends React.Component<IProps, IStates> {
             ></CoachMobileHeader>
 			{comments && comments.length > 0 &&
 				<CommentListPage
+          showReply={true}
 				receiverId={classId}
 				isClass={this.state.commentType === "class"}
 				isOwn={true}

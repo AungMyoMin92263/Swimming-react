@@ -10,13 +10,14 @@ import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutl
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { removeItem } from '../auth/LocalStorage';
 interface ICoachMobileHeader {
-  title?: boolean,
-  backBtn?: boolean,
-  addBtn?: boolean
-  filterBtn?: boolean
-  editBtn?: boolean
-  callback?: Function
-  isStudent?: boolean
+	title?: boolean;
+	backBtn?: boolean;
+	addBtn?: boolean;
+	filterBtn?: boolean;
+	editBtn?: boolean;
+	callback?: Function;
+	isStudent?: boolean;
+	isParent?: boolean;
 }
 
 const CoachMobileHeader = (props: ICoachMobileHeader) => {
@@ -25,6 +26,7 @@ const CoachMobileHeader = (props: ICoachMobileHeader) => {
   function logoutFun () {
     removeItem('authUser')
     if(props.isStudent)window.location.replace('/student/login')
+    else if(props.isParent)window.location.replace("/parent/login");
     else window.location.replace('/coach/login')
   }
   

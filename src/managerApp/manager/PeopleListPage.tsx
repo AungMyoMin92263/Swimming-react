@@ -96,6 +96,7 @@ class PeopleListPage extends React.Component<IProps, IStates> {
   componentDidMount() {
     //loading
     this.setUserInfo();
+    this.props.LoadingActionFunc(false);
   }
 
   setUserInfo = async () => {
@@ -119,32 +120,6 @@ class PeopleListPage extends React.Component<IProps, IStates> {
     await this.setState({
       users: this.props.users.result,
     });
-    // let usersArray = this.props.users.result;
-    // if (usersArray && usersArray.length > 0) {
-    // 	let filtered = usersArray.filter((u : any) => u.role !== 'manager' && u.role !== 'admin');
-    // 	if (this.state.search !== "") {
-    // 		let array = filtered.filter(
-    // 			(u: any) =>
-    // 				u.name
-    // 					.toLowerCase()
-    // 					.includes(this.state.search.trim().toLowerCase()) ||
-    // 				u.role
-    // 					.toLowerCase()
-    // 					.includes(this.state.search.trim().toLowerCase())
-    // 		);
-    // 		this.setState({
-    // 			filteredUsers: array,
-    // 		});
-    // 	} else {
-
-    // 		this.setState({
-    // 			filteredUsers: filtered,
-    // 		});
-    // 	}
-    // 	this.setState({
-    // 		users : filtered,
-    // 	});
-    // }
     this.props.LoadingActionFunc(false);
   };
 
@@ -169,20 +144,7 @@ class PeopleListPage extends React.Component<IProps, IStates> {
     await this.setState({
       search: e.target.value,
     });
-    // if (e.target.value === "") {
-    //   this.setState({
-    //     filteredUsers: this.state.users,
-    //   });
-    // } else {
-    //   let array = this.state.users.filter(
-    //     (u) =>
-    //       u.name.toLowerCase().includes(e.target.value.trim().toLowerCase()) ||
-    //       u.role.toLowerCase().includes(e.target.value.trim().toLowerCase())
-    //   );
-    //   this.setState({
-    //     filteredUsers: array,
-    //   });
-    // }
+
   };
 
   toggleOpenMore = (index: number) => {
@@ -217,14 +179,6 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 
   removeUser = async (id: any, role: string) => {
     switch (role) {
-      // case 'admin' : {
-      // 	this.deleteAdmin();
-      // 	break;
-      // }
-      // case 'manager' : {
-      // 	this.deleteStudent(id);
-      // 	break;
-      // }
       case "coache": {
         this.deleteCoach(id);
         break;
@@ -276,66 +230,70 @@ class PeopleListPage extends React.Component<IProps, IStates> {
       editCoachUrl,
       removeIndex
     } = this.state;
+    let parents = users?.filter(
+			(u: any) => u.role === "student" 
+		)
+    console.log("parents", parents)
     return (
-      <>
-        <div className="container-cus">
-          {isLogout && <Navigate to="/manager/login" replace={true} />}
+			<>
+				<div className='container-cus'>
+					{isLogout && <Navigate to='/manager/login' replace={true} />}
 
-          <div className="dashboard">
-            {/* DASHBOARD HEADER */}
-            <div className="dashboard-header">
-              <div className="justify-end">
-                <div className="dropdown">
-                  <div className="email-div cursor" onClick={this.toggleOpen}>
-                    <InitialIcon
-                      initials={email.substr(0, 1).toUpperCase()}
-                      isFooterMenu={false}
-                    />
-                    <span>{email} </span>
-                  </div>
-                  <div
-                    className={`dropdown-menu dropdown-menu-right ${
-                      dropdown ? "show" : ""
-                    }`}
-                    aria-labelledby="dropdownMenuButton"
-                  >
-                    <div className="dropdown-item cursor" onClick={this.logout}>
-                      <LogoutOutlinedIcon
-                        sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
-                      ></LogoutOutlinedIcon>
-                      <span>Logout</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="row justify-center">
-                <div className="col-9 col-md-12 justify-start align-center">
-                  <div className="f-40 fw-500">
-                    <span>People</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* DASHBOARD BODY */}
-            <div className="dashboard-body">
-              <div className="tableBody">
-                <div className="tableSearch">
-                  <div className="textArea">
-                    <div className="dash-search-div">
-                      <div className="dash-search-icon-div">
-                        <SearchIcon
-                          sx={{ color: "#808080", fontSize: 16, mr: 0.5 }}
-                        />
-                      </div>
-                      <input
-                        className="dash-input-div"
-                        placeholder="Search by name or role"
-                        value={search}
-                        onChange={this.searchChanged}
-                      />
-                    </div>
-                    <div className="dash-filter-div">
-                      {/* <FilterListIcon
+					<div className='dashboard'>
+						{/* DASHBOARD HEADER */}
+						<div className='dashboard-header'>
+							<div className='justify-end'>
+								<div className='dropdown'>
+									<div className='email-div cursor' onClick={this.toggleOpen}>
+										<InitialIcon
+											initials={email.substr(0, 1).toUpperCase()}
+											isFooterMenu={false}
+										/>
+										<span>{email} </span>
+									</div>
+									<div
+										className={`dropdown-menu dropdown-menu-right ${
+											dropdown ? "show" : ""
+										}`}
+										aria-labelledby='dropdownMenuButton'
+									>
+										<div className='dropdown-item cursor' onClick={this.logout}>
+											<LogoutOutlinedIcon
+												sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
+											></LogoutOutlinedIcon>
+											<span>Logout</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div className='row justify-center'>
+								<div className='col-9 col-md-12 justify-start align-center'>
+									<div className='f-40 fw-500'>
+										<span>People</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						{/* DASHBOARD BODY */}
+						<div className='dashboard-body'>
+							<div className='tableBody'>
+								<div className='tableSearch'>
+									<div className='textArea'>
+										<div className='dash-search-div'>
+											<div className='dash-search-icon-div'>
+												<SearchIcon
+													sx={{ color: "#808080", fontSize: 16, mr: 0.5 }}
+												/>
+											</div>
+											<input
+												className='dash-input-div'
+												placeholder='Search by name or role'
+												value={search}
+												onChange={this.searchChanged}
+											/>
+										</div>
+										<div className='dash-filter-div'>
+											{/* <FilterListIcon
 												sx={{
 													color: "#0070F8",
 													fontSize: 18,
@@ -344,76 +302,159 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 												}}
 											/>
 											Filter */}
-                    </div>
-                  </div>
-                </div>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th className="col-8">
-                        <span className="ml-56">Name</span>
-                      </th>
-                      <th className="col-4">Role</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users &&
-                      users.length > 0 &&
-                      users
-                        .filter(
-                          (u: any) => u.role !== "manager" && u.role !== "admin"
-                        )
-                        .filter((user: any) => {
-                          if (!search) {
-                            return true;
-                          }else if(search.toLowerCase() === 'student' || search.toLowerCase() === 'coach')
-                          {
-                            return (user.role || "").toLowerCase() === (search.toLowerCase() === 'coach'? 'coache' : search.toLowerCase());
-                          }
-                          else {
-                            return (user.name || "")
-                              .toLowerCase()
-                              .startsWith(search.toLowerCase());
-                          }
-                        })
-                        .map(
-                          (
-                            user: { name: string; email: string; role: string },
-                            index: any
-                          ) => (
-                            <tr>
-                              <td className="flex justify-center">
-                                <InitialIcon
-                                  initials={
-                                    (user && user.email)? user.email.substring(0, 1).toUpperCase()
-                                      : ""
-                                  }
-                                  isFooterMenu={false}
-                                />
-                                <span className="ml-16">
-                                  {!user || !user.name || user.name === ""
-                                    ? user.email
-                                    : user.name}
-                                </span>
-                              </td>
-                              <td>
-                                <span>
-                                  {user && user.role === "coache"
-                                    ? "Coach"
-                                    : user && user.role === "admin"
-                                    ? "Admin"
-                                    : user && user.role === "manager"
-                                    ? "School Manager"
-                                    : user && user.role === "student"
-                                    ? "Student"
-                                    : user && user.role === "parent"
-                                    ? "Parent"
-                                    : ""}
-                                </span>
-                              </td>
-                              <td>
-                                <div className="mr-16">
-                                  {/* <div className='dropdownMore mr-24'>
+										</div>
+									</div>
+								</div>
+								<table className='table'>
+									<thead>
+										<tr>
+											<th className='col-8'>
+												<span className='ml-56'>Name</span>
+											</th>
+											<th className='col-4'>Role</th>
+										</tr>
+									</thead>
+									<tbody>
+										{users &&
+											users.length > 0 &&
+											users
+												.filter(
+													(u: any) => u.role !== "manager" && u.role !== "admin"
+												)
+												.filter((user: any) => {
+													if (!search) {
+														return true;
+													} else if (
+														search.toLowerCase() === "student" ||
+														search.toLowerCase() === "coach"
+													) {
+														return (
+															(user.role || "").toLowerCase() ===
+															(search.toLowerCase() === "coach"
+																? "coache"
+																: search.toLowerCase())
+														);
+													} else {
+														return (user.name || "")
+															.toLowerCase()
+															.startsWith(search.toLowerCase());
+													}
+												})
+												.map((user: any, index: any) => (
+													<tr>
+														<td className='flex justify-center'>
+															<InitialIcon
+																initials={
+																	user && user.email
+																		? user.email.substring(0, 1).toUpperCase()
+																		: ""
+																}
+																isFooterMenu={false}
+															/>
+															<span className='ml-16'>
+																{!user || !user.name || user.name === ""
+																	? user.email
+																	: user.name}
+															</span>
+														</td>
+														<td>
+															<span>
+																{user && user.role === "coache"
+																	? "Coach"
+																	: user && user.role === "admin"
+																	? "Admin"
+																	: user && user.role === "manager"
+																	? "School Manager"
+																	: user && user.role === "student"
+																	? "Student"
+																	: user && user.role === "parent"
+																	? "Parent"
+																	: ""}
+															</span>
+														</td>
+
+														<td>
+															<div className='mr-16'>
+																<Dropdown className='more-dropdown'>
+																	<Dropdown.Toggle
+																		id='dropdown-basic'
+																		className='more-list-btn'
+																	>
+																		<MoreVertIcon />
+																	</Dropdown.Toggle>
+																	<Dropdown.Menu>
+																		{user && user.role === "coache" ? (
+																			<Dropdown.Item
+																				href={
+																					"/manager/coach-edit-profile/" +
+																					this.state.users[index].id
+																				}
+																			>
+																				<span>Edit</span>
+																			</Dropdown.Item>
+																		) : (
+																			<Dropdown.Item
+																				href={
+																					"/manager/student-edit-profile/" +
+																					this.state.users[index].id
+																				}
+																			>
+																				<span>Edit</span>
+																			</Dropdown.Item>
+																		)}
+
+																		<div className='dropdown-divider'></div>
+
+																		<Dropdown.Item
+																			onClick={() =>
+																				this.setState({
+																					removeIndex: index,
+																					modalShow: true,
+																				})
+																			}
+																		>
+																			<span>Remove</span>
+																		</Dropdown.Item>
+																	</Dropdown.Menu>
+																</Dropdown>
+															</div>
+														</td>
+													</tr>
+												))}
+										{parents &&
+											parents.length > 0 &&
+											parents.map((user: any, index: any) => (
+												<tr>
+													<td className='flex justify-center'>
+														<InitialIcon
+															initials={
+																user &&
+																user.student &&
+																user.student.parent_email &&
+																user.student.parent_email
+																	? user.student.parent_email
+																			.substring(0, 1)
+																			.toUpperCase()
+																	: ""
+															}
+															isFooterMenu={false}
+														/>
+														<span className='ml-16'>
+															{user &&
+															user.student &&
+															user.student.parent_email &&
+															user.student.parent_email
+																? user.student.parent_email
+																: "-"}
+														</span>
+													</td>
+													<td>
+														<span>Parent</span>
+													</td>
+
+													<td>
+														<div className='mr-16'>
+															{/* <div className='dropdownMore mr-24'>
 																<MoreVertIcon
 																	style={{
 																		color: "inherit",
@@ -462,98 +503,108 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 																	</div>
 																</div>
 															</div> */}
-                                  <Dropdown className="more-dropdown">
-                                    <Dropdown.Toggle
-                                      id="dropdown-basic"
-                                      className="more-list-btn"
-                                    >
-                                      <MoreVertIcon />
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu>
-                                      {user && user.role === "coache" ? (
-                                        <Dropdown.Item
-                                          href={
-                                            "/manager/coach-edit-profile/" +
-                                            this.state.users[index].id
-                                          }
-                                        >
-                                          <span>Edit</span>
-                                        </Dropdown.Item>
-                                      ) : (
-                                        <Dropdown.Item
-                                          href={
-                                            "/manager/student-edit-profile/" +
-                                            this.state.users[index].id
-                                          }
-                                        >
-                                          <span>Edit</span>
-                                        </Dropdown.Item>
-                                      )}
+															<Dropdown className='more-dropdown'>
+																<Dropdown.Toggle
+																	id='dropdown-basic'
+																	className='more-list-btn'
+																>
+																	<MoreVertIcon />
+																</Dropdown.Toggle>
+																<Dropdown.Menu>
+																	{user && user.role === "coache" ? (
+																		<Dropdown.Item
+																			href={
+																				"/manager/coach-edit-profile/" +
+																				parents[index].id
+																			}
+																		>
+																			<span>Edit</span>
+																		</Dropdown.Item>
+																	) : (
+																		<Dropdown.Item
+																			href={
+																				"/manager/student-edit-profile/" +
+																				parents[index].id
+																			}
+																		>
+																			<span>Edit</span>
+																		</Dropdown.Item>
+																	)}
 
-                                      <div className="dropdown-divider"></div>
+																	<div className='dropdown-divider'></div>
 
-                                      <Dropdown.Item
-                                        onClick={() => this.setState({ removeIndex : index, modalShow : true})}
-                                      >
-                                        <span>Remove</span>
-                                      </Dropdown.Item>
-                                    </Dropdown.Menu>
-                                  </Dropdown>
-                                </div>
-                              </td>
-                            </tr>
-                          )
-                        )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+																	<Dropdown.Item
+																		onClick={() =>
+																			this.setState({
+																				removeIndex: index,
+																				modalShow: true,
+																			})
+																		}
+																	>
+																		<span>Remove</span>
+																	</Dropdown.Item>
+																</Dropdown.Menu>
+															</Dropdown>
+														</div>
+													</td>
+												</tr>
+											))}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
 
-
-        <Modal
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-          dialogClassName={"confirm-modal"}
-              show={this.state.modalShow}
-              onHide={() => {
-                this.setState({
-                  ...this.state,
-                  modalShow: false,
-                });
-              }}
-        >
-          <div className="mb-16">
-            <span className="f-20 fw-500">Remove {users[removeIndex] && users[removeIndex].role} ‘ {users[removeIndex] && users[removeIndex].name} ’? </span>
-          </div>
-          <div className="mb-16">
-            <span className="f-16">
-              This action cannot be undone. This action will remove the
-              coach from this class and your school.
-            </span>
-          </div>
-          <div className="flex-center">
-            <button type="submit" className="secondary-btn mr-8" 
-            onClick={()=> this.setState({
-                  ...this.state,
-                  modalShow: false,
-                })
-              }>
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="secondary-btn"
-              style={{ color: "#F80000", borderColor: "#F80000" }}
-              onClick={this.remove}
-            >
-              Remove
-            </button>
-          </div>
-        </Modal>
-      </>
-    );
+				<Modal
+					aria-labelledby='contained-modal-title-vcenter'
+					centered
+					dialogClassName={"confirm-modal"}
+					show={this.state.modalShow}
+					onHide={() => {
+						this.setState({
+							...this.state,
+							modalShow: false,
+						});
+					}}
+				>
+					<div className='mb-16'>
+						<span className='f-20 fw-500'>
+							Remove {users[removeIndex] && users[removeIndex].role} ‘{" "}
+							{users[removeIndex] && users[removeIndex].name} ’?{" "}
+						</span>
+					</div>
+					<div className='mb-16'>
+						<span className='f-16'>
+							This action cannot be undone. This action will remove the coach
+							from this class and your school.
+						</span>
+					</div>
+					<div className='flex-center'>
+						<button
+							type='submit'
+							className='secondary-btn mr-8'
+							onClick={() =>
+								this.setState({
+									...this.state,
+									modalShow: false,
+								})
+							}
+						>
+							Cancel
+						</button>
+						<button
+							type='submit'
+							className='secondary-btn'
+							style={{ color: "#F80000", borderColor: "#F80000" }}
+							onClick={this.remove}
+						>
+							Remove
+						</button>
+					</div>
+				</Modal>
+			</>
+		);
   }
 }
 

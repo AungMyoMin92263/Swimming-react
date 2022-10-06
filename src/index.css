@@ -314,6 +314,10 @@ body a {
   font-weight: 600;
 }
 
+.text-left {
+  text-align: left !important;
+}
+
 .left {
   float: left !important;
 }
@@ -1233,6 +1237,14 @@ td {
   text-overflow: ellipsis;
 }
 
+.crop_text_email{
+  display: block;
+  width: 100px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .more-list-btn{
   position: absolute !important;
   background: #FFFFFF !important;
@@ -1291,3 +1303,11 @@ image preview */
   height: calc(100vh - 137px);
 }
 
+.custom-modal-filter.modal-fullscreen .modal-content {
+  position: absolute;
+  height: 400px;
+  bottom: 0px;
+  border: 1px solid #E5E5E5;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 8px 8px 0px 0px;
+}

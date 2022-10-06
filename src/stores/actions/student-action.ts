@@ -152,6 +152,34 @@ export const postStudent = (student : any,url : string) => {
   };
 };
 
+export const BookingSlot = (slot: any, url: string) => {
+  refreshTokenStudent();
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.post<any>(
+        url, slot, option
+      );
+
+      dispatch<createStudentAction>({
+        type: ActionTypes.createStudent,
+        payload: response,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err: any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err) {
+        dispatch<createStudentAction>({
+          type: ActionTypes.getError,
+          payload: err.response.data.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+}
+
 export interface editStudentAction {
   type: ActionTypes.editStudent | ActionTypes.getError;
   payload: any;
@@ -204,6 +232,32 @@ export const deleteStudent = (url : string,id: number) => {
     try {
       dispatch({ type: ActionTypes.loading, payload: true })
       const response = await apiServer.delete<any>(url+"/" + id, option);
+      dispatch<deleteStudentAction>({
+        type: ActionTypes.deleteStudent,
+        payload: response,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err instanceof Error) {
+        dispatch<deleteStudentAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};
+
+export const deleteSlot= (url: string, id: number) => {
+  refreshTokenStudent();
+
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.delete<any>(url + "/" + id, option);
       dispatch<deleteStudentAction>({
         type: ActionTypes.deleteStudent,
         payload: response,

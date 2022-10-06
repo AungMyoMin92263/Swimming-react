@@ -10,82 +10,94 @@ import { CreateProfile } from "../../atoms/createProfile";
 import moment from "moment";
 import ListBoxUI from "../../molecules/ListBox";
 import ListItem from "../../atoms/ListItem";
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { MonthPicker } from "@mui/x-date-pickers-pro";
+import { Typography, TextField } from "@mui/material";
 interface IStates {
-  filterText: string
-  selectBox: number
-  selectedClass: any
-  modalShow: boolean
+	filterText: string;
+	selectBox: number;
+	selectedClass: any;
+	modalShow: boolean;
+	selectedMonth: any;
 }
 
 interface IProps {
-  authUser: AuthInterface
-  classe: any
-  attendance: any
-  getMyAttendByRange: Function
-  history: any;
+	authUser: AuthInterface;
+	classe: any;
+	attendance: any;
+	getMyAttendByRange: Function;
+	history: any;
 }
 
 class CoachStudentAttendanceList extends React.Component<IProps, IStates> {
-  id: any;
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      filterText: "",
-      selectBox: 0,
-      selectedClass: this.props.classe?.viewClass ? this.props.classe.viewClass : {},
-      modalShow: false
-    }
+	id: any;
+	constructor(props: any) {
+		super(props);
+		this.state = {
+			selectedMonth: moment(new Date()).format("YYYY-MM-DD"),
+			filterText: "",
+			selectBox: 0,
+			selectedClass: this.props.classe?.viewClass
+				? this.props.classe.viewClass
+				: {},
+			modalShow: false,
+		};
+	}
+	componentDidMount() {
+		if (!this.props.authUser.otherUserinfo || !this.props.authUser.userInfo) {
+			console.log("enter");
 
-  }
-  componentDidMount() {
-    if (!this.props.authUser.otherUserinfo || !this.props.authUser.userInfo) {
-      console.log("enter");
+			this.props.history.back();
+		} else {
+			this.getMyAttendance(this.state.selectedMonth);
+		}
+	}
 
-      this.props.history.back()
-    } else {
-      this.getMyAttendance()
-    }
-  }
+	getMyAttendance = async (date: any) => {
+		console.log("attend");
+		let changed_date = moment(date).format("YYYY-MM-DD");
+		const student = this.props.authUser.otherUserinfo;
+		if (this.props && this.props.authUser.userInfo?.assign_class.length > 0) {
+			if (this.props.authUser.userInfo?.assign_class[0].classes) {
+				const selected = this.state.selectedClass?.id
+					? this.state.selectedClass
+					: this.props.authUser.userInfo?.assign_class[0].classes;
+				this.setState({
+					...this.state,
+					selectedClass: selected,
+					selectBox: selected.id,
+				});
+				await this.props.getMyAttendByRange(student.id, changed_date);
+			}
+		}
+	};
 
-  getMyAttendance = async () => {
-    let date = moment().format("YYYY-MM-DD")
-    const student = this.props.authUser.otherUserinfo
-    if (this.props && this.props.authUser.userInfo?.assign_class.length > 0) {
-      if (this.props.authUser.userInfo?.assign_class[0].classes) {
-        const selected = this.state.selectedClass?.id
-          ? this.state.selectedClass
-          : this.props.authUser.userInfo?.assign_class[0].classes;
-        this.setState({
-          ...this.state,
-          selectedClass: selected,
-          selectBox: selected.id,
-        });
-        await this.props.getMyAttendByRange(student.id, date);
-      }
-    }
-  }
+	handleChange = (
+		e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => {
+		this.setState({
+			...this.state,
+			filterText: e.currentTarget.value,
+		});
+	};
 
-  handleChange = (
-    e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    this.setState({
-      ...this.state,
-      filterText: e.currentTarget.value,
-    });
-  };
+	studentCallback = (id: any) => {
+		this.props.history.push("/coach/dashboard/profile-detail/" + id);
+	};
 
-  studentCallback = (id: any) => {
-    this.props.history.push("/coach/dashboard/profile-detail/" + id)
-  };
-
-  render() {
-
-    const { userInfo, otherUserinfo } = this.props.authUser
-    const { attandance_list } = this.props.attendance
-    const { selectedClass, selectBox } = this.state
-    const count = (attandance_list || []).reduce((counter: any, attandance: any) => attandance.attend ? counter += 1 : counter, 0);
-    return (
+	render() {
+		const { userInfo, otherUserinfo } = this.props.authUser;
+		const { attandance_list } = this.props.attendance;
+		const { selectedClass, selectBox } = this.state;
+		const count = (attandance_list || []).reduce(
+			(counter: any, attandance: any) =>
+				attandance.attend ? (counter += 1) : counter,
+			0
+		);
+		return (
 			<div className='wrapper-mobile bg-w'>
 				<div className='content-mobile-cus-space col-sm-12'>
 					<CoachMobileHeader
@@ -98,7 +110,7 @@ class CoachStudentAttendanceList extends React.Component<IProps, IStates> {
 							});
 						}}
 					/>
-					<div className='mini-profile pt-24'>
+					{/* <div className='mini-profile pt-24'>
 						<div className='img-profile'>
 							<CreateProfile
 								image_url={selectedClass?.logo}
@@ -106,9 +118,11 @@ class CoachStudentAttendanceList extends React.Component<IProps, IStates> {
 							/>
 						</div>
 						<div className='profile-name'>{selectedClass?.name}</div>
-					</div>
+					</div> */}
 					<ProfileContainer
-						title={moment(new Date(), "YYYY-MM-DD").format("MMM YYYY")}
+						title={moment(this.state.selectedMonth, "YYYY-MM-DD").format(
+							"MMM YYYY"
+						)}
 						display_item={[
 							{ value: otherUserinfo?.name, title: "Student" },
 							{
@@ -162,7 +176,7 @@ class CoachStudentAttendanceList extends React.Component<IProps, IStates> {
 						</ListBoxUI>
 					</div>
 					<Modal
-						dialogClassName={"custom-modal"}
+						dialogClassName={"custom-modal-filter"}
 						show={this.state.modalShow}
 						fullscreen={true}
 						onHide={() => {
@@ -177,10 +191,39 @@ class CoachStudentAttendanceList extends React.Component<IProps, IStates> {
 								<div className='filter-tile pt-16 pb-16 '>Filter by</div>
 								<div className={`input-form-atom`}>
 									<div className='label-con'>
-										<label>Class Name</label>
+										<label>Month</label>
 									</div>
-									<div className='dropdown-box'>
-										<select
+
+									<LocalizationProvider
+										dateAdapter={AdapterDateFns}
+										className='dropdown-box'
+									>
+										<MonthPicker
+											date={new Date()}
+											onChange={(newValue) => {
+												this.setState({
+													selectedMonth: newValue,
+												});
+											}}
+										></MonthPicker>
+										{/* <DatePicker
+											openTo='year'
+											views={["year", "month"]}
+											label='Year and Month'
+											minDate={new Date("2012-03-01")}
+											maxDate={new Date("2050-06-01")}
+											value={this.state.selectedMonth}
+											onChange={(newValue) => {
+												this.setState({
+													selectedMonth: newValue,
+												});
+											}}
+											renderInput={(params) => (
+												<TextField {...params} helperText={null} />
+											)}
+										/> */}
+									</LocalizationProvider>
+									{/* <select
 											name='filter-class'
 											id='filterClass'
 											value={selectBox}
@@ -203,20 +246,17 @@ class CoachStudentAttendanceList extends React.Component<IProps, IStates> {
 													);
 												}
 											)}
-										</select>
-									</div>
+										</select> */}
 								</div>
 							</div>
 							<button
 								type='submit'
 								className='mt-40 mt-16 btn btn-primary right w-100'
 								onClick={() => {
-									let selected = userInfo?.assign_class.find(
-										(res: any) => res.classes.id === this.state.selectBox
-									);
+									this.getMyAttendance(this.state.selectedMonth);
 									this.setState({
 										...this.state,
-										selectedClass: selected ? selected.classes : {},
+
 										modalShow: false,
 									});
 								}}
@@ -228,23 +268,25 @@ class CoachStudentAttendanceList extends React.Component<IProps, IStates> {
 				</div>
 			</div>
 		);
-  }
+	}
 }
 const mapStateToProps = ({
-  authUser,
-  classes,
-  attendance
+	authUser,
+	classes,
+	attendance,
 }: StoreState): {
-  authUser: AuthInterface,
-  classes: any
-  attendance: any
+	authUser: AuthInterface;
+	classes: any;
+	attendance: any;
 } => {
-  return {
-    authUser,
-    classes,
-    attendance
-  };
+	return {
+		authUser,
+		classes,
+		attendance,
+	};
 };
 
-export default connect(mapStateToProps, { getMyAttendByRange })(CoachStudentAttendanceList);
+export default connect(mapStateToProps, { getMyAttendByRange })(
+	CoachStudentAttendanceList
+);
 // export default CoachCommentsPage;

@@ -19,7 +19,8 @@ import StudentMobileHeader from "../../atoms/StudentMobileHeader";
 import StudentProfile from "../../molecules/StudentProfile";
 
 interface IStates {
-	userId: number
+	userId: number,
+	role : string
 }
 
 interface IProps {
@@ -41,12 +42,19 @@ class StudentViewProfile extends React.Component<IProps, IStates> {
 
 		this.state = {
 			userId: parseInt(path[4]),
+			role : ''
 		};
 	}
 
 	componentDidMount() {
 		this.getComments();
 		this.getMyAttendance();
+		 const authUser = JSON.parse(localStorage.getItem("authUser") || "null");
+			if (authUser && authUser.userInfo) {
+				this.setState({
+					role: authUser.userInfo.role
+				});
+			}
 	}
 	getMyAttendance = async () => {
 		let date = moment().format("YYYY-MM-DD");
@@ -71,7 +79,8 @@ class StudentViewProfile extends React.Component<IProps, IStates> {
 					<StudentMobileHeader
 						backBtn={true}
 						editBtn={true}
-						isStudent={true}
+						isStudent={this.state.role === "student"}
+						isParent={this.state.role === "parent"}
 					></StudentMobileHeader>
 					<StudentProfile
 						byCoach={false}

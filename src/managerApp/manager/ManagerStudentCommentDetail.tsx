@@ -9,11 +9,13 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { StoreState } from "../../stores/reducers";
 import {
 	getClassObject,
+	getAll,
+	getClassProgram,
+	postClassProgram,
+	getAssignUserByClass,
 	getAllComment,
-	getAllEvents,
-	getDetailEvents,
-	getUserInfo,
 } from "../../stores/actions";
+
 import { connect } from "react-redux";
 import { signOut, LoadingActionFunc } from "../../stores/actions";
 import { Link } from "react-router-dom";
@@ -37,8 +39,9 @@ import { profile } from "console";
 import ListBoxUI from "../../molecules/ListBox";
 import CommentItem from "../../atoms/Comment";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import { CreateProfile } from "../../atoms/createProfile";
 import CommentDashItem from "../../atoms/CommentDash";
+import { CreateProfile } from "../../atoms/createProfile";
+import { scrollToBottom } from "../../scroll-func";
 interface IStates {
 	email: string;
 	logo: string;
@@ -50,6 +53,7 @@ interface IStates {
 	image: any;
 	schoolId: any;
 	id: any;
+	comments: any[];
 }
 interface IProps {
 	user_id: any;
@@ -65,15 +69,16 @@ interface IProps {
 	comments: any;
 }
 
-class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
+class ManagerStudentCommentDetail extends React.Component<IProps, IStates> {
 	id: any;
 	class_id: any;
 	url = "/manager/student-edit-profile/";
+	comment_id: any;
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
-		this.id = path[4];
-		this.class_id = path[6];
+		this.class_id = path[3];
+		this.comment_id = path[5];
 		this.state = {
 			email: "",
 			logo: "",
@@ -85,19 +90,41 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 			image: { preview: "", raw: "" },
 			schoolId: -1,
 			id: this.id ? this.id : -1,
+			comments: [],
 		};
 	}
 	componentDidMount() {
 		this.authFromLocal();
-		this.getDetailAll();
+		this.getComments();
 		//loading
 	}
-	getDetailAll = async () => {
-		let cmdUrl = "comment/by-student/" + this.id;
-		await Promise.all([
-			this.props.getAllComment(cmdUrl),
-			this.props.getUserInfo(this.id, true),
-		]);
+
+	getComments = async () => {
+		await this.props.getAllComment("comment/" + this.comment_id);
+		if (
+			this.props.comments &&
+			this.props.comments.result &&
+			this.props.comments.result.length > 0
+		) {
+			let temp = this.state.comments;
+			let res = this.props.comments.result[0];
+			temp.push(res);
+
+			if (res.children && res.children.length > 0) {
+				for (let i = 0; i < res.children.length; i++) {
+					temp.push(res.children[i]);
+				}
+				await this.setState({
+					comments: temp,
+				});
+				scrollToBottom("sendCmtList");
+			} else {
+				this.setState({
+					comments: temp,
+				});
+				scrollToBottom("sendCmtList");
+			}
+		}
 	};
 
 	authFromLocal = async () => {
@@ -138,14 +165,13 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 	};
 
 	renderComment = () => {
-		const comments = this.props.comments?.result || [];
 		return (
 			<div className='mt-24'>
 				<div className='class-attendance-body mt-16 '>
 					<div>
-						{comments.length > 0 ? (
+						{this.state.comments && this.state.comments.length > 0 ? (
 							<>
-								{comments.map((res: any, index: number) => {
+								{this.state.comments.map((res: any, index: number) => {
 									return (
 										<CommentDashItem
 											key={`st_cmd-${index}`}
@@ -155,18 +181,10 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 													name={res.user_info.name}
 												/>
 											}
-											showReply={true}
-											reply={res.children.length}
-											showRightArr={true}
-											callback={() => {
-												this.props.history.push(
-													"/manager/class/" +
-														this.id +
-														"/comment-detail/" +
-														res.id
-												);
-											}}
+											showReply={false}
+											showRightArr={false}
 											message={res.message}
+											callback={() => {}}
 											timeString={
 												res.user_info.name +
 												" at " +
@@ -206,16 +224,11 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 									</div>
 									<span className='ml-16 fc-second'>
 										{this.state.school_name} {"		"}
-										<span className='ml-16 fc-second'>/</span>
+										{/* <span className='ml-16 fc-second'>/</span> */}
 									</span>
-									<span className='ml-16 fc-second'>
+									{/* <span className='ml-16 fc-second'>
 										{this.props.classes && this.props.classes.viewClass?.name}
-									</span>
-									<span className='ml-16 fc-second'>/</span>
-									<span className='ml-16 fc-second'>
-										{this.props.authUser &&
-											this.props.authUser.otherUserinfo?.name}
-									</span>
+									</span> */}
 								</div>
 
 								<div className='justify-end'>
@@ -251,7 +264,7 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 									<div className='mr-16'></div>
 
 									<div className='f-40 fw-500'>
-										<span>All comments</span>
+										<span>Comments</span>
 									</div>
 								</div>
 							</div>
@@ -269,26 +282,19 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 const mapStateToProps = ({
 	authUser,
 	classes,
-	response,
 	comments,
 }: StoreState): {
 	authUser: AuthInterface;
 	classes: any;
-	response: any;
-	comments:any;
+	comments: any;
 } => {
 	return {
 		authUser,
 		classes,
-		response,
 		comments,
 	};
 };
 
-export default connect(mapStateToProps, {
-	getAllComment,
-	getClassObject,
-	getUserInfo,
-	signOut,
-	LoadingActionFunc,
-})(ManagerAllCommentStudent);
+export default connect(mapStateToProps, { getClassObject, getAllComment })(
+	ManagerStudentCommentDetail
+);

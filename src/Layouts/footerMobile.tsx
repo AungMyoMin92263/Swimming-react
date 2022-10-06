@@ -30,7 +30,7 @@ const [id,setId]= React.useState('');
 						className={`menu-item cursor ${
 							path[2] === "dashboard" ? "active" : ""
 						}`}
-						onClick={() => props.history.push(role === 'student'? "/student/dashboard" :"/coach/dashboard" )}
+						onClick={() => props.history.push((role === 'student' || role === 'parent')? "/student/dashboard" :"/coach/dashboard" )}
 					>
 						<HomeOutlinedIcon
 							sx={{
@@ -44,7 +44,7 @@ const [id,setId]= React.useState('');
 						className={`menu-item cursor ${
 							path[2] === "class-list" ? "active" : ""
 						}`}
-						onClick={() => props.history.push(role === 'student'? "/student/class-list" : "/coach/class-list")}
+						onClick={() => props.history.push((role === 'student' || role === 'parent')? "/student/class-list" : "/coach/class-list")}
 					>
 						<EventNoteIcon
 							sx={{
@@ -58,7 +58,7 @@ const [id,setId]= React.useState('');
 						className={`menu-item cursor ${
 							path[2] === "event-list" ? "active" : ""
 						}`}
-						onClick={() => props.history.push(role === 'student'? "/student/event-list" : "/coach/event-list")}
+						onClick={() => props.history.push((role === 'student' || role === 'parent')? "/student/event-list" : "/coach/event-list")}
 					>
 						<PoolIcon
 							sx={{
@@ -72,7 +72,7 @@ const [id,setId]= React.useState('');
 						className={`menu-item cursor ${
 							path[2] === "me" ? "active" : ""
 						}`}
-						onClick={() => props.history.push(role === 'student'? "/student/me/profile-detail/"+id : "/coach/me")}
+						onClick={() => props.history.push((role === 'student' || role === 'parent')? "/student/me/profile-detail/"+id : "/coach/me")}
 					>
 							<InitialIcon
 								initials={(name && name !== "" ? name.substring(0,1) : "M").toUpperCase()}

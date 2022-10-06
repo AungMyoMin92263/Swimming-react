@@ -23,13 +23,13 @@ export const signUp = (signUpInfo: SignUpInterface) => {
         payload: response.data
       });
       dispatch({ type: ActionTypes.loading, payload: false })
-    } catch (err) {
+    } catch (err :any) {
       dispatch({ type: ActionTypes.loading, payload: false })
-      if (err instanceof Error) {
+      if (err) {
         // ✅ TypeScript knows err is Error
         dispatch<SignInAction>({
           type: ActionTypes.getError,
-          payload: err.message
+          payload: err.response.data.message
         });
       } else {
         console.log('Unexpected error', err);
@@ -60,13 +60,13 @@ export const changePwd = (signUpInfo: SignUpInterface) => {
         payload: response.data
       });
       dispatch({ type: ActionTypes.loading, payload: false })
-    } catch (err) {
+    } catch (err :any) {
       dispatch({ type: ActionTypes.loading, payload: false })
-      if (err instanceof Error) {
+      if (err) {
         // ✅ TypeScript knows err is Error
         dispatch<ChangePasswordAction>({
           type: ActionTypes.getError,
-          payload: err.message
+          payload: err.response.data.message
         });
       } else {
         console.log('Unexpected error', err);

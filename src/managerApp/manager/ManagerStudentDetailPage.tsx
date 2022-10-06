@@ -282,8 +282,17 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 													name={res.user_info.name}
 												/>
 											}
+											showReply={true}
+											reply={res.children.length}
+											showRightArr={true}
 											message={res.message}
-											callback={() => {}}
+											
+											callback={() => {this.props.history.push(
+													"/manager/user/" +
+														this.id +
+														"/comment-detail/" +
+														res.id
+												);}}
 											timeString={
 												res.user_info.name +
 												" at " +
@@ -430,7 +439,7 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 			logo: this.props.authUser.otherUserinfo?.avatar,
 			title: this.props.authUser.otherUserinfo? this.props.authUser.otherUserinfo.name
 				? this.props.authUser.otherUserinfo.name
-				: this.props.authUser.otherUserinfo.email.substr(0,6): '',
+				: this.props.authUser.otherUserinfo?.email: '',
 			display_item: [
 				{
 					title: "Age",

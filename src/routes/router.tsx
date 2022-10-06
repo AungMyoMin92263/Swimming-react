@@ -95,6 +95,9 @@ import ParentLoginPage from "../studentApp/parent/ParentLoginPage";
 import ParentRecoverPasswordPage from "../studentApp/parent/ParentRecoverPasswordPage";
 import ParentChangePasswordPage from "../studentApp/parent/ParentChangePasswordPage";
 import ParentWelcomePage from "../studentApp/parent/ParentWelcome";
+import ParentConfirmBooking from "../studentApp/parent/ParentConfirmBooking";
+import ParentCancelBooking from "../studentApp/parent/ParentCancelBooking";
+import ParentBookingAlert from "../studentApp/parent/ParentBookingAlert";
 
 //testing
 import TestingComponent from "./TestingComponent";
@@ -124,6 +127,8 @@ import ManagerEventDetailPage from "../managerApp/manager/ManagerEventDetailPage
 import ManagerEditEventPage from "../managerApp/manager/ManagerEditEventPage";
 import ManagerEventSummaryPage from "../managerApp/manager/ManagerEventSummaryPage";
 import ManagerEventEditInvitePage from "../managerApp/manager/ManagerEventEditInvitePage";
+import ManagerClassCommentDetail from "../managerApp/manager/ManagerClassCommentDetail";
+import ManagerStudentCommentDetail from "../managerApp/manager/ManagerStudentCommentDetail";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -783,6 +788,38 @@ const routes = [
 				isMobileFooter: false,
 			},
 			{
+				path: "class/:classId/comment-detail/:id",
+				sideBar: (props: any) => (
+					<>
+						<ManagerSideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<ManagerClassCommentDetail {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "user/:userId/comment-detail/:id",
+				sideBar: (props: any) => (
+					<>
+						<ManagerSideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<ManagerStudentCommentDetail {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
 				path: "all-badgets/user/:id/class/:classId",
 				sideBar: (props: any) => (
 					<>
@@ -1262,6 +1299,55 @@ const routes = [
 				main: (props: any) => (
 					<>
 						<StudentCoacheProfile {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+
+			{
+				path: "booking-confirm/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ParentConfirmBooking {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "booking-cancel/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ParentCancelBooking {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "booking-alert/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ParentBookingAlert {...props} />
 					</>
 				),
 				footer: (props: any) => (

@@ -76,6 +76,7 @@ class CoachCommentsPage extends React.Component<IProps, IStates> {
 						isClass={this.state.commentType === "class"}
 						showRightArr={true}
 						callback={this.commentBack}
+						showReply={true}
 					></CommentListPage>
 				</div>
 			</div>

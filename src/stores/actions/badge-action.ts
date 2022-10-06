@@ -111,6 +111,7 @@ export const giveBadgeToStudent = (data: any) => {
     }
   }
 }
+
 export interface CreatingBadgeAction {
   type: ActionTypes.selectBadgeIcon | ActionTypes.selectGiveBadge;
   payload: any;
