@@ -65,7 +65,7 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 	}
 	classCallback = (id: any, date: any) => {
 		this.setState({ goClass: true });
-		this.urlClass = "/coach/dashboard/daily-program/" + id + "/?date=" + date;
+		this.urlClass = "/student/dashboard/daily-program/" + id + "/?date=" + date;
 	};
 
 	getDatesInRange(startDate: Date, endDate: Date) {
