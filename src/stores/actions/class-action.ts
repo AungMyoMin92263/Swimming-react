@@ -144,7 +144,7 @@ export const postClassProgram = (classProgram: ClassProgramInterface, url: strin
       let id = classProgram.id
       delete classProgram.id
       dispatch({ type: ActionTypes.loading, payload: true })
-      if (id) {
+      if (id && id !== 0) {
         response = await apiServer.put<Class>(
           url + "/" + id, classProgram, options?.optionImage
         );
@@ -296,7 +296,7 @@ export const inviteStudent = (emails: any) => {
       if (err) {
         dispatch<inviteStudentAction>({
           type: ActionTypes.getError,
-          payload: err.response.data.message,
+          payload: err.response.data? err.response.data.message :  err.message,
         });
       } else {
         console.log("Unexpected error", err);

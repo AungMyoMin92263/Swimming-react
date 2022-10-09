@@ -66,6 +66,7 @@ import StudentCommentsPage from "../studentApp/student/StudentComments";
 import StudentEnterCommentsPage from "../studentApp/student/StudentEnterCommentsPage";
 import StudentViewProfile from "../studentApp/student/StudentMeProfileDetails";
 import StudentEventsDetailPage from "../studentApp/student/StudentEventsDetailPage";
+import StudentAddInfoPage from "../studentApp/student/StudentAddInfo";
 
 //coach
 import CoachLoginPage from "../coachApp/coach/CoachLogin";
@@ -129,6 +130,7 @@ import ManagerEventSummaryPage from "../managerApp/manager/ManagerEventSummaryPa
 import ManagerEventEditInvitePage from "../managerApp/manager/ManagerEventEditInvitePage";
 import ManagerClassCommentDetail from "../managerApp/manager/ManagerClassCommentDetail";
 import ManagerStudentCommentDetail from "../managerApp/manager/ManagerStudentCommentDetail";
+import ManagerAllAttendancesClasses from "../managerApp/manager/ManagerAllAttendancesClasses";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -852,6 +854,22 @@ const routes = [
 				isMobileFooter: false,
 			},
 			{
+				path: "all-attendances/class/:classId",
+				sideBar: (props: any) => (
+					<>
+						<ManagerSideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<ManagerAllAttendancesClasses {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
 				path: "all-events/user/:id/class/:classId",
 				sideBar: (props: any) => (
 					<>
@@ -1357,6 +1375,18 @@ const routes = [
 				),
 				isSideBar: false,
 				isMobileFooter: true,
+			},
+			{
+				path: "add-info",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachAddInfoPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
 			},
 		],
 	},

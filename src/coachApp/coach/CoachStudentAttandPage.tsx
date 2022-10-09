@@ -7,7 +7,7 @@ import ListItem from "../../atoms/ListItem";
 import moment from "moment";
 import ProfileContainer, { IProfile } from "../../atoms/ProfileContainer";
 import ListBoxUI from "../../molecules/ListBox";
-import { createAttendance, getAll, getClassAttend } from "../../stores/actions";
+import { createAttendance, getClassAttend } from "../../stores/actions";
 import Modal from "react-bootstrap/Modal";
 import InputFormAtom from "../../atoms/InputFormAtom";
 
@@ -69,7 +69,7 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 	};
 
 	getAttendancesByClass = async () => {
-		await this.props.getClassAttend(this.state.classId);
+		await this.props.getClassAttend(this.state.classId, this.state.filterDate);
 		if (
 			this.props.attendance &&
 			this.props.attendance.attandance_list &&
@@ -93,16 +93,17 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 					selectable: true,
 					checked: attend.attend,
 					userId: attend.user_id,
-					chooseCallBack: (check: any) => {
+					chooseCallBack: async(check: any) => {
 						let index = this.state.attendances.findIndex(
-							(x: any) => x.id == attend.id
+							(x: any) => x.id === attend.id
 						);
 						let temp = this.state.attendances;
 						temp[index].checked = check;
-						this.setState({
+						await this.setState({
 							...this.state,
 							attendances: temp,
 						});
+						this.createAttend();
 					},
 				};
 			});
@@ -113,6 +114,11 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 		}
 	};
 
+	handleFilter =() =>{
+		this.getAttendancesByClass()
+		this.setState({modalShow:false})
+	}
+
 	render() {
 		const { viewClass } = this.props.classes;
 		let profile: IProfile = {
@@ -121,7 +127,7 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 			display_item: [
 				{
 					title: "Date",
-					value: moment().format("D MMM YYYY"),
+					value: moment(this.state.filterDate).format("D MMM YYYY"),
 				},
 				{
 					title: "Time",
@@ -188,13 +194,13 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 							)}
 						</ListBoxUI>
 					</div>
-					<button
+					{/* <button
 						type='submit'
 						className='btn btn-primary right w-100'
 						onClick={() => this.createAttend()}
 					>
 						Done
-					</button>
+					</button> */}
 					<Modal
 						dialogClassName={"custom-modal"}
 						show={this.state.modalShow}
@@ -239,7 +245,9 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 							<button
 								type='submit'
 								className='mt-40 mt-16 btn btn-primary right w-100'
-								onClick={() => {}}
+								onClick={() => {
+									
+									this.handleFilter()}}
 							>
 								Confirm
 							</button>

@@ -73,6 +73,7 @@ class CoachCommentsPage extends React.Component<IProps, IStates> {
   getSendComments = async () => {
     await this.props.getSendComment(this.state.classId, this.state.commentType);
     scrollToBottom("sendCmtList");
+    this.props.history.back();
   };
 
   //   fileUploadChange = () => {
@@ -307,19 +308,21 @@ class CoachCommentsPage extends React.Component<IProps, IStates> {
 
   render() {
     const { classId, commetFile } = this.state;
+    console.log('this.state.commetFile',this.state.commetFile)
+
     return (
 			<>
 				<div className='wrapper-mobile bg-w'>
 					<div className='content-mobile-cus-space col-sm-12' id='sendCmtList'>
 						<CoachMobileHeader backBtn={true}></CoachMobileHeader>
-						<CommentListPage
+						{/* <CommentListPage
 							showReply={true}
 							receiverId={classId}
 							isClass={this.state.commentType === "class"}
 							isOwn={true}
 							showRightArr={false}
 							callback={() => {}}
-						></CommentListPage>
+						></CommentListPage> */}
 
 						{this.renderComment()}
 

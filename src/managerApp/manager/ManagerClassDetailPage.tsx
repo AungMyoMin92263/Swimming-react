@@ -80,12 +80,14 @@ interface IProps {
 class ManagerClassDetailPage extends React.Component<IProps, IStates> {
   id: any;
   urlClassAllComments: any;
+  urlClassAllAttendances: any;
   url = "/manager/edit-class/";
   constructor(props: any) {
     super(props);
     let path = window.location.pathname.split("/");
     this.id = path[3];
     this.urlClassAllComments = "/manager/all-comments/class/" + this.id;
+    this.urlClassAllAttendances = "/manager/all-attendances/class/" + this.id
     this.state = {
       email: "",
       logo: "",
@@ -517,9 +519,13 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
     let editAddStudentUrl = "/manager/invite-student-summary/" + this.state.id;
     return (
       <>
-        <div className="class-attendance-header mt-24 fc-second">
-          <span>Student</span>
-        </div>
+      <div className='mt-24'>
+      <div className='class-comment-header flex justify-space-between '>
+					<span className='fc-second'>Attendances</span>
+					<Link to={this.urlClassAllAttendances}>
+						<span className='fc-primary'>View All</span>
+					</Link>
+				</div>
         <div className="class-attendance-body mt-16 ">
           <div className="class-attendance-sub-header flex mt-16 ml-16">
             <div className="col-10 f-10">
@@ -572,6 +578,9 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
             );
           })}
         </div>
+        
+      </div>
+        
       </>
     );
   };

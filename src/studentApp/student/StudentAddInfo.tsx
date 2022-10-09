@@ -2,7 +2,7 @@ import React from "react";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
-import "./CoachWelcome.css";
+import "../../coachApp/coach/CoachWelcome.css";
 import InputFormAtom from "../../atoms/InputFormAtom";
 import { putUser } from "../../stores/actions";
 import { getItem, setItemWithObject } from "../../auth/LocalStorage";
@@ -25,7 +25,7 @@ interface IProps {
   history: any;
 }
 
-class CoachAddInfoPage extends React.Component<IProps, IStates> {
+class StudentAddInfoPage extends React.Component<IProps, IStates> {
   id: any;
   constructor(props: any) {
     super(props);
@@ -84,22 +84,18 @@ class CoachAddInfoPage extends React.Component<IProps, IStates> {
       name: this.state.name,
       email: this.props.authUser.userInfo?.email,
       avatar: this.state.logo ? this.state.logo : null,
-    };
-    await this.props.putUser(
-      userData,
-      "users",
-      this.props.authUser.userInfo?.id
-    );
-    if (!this.props.authUser.error) {
-      let user = JSON.parse(getItem("authUser") || "null");
-      if (user && user.userInfo) {
-        let temp = user;
-        temp.userInfo.name = this.props.authUser.userInfo?.name;
-        setItemWithObject("authUser", temp);
-      }
-      this.props.history.push("/coach/dashboard");
     }
-  };
+    await this.props.putUser(userData, "users", this.props.authUser.userInfo?.id)
+    if (!this.props.authUser.error) {
+    let user = JSON.parse(getItem("authUser") || "null");
+		if (user && user.userInfo) {
+      let temp = user;
+			temp.userInfo.name = this.props.authUser.userInfo?.name;
+      setItemWithObject("authUser", temp);
+    }
+      this.props.history.push("/student/dashboard")
+    }
+  }
 
   handleChange = (e: any) => {
     var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
@@ -133,13 +129,17 @@ class CoachAddInfoPage extends React.Component<IProps, IStates> {
                   this.state.id === -1
                     ? this.state.image.preview
                     : this.state.isChangeLogo
-                    ? this.state.image.preview
-                    : process.env.REACT_APP_API_ENDPOINT + "/" + this.state.logo
+                      ? this.state.image.preview
+                      : process.env.REACT_APP_API_ENDPOINT + "/" + this.state.logo
                 }
                 alt="preview"
                 className="preview-icon cursor  mb-8"
               />
-              <div className="primary f-14 cursor">&nbsp; Change Image</div>
+              <div
+                className="primary f-14 cursor"
+              >
+                &nbsp; Change Image
+              </div>
             </>
           ) : (
             <>
@@ -150,7 +150,11 @@ class CoachAddInfoPage extends React.Component<IProps, IStates> {
                   alt="upload"
                   className="big-icon cursor mb-8"
                 />
-                <div className="primary f-14 cursor">&nbsp; Upload Image</div>
+                <div
+                  className="primary f-14 cursor"
+                >
+                  &nbsp; Upload Image
+                </div>
               </>
             </>
           )}
@@ -166,12 +170,13 @@ class CoachAddInfoPage extends React.Component<IProps, IStates> {
   };
 
   render() {
-    const { name, isNameEmpty, isNameValid, nameMsg } = this.state;
+    const { name, isNameEmpty, isNameValid, nameMsg, errorMsg } = this.state;
 
     return (
       <>
         <div className="wrapper-mobile">
           <div className="content-mobile-cus  col-sm-12">
+
             <div className="fw-500 f-32 pt-24 pb-24">
               <span>Tell us a bit about yourself!</span>
             </div>
@@ -199,7 +204,7 @@ class CoachAddInfoPage extends React.Component<IProps, IStates> {
                 required={true}
                 maxLength={200}
                 className=""
-                clickCallback={() => {}}
+                clickCallback={() => { }}
                 focusCallback={() => {
                   // this.setState({
                   //   isNameEmpty: false,
@@ -208,7 +213,9 @@ class CoachAddInfoPage extends React.Component<IProps, IStates> {
                 }}
               />
             </div>
-            <div className="flex-center">{this.renderBtn()}</div>
+            <div className="flex-center">
+              {this.renderBtn()}
+            </div>
           </div>
         </div>
       </>
@@ -226,4 +233,4 @@ const mapStateToProps = ({
   };
 };
 
-export default connect(mapStateToProps, { putUser })(CoachAddInfoPage);
+export default connect(mapStateToProps, { putUser })(StudentAddInfoPage);

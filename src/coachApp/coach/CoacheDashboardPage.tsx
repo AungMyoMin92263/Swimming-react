@@ -154,7 +154,7 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
 								/>
 							),
 							secondryText: true,
-							isBigIcon: false,
+							isBigIcon: false,						
 						},
 						start_time: this.props.classList.result[i].start_time,
 					});
@@ -194,6 +194,7 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
 						),
 						secondryText: false,
 						isBigIcon: false,
+						arrow: this.props.studentList.result[i].name
 					});
 				}
 				this.setState({
@@ -210,7 +211,9 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
 
 	render() {
 		let date = "Today, " + moment().format("D MMMM");
-		const { user_name, goClass, goStudent, classes, students } = this.state;
+		const { goClass, goStudent, classes, students } = this.state;
+		let name = this.props.authUser.userInfo?.name;
+
 		return (
 			<>
 				{goClass && <Navigate to={this.urlClass} replace={true} />}
@@ -218,7 +221,7 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
 				<div className='wrapper-mobile bg-w '>
 					<div className='content-mobile-cus-space col-sm-12'>
 						<div className='f-32 fw-500 mt-24 mb-40'>
-							<span> Hello, </span> <span>{user_name}</span>
+							<span> Hello, </span> <span>{name}</span>
 						</div>
 						<div className='mb-8'>
 							<ListBoxUI
@@ -265,7 +268,7 @@ class CoacheDashboardPage extends React.Component<IProps, IStates> {
 									students.map((student: any, index: any) => (
 										<ListItem
 											{...student}
-											arrowRight={true}
+											arrowRight={student.arrow}
 											key={`student${index}`}
 										>
 											<></>

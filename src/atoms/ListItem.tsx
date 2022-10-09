@@ -24,7 +24,9 @@ const ListItem = (props: IListItem) => {
     <div className={`${props.isBooking ? 'card-list-booking' : 'card-list-item '} ${props.selectable ? '' : 'pointer'}`} onClick={() => {
       
       if (!props.selectable) {
-        if (!props.isSlot) props.callback();
+        if (!props.isSlot) {
+          if(props.arrowRight)props.callback();
+        }
 				else {
           setItemWithObject("selected-slot", props.slot);
           props.callback();

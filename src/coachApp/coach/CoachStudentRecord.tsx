@@ -83,7 +83,7 @@ class CoachStudentRecordPage extends React.Component<IProps, IStates> {
 					<div className='mb-8'>
 						<ListBoxUI
 							title='You'
-							callback={() => {}}
+							callback={() => {this.props.history.push("/coach/dashboard/profile-detail/"+this.state.studentId);}}
 							callback2={() => {}}
 							more={true}
 							moreText='View Profile'

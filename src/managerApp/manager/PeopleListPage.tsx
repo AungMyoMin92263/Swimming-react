@@ -308,9 +308,10 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 								<table className='table'>
 									<thead>
 										<tr>
-											<th className='col-8'>
+											<th className='col-4'>
 												<span className='ml-56'>Name</span>
 											</th>
+											<th className='col-4'>Email</th>
 											<th className='col-4'>Role</th>
 										</tr>
 									</thead>
@@ -353,10 +354,14 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 															/>
 															<span className='ml-16'>
 																{!user || !user.name || user.name === ""
-																	? user.email
+																	? "-"
 																	: user.name}
 															</span>
 														</td>
+														<td>
+															<span className=''>{user && user.email}</span>
+														</td>
+
 														<td>
 															<span>
 																{user && user.role === "coache"
@@ -372,52 +377,49 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 																	: ""}
 															</span>
 														</td>
-
-														<td>
-															<div className='mr-16'>
-																<Dropdown className='more-dropdown'>
-																	<Dropdown.Toggle
-																		id='dropdown-basic'
-																		className='more-list-btn'
-																	>
-																		<MoreVertIcon />
-																	</Dropdown.Toggle>
-																	<Dropdown.Menu>
-																		{user && user.role === "coache" ? (
-																			<Dropdown.Item
-																				href={
-																					"/manager/coach-edit-profile/" +
-																					this.state.users[index].id
-																				}
-																			>
-																				<span>Edit</span>
-																			</Dropdown.Item>
-																		) : (
-																			<Dropdown.Item
-																				href={
-																					"/manager/student-edit-profile/" +
-																					this.state.users[index].id
-																				}
-																			>
-																				<span>Edit</span>
-																			</Dropdown.Item>
-																		)}
-
-																		<div className='dropdown-divider'></div>
-
+														<td className='mr-16'>
+															<Dropdown className='more-dropdown'>
+																<Dropdown.Toggle
+																	id='dropdown-basic'
+																	className='more-list-btn'
+																>
+																	<MoreVertIcon />
+																</Dropdown.Toggle>
+																<Dropdown.Menu>
+																	{user && user.role === "coache" ? (
 																		<Dropdown.Item
-																			onClick={() =>
-																				this.setState({
-																					removeIndex: index,
-																					modalShow: true,
-																				})
+																			href={
+																				"/manager/coach-edit-profile/" +
+																				this.state.users[index].id
 																			}
 																		>
-																			<span>Remove</span>
+																			<span>Edit</span>
 																		</Dropdown.Item>
-																	</Dropdown.Menu>
-																</Dropdown>
-															</div>
+																	) : (
+																		<Dropdown.Item
+																			href={
+																				"/manager/student-edit-profile/" +
+																				this.state.users[index].id
+																			}
+																		>
+																			<span>Edit</span>
+																		</Dropdown.Item>
+																	)}
+
+																	<div className='dropdown-divider'></div>
+
+																	<Dropdown.Item
+																		onClick={() =>
+																			this.setState({
+																				removeIndex: index,
+																				modalShow: true,
+																			})
+																		}
+																	>
+																		<span>Remove</span>
+																	</Dropdown.Item>
+																</Dropdown.Menu>
+															</Dropdown>
 														</td>
 													</tr>
 												))}
@@ -442,19 +444,31 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 														<span className='ml-16'>
 															{user &&
 															user.student &&
+															user.student.parent_name &&
+															user.student.parent_name
+																? user.student.parent_name
+																: "-"}
+														</span>
+													</td>
+
+													<td>
+														<span className=''>
+															{user &&
+															user.student &&
 															user.student.parent_email &&
 															user.student.parent_email
 																? user.student.parent_email
 																: "-"}
 														</span>
 													</td>
-													<td>
-														<span>Parent</span>
-													</td>
 
 													<td>
-														<div className='mr-16'>
-															{/* <div className='dropdownMore mr-24'>
+														<td>
+															<span>Parent</span>
+														</td>
+													</td>
+													<td className='mr-16'>
+														{/* <div className='dropdownMore mr-24'>
 																<MoreVertIcon
 																	style={{
 																		color: "inherit",
@@ -503,49 +517,48 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 																	</div>
 																</div>
 															</div> */}
-															<Dropdown className='more-dropdown'>
-																<Dropdown.Toggle
-																	id='dropdown-basic'
-																	className='more-list-btn'
-																>
-																	<MoreVertIcon />
-																</Dropdown.Toggle>
-																<Dropdown.Menu>
-																	{user && user.role === "coache" ? (
-																		<Dropdown.Item
-																			href={
-																				"/manager/coach-edit-profile/" +
-																				parents[index].id
-																			}
-																		>
-																			<span>Edit</span>
-																		</Dropdown.Item>
-																	) : (
-																		<Dropdown.Item
-																			href={
-																				"/manager/student-edit-profile/" +
-																				parents[index].id
-																			}
-																		>
-																			<span>Edit</span>
-																		</Dropdown.Item>
-																	)}
-
-																	<div className='dropdown-divider'></div>
-
+														<Dropdown className='more-dropdown'>
+															<Dropdown.Toggle
+																id='dropdown-basic'
+																className='more-list-btn'
+															>
+																<MoreVertIcon />
+															</Dropdown.Toggle>
+															<Dropdown.Menu>
+																{user && user.role === "coache" ? (
 																	<Dropdown.Item
-																		onClick={() =>
-																			this.setState({
-																				removeIndex: index,
-																				modalShow: true,
-																			})
+																		href={
+																			"/manager/coach-edit-profile/" +
+																			parents[index].id
 																		}
 																	>
-																		<span>Remove</span>
+																		<span>Edit</span>
 																	</Dropdown.Item>
-																</Dropdown.Menu>
-															</Dropdown>
-														</div>
+																) : (
+																	<Dropdown.Item
+																		href={
+																			"/manager/student-edit-profile/" +
+																			parents[index].id
+																		}
+																	>
+																		<span>Edit</span>
+																	</Dropdown.Item>
+																)}
+
+																<div className='dropdown-divider'></div>
+
+																<Dropdown.Item
+																	onClick={() =>
+																		this.setState({
+																			removeIndex: index,
+																			modalShow: true,
+																		})
+																	}
+																>
+																	<span>Remove</span>
+																</Dropdown.Item>
+															</Dropdown.Menu>
+														</Dropdown>
 													</td>
 												</tr>
 											))}

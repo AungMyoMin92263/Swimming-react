@@ -21,13 +21,13 @@ export const authReducers = (
         ...state,
         isSignedIn: true,
         userInfo: user,
-        token: user.token
+        token: user?.token
       });
       return {
         ...state,
         isSignedIn: true,
         userInfo: user,
-        token: user.token
+        token: user?.token
       };
     case ActionTypes.signUp:
       return {

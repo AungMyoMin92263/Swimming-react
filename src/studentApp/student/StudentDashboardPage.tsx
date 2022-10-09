@@ -171,6 +171,7 @@ class StudentDashboardPage extends React.Component<IProps, IStates> {
   render() {
     const { user_name, goClass, goStudent, classes } = this.state;
     let date = "Today, " + moment().format("D MMMM");
+    let name = this.props.authUser.userInfo?.name;
     return (
 			<>
 				{goClass && <Navigate to={this.urlClass} replace={true} />}
@@ -178,7 +179,7 @@ class StudentDashboardPage extends React.Component<IProps, IStates> {
 				<div className='wrapper-mobile bg-w'>
 					<div className='content-mobile-cus-space col-sm-12'>
 						<div className='f-32 fw-500 mt-24 mb-40'>
-							<span> Hello, </span> <span>{user_name}</span>
+							<span> Hello, </span> <span>{name}</span>
 						</div>
 						<div className='mb-8'>
 							<ListBoxUI

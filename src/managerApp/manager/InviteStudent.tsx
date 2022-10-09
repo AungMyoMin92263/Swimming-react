@@ -79,18 +79,18 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
       isValid: false,
       students: [
         {
-		  name: '',
-		  phone: '',
-		  email: '',
-		  parent_name: '',
-		  age: 0,
-		  gender: '',
-		  favorite: '',
-		  parent_email: '',
-		  parent_phone: '',
-		  avatar: null,
+          name: "",
+          phone: "",
+          email: "",
+          parent_name: "",
+          age: 0,
+          gender: "",
+          favorite: "",
+          parent_email: "",
+          parent_phone: "",
+          avatar: null,
           status: "init",
-		
+
           isStudentEmailValid: false,
           isStudentEmailEmpty: true,
           studentEmailMsg: "",
@@ -154,25 +154,25 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
   addStudent = () => {
     let temp = this.state.students;
     temp.push({
-		name: '',
-		phone: '',
-		email: '',
-		parent_name: '',
-		age: 0,
-		gender: '',
-		favorite: '',
-		parent_email: '',
-		parent_phone: '',
-		avatar: null,
-		status: "init",
-	  
-		isStudentEmailValid: false,
-		isStudentEmailEmpty: true,
-		studentEmailMsg: "",
-		isParentEmailValid: false,
-		isParentEmailEmpty: true,
-		parentEmailMsg: "",
-	  });
+      name: "",
+      phone: "",
+      email: "",
+      parent_name: "",
+      age: 0,
+      gender: "",
+      favorite: "",
+      parent_email: "",
+      parent_phone: "",
+      avatar: null,
+      status: "init",
+
+      isStudentEmailValid: false,
+      isStudentEmailEmpty: true,
+      studentEmailMsg: "",
+      isParentEmailValid: false,
+      isParentEmailEmpty: true,
+      parentEmailMsg: "",
+    });
     this.setState({
       students: temp,
       isValid: false,
@@ -184,9 +184,9 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
       this.setState({ isValid: true });
       this.state.students.map((studentObject: any) => {
         if (
-          studentObject.isStudentEmailEmpty ||
+          studentObject.email === '' ||
           !studentObject.isStudentEmailValid ||
-          studentObject.isParentEmailEmpty ||
+          studentObject.parent_email === '' ||
           !studentObject.isParentEmailValid
         ) {
           this.setState({ isValid: false });
@@ -196,8 +196,6 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
       this.setState({ isValid: true });
     }
   };
-
-
 
   submit = async () => {
     if (this.state.isValid) {
@@ -227,10 +225,21 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
         for (let i = 0; i < this.state.students.length; i++) {
           if (this.state.students[i].status === "init") {
             await this.props.inviteStudent({
-							user_email: this.state.students[i].email,
-							student: this.state.students[i],
-							class_id: this.state.classObj.id,
-						});
+              user_email: this.state.students[i].email,
+              student: {
+                name: this.state.students[i].name,
+                phone: this.state.students[i].phone,
+                email: this.state.students[i].email,
+                parent_name: this.state.students[i].parent_name,
+                age: this.state.students[i].age,
+                gender: this.state.students[i].gender,
+                favorite: this.state.students[i].favorite,
+                parent_email: this.state.students[i].parent_email,
+                parent_phone: this.state.students[i].parent_phone,
+                avatar: this.state.students[i].avatar,
+              },
+              class_id: this.state.classObj.id,
+            });
             if (this.props.classes.error) {
               let temp = this.state.students;
               temp[i].status = "error";
@@ -285,8 +294,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
     this.setState({
       students: temp,
     });
-    this.getClass()
-   
+    this.getClass();
   };
 
   render() {
@@ -420,13 +428,13 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
                           // }
                           showWarning={false}
                           isDropdown={false}
-                          callback={(value: string) => {
-                            this.isValidated();
+                          callback={async(value: string) => {
                             let temp = students;
                             temp[index].email = value;
-                            this.setState({
+                            await this.setState({
                               students: temp,
                             });
+                            this.isValidated();
                           }}
                           id="inviteStudentEmail"
                           name="inviteStudentEmail"
@@ -445,7 +453,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
                               students: temp,
                             });
                           }}
-						  status={student.status}
+                          status={student.status}
                         />
                       </div>
 
@@ -499,13 +507,13 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
                           // }
                           showWarning={false}
                           isDropdown={false}
-                          callback={(value: string) => {
-                            this.isValidated();
+                          callback={async(value: string) => {
                             let temp = students;
                             temp[index].parent_email = value;
-                            this.setState({
+                            await this.setState({
                               students: temp,
                             });
+                            this.isValidated();
                           }}
                           id="inviteParentEmail"
                           name="inviteParentEmail"
@@ -524,7 +532,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
                               students: temp,
                             });
                           }}
-						  status={student.status}
+                          status={student.status}
                         />
                       </div>
                     </div>
