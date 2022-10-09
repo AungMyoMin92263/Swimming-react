@@ -121,6 +121,7 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 
 	render() {
 		const { viewClass } = this.props.classes;
+		let coaches = this.props.classes.assignUser.filter((user:any)=>  user.type!=="coache").length
 		let profile: IProfile = {
 			isLogo: false,
 			title: "Attendance",
@@ -135,10 +136,7 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 				},
 				{
 					title: "Coaches",
-					value: viewClass?.assign_user
-						.slice(0, 2)
-						.map((userInfo: any) => userInfo.user.name || "User")
-						.join(", "),
+					value: coaches,
 				},
 				{
 					title: "No. Student",
