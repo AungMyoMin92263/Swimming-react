@@ -121,7 +121,7 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 
 	render() {
 		const { viewClass } = this.props.classes;
-		let coaches = this.props.classes.assignUser.filter((user:any)=>  user.type!=="coache").length
+		let coaches = this.props.classes.assignUser.filter((user:any)=>  user.type==="coache").length
 		let profile: IProfile = {
 			isLogo: false,
 			title: "Attendance",
