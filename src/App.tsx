@@ -34,7 +34,14 @@ class App extends React.Component<IProps, AppStates> {
     super(props);
     this.state = { isBusy: false, isAuth: true, user: '', password: '', error: false };
   }
-
+  appHeight = () => {
+    const doc = document.documentElement
+    doc.style.setProperty('--app-height', `${window.innerHeight}px`)
+  }
+  componentWillMount(): void {
+    window.addEventListener('resize', this.appHeight)
+    this.appHeight()
+  }
   componentDidMount() {
     const authUser = getItem('authUser');
     if (authUser) {

@@ -15,6 +15,7 @@ import { getSchoolObj, LoadingActionFunc } from "../../stores/actions";
 import { getClassObject, getAll } from "../../stores/actions";
 import { deleteCoach } from "./../../stores/actions/coach-action";
 import { Modal } from "react-bootstrap";
+import { getAssignUserByClass } from './../../stores/actions/class-action';
 interface IStates {
   school: any;
   errorMsg: string;
@@ -31,13 +32,14 @@ interface IStates {
 }
 
 interface IProps {
-  LoadingActionFunc: Function;
-  schools: any;
-  getSchoolObj: Function;
-  getClassObject: Function;
-  classes: any;
-  deleteCoach: Function;
-  coach: any;
+	LoadingActionFunc: Function;
+	schools: any;
+	getSchoolObj: Function;
+	getAssignUserByClass: Function;
+	getClassObject: Function;
+	classes: any;
+	deleteCoach: Function;
+	coach: any;
 }
 class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
   id: any;
@@ -86,6 +88,8 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 
   getClass = async () => {
     let url = "school/" + this.state.schoolId + "/class/" + this.state.classId;
+    		let class_url = "assigned/class/by-class/" + this.state.classId;
+				await this.props.getAssignUserByClass(class_url);
     await this.props.getClassObject(url);
     if (this.props.classes && this.props.classes.viewClass) {
       this.setState({
@@ -99,11 +103,17 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
       this.props.classes.result &&
       this.props.classes.result.assign_user
     ) {
-      this.setState({
-        coachList: this.props.classes.result.assign_user,
-        class_logo: this.props.classes.result.logo,
-        class_name: this.props.classes.result.name,
-      });
+      let coachTemp = [];
+			for (let i = 0; i < this.props.classes.assignUser.length; i++) {
+				if (this.props.classes.assignUser[i].type === "coache") {
+					coachTemp.push(this.props.classes.assignUser[i]);
+				}
+			}
+			this.setState({
+				class_logo: this.props.classes.result.logo,
+				class_name: this.props.classes.result.name,
+				coachList: coachTemp,
+			});
     }
   };
 
@@ -317,6 +327,7 @@ const mapStateToProps = ({
 
 export default connect(mapStateToProps, {
   LoadingActionFunc,
+  getAssignUserByClass,
   getSchoolObj,
   getClassObject,
   deleteCoach,

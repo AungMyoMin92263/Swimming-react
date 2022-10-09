@@ -4,7 +4,7 @@
   position: fixed;
   left: 0px;
   width: 236px;
-  height: 100vh;
+  height: var(--app-height);
   background-color: white;
   border-right: 1px solid #cccccc;
 }
