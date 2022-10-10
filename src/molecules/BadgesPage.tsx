@@ -107,6 +107,7 @@ class BadgesListPage extends React.Component<IProps, IStates> {
           smallText={"Reward your students."}
           callback={() => this.goCreateBadge()} isBigIcon={true}
           icon={this.createIcon()}
+          arrowRight={true}
         />
         {badgesList.length > 0 ?
           <>
