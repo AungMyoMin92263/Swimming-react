@@ -114,6 +114,7 @@ class ParentCreatePasswordPage extends React.Component<IProps, IStates> {
 			
 			sign_token: signUptoken,
 			password: secondPassword,
+			user_role: 'parent'
 		});
 		if (this.props.signedUpUser.isSignedUp) {
 			this.setState({
