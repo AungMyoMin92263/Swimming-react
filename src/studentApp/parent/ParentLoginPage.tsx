@@ -164,7 +164,7 @@ class ParentLoginPage extends React.Component<IProps, IStates> {
 
 					<div className='center mb-16 mt-120 fw-500'>
 						<Link
-							to='/coach/recover-password'
+							to='/parent/recover-password'
 							style={{ textDecoration: "none" }}
 						>
 							<span className='f-14 primary'>Forgot password?</span>

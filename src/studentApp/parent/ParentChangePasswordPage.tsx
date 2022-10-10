@@ -114,7 +114,7 @@ class ParentChangePasswordPage extends React.Component<IProps, IStates> {
 			email: email,
 			token: signUptoken,
 			password: secondPassword,
-			role: "manager",
+			role: "parent",
 		});
 		if (this.props.signedUpUser.isSignedUp) {
 			this.setState({
@@ -196,7 +196,7 @@ class ParentChangePasswordPage extends React.Component<IProps, IStates> {
 	renderBtn = () => {
 		if (this.state.isCompleted) {
 			return (
-				<Link to='/coach/login'>
+				<Link to='/parent/login'>
 					<button
 						type='submit'
 						className='primary-btn'

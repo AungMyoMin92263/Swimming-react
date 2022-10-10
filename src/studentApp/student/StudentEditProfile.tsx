@@ -115,7 +115,7 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
     if (!allowedExtensions.exec(e.target.files[0].name)) {
       alert("Invalid file type");
     } else {
-      if (e.target.files.length) {
+      if (e.target.files.length > 0) {
         let temp = this.state.image;
         temp.preview = URL.createObjectURL(e.target.files[0]);
         temp.raw = e.target.files[0];
@@ -146,6 +146,7 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
       formData.append("phone", this.state.mobile);
       formData.append("email", this.state.email);
       formData.append("parent_email", this.state.parentEmail);
+      formData.append("parent_phone", this.state.parentMobile);
       formData.append("age", this.state.age);
       formData.append("gender", this.state.gender);
       formData.append("favorite", this.state.favourite);

@@ -121,7 +121,6 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
       });
 
       if (!this.id) {
-        console.log("this.id", this.id);
         const classObject = JSON.parse(getItem("class") || "null");
         if (classObject) {
           this.id = classObject.id;
@@ -193,7 +192,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
         }
       });
     } else {
-      this.setState({ isValid: true });
+      this.setState({ isValid: false });
     }
   };
 
@@ -204,16 +203,8 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
       for (let i = 0; i < this.state.students.length; i++) {
         temp.push(this.state.students[i].email);
         tempStu.push({
-          // name: this.state.students[i].name,
-          // phone: this.state.students[i].phone,
           email: this.state.students[i].email,
-          // parent_name: this.state.students[i].parent_name,
-          // age: this.state.students[i].age,
-          // gender: this.state.students[i].gender,
-          // favorite: this.state.students[i].favorite,
           parent_email: this.state.students[i].parent_email,
-          // parent_phone: this.state.students[i].parent_phone,
-          // avatar: null,
         });
       }
       await this.setState({
@@ -243,9 +234,12 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
             if (this.props.classes.error) {
               let temp = this.state.students;
               temp[i].status = "error";
-              this.setState({
+              temp[i].email = '';
+              temp[i].parent_email = '';
+              await this.setState({
                 isCompleted: false,
                 students: temp,
+                isValid: false
               });
             } else {
               const coach = JSON.parse(getItem("students") || "null");
@@ -288,12 +282,13 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
       );
   };
 
-  removeStudent = (index: number) => {
+  removeStudent = async(index: number) => {
     let temp = this.state.students;
     temp.splice(index, 1);
-    this.setState({
+    await this.setState({
       students: temp,
     });
+    this.isValidated();
     this.getClass();
   };
 
@@ -371,7 +366,6 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
                           <div
                             onClick={() => {
                               this.removeStudent(index);
-                              this.isValidated();
                             }}
                             className="fc-primary cursor"
                           >

@@ -220,8 +220,7 @@ export const inviteManager = (emails : any) => {
       if (err) {
         dispatch<inviteManagerAction>({
           type: ActionTypes.getError,
-          payload: err.response.status === 400 ? err.response.data.message: err.response.data.message[0],
-
+          payload: err.response.status === 400 ||  err.response.status === 500? err.response.data.message: err.response.data.message[0]
         });
       } else {
         console.log("Unexpected error", err);
