@@ -216,7 +216,7 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 												<span className='ml-16'>
 													{student.user && student.user.name
 														? student.user.name
-														: "-"}
+														: student.user.email}
 												</span>
 											</div>
 											<div>

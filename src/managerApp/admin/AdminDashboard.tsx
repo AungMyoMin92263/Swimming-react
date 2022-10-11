@@ -25,6 +25,7 @@ import { getItem, removeItem } from "../../auth/LocalStorage";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Dropdown from "react-bootstrap/Dropdown";
+import { Modal } from "react-bootstrap";
 interface IStates {
   email: string;
   schools: School[];
@@ -34,6 +35,8 @@ interface IStates {
   currentIndex: number;
   url: string;
   managerUrl: string;
+  modalShow : boolean;
+  removeIndex : number;
 }
 interface IProps {
   getAllSchools: Function;
@@ -57,6 +60,8 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
       currentIndex: -1,
       url: "",
       managerUrl: "",
+      modalShow : false,
+      removeIndex : -1
     };
     // this.props.LoadingActionFunc(true);
   }
@@ -111,16 +116,29 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 
   edit = () => {};
 
-  remove = (index: number) => {
-    this.removeSchool(this.state.schools[index].id);
-  };
+  // remove = (index: number) => {
+  //   this.removeSchool(this.state.schools[index].id);
+  // };
 
-  removeSchool = async (id: any) => {
-    await this.props.deleteSchoolObj(id);
+  // removeSchool = async (id: any) => {
+  //   await this.props.deleteSchoolObj(id);
+  //   if (
+  //     this.props.schoolList.result &&
+  //     this.props.schoolList.result.data.statusText === "success"
+  //   ) {
+  //     this.getSchools();
+  //   }
+  // };
+
+  remove = async () => {
+    await this.props.deleteSchoolObj(this.state.schools[this.state.removeIndex].id);
     if (
       this.props.schoolList.result &&
       this.props.schoolList.result.data.statusText === "success"
     ) {
+      this.setState({
+        modalShow : this.state.modalShow? false : this.state.modalShow,
+        });
       this.getSchools();
     }
   };
@@ -135,6 +153,8 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
       url,
       managerUrl,
       schools,
+      modalShow,
+      removeIndex
     } = this.state;
     return (
       <>
@@ -252,51 +272,6 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
                             <div className="flex justify-space-between">
                               <span>0</span>
 
-                              {/* <div className='dropdownMore mr-24'>
-																<MoreVertIcon
-																	style={{
-																		color: "inherit",
-																		cursor: "pointer",
-																	}}
-																	onClick={() => this.toggleOpenMore(index)}
-																/>
-																<div
-																	className={`dropdown-menu ${
-																		dropdownMore && currentIndex === index
-																			? "show"
-																			: ""
-																	}`}
-																	aria-labelledby='dropdownMenuButton'
-																>
-																	<div
-																		className='dropdown-item cursor'
-																		onClick={this.edit}
-																	>
-																		<span>View</span>
-																	</div>
-																	<div className='dropdown-divider'></div>
-																	<Link to={url}>
-																		<div className='dropdown-item cursor'>
-																			<span>Edit School</span>
-																		</div>
-																	</Link>
-																	<div className='dropdown-divider'></div>
-
-																	<Link to={managerUrl}>
-																		<div className='dropdown-item cursor'>
-																			<span>Edit School Managers</span>
-																		</div>
-																	</Link>
-																	<div className='dropdown-divider'></div>
-																	<div
-																		className='dropdown-item cursor'
-																		onClick={() => this.remove(index)}
-																	>
-																		<span>Remove</span>
-																	</div>
-																</div>
-															</div> */}
-
                               <Dropdown className="more-dropdown">
                                 <Dropdown.Toggle
                                   id="dropdown-basic"
@@ -306,11 +281,6 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
                                 </Dropdown.Toggle>
 
                                 <Dropdown.Menu>
-                                  {/* <Dropdown.Item onClick={this.edit}>
-                                    <span>View</span>
-                                  </Dropdown.Item>
-                                  <div className="dropdown-divider"></div> */}
-
                                   <Dropdown.Item
                                     href={
                                       "/admin/edit-school/" +
@@ -331,7 +301,10 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
                                   <div className="dropdown-divider"></div>
 
                                   <Dropdown.Item
-                                    onClick={() => this.remove(index)}
+                                    onClick={() => this.setState({
+                                      removeIndex: index,
+                                      modalShow: true,
+                                    })}
                                   >
                                     <span>Remove</span>
                                   </Dropdown.Item>
@@ -347,6 +320,53 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
             </div>
           </div>
         </div>
+
+        <Modal
+					aria-labelledby='contained-modal-title-vcenter'
+					centered
+					dialogClassName={"confirm-modal"}
+					show={this.state.modalShow}
+					onHide={() => {
+						this.setState({
+							...this.state,
+							modalShow: false,
+						});
+					}}
+				>
+					<div className='mb-16'>
+						<span className='f-20 fw-500'>
+							Remove school ‘{" "}
+							{schools[removeIndex] && schools[removeIndex].name} ’?{" "}
+						</span>
+					</div>
+					<div className='mb-16'>
+						<span className='f-16'>
+							This action cannot be undone. This action will remove the school.
+						</span>
+					</div>
+					<div className='flex-center'>
+						<button
+							type='submit'
+							className='secondary-btn mr-8'
+							onClick={() =>
+								this.setState({
+									...this.state,
+									modalShow: false,
+								})
+							}
+						>
+							Cancel
+						</button>
+						<button
+							type='submit'
+							className='secondary-btn'
+							style={{ color: "#F80000", borderColor: "#F80000" }}
+							onClick={this.remove}
+						>
+							Remove
+						</button>
+					</div>
+				</Modal>
       </>
     );
   }

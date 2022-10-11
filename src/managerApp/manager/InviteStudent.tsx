@@ -17,19 +17,21 @@ import {
   setItemWithObject,
 } from "../../auth/LocalStorage";
 import placeholder from "./../../assets/images/place-holder.png";
+import { isConstructorDeclaration } from "typescript";
 
 interface StudentViewModel {
-  name: string;
-  phone: string;
-  email: string;
-  parent_name: string;
+  name: any;
+  phone: any;
+  email: any;
+  parent_name: any;
   age: number;
-  gender: string;
-  favorite: string;
-  parent_email: string;
-  parent_phone: string;
+  gender: any;
+  favorite: any;
+  parent_email: any;
+  parent_phone: any;
   avatar: any;
   status: string;
+  errorMsg: string;
 
   isStudentEmailValid: boolean;
   isStudentEmailEmpty: boolean;
@@ -79,17 +81,18 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
       isValid: false,
       students: [
         {
-          name: "",
-          phone: "",
-          email: "",
-          parent_name: "",
+          name: null,
+          phone: null,
+          email: null,
+          parent_name: null,
           age: 0,
-          gender: "",
-          favorite: "",
-          parent_email: "",
-          parent_phone: "",
+          gender: null,
+          favorite: null,
+          parent_email: null,
+          parent_phone: null,
           avatar: null,
           status: "init",
+          errorMsg: "",
 
           isStudentEmailValid: false,
           isStudentEmailEmpty: true,
@@ -153,17 +156,18 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
   addStudent = () => {
     let temp = this.state.students;
     temp.push({
-      name: "",
-      phone: "",
-      email: "",
-      parent_name: "",
+      name: null,
+      phone: null,
+      email: null,
+      parent_name: null,
       age: 0,
-      gender: "",
-      favorite: "",
-      parent_email: "",
-      parent_phone: "",
+      gender: null,
+      favorite: null,
+      parent_email: null,
+      parent_phone: null,
       avatar: null,
       status: "init",
+      errorMsg: "",
 
       isStudentEmailValid: false,
       isStudentEmailEmpty: true,
@@ -183,10 +187,11 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
       this.setState({ isValid: true });
       this.state.students.map((studentObject: any) => {
         if (
-          studentObject.email === '' ||
+          studentObject.email === "" ||
           !studentObject.isStudentEmailValid ||
-          studentObject.parent_email === '' ||
-          !studentObject.isParentEmailValid
+          studentObject.parent_email === "" ||
+          !studentObject.isParentEmailValid ||
+          studentObject.status === 'error'
         ) {
           this.setState({ isValid: false });
         }
@@ -231,16 +236,19 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
               },
               class_id: this.state.classObj.id,
             });
-            if (this.props.classes.error) {
+            if (this.props.classes && this.props.classes.error) {
               let temp = this.state.students;
               temp[i].status = "error";
-              temp[i].email = '';
-              temp[i].parent_email = '';
+              temp[i].errorMsg =
+                this.props.classes.error && this.props.classes.error.length > 0
+                  ? this.props.classes.error[0]
+                  : this.props.classes.error;
               await this.setState({
                 isCompleted: false,
                 students: temp,
-                isValid: false
+                isValid: false,
               });
+              this.props.LoadingActionFunc(false);
             } else {
               const coach = JSON.parse(getItem("students") || "null");
               let temp = this.state.students;
@@ -248,18 +256,31 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
               if (coach) {
                 setItemWithObject("students", coach.concat(temp));
               } else setItemWithObject("students", temp);
-
               this.setState({
-                isCompleted: true,
                 students: temp,
               });
             }
+            if(i === this.state.students.length - 1)this.checkBack();
           }
         }
-        this.props.LoadingActionFunc(false);
       }
     }
   };
+
+  checkBack = () => {
+    console.log('this.state.students',this.state.students)
+    if(this.state.students.length > 0){
+      for (let i = 0; i < this.state.students.length; i++) {
+        if(this.state.students[i].status === 'error')return;
+        else if(this.state.students[i].status !== 'error' && i === this.state.students.length - 1){
+          this.setState({
+            isCompleted: true,
+          });
+          this.props.LoadingActionFunc(false);
+        }
+      }
+    }
+  }
 
   renderBtn = () => {
     if (!this.state.isValid) {
@@ -282,7 +303,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
       );
   };
 
-  removeStudent = async(index: number) => {
+  removeStudent = async (index: number) => {
     let temp = this.state.students;
     temp.splice(index, 1);
     await this.setState({
@@ -373,56 +394,16 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
                           </div>
                         )}
                       </div>
-                      {/* <div className='fw-400 mb-16'>
-											<InputFormAtom
-												label='Student Name'
-												placeholder={"Enter name of Student"}
-												warning={studentNameMsg}
-												type='text'
-												// showWarning={
-												// 	student.isStudentNameEmpty ||
-												// 	!student.isStudentNameValid
-												// }
-												showWarning={false}
-												isDropdown={false}
-												callback={(value: string) => {
-													this.isValidated();
-													let temp = students;
-													temp[index].studentName = value;
-													this.setState({
-														students: temp,
-													});
-												}}
-												id='inviteStudentName'
-												name='inviteStudentName'
-												value={student.studentName}
-												required={true}
-												maxLength={200}
-												className=''
-												clickCallback={() => {}}
-												focusCallback={() => {
-													let temp = students;
-													temp[index].isStudentNameEmpty = false;
-													temp[index].isStudentNameValid = true;
-													this.setState({
-														students: temp,
-													});
-												}}
-											/>
-										</div> */}
                       <div className="fw-400 mb-16">
                         <InputFormAtom
                           label="Student Email"
                           placeholder={"Enter email of Student"}
                           warning={studentEmailMsg}
                           type="text"
-                          // showWarning={
-                          // 	student.isStudentEmailEmpty ||
-                          // 	!student.isStudentEmailValid
-                          // }
+                          disabled={student.status === 'success'}
                           showWarning={false}
                           isDropdown={false}
-                          callback={async(value: string) => {
+                          callback={async (value: string) => {
                             let temp = students;
                             temp[index].email = value;
                             await this.setState({
@@ -432,7 +413,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
                           }}
                           id="inviteStudentEmail"
                           name="inviteStudentEmail"
-                          value={student.studentEmail}
+                          value={student.email}
                           required={true}
                           maxLength={200}
                           className=""
@@ -451,57 +432,16 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
                         />
                       </div>
 
-                      {/* <div className='fw-400 mb-16'>
-											<InputFormAtom
-												label='Parent Name'
-												placeholder={"Enter name of parent"}
-												warning={parentNameMsg}
-												type='text'
-												// showWarning={
-												// 	student.isParentNameEmpty ||
-												// 	!student.isParentNameValid
-												// }
-												showWarning={false}
-												isDropdown={false}
-												callback={(value: string) => {
-													this.isValidated();
-													let temp = students;
-													temp[index].parentName = value;
-													this.setState({
-														students: temp,
-													});
-												}}
-												id='inviteParentName'
-												name='inviteParentName'
-												value={student.parentName}
-												required={true}
-												maxLength={200}
-												className=''
-												clickCallback={() => {}}
-												focusCallback={() => {
-													let temp = students;
-													temp[index].isParentNameEmpty = false;
-													temp[index].isParentNameValid = true;
-
-													this.setState({
-														students: temp,
-													});
-												}}
-											/>
-										</div> */}
                       <div className="fw-400 mb-16">
                         <InputFormAtom
                           label="Parent Email"
                           placeholder={"Enter email of parent"}
                           warning={parentEmailMsg}
                           type="text"
-                          // showWarning={
-                          // 	student.isParentEmailEmpty ||
-                          // 	!student.isParentEmailValid
-                          // }
+                          disabled={student.status === 'success'}
                           showWarning={false}
                           isDropdown={false}
-                          callback={async(value: string) => {
+                          callback={async (value: string) => {
                             let temp = students;
                             temp[index].parent_email = value;
                             await this.setState({
@@ -511,7 +451,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
                           }}
                           id="inviteParentEmail"
                           name="inviteParentEmail"
-                          value={student.parentEmail}
+                          value={student.parent_email}
                           required={true}
                           maxLength={200}
                           className=""
@@ -529,6 +469,9 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
                           status={student.status}
                         />
                       </div>
+                      {student && student.errorMsg !== "" && (
+                        <p className="text-danger">{student.errorMsg}</p>
+                      )}
                     </div>
                   </>
                 ))}
@@ -548,9 +491,6 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
                   {this.renderBtn()}
                 </div>
               </div>
-              {this.props.classes.error && (
-                <p className="text-danger">{this.props.classes.error}</p>
-              )}
             </div>
           </div>
         </div>

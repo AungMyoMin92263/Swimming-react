@@ -42,6 +42,7 @@ class InputFormAtom extends React.Component<IProps, IStates> {
 
   componentDidMount() {
     document.addEventListener("mousedown", this.handleClickOutside);
+    console.log('status',this.props.status)
   }
 
   componentWillUnmount() {

@@ -59,7 +59,6 @@ class ManagerEventDetailPage extends React.Component<IProps, IStates> {
 
 	componentDidMount(): void {
 		this.authFromLocal();
-		this.getEventDetail();
 		this.props.LoadingActionFunc(false);
 	}
 
@@ -79,6 +78,7 @@ class ManagerEventDetailPage extends React.Component<IProps, IStates> {
 					? user.userInfo.assign_school.school_id
 					: -1,
 			});
+			this.getEventDetail();
 		}
 	};
 	getEventDetail = async () => {

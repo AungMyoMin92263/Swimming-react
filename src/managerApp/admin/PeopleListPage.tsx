@@ -13,14 +13,12 @@ import {
   LoadingActionFunc,
 } from "../../stores/actions";
 
-import { Link, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { getItem, removeItem } from "../../auth/LocalStorage";
 import { InitialIcon } from "../../atoms/InitialIcon";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SearchIcon from "@mui/icons-material/Search";
-import FilterListIcon from "@mui/icons-material/FilterList";
 interface IStates {
 	users: any[];
 	email: string;
