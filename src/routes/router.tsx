@@ -1689,6 +1689,22 @@ const routes = [
 				isMobileFooter: true,
 			},
 			{
+				path: "coach/profile/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<StudentCoacheProfile {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
 				path: "dashboard/badge-list/:id",
 				sideBar: (props: any) => <></>,
 				main: (props: any) => (

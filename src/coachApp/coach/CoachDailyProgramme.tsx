@@ -314,6 +314,8 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 	};
 
 	render() {
+				const urlParams = new URLSearchParams(window.location.search);
+		let date = urlParams.get("date") || moment(new Date()).format("YYYY-MM-DD")
 		let item: IListItem = {
 			text: "Joseph",
 			callback: () => console.log("log click item"),
@@ -429,7 +431,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 												return (
 													<ListItem
 														text={coach.user.name || coach.user.email}
-														callback={() => {}}
+														callback={() => {this.props.history.push("/coach/coach/profile/"+ coach.user_id);}}
 														key={`coache${index}`}
 														icon={
 															<>
@@ -445,7 +447,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 																/>
 															</>
 														}
-														arrowRight={false}
+														arrowRight={true}
 													/>
 												);
 											})}
@@ -562,7 +564,10 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 									title='Attendance'
 									callback={() => {
 										this.props.history.push(
-											"/coach/class/attendance/" + this.state.classe.id
+											"/coach/class/attendance/" +
+												this.state.classe.id +
+												"?date=" +
+												date
 										);
 									}}
 									more={true}

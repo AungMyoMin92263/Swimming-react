@@ -276,7 +276,7 @@ class ManagerDashboardPage extends React.Component<IProps, IStates> {
                                 <Dropdown.Item
                                   href={"/manager/class/" + classe.id}
                                 >
-                                  <span>Edit</span>
+                                  <span>View</span>
                                 </Dropdown.Item>
                               )}
 

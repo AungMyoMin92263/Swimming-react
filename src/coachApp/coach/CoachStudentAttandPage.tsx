@@ -33,7 +33,10 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 	id: any;
 	urlDailyProgram = "";
 	urlEnterComment = "";
+
 	constructor(props: any) {
+		const urlParams = new URLSearchParams(window.location.search);
+		let date = urlParams.get("date");
 		super(props);
 		let path = window.location.pathname.split("/");
 		this.id = path[4];
@@ -41,7 +44,7 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 			classId: this.id ? this.id : -1,
 			attendances: [],
 			modalShow: false,
-			filterDate: moment().format("D MMM YYYY"),
+			filterDate: moment(date).format("D MMM YYYY"),
 			isfilterDateValid: true,
 			isfilterDateEmpty: false,
 			filterDateMsg: "",
@@ -56,6 +59,8 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 	}
 
 	createAttend = async () => {
+				const urlParams = new URLSearchParams(window.location.search);
+		let date = urlParams.get("date");
 		let userList = this.state.attendances.map((res) => {
 			return {
 				user_id: res.userId,
@@ -63,6 +68,7 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 			};
 		});
 		await this.props.createAttendance({
+			attendance_date:date,
 			users: userList,
 			class_id: parseInt(this.state.classId + ""),
 		});
@@ -78,7 +84,7 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 			let tempAttendances = this.props.attendance.attandance_list;
 			let res = tempAttendances.map((attend: any) => {
 				return {
-					text: attend.user.name? attend.user.name: attend.user.email,
+					text: attend.user.name ? attend.user.name : attend.user.email,
 					callback: () => console.log("log click item"),
 					smallText: "",
 					icon: (
@@ -93,7 +99,7 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 					selectable: true,
 					checked: attend.attend,
 					userId: attend.user_id,
-					chooseCallBack: async(check: any) => {
+					chooseCallBack: async (check: any) => {
 						let index = this.state.attendances.findIndex(
 							(x: any) => x.id === attend.id
 						);
@@ -114,14 +120,16 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 		}
 	};
 
-	handleFilter =() =>{
-		this.getAttendancesByClass()
-		this.setState({modalShow:false})
-	}
+	handleFilter = () => {
+		this.getAttendancesByClass();
+		this.setState({ modalShow: false });
+	};
 
 	render() {
 		const { viewClass } = this.props.classes;
-		let coaches = this.props.classes.assignUser.filter((user:any)=>  user.type==="coache").length
+		let coaches = this.props.classes.assignUser.filter(
+			(user: any) => user.type === "coache"
+		).length;
 		let profile: IProfile = {
 			isLogo: false,
 			title: "Attendance",
@@ -244,8 +252,8 @@ class CoachStudentAttandPage extends React.Component<IProps, IStates> {
 								type='submit'
 								className='mt-40 mt-16 btn btn-primary right w-100'
 								onClick={() => {
-									
-									this.handleFilter()}}
+									this.handleFilter();
+								}}
 							>
 								Confirm
 							</button>

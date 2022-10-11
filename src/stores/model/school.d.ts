@@ -6,5 +6,6 @@ export interface School {
     deleted_at: Date,
     name: string,
     logo: string,
+  student_count:number,
   assign_user:string[],
   }

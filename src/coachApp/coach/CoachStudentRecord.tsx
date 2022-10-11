@@ -36,6 +36,7 @@ class CoachStudentRecordPage extends React.Component<IProps, IStates> {
     };
   }
   componentDidMount() {
+	this.getEventList();
     if (!this.props.authUser.viewStudent && !this.props.events.eventDetail)
       this.props.history.back()
     else{
@@ -52,7 +53,13 @@ class CoachStudentRecordPage extends React.Component<IProps, IStates> {
   render() {
     const { viewStudent } = this.props.authUser
     const { eventDetail, eventRecords } = this.props.events
-    let maxObj = eventRecords.reduce((prev: any, current: any) => ((prev.record < current.record) ? prev : current), 0)
+    let maxObj = eventRecords.reduce(
+			(prev: any, current: any) =>
+				prev.record <= current.record 
+					? prev
+					: current,
+			0
+		);
     console.log("maxObj", maxObj);
     
     return (
@@ -83,7 +90,11 @@ class CoachStudentRecordPage extends React.Component<IProps, IStates> {
 					<div className='mb-8'>
 						<ListBoxUI
 							title='You'
-							callback={() => {this.props.history.push("/coach/dashboard/profile-detail/"+this.state.studentId);}}
+							callback={() => {
+								this.props.history.push(
+									"/coach/dashboard/profile-detail/" + this.state.studentId
+								);
+							}}
 							callback2={() => {}}
 							more={true}
 							moreText='View Profile'

@@ -270,7 +270,7 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
                           </td>
                           <td>
                             <div className="flex justify-space-between">
-                              <span>0</span>
+                              <span>{school.student_count}</span>
 
                               <Dropdown className="more-dropdown">
                                 <Dropdown.Toggle
