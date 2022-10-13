@@ -8,10 +8,11 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { StoreState } from "../../stores/reducers";
 import {
+	getClassObject,
 	getUserInfo,
 	getAll,
 	getClassAttend,
-	getAllComment,
+	getAssignUserByClass,
 } from "../../stores/actions";
 import { connect } from "react-redux";
 import { signOut, LoadingActionFunc } from "../../stores/actions";
@@ -28,7 +29,7 @@ import AddIcon from "@mui/icons-material/Add";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { ClassInterface } from "../../stores/model/class-interface";
 import ProfileContainer, { IProfile } from "../../atoms/ProfileContainer";
-import { Checkbox } from "@mui/material";
+import { Checkbox, TextField } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import moment from "moment";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
@@ -38,6 +39,9 @@ import CommentItem from "../../atoms/Comment";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { CreateProfile } from "../../atoms/createProfile";
 import CommentDashItem from "../../atoms/CommentDash";
+import { Modal } from "react-bootstrap";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers-pro";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 interface IStates {
 	classId: number;
 	email: string;
@@ -53,11 +57,12 @@ interface IStates {
 	attendances: any[];
 	total_attended: number;
 	total_class: number;
-    modalShow: boolean;
-    filterDate: string;
+	filterDate: string;
 	isfilterDateValid: boolean;
 	isfilterDateEmpty: boolean;
 	filterDateMsg: string;
+	modalShow: boolean;
+	selectedMonth: any;
 }
 interface IProps {
 	user_id: any;
@@ -67,6 +72,7 @@ interface IProps {
 	response: any;
 	history: any;
 	getClassObject: Function;
+	getAssignUserByClass: Function;
 	defaultPath: string;
 	signOut: Function;
 	LoadingActionFunc: Function;
@@ -81,12 +87,13 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 	class_id: any;
 	url = "/manager/student-edit-profile/";
 	currentMonth = moment(new Date()).format("MMM YYYY");
+	date = moment(new Date()).format("YYYY-MM-DD");
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
 		this.id = path[4];
 		this.state = {
-            classId: this.id ? this.id : -1,
+			classId: this.id ? this.id : -1,
 			total_attended: 0,
 			total_class: 0,
 			email: "",
@@ -100,11 +107,12 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 			schoolId: -1,
 			id: this.id ? this.id : -1,
 			attendances: [],
-            modalShow: false,
 			filterDate: moment().format("D MMM YYYY"),
 			isfilterDateValid: true,
 			isfilterDateEmpty: false,
 			filterDateMsg: "",
+			modalShow: false,
+			selectedMonth: moment(new Date()).format("YYYY-MM-DD"),
 		};
 	}
 	componentDidMount() {
@@ -136,53 +144,65 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 					: -1,
 			});
 			let classUrl =
-				"school/" + this.state.schoolId + "/class/" + this.class_id;
-			this.props.getClassObject(classUrl, true);
+				"school/" + this.state.schoolId + "/class/" + this.state.classId;
+			await this.props.getClassObject(classUrl, true);
+			await this.getCoachesByClass();
 		}
 	};
-    getAttendancesByClass = async () => {
-		await this.props.getClassAttend(this.state.classId);
+	getAttendancesByClass = async () => {
+		let url = "attendance/byClass/" + this.state.classId;
+		await this.props.getAll(url);
 		if (
-			this.props.attendance &&
-			this.props.attendance.attandance_list &&
-			this.props.attendance.attandance_list.length > 0
+			this.props.response &&
+			this.props.response.result &&
+			this.props.response.result.length > 0
 		) {
-			let tempAttendances = this.props.attendance.attandance_list;
-			let res = tempAttendances.map((attend: any) => {
-				return {
-					text: attend.user.name? attend.user.name: attend.user.email,
+			let tempAttendances = this.props.response.result;
+			let res = [];
+			for (let i = 0; i < tempAttendances.length; i++) {
+				res.push({
+					text: tempAttendances[i].user.name
+						? tempAttendances[i].user.name
+						: tempAttendances[i].user.email,
 					callback: () => console.log("log click item"),
 					smallText: "",
-					icon: (
-						<CreateProfile
-							image_url={attend.user.avatar}
-							name={attend.user.name || attend.user.email}
+					icon: tempAttendances[i].user.avatar ? (
+						<img
+							src={
+								process.env.REACT_APP_API_ENDPOINT +
+								"/" +
+								tempAttendances[i].user.avatar
+							}
+							className='logo-icon'
+						/>
+					) : (
+						<InitialIcon
+							initials={(
+								tempAttendances[i].user.name ||
+								tempAttendances[i].user.email ||
+								"User"
+							)
+								.substr(0, 1)
+								.toUpperCase()}
+							isFooterMenu={true}
 						/>
 					),
 					secondryText: true,
-					isBigIcon: false,
-					id: attend.id,
+					isBigIcon: true,
 					selectable: true,
-					checked: attend.attend,
-					userId: attend.user_id,
-					chooseCallBack: (check: any) => {
-						let index = this.state.attendances.findIndex(
-							(x: any) => x.id == attend.id
-						);
-						let temp = this.state.attendances;
-						temp[index].checked = check;
-						this.setState({
-							...this.state,
-							attendances: temp,
-						});
-					},
-				};
-			});
+					student_id: tempAttendances[i].user_id,
+					checked: tempAttendances[i].attend,
+				});
+			}
 			this.setState({
 				...this.state,
 				attendances: res,
 			});
 		}
+	};
+	getCoachesByClass = async () => {
+		let url = "assigned/class/by-class/" + this.state.classId;
+		await this.props.getAssignUserByClass(url);
 	};
 	toggleOpen = () => {
 		let dropdownVal = !this.state.dropdown;
@@ -200,46 +220,36 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 		this.props.LoadingActionFunc(true);
 	};
 
-	
-
 	renderAttendance = () => {
 		return (
 			<>
+				<div className='class-comment-header flex justify-space-between mt-24'>
+					<span className='fc-second'>Attendances</span>
+				</div>
 				<div className='class-attendance-body mt-16 '>
 					<div className='class-attendance-sub-header flex mt-16 ml-16'>
-						<div className='col-5 f-10 ml-16'>
-							<span className='ml-56'>CLASS</span>
+						<div className='col-10 f-10'>
+							<span className='ml-56'>Students</span>
 						</div>
-						<div className='col-4 f-10'>
-							<span className='ml-16'>DATE/TIME</span>
-						</div>
-						<div className='col-3 f-10 flex-center'>
-							<span className='ml-16'>ATTENDACE</span>
+						<div className='col-2 f-10'>
+							<span className='ml-56'>Attendace</span>
 						</div>
 					</div>
 					{this.state.attendances.map((attend, index) => {
 						return (
 							<>
 								<div className='class-attendance-content flex align-center'>
-									<div className='student-content col-5 '>
-										<img
-											src={
-												process.env.REACT_APP_API_ENDPOINT + "/" + attend.logo
-											}
-											alt=''
-											className='logo-icon ml-16'
-										/>
+									<div className='student-content col-10 flex align-center'>
+										<div className='plus flex-center ml-16'>{attend.icon}</div>
+
 										<span className='f-16 ml-16'>{attend.text}</span>
 									</div>
-									<div className='student-content col-5'>
-										<span className='f-16 ml-16'>{attend.record_date}</span>
-									</div>
 
-									<div className='attendance-content col-2 flex-center mr-8'>
+									<div className='attendance-content col-2 align-center justify-space-around'>
 										{attend.checked}
 										<Checkbox
 											disabled
-											checked={attend.attended}
+											checked={attend.checked}
 											icon={<RadioButtonUncheckedIcon />}
 											checkedIcon={<CheckCircleIcon />}
 										/>
@@ -253,16 +263,75 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 		);
 	};
 
+	getMyAttendance = async (date: any) => {
+		let changed_date = moment(date).format("YYYY-MM-DD");
+		await this.props.getClassAttend(this.state.classId, changed_date);
+		if (
+			this.props.attendance &&
+			this.props.attendance.attandance_list &&
+			this.props.attendance.attandance_list.length > 0
+		) {
+			let tempAttendances = this.props.attendance.attandance_list; 
+			let res = [];
+			for (let i = 0; i < tempAttendances.length; i++) {
+				res.push({
+					text: tempAttendances[i].user.name
+						? tempAttendances[i].user.name
+						: tempAttendances[i].user.email,
+					callback: () => console.log("log click item"),
+					smallText: "",
+					icon: tempAttendances[i].user.avatar ? (
+						<img
+							src={
+								process.env.REACT_APP_API_ENDPOINT +
+								"/" +
+								tempAttendances[i].user.avatar
+							}
+							className='logo-icon'
+						/>
+					) : (
+						<InitialIcon
+							initials={(
+								tempAttendances[i].user.name ||
+								tempAttendances[i].user.email ||
+								"User"
+							)
+								.substr(0, 1)
+								.toUpperCase()}
+							isFooterMenu={true}
+						/>
+					),
+					secondryText: true,
+					isBigIcon: true,
+					selectable: true,
+					student_id: tempAttendances[i].user_id,
+					checked: tempAttendances[i].attend,
+				});
+			}
+			this.setState({
+				...this.state,
+				attendances: res,
+			});
+		} else {
+			await this.setState({
+				attendances: [],
+			});
+		}
+	};
+
 	render() {
 		const { email, logo, school_name, step } = this.state;
-        const { viewClass } = this.props.classes;
+		let coaches = this.props.classes.assignUser.filter(
+			(user: any) => user.type === "coache"
+		).length;
+		const { viewClass } = this.props.classes;
 		let profile: IProfile = {
 			isLogo: false,
 			title: "Attendance",
 			display_item: [
 				{
 					title: "Date",
-					value: moment().format("D MMM YYYY"),
+					value: moment(this.state.selectedMonth).format("D MMM YYYY"),
 				},
 				{
 					title: "Time",
@@ -270,10 +339,7 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 				},
 				{
 					title: "Coaches",
-					value: viewClass?.assign_user
-						.slice(0, 2)
-						.map((userInfo: any) => userInfo.user.name || "User")
-						.join(", "),
+					value: coaches,
 				},
 				{
 					title: "No. Student",
@@ -306,7 +372,6 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 									<span className='ml-16 fc-second'>
 										{this.props.classes && this.props.classes.viewClass?.name}
 									</span>
-									
 								</div>
 
 								<div className='justify-end'>
@@ -338,12 +403,50 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 								</div>
 							</div>
 							<div className='justify-center'>
-								<div className='col-8 col-md-8 justify-start align-center'>
-									<div className='mr-16'></div>
+								<div className='col-10 justify-start align-center'>
+									<div className='mr-16'>
+										<img
+											src={
+												this.props.classes &&
+												this.props.classes.viewClass &&
+												this.props.classes.viewClass.logo !== ""
+													? process.env.REACT_APP_API_ENDPOINT +
+													  "/" +
+													  this.props.classes.viewClass?.logo
+													: placeholder
+											}
+											className='big-logo'
+											alt=''
+										/>
+									</div>
 
 									<div className='f-40 fw-500'>
-										<span>{this.currentMonth}</span>
+										<span>
+											{this.props.classes && this.props.classes.viewClass?.name}
+										</span>
 									</div>
+								</div>
+								<div className='col-2 justify-end'>
+									<button
+										type='submit'
+										className='secondary-btn'
+										onClick={() =>
+											this.setState({
+												...this.state,
+												modalShow: true,
+											})
+										}
+									>
+										<FilterListIcon
+											sx={{
+												color: "#0070F8",
+												fontSize: 18,
+												fontWeight: 500,
+												mr: 0.5,
+											}}
+										/>
+										Filter
+									</button>
 								</div>
 							</div>
 						</div>
@@ -379,13 +482,13 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 											</div>
 											<div className='col-6 flex-column'>
 												<span className='f-16 fw-500'>
-                                                {profile &&
+													{profile &&
 														profile.display_item &&
 														profile.display_item[1].value}
 												</span>
 											</div>
 										</div>
-                                        <div className='class-detail-date-time mt-16'>
+										<div className='class-detail-date-time mt-16'>
 											<div className='col-6 flex-column'>
 												<span className='f-10 fc-second'>
 													{profile &&
@@ -411,7 +514,7 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 											</div>
 											<div className='col-6 flex-column'>
 												<span className='f-16 fw-500'>
-                                                {profile &&
+													{profile &&
 														profile.display_item &&
 														profile.display_item[3].value}
 												</span>
@@ -427,6 +530,64 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 						</div>
 					</div>
 				</div>
+
+				<Modal
+					aria-labelledby='contained-modal-title-vcenter'
+					centered
+					dialogClassName={"confirm-modal"}
+					show={this.state.modalShow}
+					onHide={() => {
+						this.setState({
+							...this.state,
+							modalShow: false,
+						});
+					}}
+				>
+					<Modal.Body className='p-16'>
+						<div className='filter-tile pb-16 '>Filter by</div>
+						<div>
+							<LocalizationProvider
+								dateAdapter={AdapterDateFns}
+								className='dropdown-box'
+							>
+								<DatePicker
+									inputFormat='dd/MM/yyyy'
+									openTo='year'
+									views={["year", "month", "day"]}
+									label='Year, Month and Day'
+									minDate={new Date("2012-03-01")}
+									maxDate={new Date("2050-06-01")}
+									value={this.state.selectedMonth}
+									onChange={(newValue) => {
+										this.setState({
+											selectedMonth: newValue,
+										});
+									}}
+									renderInput={(params) => (
+										<TextField
+											{...params}
+											helperText={null}
+											sx={{ width: 300 }}
+										/>
+									)}
+								/>
+							</LocalizationProvider>
+						</div>
+						<button
+							type='submit'
+							className='mt-40 mt-16 btn btn-primary right w-100'
+							onClick={() => {
+								this.getMyAttendance(this.state.selectedMonth);
+								this.setState({
+									...this.state,
+									modalShow: false,
+								});
+							}}
+						>
+							Confirm
+						</button>
+					</Modal.Body>
+				</Modal>
 			</>
 		);
 	}
@@ -435,15 +596,18 @@ const mapStateToProps = ({
 	authUser,
 	classes,
 	response,
+	attendance,
 }: StoreState): {
 	authUser: AuthInterface;
 	classes: any;
 	response: any;
+	attendance: any;
 } => {
 	return {
 		authUser,
 		classes,
 		response,
+		attendance,
 	};
 };
 
@@ -451,6 +615,8 @@ export default connect(mapStateToProps, {
 	getAll,
 	getUserInfo,
 	getClassAttend,
+	getClassObject,
+	getAssignUserByClass,
 	signOut,
 	LoadingActionFunc,
 })(ManagerAllAttendancesStudent);

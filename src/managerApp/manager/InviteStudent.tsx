@@ -253,6 +253,7 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
               const coach = JSON.parse(getItem("students") || "null");
               let temp = this.state.students;
               temp[i].status = "success";
+              temp[i].errorMsg = "";
               if (coach) {
                 setItemWithObject("students", coach.concat(temp));
               } else setItemWithObject("students", temp);
@@ -268,7 +269,6 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
   };
 
   checkBack = () => {
-    console.log('this.state.students',this.state.students)
     if(this.state.students.length > 0){
       for (let i = 0; i < this.state.students.length; i++) {
         if(this.state.students[i].status === 'error')return;
