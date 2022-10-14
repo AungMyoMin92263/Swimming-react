@@ -30,7 +30,7 @@ type IProps = UserSignInPage;
 
 class ManagerLoginPage extends React.Component<IProps, IStates> {
 	constructor(props: IProps) {
-		removeItem("authUser");
+		// removeItem("authUser");
 		super(props);
 		console.log("props", props);
 		this.state = {
@@ -182,9 +182,11 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 						</div>
 						{authUser.error && <p className='text-danger'>{authUser.error}</p>}
 						<div className='form-footer'>
-							<Link to='/manager/recover-password'>
-								<span>Forgot password?</span>
-							</Link>
+							<div className='forget-manager'>
+								<Link to='/manager/recover-password'>
+									<span>Forgot password?</span>
+								</Link>
+							</div>
 
 							<button
 								type='submit'

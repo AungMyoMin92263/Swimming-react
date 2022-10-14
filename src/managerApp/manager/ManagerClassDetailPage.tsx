@@ -106,7 +106,7 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
       classProgram: null,
       goAllComments: false,
       goEnterComment: false,
-      profile: { title: "Dummy" },
+      profile: { title: "" },
       isPreview: false,
     };
   }

@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap');
-@import '~video-react/dist/video-react.css'; 
+@import '~video-react/dist/video-react.css';
+
 :root {
   --primary: #0070F8;
   --secondary: #808080;
@@ -80,7 +81,7 @@ body a {
   overflow: hidden;
   max-width: 375px;
   /* height: calc(var(--app-height) - 137px); */
-  height : calc(var(--app-height) - 75px);
+  height: calc(var(--app-height) - 75px);
   overflow-y: auto;
 }
 
@@ -252,7 +253,7 @@ body a {
 .comment-input {
   background: inherit;
   border: none;
-  width:100%;
+  width: 100%;
 
 }
 
@@ -409,7 +410,7 @@ body a {
   margin-left: 56px;
 }
 
-.ml-40{
+.ml-40 {
   margin-left: 40px !important;
 }
 
@@ -904,9 +905,9 @@ body a {
   border-radius: 8px 8px 0px 0px;
 }
 
-.confirm-modal .modal-content{
-  padding:16px;
-  width : 375px;
+.confirm-modal .modal-content {
+  padding: 16px;
+  width: 375px;
 }
 
 .filter-tile {
@@ -1034,15 +1035,45 @@ body a {
   gap: 4px;
   align-items: center;
 }
+
 .slot-label svg {
   font-size: 16px;
 }
 
 @media screen and (max-width: 767px) {
+  .content {
+    width: 100%;
+    padding: 0px;
+    overflow: hidden;
+    max-width: 375px;
+    height: var(--app-height);
+    overflow-y: auto;
+
+  }
+
+  .wrapper {
+    width: 100%;
+    padding: 16px;
+    position: fixed;
+  }
+
+  .form-footer {
+    margin-top: 120px;
+    display: flex;
+    flex-direction: column;
+    gap:16px
+  }
+  .forget-manager{
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   .project-header {
     text-align: center;
     width: 100%;
+    margin-top: 16px;
   }
 
   .title {
@@ -1059,7 +1090,7 @@ body a {
   }
 
   .container-cus {
-    padding: 12px;
+    padding: 0px;
   }
 }
 
@@ -1202,26 +1233,26 @@ td {
   height: 120px;
 }
 
-.comment-file{
-  width : auto;
-  height : 52px;
+.comment-file {
+  width: auto;
+  height: 52px;
   margin-right: 24px;
   white-space: no-wrap;
-  float:left;
+  float: left;
 
 }
 
-.comment-photo{
-  width : 52px;
-  height : 52px;
+.comment-photo {
+  width: 52px;
+  height: 52px;
   margin-right: 24px;
-  float:left;
+  float: left;
 }
 
-.photo-box{
+.photo-box {
   width: 157px;
   height: 64px;
-  
+
   border: 1px solid #E5E5E5;
   border-radius: 8px;
   padding: 8px 16px 8px 8px;
@@ -1230,11 +1261,11 @@ td {
 
 /* video  preview */
 
-.video-react .video-react-big-play-button{
-  display : none !important;
+.video-react .video-react-big-play-button {
+  display: none !important;
 }
 
-.crop_text_comment{
+.crop_text_comment {
   display: block;
   width: 48px;
   overflow: hidden;
@@ -1242,7 +1273,7 @@ td {
   text-overflow: ellipsis;
 }
 
-.crop_text_email{
+.crop_text_email {
   display: block;
   width: 100px;
   overflow: hidden;
@@ -1250,7 +1281,7 @@ td {
   text-overflow: ellipsis;
 }
 
-.more-list-btn{
+.more-list-btn {
   position: absolute !important;
   background: #FFFFFF !important;
   border: 1px solid #FFF !important;
@@ -1274,7 +1305,7 @@ td {
 /* 
 image preview */
 
-.preview-icon-btn{
+.preview-icon-btn {
   width: 48px;
   height: 48px;
   cursor: pointer;
@@ -1284,7 +1315,7 @@ image preview */
   opacity: .3;
 }
 
-.preview-div{
+.preview-div {
   width: 100%;
   height: var(--app-height);
   position: absolute;
@@ -1293,17 +1324,17 @@ image preview */
   /* opacity: .8; */
 }
 
-.preview-image{
+.preview-image {
   width: 100%;
   height: auto;
 }
 
-.round-btn{
+.round-btn {
   border-radius: 25px;
   width: 135px;
 }
 
-.img-div{
+.img-div {
   width: 100%;
   height: calc(var(--app-height) - 137px);
 }

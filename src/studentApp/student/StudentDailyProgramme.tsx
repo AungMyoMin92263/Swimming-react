@@ -82,7 +82,7 @@ class StudentDailyProgramPage extends React.Component<IProps, IStates> {
 			classProgram: null,
 			goAllComments: false,
 			goEnterComment: false,
-			profile: { title: "Dummy" },
+			profile: { title: "" },
 			role: "",
 			slots: [],
 			userId: -1,

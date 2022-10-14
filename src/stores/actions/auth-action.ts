@@ -89,13 +89,27 @@ export const signIn = (signInInfo: SignInInterface) => {
     // let response: APIResInterface = { error: null, data: null }
     try {
       dispatch({ type: ActionTypes.loading, payload: true })
-      const response = await apiServer.post<IUser>(
-        'users/login', signInInfo
-      );
-      dispatch<SignInAction>({
-        type: ActionTypes.signIn,
-        payload: response.data
-      });
+      if (signInInfo.role === "no_role"){
+        const response = await apiServer.post<IUser>(
+          'users/login/no-role', signInInfo
+        );
+        dispatch<SignInAction>({
+          type: ActionTypes.signIn,
+          payload: response.data
+        });
+        dispatch({ type: ActionTypes.loading, payload: false })
+      }else
+      {
+        const response = await apiServer.post<IUser>(
+          'users/login', signInInfo
+        );
+        dispatch<SignInAction>({
+          type: ActionTypes.signIn,
+          payload: response.data
+        });
+      }
+
+
       dispatch({ type: ActionTypes.loading, payload: false })
     } catch (err: any) {
       dispatch({ type: ActionTypes.loading, payload: false })

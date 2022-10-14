@@ -102,7 +102,7 @@ class CoachStudentRecordPage extends React.Component<IProps, IStates> {
 							<BestScoreBox
 								score={maxObj?.record || "0.00"}
 								title='Personal Best'
-								scoreDate={moment(maxObj?.created_at).format("DD MMM YYYY")}
+								scoreDate={moment(maxObj?.updated_at).format("DD MMM YYYY")}
 							/>
 						</ListBoxUI>
 					</div>
@@ -125,7 +125,7 @@ class CoachStudentRecordPage extends React.Component<IProps, IStates> {
 											<>
 												<CalendarTodayOutlinedIcon fontSize='small' />
 												<label>
-													{moment(record.created_date).format("DD MMM YYYY")}
+													{moment(record.updated_at).format("DD MMM YYYY")}
 												</label>
 											</>
 										</ListItem>

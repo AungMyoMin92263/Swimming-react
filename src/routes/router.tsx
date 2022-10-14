@@ -37,7 +37,7 @@ import ManagerEditProfilePage from "../managerApp/manager/ManagerEditProfile";
 import ManagerInviteCoachSummaryPage from "../managerApp/manager/ManagerInviteCoachSummaryPage";
 import ManagerInviteStudentSummaryPage from "../managerApp/manager/ManagerInviteStudentSummaryPage";
 
-
+import LoginPage from "../managerApp/manager/Login";
 import AssignStudentPage from "../managerApp/manager/AssignStudent";
 import EventList from "../managerApp/manager/EventList";
 import PeopleListPage from "../managerApp/manager/PeopleListPage";
@@ -135,6 +135,35 @@ import ManagerAllAttendancesClasses from "../managerApp/manager/ManagerAllAttend
 const windowHistory = createBrowserHistory({ window });
 
 const routes = [
+	{
+		path: "",
+		child: [
+			{
+				path: "",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<Navigate to={"/login"} replace={true}></Navigate>
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "login",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<LoginPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+		],
+	},
 	{
 		path: "/admin",
 		child: [

@@ -222,6 +222,7 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 													profile.logo
 												}
 												alt=''
+												className='big-logo'
 											/>
 										) : profile.title ? (
 											<InitialIcon

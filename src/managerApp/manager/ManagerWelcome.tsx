@@ -25,24 +25,19 @@ class ManagerWelcomePage extends React.Component<IProps, IStates> {
 
     this.state = {
       step: 0,
-      goDashboard:false,
+      goDashboard:true,
     };
   }
   componentDidMount() {
-    const user = JSON.parse(getItem("authUser") || "null");
-    if(user && user.userInfo && user.userInfo.name){
-      this.setState({
-        goDashboard:true
-      })
-    }
+
 	this.props.LoadingActionFunc(false);
     //loading
   }
 
   render() {
+	const { userInfo } = this.props.authUser;
     return (
 			<>
-				{this.state.goDashboard && <Navigate to='/manager/dashboard' replace={true} />}
 				<div className='wrapper'>
 					<div className='primary f-16 project-header'>
 						<span>My Report Cards</span>
@@ -64,7 +59,12 @@ class ManagerWelcomePage extends React.Component<IProps, IStates> {
 								<span>Manage Your Classes</span>
 							</div>
 							<div className='flex-center'>
-								<Link to='/manager/add-name'>
+								<Link
+									to={
+										userInfo?.name ? "/manager/dashboard" : "/manager/add-name"
+									}
+									style={{ textDecoration: "none", width: "100%" , display:"flex", justifyContent:'center'}}
+								>
 									{" "}
 									<button type='submit' className='primary-btn'>
 										<span>Next</span>
@@ -73,6 +73,7 @@ class ManagerWelcomePage extends React.Component<IProps, IStates> {
 										></ArrowForwardIcon>
 									</button>
 								</Link>
+								
 							</div>
 						</div>
 					</div>

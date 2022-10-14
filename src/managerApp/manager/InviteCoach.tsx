@@ -180,9 +180,10 @@ class InviteCoachPage extends React.Component<IProps, IStates> {
               this.setState({
                 coaches: temp,
               });
-              if(i === this.state.coaches.length - 1)this.checkBack();
             }
+            if(i === this.state.coaches.length - 1)this.checkBack();
           }
+          if (i === this.state.coaches.length - 1) this.checkBack();
         }
         this.props.LoadingActionFunc(false);
       }

@@ -10,6 +10,7 @@ export interface AuthInterface {
 export interface SignInInterface {
   email?: string | null;
   password?: string | null;
+  role?:string | null;
 }
 
 export interface APIResInterface {

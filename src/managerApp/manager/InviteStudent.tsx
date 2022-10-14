@@ -263,16 +263,20 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
             }
             if(i === this.state.students.length - 1)this.checkBack();
           }
+          if(i === this.state.students.length - 1)this.checkBack();
         }
       }
     }
   };
 
   checkBack = () => {
+    console.log("no error");
     if(this.state.students.length > 0){
       for (let i = 0; i < this.state.students.length; i++) {
         if(this.state.students[i].status === 'error')return;
         else if(this.state.students[i].status !== 'error' && i === this.state.students.length - 1){
+          
+          this.props.LoadingActionFunc(false);
           this.setState({
             isCompleted: true,
           });

@@ -103,8 +103,8 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
 				logo: userObj.avatar,
 				mobile: userObj.phone ? userObj.phone : "",
 				email: userObj.email,
-				parentEmail: userObj.parent_email,
-        parentMobile: userObj.student.parent_phone,
+				parentEmail: userObj.parent_email? userObj.parent_email: '',
+        parentMobile: userObj.student.parent_phone ? userObj.student.parent_phone: '',
 			});
     }
   };
@@ -250,233 +250,254 @@ class StudentEditProfilePage extends React.Component<IProps, IStates> {
     } = this.state;
 
     return (
-      <>
-        <div className="wrapper-mobile">
-          <div className="content-mobile col-sm-12">
-            <StudentMobileHeader backBtn={true} />
-            <div className="f-32 fw-500 mb-32">
-              <span>Edit Profile</span>
-            </div>
-            <div className="mb-8 center f-12">
-              <span>PHOTO</span>
-            </div>
-            <div className="mb-16 center">{this.renderImageUpload()}</div>
+			<>
+				<div className='wrapper-mobile'>
+					<div className='content-mobile col-sm-12'>
+						<StudentMobileHeader backBtn={true} />
+						<div className='f-32 fw-500 mb-32'>
+							<span>Edit Profile</span>
+						</div>
+						<div className='mb-8 center f-12'>
+							<span>PHOTO</span>
+						</div>
+						<div className='mb-16 center'>{this.renderImageUpload()}</div>
 
-            <div className="fw-400 mb-16">
-              <InputFormAtom
-                label="Name"
-                placeholder={"Enter your name"}
-                warning={nameMsg}
-                type="text"
-                showWarning={isManagerNameEmpty || !isStudentNameValid}
-                isDropdown={false}
-                callback={(value: string) => {
-                  this.setState({
-                    name: value,
-                  });
-                }}
-                id="addManagerName"
-                name="addManagerName"
-                value={name}
-                required={true}
-                maxLength={200}
-                className=""
-                clickCallback={() => {}}
-                focusCallback={() => {
-                  // this.setState({
-                  //   isManagerNameEmpty: false,
-                  //   isStudentNameValid: true,
-                  // });
-                }}
-              />
-            </div>
+						<div className='fw-400 mb-16'>
+							<InputFormAtom
+								label='Name'
+								placeholder={"Enter your name"}
+								warning={nameMsg}
+								type='text'
+								showWarning={isManagerNameEmpty || !isStudentNameValid}
+								isDropdown={false}
+								callback={(value: string) => {
+									this.setState({
+										name: value,
+									});
+								}}
+								id='addManagerName'
+								name='addManagerName'
+								value={name}
+								required={true}
+								maxLength={200}
+								className=''
+								clickCallback={() => {}}
+								focusCallback={() => {
+									// this.setState({
+									//   isManagerNameEmpty: false,
+									//   isStudentNameValid: true,
+									// });
+								}}
+							/>
+						</div>
 
-            <div className="flex mb-16">
-              <div className="col-5">
-                <InputFormAtom
-                  label="Age"
-                  placeholder={"Age"}
-                  warning={nameMsg}
-                  type="text"
-                  showWarning={isManagerNameEmpty || !isStudentNameValid}
-                  isDropdown={false}
-                  callback={(value: string) => {
-                    this.setState({
-                      age: value,
-                    });
-                  }}
-                  id="age"
-                  name="age"
-                  value={this.state.age}
-                  required={true}
-                  maxLength={200}
-                  className=""
-                  clickCallback={() => {}}
-                  focusCallback={() => {
-                    // this.setState({
-                    //   isManagerNameEmpty: false,
-                    //   isStudentNameValid: true,
-                    // });
-                  }}
-                />
-              </div>
-              <div className="col-2"></div>
-              <div className="col-5">
-                <div className={`input-form-atom`}>
-                  <div className="label-con">
-                    <label>Gender</label>
-                  </div>
-                  <div className="dropdown-box cursor">
-                    <select
-                      name="filter-class"
-                      id="filterClass"
-                      value={this.state.gender}
-                      onChange={(e) => {
-                        this.setState({
-                          gender: e.currentTarget.value,
-                        });
-                      }}
-                    >
-                      <option value={"Male"}>Male</option>
-                      <option value={"Female"}>Female</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="fw-400 mb-16">
-              <InputFormAtom
-                label="Favourite Stroke"
-                placeholder={"Favourite Stroke"}
-                warning={""}
-                type="text"
-                showWarning={false}
-                isDropdown={false}
-                callback={(value: string) => {
-                  this.setState({
-                    favourite: value,
-                  });
-                }}
-                id="favaourite"
-                name="favaourite"
-                value={this.state.favourite}
-                required={false}
-                maxLength={200}
-                className=""
-                clickCallback={() => {}}
-                focusCallback={() => {
-                  // this.setState({
-                  //   isManagerNameEmpty: false,
-                  //   isStudentNameValid: true,
-                  // });
-                }}
-              />
-            </div>
+						<div className='flex mb-16'>
+							<div className='col-5'>
+								<InputFormAtom
+									label='Age'
+									placeholder={"Age"}
+									warning={nameMsg}
+									type='text'
+									showWarning={isManagerNameEmpty || !isStudentNameValid}
+									isDropdown={false}
+									callback={(value: string) => {
+										this.setState({
+											age: value,
+										});
+									}}
+									id='age'
+									name='age'
+									value={this.state.age}
+									required={true}
+									maxLength={200}
+									className=''
+									clickCallback={() => {}}
+									focusCallback={() => {
+										// this.setState({
+										//   isManagerNameEmpty: false,
+										//   isStudentNameValid: true,
+										// });
+									}}
+								/>
+							</div>
+							<div className='col-2'></div>
+							<div className='col-5'>
+								<div className={`input-form-atom`}>
+									<div className='label-con'>
+										<label>Gender</label>
+									</div>
+									<div className='dropdown-box cursor'>
+										<select
+											name='filter-class'
+											id='filterClass'
+											value={this.state.gender}
+											onChange={(e) => {
+												this.setState({
+													gender: e.currentTarget.value,
+												});
+											}}
+										>
+											<option value={"Male"}>Male</option>
+											<option value={"Female"}>Female</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div className='fw-400 mb-16'>
+							<InputFormAtom
+								label='Favourite Stroke'
+								placeholder={"Favourite Stroke"}
+								warning={""}
+								type='text'
+								showWarning={false}
+								isDropdown={false}
+								callback={(value: string) => {
+									this.setState({
+										favourite: value,
+									});
+								}}
+								id='favaourite'
+								name='favaourite'
+								value={this.state.favourite}
+								required={false}
+								maxLength={200}
+								className=''
+								clickCallback={() => {}}
+								focusCallback={() => {
+									// this.setState({
+									//   isManagerNameEmpty: false,
+									//   isStudentNameValid: true,
+									// });
+								}}
+							/>
+						</div>
 
-            <div className="mb-16">
-              <span className="f-16 fw-500">Contact Details</span>
-            </div>
+						<div className='mb-16'>
+							<span className='f-16 fw-500'>Contact Details</span>
+						</div>
 
-            <div className="pb-16">
-              <InputFormAtom
-                label="Email"
-                placeholder={"Enter your email"}
-                warning={""}
-                type="text"
-                showWarning={false}
-                isDropdown={false}
-                callback={(value: string) => {
-                  this.setState({
-                    email: value,
-                  });
-                }}
-                id="name"
-                name="name"
-                value={email}
-                required={true}
-                maxLength={200}
-                className=""
-                disabled={true}
-                clickCallback={() => {}}
-              />
-            </div>
+						<div className='pb-16'>
+							<InputFormAtom
+								label='Email'
+								placeholder={"Enter your email"}
+								warning={""}
+								type='text'
+								showWarning={false}
+								isDropdown={false}
+								callback={(value: string) => {
+									this.setState({
+										email: value,
+									});
+								}}
+								id='name'
+								name='name'
+								value={email}
+								required={true}
+								maxLength={200}
+								className=''
+								disabled={true}
+								clickCallback={() => {}}
+							/>
+						</div>
 
-            <div className="mb-16">
-              <InputPhoneNumber
-                label="Student Mobile"
-                placeholder={"Enter mobile number"}
-                warning={""}
-                showWarning={false}
-                callback={(value: string) => {
-                  this.setState({
-                    mobile: value,
-                  });
-                }}
-                id="mobile"
-                name="mobile"
-                value={this.state.mobile}
-                required={true}
-                maxLength={200}
-                className=""
-                clickCallback={() => {}}
-              />
-            </div>
-            <div className="mb-16">
-              <span className="f-16 fw-500">Parent Details</span>
-            </div>
+						<div className='mb-16'>
+							<InputPhoneNumber
+								label='Student Mobile'
+								placeholder={"Enter mobile number"}
+								warning={""}
+								showWarning={false}
+								callback={(value: string) => {
+									this.setState({
+										mobile: value,
+									});
+								}}
+								id='mobile'
+								name='mobile'
+								value={this.state.mobile}
+								required={true}
+								maxLength={200}
+								className=''
+								clickCallback={() => {}}
+							/>
+						</div>
+						<div className='mb-16'>
+							<span className='f-16 fw-500'>Parent Details</span>
+						</div>
 
-            <div className="pb-16">
-              <InputFormAtom
-                label="Parent Email"
-                placeholder={"Enter email"}
-                warning={""}
-                type="text"
-                showWarning={false}
-                isDropdown={false}
-                callback={(value: string) => {
-                  this.setState({
-                    parentEmail: value,
-                  });
-                }}
-                id="name"
-                name="name"
-                value={this.state.parentEmail}
-                required={true}
-                maxLength={200}
-                className=""
-                disabled={true}
-                clickCallback={() => {}}
-              />
-            </div>
+						<div className='pb-16'>
+							<InputFormAtom
+								label='Parent Email'
+								placeholder={"Enter email"}
+								warning={""}
+								type='text'
+								showWarning={false}
+								isDropdown={false}
+								callback={(value: string) => {
+									this.setState({
+										parentEmail: value,
+									});
+								}}
+								id='name'
+								name='name'
+								value={this.state.parentEmail}
+								required={true}
+								maxLength={200}
+								className=''
+								disabled={true}
+								clickCallback={() => {}}
+							/>
+						</div>
 
-            <div className="mb-16">
-              <InputPhoneNumber
-                label="Parent Mobile"
-                placeholder={"Enter mobile number"}
-                warning={""}
-                showWarning={false}
-                callback={(value: string) => {
-                  this.setState({
-                    parentMobile: value,
-                  });
-                }}
-                id="mobile"
-                name="mobile"
-                value={this.state.parentMobile}
-                required={true}
-                maxLength={200}
-                className=""
-                // disabled={true}
-                clickCallback={() => {}}
-              />
-            </div>
+						<div className='mb-16'>
+							<InputFormAtom
+								label='Parent Mobile'
+								placeholder={"Enter mobile number"}
+								warning={""}
+								type='text'
+								showWarning={false}
+								isDropdown={false}
+								callback={(value: string) => {
+									this.setState({
+										parentMobile: value,
+									});
+								}}
+								id='name'
+								name='name'
+								value={this.state.parentMobile}
+								required={true}
+								maxLength={200}
+								className=''
+								disabled={false}
+								clickCallback={() => {}}
+							/>
+							{/* <InputPhoneNumber
+								label='Parent Mobile'
+								placeholder={"Enter mobile number"}
+								warning={""}
+								showWarning={false}
+								callback={(value: string) => {
+									this.setState({
+										parentMobile: value,
+									});
+								}}
+								id='mobile'
+								name='mobile'
+								value={this.state.parentMobile}
+								required={true}
+								maxLength={200}
+								className=''
+								// disabled={true}
+								clickCallback={() => {}}
+							/> */}
+						</div>
 
-            {errorMsg && <p className="text-danger">{errorMsg}</p>}
-            <div className="">{this.renderBtn()}</div>
-          </div>
-        </div>
-      </>
-    );
+						{errorMsg && <p className='text-danger'>{errorMsg}</p>}
+						<div className=''>{this.renderBtn()}</div>
+					</div>
+				</div>
+			</>
+		);
   }
 }
 

@@ -8,4 +8,5 @@ interface IUser {
   favorite?: string
   phone?: string
   assign_class?: any
+  role?: string;
 }

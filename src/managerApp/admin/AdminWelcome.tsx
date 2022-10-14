@@ -75,7 +75,7 @@ class AdminWelcomePage extends React.Component<IProps, IStates> {
         <ArrowBackIcon sx={{ color: '#0070F8', fontSize: 24, mr : 0.5 }} ></ArrowBackIcon>
           <span>Back</span>
         </button>
-        <Link to="/admin/add-school">
+        <Link to="/admin/dashboard">
         <button type="submit" className="primary-btn">
           <span>Next</span>
           <ArrowForwardIcon sx={{ color: '#FFF', fontSize: 24, ml: 0.5 }} ></ArrowForwardIcon>

@@ -42,11 +42,16 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 			isPasswordEmpty: false,
 			emailMsg: "",
 			passwordMsg: "",
-			isNewUser: "",
+			isNewUser: "t",
 			schoolList: [],
 		};
 		this.props.LoadingActionFunc(false);
-		removeItem("authUser");
+		// removeItem("authUser");
+	}
+	componentDidMount() {
+	this.props.LoadingActionFunc(false);		
+	this.setSchools()
+		//loading
 	}
 
 	submit = () => {
@@ -112,9 +117,9 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 			role: "admin",
 			password: password,
 		});
-		if (this.props.authUser.isSignedIn){
-		setItemWithObject("authUser", this.props.authUser);
-		await this.setItems();
+		if (this.props.authUser.isSignedIn) {
+			setItemWithObject("authUser", this.props.authUser);
+			await this.setItems();
 		}
 
 		this.props.LoadingActionFunc(false);
@@ -143,9 +148,9 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 				{authUser.isSignedIn && isNewUser === "t" && (
 					<Navigate to='/admin/welcome' replace={true} />
 				)}
-				{authUser.isSignedIn && isNewUser === "f" && (
+				{/* {authUser.isSignedIn && isNewUser === "t" && (
 					<Navigate to='/admin/dashboard' replace={true} />
-				)}
+				)} */}
 
 				<div className='primary f-16 project-header'>
 					<span>My Report Cards</span>

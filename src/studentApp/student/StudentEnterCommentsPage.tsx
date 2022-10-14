@@ -152,10 +152,10 @@ class StudentCommentsPage extends React.Component<IProps, IStates> {
                     onChange={this.handleChange}
                   />
                   <div className="input-icons align-center">
-                    <AttachFileIcon
+                    {/* <AttachFileIcon
                       onClick={() => this.fileUplaodChange()}
                       style={{ rotate: "45deg" }}
-                    />
+                    /> */}
                     <button
                       disabled={!this.state.newcomment}
                       className="ml-16 send-btn"
