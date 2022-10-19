@@ -20,6 +20,10 @@ import AdminRecoverPasswordPage from "../managerApp/admin/AdminRecoverPasswordPa
 import AdminChangePasswordPage from "../managerApp/admin/AdminChangePasswordPage";
 import AdminPeopleListPage from "../managerApp/admin/PeopleListPage";
 import InvitedManagerSummaryPage from "../managerApp/admin/InvitedManagerSummary";
+import AllClassesPage from "../managerApp/admin/AllClasses";
+import AdminInviteCoachPage from "../managerApp/admin/AdminInviteCoach";
+import AdminEditProfilePage from "../managerApp/admin/AdminEditProfile";
+import AllPeoplePage from "../managerApp/admin/AllPeople";
 
 import ManagerSideBar from "../Layouts/ManagerMenuSideBar";
 import InviteStudentEvent from "../managerApp/manager/InviteStudentEvent";
@@ -131,6 +135,17 @@ import ManagerEventEditInvitePage from "../managerApp/manager/ManagerEventEditIn
 import ManagerClassCommentDetail from "../managerApp/manager/ManagerClassCommentDetail";
 import ManagerStudentCommentDetail from "../managerApp/manager/ManagerStudentCommentDetail";
 import ManagerAllAttendancesClasses from "../managerApp/manager/ManagerAllAttendancesClasses";
+import AdminStudentEditProfile from "../managerApp/admin/AdminStudentEditProfile";
+import AdminCoachEditProfile from "../managerApp/admin/AdminCoachEditProfile";
+import AdminClassDetailPage from "../managerApp/admin/AdminClassDetailPage";
+import AdminAddClass from "../managerApp/admin/AdminAddClass";
+import AdminSetDateTime from "../managerApp/admin/AdminSetDateTime";
+import AdminSchoolDetailPage from "../managerApp/admin/AdminSchoolDetailPage";
+import AdminInviteCoachSummaryPage from "../managerApp/admin/AdminInviteCoachSummaryPage";
+import AdminInviteStudent from "../managerApp/admin/AdminInviteStudent";
+import AdminInviteStudentSummaryPage from "../managerApp/admin/AdminInviteStudentSummaryPage";
+import AdminEditClass from "../managerApp/admin/AdminEditClass";
+import AdminEditSetDateTime from "../managerApp/admin/AdminEditSetDateTime";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -255,6 +270,22 @@ const routes = [
 				isSideBar: true,
 				isMobileFooter: false,
 			},
+			{
+				path: "school/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminSchoolDetailPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
 
 			{
 				path: "add-school",
@@ -361,6 +392,324 @@ const routes = [
 				),
 				footer: (props: any) => <></>,
 				isSideBar: true,
+			},
+			{
+				path: "all-people/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AllPeoplePage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+			},
+			
+			{
+				path: "student-edit-profile/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminStudentEditProfile {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "coach-edit-profile/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminCoachEditProfile {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "all-class/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AllClassesPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "school/:schoolId/class/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminClassDetailPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "add-class",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminAddClass {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "add-class/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminAddClass {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "school/:schoolId/set-date-time/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminSetDateTime {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "school/:schoolId/invite-coach/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminInviteCoachPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "school/:schoolId/invite-coach-summary/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminInviteCoachSummaryPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "school/:schoolId/invite-coach-summary/new/:id",				
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminInviteCoachSummaryPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "school/:schoolId/invite-student",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminInviteStudent {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+
+			{
+				path: "manager-edit-profile/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<AdminEditProfilePage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+
+			{
+				path: "school/:schoolId/invite-student/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminInviteStudent {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "school/:schoolId/invite-student-summary/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminInviteStudentSummaryPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "school/:schoolId/invite-student-summary/new/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminInviteStudentSummaryPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "school/:schoolId/edit-class/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminEditClass {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "edit-class/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminEditClass {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "school/:schoolId/edit-set-date-time/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminEditSetDateTime {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
+			},
+			{
+				path: "school-detail/:id",
+				sideBar: (props: any) => (
+					<>
+						<SideBar {...props} />
+					</>
+				),
+				main: (props: any) => (
+					<>
+						<AdminSchoolDetailPage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: true,
+				isMobileFooter: false,
 			},
 		],
 	},

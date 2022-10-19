@@ -1347,3 +1347,11 @@ image preview */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
   border-radius: 8px 8px 0px 0px;
 }
+
+.onboarded{
+  color : #F08E00;
+}
+
+.pending{
+  color : #67CE67;
+}

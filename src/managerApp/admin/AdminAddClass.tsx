@@ -2,7 +2,7 @@ import React from "react";
 import { StoreState } from "../../stores/reducers";
 import { connect } from "react-redux";
 
-import { postClass, putClass, getClassObject,LoadingActionFunc } from "../../stores/actions";
+import { postClass, putClass, getClassObject,LoadingActionFunc,getSchoolObj } from "../../stores/actions";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -28,9 +28,11 @@ interface IProps {
 	putClass: Function;
 	getClassObject : Function;
 	LoadingActionFunc : Function;
+	getSchoolObj  : Function;
+	schools : any;
 }
 
-class AddClass extends React.Component<IProps, IStates> {
+class AdminAddClass extends React.Component<IProps, IStates> {
 	id : any;
 	constructor(props: any) {
 		super(props);
@@ -38,13 +40,13 @@ class AddClass extends React.Component<IProps, IStates> {
 		this.id = path[3];
 		this.state = {
 			classObj: {
-				id: this.id? this.id : -1,
+				id: -1,
 				created_by: null,
 				created_at: new Date(),
 				updated_at: new Date(),
 				deleted_at: new Date(),
 				name: "",
-				school_id: null,
+				school_id: this.id,
 				school_name: "",
 				type: "one-day",
 				open_days: ["mon"],
@@ -60,7 +62,7 @@ class AddClass extends React.Component<IProps, IStates> {
 			classNameMsg: "",
 			isCompleted: false,
 			image: { preview: "", raw: "" },
-			schoolId: -1,
+			schoolId: this.id,
 			school_name: "",
 			school_logo: "",
 			errorMsg: "",
@@ -70,32 +72,28 @@ class AddClass extends React.Component<IProps, IStates> {
 
 	componentDidMount() {	
 		this.authFromLocal();
+		this.getSchool();
 	}
 
 	authFromLocal = async() => {
-		const user = JSON.parse(getItem("authUser") || "null");
-		if (user && user.userInfo && user.userInfo.assign_school) {
-			await this.setState({
-				schoolId: user.userInfo.assign_school.school.id,
-				school_name: user.userInfo.assign_school.school.name,
-				school_logo: user.userInfo.assign_school.school.logo,
-			});
-
-			if(this.state.classObj.id === -1){ 
-			const classObject = JSON.parse(getItem("class") || "null");
-			if (classObject) {
-				this.setState({
-					classObj: classObject,
-				});
-			}
-			}else{
-				this.getClass();
-			}
-		}	
+		if(this.state.classObj.id !== -1){ 
+			this.getClass();
+		}
 	}
 
+	getSchool = async () => {
+		await this.props.getSchoolObj("schools/" + this.id);
+		let school = this.props.schools.result;
+		if (school) {
+			this.setState({
+				school_name: school.name,
+				school_logo: school.logo,
+			});
+		}
+	};
+
 	getClass = async () => {
-		await this.props.getClassObject('school/'+this.state.schoolId + '/class/'+ this.id);
+		await this.props.getClassObject('school/'+this.state.schoolId + '/class/'+ this.state.classObj.id);
 		if(this.props.classes.result){
 		  if (this.props.classes.error) {
 			this.setState({
@@ -224,7 +222,7 @@ class AddClass extends React.Component<IProps, IStates> {
 			return (
 				<>
 					{this.state.isCompleted && (
-						<Navigate to='/manager/set-date-time' replace={true} />
+						<Navigate to={'/admin/school/'+ this.state.schoolId + '/set-date-time/'+this.id } replace={true} />
 					)}
 					<button type='submit' className='primary-btn' onClick={this.submit}>
 						Continue
@@ -314,7 +312,7 @@ class AddClass extends React.Component<IProps, IStates> {
 			<>
 				<div className='wrapper'>
 					<div className='primary f-16 project-header'>
-						<Link to='/manager/dashboard'>
+						<Link to='/admin/dashboard'>
 							<span>My Report Cards</span>
 						</Link>
 					</div>
@@ -322,7 +320,7 @@ class AddClass extends React.Component<IProps, IStates> {
 						<div className='content col-6 col-md-6 col-sm-12'>
 							<div className='f-14 mb-32'>
 								<Link
-									to='/manager/dashboard'
+									to={'/admin/school/'+this.id}
 									style={{ textDecoration: "none" }}
 								>
 									<ArrowBackIcon
@@ -332,7 +330,7 @@ class AddClass extends React.Component<IProps, IStates> {
 								</Link>
 							</div>
 							<div className='mb-16 align-center'>
-								<img
+							<img
 									src={
 										school_logo
 											? process.env.REACT_APP_API_ENDPOINT + "/" + school_logo
@@ -341,7 +339,9 @@ class AddClass extends React.Component<IProps, IStates> {
 									alt='logo'
 									className={`${school_logo ? "item-icon" : "w-48"}`}
 								/>
-								<span className='f-16'>{school_name}</span>
+								<span className='f-16 '>
+									{school_name}
+								</span>
 							</div>
 							<div className='hr mb-16'></div>
 							<div className='f-32 fw-500 mb-8'>
@@ -399,13 +399,13 @@ class AddClass extends React.Component<IProps, IStates> {
 }
 
 const mapStateToProps = ({
-	classes,
+	classes,schools,
 }: StoreState): {
-	classes: any;
+	classes: any; schools : any;
 } => {
 	return {
-		classes,
+		classes,schools,
 	};
 };
 
-export default connect(mapStateToProps, { postClass, putClass, getClassObject, LoadingActionFunc })(AddClass);
+export default connect(mapStateToProps, { postClass, putClass, getClassObject, LoadingActionFunc,getSchoolObj })(AdminAddClass);

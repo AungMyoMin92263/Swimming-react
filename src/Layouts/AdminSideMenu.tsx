@@ -1,6 +1,5 @@
 import { IPageProp } from "../pagePropsInterface";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import PoolIcon from "@mui/icons-material/Pool";
 import SupervisedUserCircleOutlinedIcon from "@mui/icons-material/SupervisedUserCircleOutlined";
 
 import "./menuSideBar.css";
@@ -21,7 +20,7 @@ const SideBar = (props: IPageProp) => {
       <div className="class-box">
         <div
           className={`list-item ${path[2] === "dashboard" ? "active" : ""}`}
-          onClick={() => props.history.push("dashboard")}
+          onClick={() => props.history.push("/admin/dashboard")}
         >
           <SupervisedUserCircleOutlinedIcon
             sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
@@ -31,20 +30,20 @@ const SideBar = (props: IPageProp) => {
 
         <div
           className={`list-item ${path[2] === "people-list" ? "active" : ""}`}
-          onClick={() => props.history.push("people-list")}
+          onClick={() => props.history.push("/admin/people-list")}
         >
           <AccountCircleOutlinedIcon
             sx={{ color: "#808080", fontSize: 32, mr: 2 }}
           ></AccountCircleOutlinedIcon>
           <span className="item-text">People</span>
         </div>
-        <div
+        {/* <div
           className={`list-item ${path[2] === "event-list" ? "active" : ""}`}
           onClick={() => props.history.push("event-list")}
         >
           <PoolIcon sx={{ color: "#808080", fontSize: 32, mr: 2 }}></PoolIcon>
           <span className="item-text">Events</span>
-        </div>
+        </div> */}
       </div>
     </div>
   );

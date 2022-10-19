@@ -41,20 +41,20 @@ interface IProps {
 	deleteCoach: Function;
 	coach: any;
 }
-class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
-  id: any;
+class AdminInviteCoachSummaryPage extends React.Component<IProps, IStates> {
+  id: any;schoolId : any;
   constructor(props: any) {
     super(props);
     let path = window.location.pathname.split("/");
-    this.id = path[3] === "new" ? path[4] : path[3];
-
+    this.id = path[5] === "new" ? path[7] : path[5];
+    this.schoolId = path[5] === "new" ? path[4] : path[3];
     this.state = {
       school: { name: "", logo: "", assign_user: [] },
       errorMsg: "",
       url:
         path[3] === "new"
-          ? "/manager/invite-student"
-          : "/manager/class/" + this.id,
+          ? "/admin/school/"+ this.schoolId +"/invite-student"
+          : "/admin/school/"+ this.schoolId +"/class/" + this.id,
       school_logo: "",
       school_name: "",
       schoolId: "",
@@ -83,6 +83,7 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
       });
       this.getClass();
     }
+    this.getSchool();
     this.props.LoadingActionFunc(false);
   };
 
@@ -116,6 +117,17 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 			});
     }
   };
+
+  getSchool = async () => {
+		await this.props.getSchoolObj("schools/" + this.schoolId);
+		let school = this.props.schools.result;
+		if (school) {
+			this.setState({
+				school_name: school.name,
+				school_logo: school.logo,
+			});
+		}
+	};
 
   handleDelete = async () => {
     let deleteCoachUrl = "assigned/class";
@@ -156,7 +168,7 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
       <>
         <div className="wrapper">
           <div className="primary f-16 project-header">
-            <Link to="/manager/dashboard">
+            <Link to="/admin/dashboard">
               <span>My Report Cards</span>
             </Link>
           </div>
@@ -164,7 +176,7 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
             <div className="content col-lg-6 col-md-6 col-sm-12">
               <div className="f-14 mb-32">
                 <Link
-                  to={"/manager/class/" + classId}
+                  to={"/admin/school/"+this.schoolId+"/class/" + classId}
                   style={{ textDecoration: "none" }}
                 >
                   <ArrowBackIcon
@@ -232,7 +244,7 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
                   </>
                 ))}
               <Link
-                to={"/manager/invite-coach/" + this.id}
+                to={"/admin/school/"+this.schoolId+"/invite-coach/" + this.id}
                 style={{ textDecoration: "none" }}
               >
                 <div className="mb-16 align-center">
@@ -331,4 +343,4 @@ export default connect(mapStateToProps, {
   getSchoolObj,
   getClassObject,
   deleteCoach,
-})(ManagerInviteCoachSummaryPage);
+})(AdminInviteCoachSummaryPage);

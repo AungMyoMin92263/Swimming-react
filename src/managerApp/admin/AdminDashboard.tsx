@@ -296,8 +296,16 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
                                     <Dropdown.Item href={"/admin/invite-manager-summary/" + this.state.schools[index].id}>
                                       <span>Edit School Managers</span>
                                     </Dropdown.Item>
-                                  
+                                    <div className="dropdown-divider"></div>
 
+                                  <Dropdown.Item
+                                     href={
+                                      "/admin/school/" +
+                                      this.state.schools[index].id
+                                    }
+                                  >
+                                    <span>View</span>
+                                  </Dropdown.Item>
                                   <div className="dropdown-divider"></div>
 
                                   <Dropdown.Item

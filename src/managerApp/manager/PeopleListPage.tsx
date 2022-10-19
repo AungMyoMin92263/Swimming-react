@@ -583,8 +583,8 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 				>
 					<div className='mb-16'>
 						<span className='f-20 fw-500'>
-							Remove {users[removeIndex] && users[removeIndex].role} ‘{" "}
-							{users[removeIndex] && users[removeIndex].name} ’?{" "}
+							Remove {users && users.length > 0 && users[removeIndex] && users[removeIndex].role} ‘{" "}
+							{users && users.length > 0 && users[removeIndex] && users[removeIndex].name} ’?{" "}
 						</span>
 					</div>
 					<div className='mb-16'>

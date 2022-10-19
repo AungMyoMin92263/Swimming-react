@@ -12,9 +12,10 @@ import {
   getAllUsers,
   LoadingActionFunc,
   deleteUser,
+  getSchoolObj
 } from "../../stores/actions";
 
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { getItem, removeItem } from "../../auth/LocalStorage";
 import { InitialIcon } from "../../atoms/InitialIcon";
@@ -23,6 +24,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Modal } from "react-bootstrap";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { AnyAsyncThunk } from "@reduxjs/toolkit/dist/matchers";
+
 interface IStates {
   users: any[];
   email: string;
@@ -34,6 +38,9 @@ interface IStates {
   filterText: string;
   modalShow: boolean;
   removeIndex: number;
+  logo: string;
+  school_id: number;
+  school_name: string;
 }
 interface UserSignInPage {
   signIn: Function;
@@ -44,14 +51,18 @@ interface UserSignInPage {
   LoadingActionFunc: Function;
   deleteUser: Function;
   user: any;
+  getSchoolObj : Function;
+  schools : any;
 }
 
 type IProps = UserSignInPage;
 
-class AdminPeopleListPage extends React.Component<IProps, IStates> {
+class AllPeoplePage extends React.Component<IProps, IStates> {
+  id : any;
   constructor(props: any) {
     super(props);
-
+    let path = window.location.pathname.split("/");
+    this.id = path[3];
     this.state = {
       users: [
         {
@@ -68,6 +79,9 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
       filterText: "",
       modalShow: false,
       removeIndex: -1,
+      logo: "",
+      school_id: this.id,
+      school_name: "",
     };
     this.props.LoadingActionFunc(true);
   }
@@ -80,7 +94,22 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
       });
     }
     this.getUsers();
+    this.getSchool();
   }
+
+  getSchool = async () => {
+    await this.props.getSchoolObj("schools/" + this.id);
+    if (this.props.schools.result) {
+        let school = this.props.schools.result;
+        if (school) {
+          this.setState({
+            school_name: school.name,
+            logo: school.logo,
+            school_id: school.id
+          });
+        }
+    }
+  };
 
   getUsers = async () => {
     await this.props.getAllUsers();
@@ -162,34 +191,50 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
           <div className="dashboard">
             {/* DASHBOARD HEADER */}
             <div className="dashboard-header">
-              <div className="justify-end">
-                <div className="dropdown">
-                  <div className="email-div cursor" onClick={this.toggleOpen}>
-                    <InitialIcon
-                      initials={email.substr(0, 1).toUpperCase()}
-                      isFooterMenu={false}
-                    />
-                    <span>{email} </span>
-                  </div>
-                  <div
-                    className={`dropdown-menu dropdown-menu-right ${
-                      dropdown ? "show" : ""
-                    }`}
-                    aria-labelledby="dropdownMenuButton"
-                  >
-                    <div className="dropdown-item cursor" onClick={this.logout}>
-                      <LogoutOutlinedIcon
-                        sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
-                      ></LogoutOutlinedIcon>
-                      <span>Logout</span>
+              <div className="justify-center justify-space-between">
+                <Link to={'/admin/school/'+this.id} style={{ textDecoration: "none" }}>
+                  <ArrowBackIcon
+                    sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+                  ></ArrowBackIcon>
+                  <span>Back</span>
+                  <span className="ml-16 fc-second">
+                    Schools / {this.state.school_name}
+                  </span>
+                </Link>
+
+                <div className="justify-end">
+                  <div className="dropdown">
+                    <div className="email-div cursor" onClick={this.toggleOpen}>
+                      <InitialIcon
+                        initials={email.substr(0, 1).toUpperCase()}
+                        isFooterMenu={false}
+                      />
+                      <span>{email} </span>
+                    </div>
+                    <div
+                      className={`dropdown-menu dropdown-menu-right ${
+                        dropdown ? "show" : ""
+                      }`}
+                      aria-labelledby="dropdownMenuButton"
+                    >
+                      <div
+                        className="dropdown-item cursor"
+                        onClick={this.logout}
+                      >
+                        <LogoutOutlinedIcon
+                          sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
+                        ></LogoutOutlinedIcon>
+                        <span>Logout</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+
               <div className="row justify-center">
                 <div className="col-9 col-md-12 justify-start align-center">
                   <div className="f-40 fw-500">
-                    <span>People</span>
+                    <span>All People</span>
                   </div>
                 </div>
               </div>
@@ -416,15 +461,18 @@ const mapStateToProps = ({
   authUser,
   users,
   user,
+  schools,
 }: StoreState): {
   authUser: AuthInterface;
   users: any;
   user: any;
+  schools : any;
 } => {
   return {
     authUser,
     users,
     user,
+    schools,
   };
 };
 
@@ -433,5 +481,5 @@ export default connect(mapStateToProps, {
   signOut,
   getAllUsers,
   LoadingActionFunc,
-  deleteUser,
-})(AdminPeopleListPage);
+  deleteUser,getSchoolObj,
+})(AllPeoplePage);
