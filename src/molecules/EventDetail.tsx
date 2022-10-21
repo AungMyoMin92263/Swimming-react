@@ -76,12 +76,26 @@ class EventDetailPage extends React.Component<IProps, IStates> {
             <>
               {this.props.events.eventDetail?.students.map((student: any, index: number) => {
                 return (
-                  <ListItem icon={<CreateProfile image_url={student.avatar} name={student.name} />} text={student.name} callback={() => { this.goStudentRecord(student) }} key={`student${index}`} arrowRight={true} secondryText={true} >
-                    <>
-                      <label>{student.best_record || "0.00"}s</label>
-                    </>
-                  </ListItem>
-                )
+									<ListItem
+										icon={
+											<CreateProfile
+												image_url={student.avatar}
+												name={student.name ? student.name : student.email}
+											/>
+										}
+										text={student.name ? student.name : student.email.substr(0,10)}
+										callback={() => {
+											this.goStudentRecord(student);
+										}}
+										key={`student${index}`}
+										arrowRight={true}
+										secondryText={true}
+									>
+										<>
+											<label>{student.best_record || "0.00"}s</label>
+										</>
+									</ListItem>
+								);
               })}
             </>
           </ListBoxUI>
