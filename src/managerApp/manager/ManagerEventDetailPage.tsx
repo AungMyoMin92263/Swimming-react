@@ -18,7 +18,7 @@ import ListBoxUI from "../../molecules/ListBox";
 import { getItem, removeItem } from "../../auth/LocalStorage";
 import { InitialIcon, InitialIconList } from "../../atoms/InitialIcon";
 import { getDetailEvents } from "../../stores/actions";
-
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 interface IStates {
 	email: string;
 	logo: string;
@@ -275,7 +275,8 @@ class ManagerEventDetailPage extends React.Component<IProps, IStates> {
 											className='secondary-btn'
 											// style={{ width: "140px" }}
 										>
-											Edit Event
+											<ModeEditOutlineOutlinedIcon fontSize='small' className="mr-8" /> <span>Edit Event</span>
+
 											<AddIcon
 												sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
 											></AddIcon>

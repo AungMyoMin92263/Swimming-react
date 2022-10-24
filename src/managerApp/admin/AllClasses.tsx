@@ -277,9 +277,9 @@ class AllClassesPage extends React.Component<IProps, IStates> {
                               <MoreVertIcon />
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
-                              {classe && classes.length > 0 && (
+                              {classe && (
                                 <Dropdown.Item
-                                  href={"/admin/class/" + classe.id}
+                                  href={"/admin/school/"+ this.id +"/class/" + classe.id}
                                 >
                                   <span>View</span>
                                 </Dropdown.Item>

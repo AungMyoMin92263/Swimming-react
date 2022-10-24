@@ -5,6 +5,7 @@ export interface AuthInterface {
   token?: string | null;
   otherUserinfo?: any 
   viewStudent?: any 
+  first_time?: boolean | null;
 }
 
 export interface SignInInterface {

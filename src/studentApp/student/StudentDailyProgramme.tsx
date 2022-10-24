@@ -434,10 +434,11 @@ class StudentDailyProgramPage extends React.Component<IProps, IStates> {
 																	true
 																)}
 																<label className='flex'>
-																	<span className='crop_text_email'>
-																		{slot.user.student.parent_name
+																	<span className='crop_text_email mr-8'>
+																		{/* {slot.user.student.parent_name
 																			? slot.user.student.parent_name
-																			: slot.user.student.parent_email}
+																			: slot.user.student.parent_email} */}
+																			Parent of {slot.user.name}
 																	</span>{" "}
 																	booked this slot
 																</label>

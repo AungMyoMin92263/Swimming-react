@@ -3,6 +3,7 @@ import { Action, ActionTypes } from "../actions/types";
 export const classReducers = (
   state: any = {
     result: null,
+    class_list: null,
     dailyProgram: null,
     assignUser: [],
     viewClass: null,
@@ -20,7 +21,7 @@ export const classReducers = (
     case ActionTypes.getclassesByDateRange:
       return {
         ...state,
-        result: action.payload,
+        class_list: action.payload,
         error: null,
       };
 

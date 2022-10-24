@@ -19,6 +19,7 @@ interface IProps {
   isOwn?: boolean
   defaultPath: string
   history: any
+  schoolId?: any
 }
 
 class BadgesListPage extends React.Component<IProps, IStates> {
@@ -29,6 +30,7 @@ class BadgesListPage extends React.Component<IProps, IStates> {
   }
 
   componentDidMount(): void {
+    this.getAllBadge();
     if (this.props.isOwn) {
       this.getMyBadge()
     } else {
@@ -42,7 +44,7 @@ class BadgesListPage extends React.Component<IProps, IStates> {
   }
 
   getAllBadge = async () => {
-    await this.props.getAllBadges()
+    await this.props.getAllBadges(this.props.schoolId)
   }
 
   createProfile = (image_url: string, name: string) => {

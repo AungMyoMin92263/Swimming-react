@@ -373,7 +373,7 @@ class AllPeoplePage extends React.Component<IProps, IStates> {
                                       ) : (
                                         <Dropdown.Item
                                           href={
-                                            "/admin/manager-edit-profile/" +
+                                            "/admin/manager-edit-profile/all-people/" +
                                             user.id
                                           }
                                         >

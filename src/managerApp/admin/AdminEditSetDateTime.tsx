@@ -98,6 +98,7 @@ interface IProps {
 	putClass: Function;
 	getClassObject: Function;
 	LoadingActionFunc: Function;
+	history : any
 }
 class AdminEditSetDateTime extends React.Component<IProps, IStates> {
     	id: any;schoolId : any;
@@ -429,16 +430,16 @@ class AdminEditSetDateTime extends React.Component<IProps, IStates> {
 					</div>
 					<div className='container-cus'>
 						<div className='content'>
-							<div className='f-14 mb-32'>
-								<Link
+							<div className='f-14 mb-32 cursor' onClick={() => this.props.history.back()}>
+								{/* <Link
 									to={"/admin/edit-class/"+this.id}
 									style={{ textDecoration: "none" }}
-								>
+								> */}
 									<ArrowBackIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 									></ArrowBackIcon>
 									<span>Back</span>
-								</Link>
+								{/* </Link> */}
 							</div>
 							<div className='mb-16 align-center'>
 								<img

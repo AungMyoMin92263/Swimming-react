@@ -381,15 +381,7 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
                         alt=""
 						className="big-logo"
                       />
-                    ) : this.props.authUser.otherUserinfo?.name ? (
-                      <InitialIcon
-                        initials={this.props.authUser.otherUserinfo?.name
-                          .substr(0, 1)
-                          .toUpperCase()}
-                        isFooterMenu={false}
-                        isMid={true}
-                      />
-                    ) : (
+                    ) : this.props.authUser.otherUserinfo?.email &&  (
                       <InitialIcon
                         initials={this.props.authUser.otherUserinfo?.email
                           .substr(0, 1)
@@ -397,7 +389,8 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
                         isFooterMenu={false}
                         isMid={true}
                       />
-                    )}
+                    )
+                    }
                   </div>
 
                   <div className="f-40 fw-500">

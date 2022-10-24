@@ -13,6 +13,7 @@ import {
   getClassProgram,
   postClassProgram,
   getAssignUserByClass,
+  getSchoolObj
 } from "../../stores/actions";
 import { connect } from "react-redux";
 import { signOut, LoadingActionFunc } from "../../stores/actions";
@@ -41,7 +42,7 @@ import CommentDashItem from "../../atoms/CommentDash";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { Button } from "react-bootstrap";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
-
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 interface IStates {
   email: string;
   logo: string;
@@ -75,6 +76,8 @@ interface IProps {
   getAll: Function;
   response: any;
   history: any;
+  getSchoolObj : Function;
+  schools : any;
 }
 
 class AdminClassDetailPage extends React.Component<IProps, IStates> {
@@ -87,8 +90,9 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
     let path = window.location.pathname.split("/");
     this.id = path[5];
     this.schoolId = path[3];
-    this.urlClassAllComments = "/admin/all-comments/class/" + this.id;
-    this.urlClassAllAttendances = "/admin/all-attendances/class/" + this.id
+    this.urlClassAllComments =
+			"/admin/all-comments/school/" + this.schoolId + "/class/" + this.id;
+    this.urlClassAllAttendances = "/admin/all-attendances/school/" + this.schoolId + "/class/" + this.id
     this.url = '/admin/school/'+ this.schoolId +'/invite-coach/'+ this.id
     this.editUrl = '/admin/school/'+ this.schoolId +'/edit-class/'+ this.id
     this.state = {
@@ -116,12 +120,12 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
   componentDidMount() {
     this.authFromLocal();
     console.log("authUser", this.props.authUser);
-    //loading
+    this.getSchool();
   }
   authFromLocal = async () => {
     const user = JSON.parse(getItem("authUser") || "null");
     if (user && user.userInfo) {
-      this.setState({
+      await this.setState({
         email: user.userInfo.email,
         logo: user.userInfo.assign_school
           ? user.userInfo.assign_school.school.logo
@@ -139,6 +143,17 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
       await this.getClassProgram();
       await this.getClass();
       this.props.LoadingActionFunc(false);
+    }
+  };
+
+  getSchool = async () => {
+    await this.props.getSchoolObj("schools/" + this.schoolId);
+    let school = this.props.schools.result;
+    console.log('school',school,this.props.schools)
+    if (school) {
+      await this.setState({
+        school_name: school.name,
+      });
     }
   };
 
@@ -255,12 +270,12 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
 
   goCoachDetail = (user_id: number) => {
     let coachDetailUrl =
-      "/admin/coach-detail/" + user_id + "/class/" + this.id;
+      "/admin/school/"+this.schoolId+"/coach-detail/" + user_id + "/class/" + this.id;
     this.props.history.push(coachDetailUrl);
   };
   goStudentDetail = (user_id: number) => {
     let studentDetailUrl =
-      "/admin/student-detail/" + user_id + "/class/" + this.id;
+      "/admin/school/"+this.schoolId+"/student-detail/" + user_id + "/class/" + this.id;
     this.props.history.push(studentDetailUrl);
   };
 
@@ -429,7 +444,7 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
 										className='class-attendance-content flex align-center cursor p-16'
 										onClick={() => this.goCoachDetail(coach.user.id)}
 									>
-										<div className='student-content flex align-center col-10'>
+										<div className='student-content flex align-center col-12'>
 											<div className='plus flex-center'>
 												<InitialIcon
 													isFooterMenu={true}
@@ -484,7 +499,9 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
 											message={res.message}
 											callback={() => {
 												this.props.history.push(
-													"/admin/class/" +
+													"/admin/school/" +
+														this.schoolId +
+														"/class/" +
 														this.id +
 														"/comment-detail/" +
 														res.id
@@ -536,7 +553,7 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
               <span className="ml-56">Students</span>
             </div>
             <div className="col-2 f-10">
-              <span className="ml-16">Attendace</span>
+              <span className="">Attendace</span>
             </div>
           </div>
           <div className="class-attendance-content flex align-center">
@@ -553,33 +570,33 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
           </div>
           {this.state.attendances.slice(0, 5).map((attend, index) => {
             return (
-              <>
-                <div
-                  className="class-attendance-content flex align-center cursor"
-                  onClick={() => this.goStudentDetail(attend.student_id)}
-                >
-                  <div className="student-content col-10 flex align-center">
-                    <div className="plus flex-center ml-16">{attend.icon}</div>
+							<>
+								<div
+									className='class-attendance-content flex align-center cursor'
+									onClick={() => this.goStudentDetail(attend.student_id)}
+								>
+									<div className='student-content col-10 flex align-center'>
+										<div className='plus flex-center ml-16'>{attend.icon}</div>
 
-                    <span className="f-16 ml-16">{attend.text}</span>
-                  </div>
+										<span className='f-16 ml-16'>{attend.text}</span>
+									</div>
 
-                  <div className="attendance-content col-2 align-center justify-space-around">
-                    {attend.checked}
-                    <Checkbox
-                      disabled
-                      checked={attend.checked}
-                      icon={<RadioButtonUncheckedIcon />}
-                      checkedIcon={<CheckCircleIcon />}
-                    />
-                    <div className="justify-end">
-                      <></>
-                      <ArrowForwardIosIcon></ArrowForwardIosIcon>
-                    </div>
-                  </div>
-                </div>
-              </>
-            );
+									<div className='attendance-content col-2 align-center justify-space-around'>
+										{attend.checked}
+										<Checkbox
+											disabled
+											checked={attend.checked}
+											icon={<RadioButtonUncheckedIcon />}
+											checkedIcon={<CheckCircleIcon />}
+										/>
+										<div className='justify-end'>
+											<></>
+											<ArrowForwardIosIcon></ArrowForwardIosIcon>
+										</div>
+									</div>
+								</div>
+							</>
+						);
           })}
         </div>
         
@@ -598,19 +615,19 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
         <div className="container-cus">
           <div className="dashboard">
             <div className="dashboard-header">
-              <div className="justify-center justify-space-between">
-                <Link
+              <div className="justify-center justify-space-between" onClick={()=> this.props.history.back()}>
+                {/* <Link
                   to={'/admin/school/'+this.schoolId}
                   style={{ textDecoration: "none" }}
-                >
+                > */}
+                  <div className="cursor">
                   <ArrowBackIcon
                     sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
                   ></ArrowBackIcon>
-                  <span>Back</span>
-                  <span className="ml-16 fc-second">
-                    {this.state.school_name} {"		"}
-                  </span>
-                </Link>
+                  <span className="primary">Back</span>
+                  <span className="ml-16 fc-second">Schools /  {this.state.school_name}</span>
+                  </div>
+                {/* </Link> */}
                 <div className="justify-end">
                   <div className="dropdown">
                     <div className="email-div cursor" onClick={this.toggleOpen}>
@@ -667,7 +684,7 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
                       className="secondary-btn"
                       // style={{ width: "140px" }}
                     >
-                      Edit Class
+                      <ModeEditOutlineOutlinedIcon fontSize='small' className="mr-8" /> <span>Edit Class</span>
                       <AddIcon
                         sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
                       ></AddIcon>
@@ -694,15 +711,18 @@ const mapStateToProps = ({
   authUser,
   classes,
   response,
+  schools,
 }: StoreState): {
   authUser: AuthInterface;
   classes: any;
   response: any;
+  schools : any;
 } => {
   return {
     authUser,
     classes,
     response,
+    schools
   };
 };
 
@@ -714,4 +734,5 @@ export default connect(mapStateToProps, {
   getAssignUserByClass,
   signOut,
   LoadingActionFunc,
+  getSchoolObj,
 })(AdminClassDetailPage);

@@ -98,6 +98,7 @@ class ManagerEditEventPage extends React.Component<IProps, IStates> {
 
 			this.setState({
 				event: temp,
+				selectedTab : event.gender
 			});
 		}
 	};
@@ -443,7 +444,7 @@ class ManagerEditEventPage extends React.Component<IProps, IStates> {
 										}}
 									/>
 								</div>
-								<span className='p-8'>to</span>
+								<span className='p-8 mt-8'>to</span>
 								<div className='fw-400 mb-16 f-12' style={{ width: "64px" }}>
 									<InputFormAtom
 										label=''

@@ -1,8 +1,9 @@
 import React from "react";
 
 // import css
-import "./ManagerDashboard.css";
-import "./ManagerClassDetailPage.css";
+import "../manager/ManagerDashboard.css";
+import "../manager/ManagerClassDetailPage.css";
+
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -13,6 +14,7 @@ import {
 	getAllEvents,
 	getDetailEvents,
 	getUserInfo,
+	getSchoolObj,
 } from "../../stores/actions";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -68,19 +70,23 @@ interface IProps {
 	defaultPath: string;
 	signOut: Function;
 	LoadingActionFunc: Function;
+	getSchoolObj: Function;
+	schools : any;
 }
 
-class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
+class AdminCoachDetailPage extends React.Component<IProps, IStates> {
 	id: any;
 	class_id: any;
+	school_id : any;
 	urlComments: any;
 	urlEnterComment: any;
 	Editurl = "/manager/coach-edit-profile/";
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
-		this.id = path[3];
-		this.class_id = path[5];
+		this.id = path[5];
+		this.class_id = path[7];
+		this.school_id = path[3];
 		this.state = {
 			email: "",
 			logo: "",
@@ -95,6 +101,7 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 		};
 	}
 	componentDidMount() {
+		this.getSchool();
 		const user = JSON.parse(getItem("authUser") || "null");
 		console.log(user.userInfo);
 		if (user && user.userInfo) {
@@ -116,6 +123,17 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 		this.props.getClassObject(classUrl, true);
 		//loading
 	}
+
+	getSchool = async () => {
+		await this.props.getSchoolObj("schools/" + this.school_id);
+		let school = this.props.schools.result;
+		if (school) {
+		  await this.setState({
+			school_name: school.name
+		  });
+		}
+	  };
+
 	getDetailAll = async () => {
 		let cmdUrl = "comment/by-student/" + this.id;
 		let eventUrl = "assigned/event/by-users/" + this.id;
@@ -167,7 +185,7 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 							<div className='justify-center justify-space-between'>
 								<div>
 									<Link
-										to='/manager/dashboard'
+										to={"/admin/school/"+ this.school_id +"/class/" + this.class_id}
 										style={{ textDecoration: "none" }}
 									>
 										<ArrowBackIcon
@@ -241,7 +259,7 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 										<span>{profile?.title}</span>
 									</div>
 								</div>
-								<div className='col-4 col-md-4 justify-end'>
+								{/* <div className='col-4 col-md-4 justify-end'>
 									<Link to={this.state.Editurl}>
 										<button
 											type='submit'
@@ -249,13 +267,12 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 											// style={{ width: "140px" }}
 										>
 											<ModeEditOutlineOutlinedIcon fontSize='small' className="mr-8" /> <span>Edit Coach</span>
-
 											<AddIcon
 												sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
 											></AddIcon>
 										</button>
 									</Link>
-								</div>
+								</div> */}
 							</div>
 						</div>
 						<div className='mt-24 class-daily'>
@@ -309,7 +326,7 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 													</span>
 												</span>
 											</div>
-											<div className='col-4 flex-column'>
+											<div className='col-6 flex-column'>
 												<span className='f-16 fw-500'>
 													<EmailOutlinedIcon className='mr-8' />
 													<span>
@@ -334,12 +351,14 @@ const mapStateToProps = ({
 	eventList,
 	response,
 	classes,
+	schools,
 }: StoreState): {
 	authUser: AuthInterface;
 	comments: any;
 	eventList: any;
 	response: any;
 	classes: any;
+	schools : any;
 } => {
 	return {
 		authUser,
@@ -347,6 +366,7 @@ const mapStateToProps = ({
 		eventList,
 		response,
 		classes,
+		schools,
 	};
 };
 
@@ -358,4 +378,5 @@ export default connect(mapStateToProps, {
 	getDetailEvents,
 	signOut,
 	LoadingActionFunc,
-})(ManagerCoachDetailPage);
+	getSchoolObj,
+})(AdminCoachDetailPage);

@@ -29,6 +29,7 @@ import { ClassProgramInterface } from "../../stores/model/class-interface";
 import moment from "moment";
 import ListBoxUI from "../../molecules/ListBox";
 import { Button } from "react-bootstrap";
+import { fileUploadToS3 } from "../../stores/actions/s3-file-upload.action";
 interface IStates {
 	step: number;
 	image: any;
@@ -53,6 +54,8 @@ interface IProps {
 	getAssignUserByClass: Function;
 	classes: any;
 	getAll: Function;
+	fileUploadToS3: Function;
+	s3File: any;
 	response: any;
 	history: any;
 }
@@ -66,10 +69,12 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 		second_slot: 10,
 		third_slot: 20,
 	};
+	from : any;
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
 		this.id = path[4];
+		this.from = path[2];
 		this.state = {
 			step: 0,
 			image: { preview: "", raw: "" },
@@ -226,22 +231,40 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 		console.log("upload", this.state.image);
 	};
 
+	// handleChange = async (e: any) => {
+	// 	var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+	// 	if (!allowedExtensions.exec(e.target.files[0].name)) {
+	// 		alert("Invalid file type");
+	// 	} else {
+	// 		if (e.target.files.length) {
+	// 			let temp = this.state.image;
+	// 			temp.preview = URL.createObjectURL(e.target.files[0]);
+	// 			temp.raw = e.target.files[0];
+	// 			await this.props.fileUploadToS3(e.target.files[0],"class-post")
+	// 			await this.postClassProgram(this.props.s3File.image, temp.raw);
+	// 			// this.setState({
+	// 			//   image: temp,
+	// 			// });
+	// 		}
+	// 	}
+	// };
+
 	handleChange = async (e: any) => {
 		var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
 		if (!allowedExtensions.exec(e.target.files[0].name)) {
-			alert("Invalid file type");
+		  alert("Invalid file type");
 		} else {
-			if (e.target.files.length) {
-				let temp = this.state.image;
-				temp.preview = URL.createObjectURL(e.target.files[0]);
-				temp.raw = e.target.files[0];
-				await this.postClassProgram(this.state.id, temp.raw);
-				// this.setState({
-				//   image: temp,
-				// });
-			}
+		  if (e.target.files.length) {
+			let temp = this.state.image;
+			temp.preview = URL.createObjectURL(e.target.files[0]);
+			temp.raw = e.target.files[0];
+			await this.postClassProgram(this.state.id, temp.raw);
+			// this.setState({
+			//   image: temp,
+			// });
+		  }
 		}
-	};
+	  };
 
 	postClassProgram = async (id: number, file: any) => {
 		let url = "class-daily/" + id + "/program";
@@ -280,13 +303,13 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 
 	goToAllComments = (id: any) => {
 		// this.setState({ goAllComments: true });
-		let cmdUrl = "/coach/dashboard/all-comments/" + id + "/class";
+		let cmdUrl = "/coach/"+this.from+"/all-comments/" + id + "/class";
 		this.props.history.push(cmdUrl);
 	};
 
 	goToEnterComments = (id: any) => {
 		this.setState({ goEnterComment: true });
-		this.urlEnterComment = "/coach/dashboard/enter-comments/" + id + "/class";
+		this.urlEnterComment = "/coach/"+this.from+"/enter-comments/" + id + "/class";
 	};
 
 	createProfile = (image_url: string, name: string, isXs?: boolean) => {
@@ -314,7 +337,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 	};
 
 	render() {
-				const urlParams = new URLSearchParams(window.location.search);
+		const urlParams = new URLSearchParams(window.location.search);
 		let date = urlParams.get("date") || moment(new Date()).format("YYYY-MM-DD")
 		let item: IListItem = {
 			text: "Joseph",
@@ -354,8 +377,8 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 						<div className='mb-8'>
 							<ListBoxUI
 								title='Daily Program'
-								callback={() => {}}
-								callback2={() => {}}
+								callback={() => { }}
+								callback2={() => { }}
 								noBtn={true}
 							>
 								{classProgram && classProgram.image_url !== "" ? (
@@ -420,8 +443,8 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 							<div className='mb-8'>
 								<ListBoxUI
 									title='Coaches'
-									callback={() => {}}
-									callback2={() => {}}
+									callback={() => { }}
+									callback2={() => { }}
 									noBtn={true}
 								>
 									<>
@@ -430,16 +453,16 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 											.map((coach: any, index: any) => {
 												return (
 													<ListItem
-														text={coach.user.name || coach.user.email}
-														callback={() => {this.props.history.push("/coach/coach/profile/"+ coach.user_id);}}
+														text={coach?.user?.name || coach?.user?.email}
+														callback={() => { this.props.history.push("/coach/coach/profile/" + coach?.user_id); }}
 														key={`coache${index}`}
 														icon={
 															<>
 																<InitialIcon
 																	isFooterMenu={true}
 																	initials={(
-																		coach.user.name ||
-																		coach.user.email ||
+																		coach?.user?.name ||
+																		coach?.user?.email ||
 																		"User"
 																	)
 																		.substr(0, 1)
@@ -461,9 +484,9 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 							<ListBoxUI
 								title='Post-Class Slots'
 								callback={() => this.goToAllComments(this.state.classe.id)}
-								callback2={() => {}}
+								callback2={() => { }}
 								noBtn={true}
-								// more2={true}
+							// more2={true}
 							>
 								<>
 									{classe?.class_slot?.map((slot: any, index: any) => {
@@ -471,7 +494,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 										return (
 											<ListItem
 												key={`classSlot${index}`}
-												callback={() => {}}
+												callback={() => { }}
 												noMainText={true}
 												secondryText={true}
 											>
@@ -495,11 +518,12 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 																true
 															)}
 															<label className='flex'>
-																<span className='crop_text_email'>
-																	{slot.user.student.parent_name
+																<span className='crop_text_email mr-8'>
+																	{/* {slot.user.student.parent_name
 																		? slot.user.student.parent_name
-																		: slot.user.student.parent_email}
-																</span>{" "}
+																		: slot.user.student.parent_email} */}
+																		Parent of {slot.user.name}
+																</span>
 																booked this slot
 															</label>
 														</div>
@@ -517,7 +541,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 							<ListBoxUI
 								title='Class Comments'
 								callback={() => this.goToAllComments(this.state.classe.id)}
-								callback2={() => {}}
+								callback2={() => { }}
 								more={true}
 								// more2={true}
 								moreText2='Add Comment'
@@ -534,7 +558,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 															res.user_info.name
 														)}
 														message={res.message}
-														callback={() => {}}
+														callback={() => { }}
 														timeString={
 															res.user_info.name +
 															" at " +
@@ -565,9 +589,9 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 									callback={() => {
 										this.props.history.push(
 											"/coach/class/attendance/" +
-												this.state.classe.id +
-												"?date=" +
-												date
+											this.state.classe.id +
+											"?date=" +
+											date
 										);
 									}}
 									more={true}
@@ -615,15 +639,18 @@ const mapStateToProps = ({
 	authUser,
 	classes,
 	response,
+	s3File
 }: StoreState): {
 	authUser: AuthInterface;
 	classes: any;
 	response: any;
+	s3File: any
 } => {
 	return {
 		authUser,
 		classes,
 		response,
+		s3File
 	};
 };
 
@@ -633,4 +660,5 @@ export default connect(mapStateToProps, {
 	postClassProgram,
 	getClassProgram,
 	getAssignUserByClass,
+	fileUploadToS3
 })(CoachDailyProgramPage);

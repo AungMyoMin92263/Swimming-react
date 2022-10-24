@@ -99,7 +99,7 @@ class AdminWelcomePage extends React.Component<IProps, IStates> {
               <div className="fw-500 f-48">
                 <span>Welcome to My Report Cards.</span>
               </div>
-              <div style={{ marginTop: '-80px' }}>
+              <div style={{ marginTop: '-80px', minHeight : '405px' }}>
                 <img
                   src="../../../assets/images/mobile.png"
                   alt="mobile"

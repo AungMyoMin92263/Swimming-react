@@ -25,9 +25,9 @@ const CoachMobileHeader = (props: ICoachMobileHeader) => {
  
   function logoutFun () {
     removeItem('authUser')
-    if(props.isStudent)window.location.replace('/student/login')
-    else if(props.isParent)window.location.replace("/parent/login");
-    else window.location.replace('/coach/login')
+    if(props.isStudent)window.location.replace('/login')
+    else if(props.isParent)window.location.replace("/login");
+    else window.location.replace('/login')
   }
   
   return (

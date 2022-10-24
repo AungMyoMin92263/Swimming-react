@@ -1,19 +1,23 @@
 import React from "react";
 
 // import css
-import "./ManagerDashboard.css";
-import "./ManagerClassDetailPage.css";
+import "../manager/ManagerDashboard.css";
+import "../manager/ManagerClassDetailPage.css";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { StoreState } from "../../stores/reducers";
 import {
 	getClassObject,
+    getSchoolObj,
+	getUserInfo,
 	getAll,
 	getClassProgram,
 	postClassProgram,
 	getAssignUserByClass,
+	getAllComment,
 } from "../../stores/actions";
+
 import { connect } from "react-redux";
 import { signOut, LoadingActionFunc } from "../../stores/actions";
 import { Link } from "react-router-dom";
@@ -39,6 +43,7 @@ import CommentItem from "../../atoms/Comment";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import CommentDashItem from "../../atoms/CommentDash";
 import { CreateProfile } from "../../atoms/createProfile";
+import { scrollToBottom } from "../../scroll-func";
 interface IStates {
 	email: string;
 	logo: string;
@@ -50,12 +55,15 @@ interface IStates {
 	image: any;
 	schoolId: any;
 	id: any;
+	comments: any[];
 }
 interface IProps {
 	user_id: any;
 	authUser: any;
 	getUserInfo: Function;
 	getAllComment: Function;
+	getSchoolObj: Function;
+	schools: any;
 	history: any;
 	getClassObject: Function;
 	defaultPath: string;
@@ -65,14 +73,20 @@ interface IProps {
 	comments: any;
 }
 
-class AdminAllCommentClass extends React.Component<IProps, IStates> {
+class AdminStudentCommentDetail extends React.Component<IProps, IStates> {
 	id: any;
 	class_id: any;
 	url = "/manager/student-edit-profile/";
+	comment_id: any;
+	schoolId: any;
+	user_id: any;
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
-		this.class_id = path[4];
+		this.schoolId = path[3];
+		this.class_id = path[5];
+		this.user_id = path[7];
+		this.comment_id = path[9];
 		this.state = {
 			email: "",
 			logo: "",
@@ -84,18 +98,56 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 			image: { preview: "", raw: "" },
 			schoolId: -1,
 			id: this.id ? this.id : -1,
+			comments: [],
 		};
 	}
 	componentDidMount() {
 		this.authFromLocal();
-		this.getClass();
+		this.getSchool();
+		this.getComments();
+		this.getUserInfo()
 		//loading
 	}
+	getUserInfo() {
+		this.props.getUserInfo(this.user_id, true);
+	}
+	getComments = async () => {
+		await this.props.getAllComment("comment/" + this.comment_id);
+		if (
+			this.props.comments &&
+			this.props.comments.result &&
+			this.props.comments.result.length > 0
+		) {
+			let temp = this.state.comments;
+			let res = this.props.comments.result[0];
+			temp.push(res);
 
-	getClass = async () => {
-		let url = "school/" + this.state.schoolId + "/class/" + this.state.id;
-		await this.props.getClassObject(url, true);
-		
+			if (res.children && res.children.length > 0) {
+				for (let i = 0; i < res.children.length; i++) {
+					temp.push(res.children[i]);
+				}
+				await this.setState({
+					comments: temp,
+				});
+				scrollToBottom("sendCmtList");
+			} else {
+				this.setState({
+					comments: temp,
+				});
+				scrollToBottom("sendCmtList");
+			}
+		}
+	};
+
+	getSchool = async () => {
+		await this.props.getSchoolObj("schools/" + this.schoolId);
+		let school = this.props.schools.result;
+		console.log("school", school, this.props.schools);
+		if (school) {
+			await this.setState({
+				school_name: school.name,
+			});
+		}
 	};
 
 	authFromLocal = async () => {
@@ -136,47 +188,34 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 	};
 
 	renderComment = () => {
-
-			
 		return (
 			<div className='mt-24'>
 				<div className='class-attendance-body mt-16 '>
 					<div>
-						{this.props.classes &&
-						this.props.classes.viewClass &&
-						this.props.classes.viewClass.comments &&
-						this.props.classes.viewClass.comments.length > 0 ? (
+						{this.state.comments && this.state.comments.length > 0 ? (
 							<>
-								{this.props.classes.viewClass.comments.map(
-									(res: any, index: number) => {
-										return (
-											<CommentDashItem
-												key={`st_cmd-${index}`}
-												profile={
-													<CreateProfile
-														image_url={res.user_info.avatar}
-														name={res.user_info.name}
-													/>
-												}
-												message={res.message}
-												showReply={true}
-												reply={res.children.length}
-												showRightArr={true}
-												callback={() => {this.props.history.push(
-													"/manager/class/" +
-														this.id +
-														"/comment-detail/" +
-														res.id
-												);}}
-												timeString={
-													res.user_info.name +
-													" at " +
-													moment(res.created_at).format("DD MMM, h:mm a")
-												}
-											></CommentDashItem>
-										);
-									}
-								)}
+								{this.state.comments.map((res: any, index: number) => {
+									return (
+										<CommentDashItem
+											key={`st_cmd-${index}`}
+											profile={
+												<CreateProfile
+													image_url={res.user_info.avatar}
+													name={res.user_info.name}
+												/>
+											}
+											showReply={false}
+											showRightArr={false}
+											message={res.message}
+											callback={() => {}}
+											timeString={
+												res.user_info.name +
+												" at " +
+												moment(res.created_at).format("DD MMM, h:mm a")
+											}
+										></CommentDashItem>
+									);
+								})}
 							</>
 						) : (
 							<></>
@@ -213,6 +252,11 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 									<span className='ml-16 fc-second'>
 										{this.props.classes && this.props.classes.viewClass?.name}
 									</span>
+									<span className='ml-16 fc-second'>/</span>
+									<span className='ml-16 fc-second'>
+										{this.props.authUser &&
+											this.props.authUser.otherUserinfo?.name}
+									</span>
 								</div>
 
 								<div className='justify-end'>
@@ -248,7 +292,7 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 									<div className='mr-16'></div>
 
 									<div className='f-40 fw-500'>
-										<span>All comments</span>
+										<span>Comments</span>
 									</div>
 								</div>
 							</div>
@@ -266,20 +310,25 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 const mapStateToProps = ({
 	authUser,
 	classes,
-	response,
+	comments,
+	schools,
 }: StoreState): {
 	authUser: AuthInterface;
 	classes: any;
-	response: any;
+	comments: any;
+	schools:any;
 } => {
 	return {
 		authUser,
 		classes,
-		response,
+		comments,
+		schools,
 	};
 };
 
-export default connect(mapStateToProps, { getClassObject, })(
-	AdminAllCommentClass
-);
-
+export default connect(mapStateToProps, {
+	getClassObject,
+	getAllComment,
+	getSchoolObj,
+	getUserInfo,
+})(AdminStudentCommentDetail);

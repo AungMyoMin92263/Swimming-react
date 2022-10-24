@@ -1,14 +1,15 @@
 import React from "react";
 
 // import css
-import "./ManagerDashboard.css";
-import "./ManagerClassDetailPage.css";
+import "../manager/ManagerDashboard.css";
+import "../manager/ManagerClassDetailPage.css";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { StoreState } from "../../stores/reducers";
 import {
 	getClassObject,
+	getSchoolObj,
 	getAll,
 	getClassProgram,
 	postClassProgram,
@@ -37,8 +38,8 @@ import { profile } from "console";
 import ListBoxUI from "../../molecules/ListBox";
 import CommentItem from "../../atoms/Comment";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import CommentDashItem from "../../atoms/CommentDash";
-import { CreateProfile } from "../../atoms/createProfile";
+import BadgeListDash from "../../molecules/BadgeListDash";
+import { getUserInfo } from '../../stores/actions/auth-action';
 interface IStates {
 	email: string;
 	logo: string;
@@ -56,23 +57,28 @@ interface IProps {
 	authUser: any;
 	getUserInfo: Function;
 	getAllComment: Function;
+	getSchoolObj:Function;
 	history: any;
 	getClassObject: Function;
 	defaultPath: string;
 	signOut: Function;
 	LoadingActionFunc: Function;
 	classes: any;
+	schools:any;
 	comments: any;
 }
 
-class AdminAllCommentClass extends React.Component<IProps, IStates> {
+class AdminAllBadgetsStudent extends React.Component<IProps, IStates> {
 	id: any;
 	class_id: any;
+	school_id: any;
 	url = "/manager/student-edit-profile/";
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
-		this.class_id = path[4];
+		this.id = path[8];
+		this.class_id = path[6];
+		this.school_id = path[4];
 		this.state = {
 			email: "",
 			logo: "",
@@ -88,14 +94,17 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 	}
 	componentDidMount() {
 		this.authFromLocal();
-		this.getClass();
+		// this.getDetailAll();
 		//loading
 	}
-
-	getClass = async () => {
-		let url = "school/" + this.state.schoolId + "/class/" + this.state.id;
-		await this.props.getClassObject(url, true);
-		
+	getSchool = async () => {
+		await this.props.getSchoolObj("schools/" + this.school_id);
+		let school = this.props.schools.result;
+		if (school) {
+			await this.setState({
+				school_name: school.name,
+			});
+		}
 	};
 
 	authFromLocal = async () => {
@@ -115,8 +124,10 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 					: -1,
 			});
 			let classUrl =
-				"school/" + this.state.schoolId + "/class/" + this.class_id;
+				"school/" + this.school_id + "/class/" + this.class_id;
 			this.props.getClassObject(classUrl, true);
+			this.props.getUserInfo(this.id, true);
+			this.getSchool()
 		}
 	};
 	toggleOpen = () => {
@@ -135,55 +146,23 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 		this.props.LoadingActionFunc(true);
 	};
 
-	renderComment = () => {
-
-			
+	renderBadgetList = () => {
+		const badgeData: any[] =
+			this.props.authUser.otherUserinfo?.own_badges.map((res: any) => {
+				return {
+					text: res.badge.name,
+					icon: res.badge.logo,
+					description: res.badge.description,
+					callback: () => {},
+					isActive: true,
+				};
+			}) || [];
 		return (
-			<div className='mt-24'>
-				<div className='class-attendance-body mt-16 '>
-					<div>
-						{this.props.classes &&
-						this.props.classes.viewClass &&
-						this.props.classes.viewClass.comments &&
-						this.props.classes.viewClass.comments.length > 0 ? (
-							<>
-								{this.props.classes.viewClass.comments.map(
-									(res: any, index: number) => {
-										return (
-											<CommentDashItem
-												key={`st_cmd-${index}`}
-												profile={
-													<CreateProfile
-														image_url={res.user_info.avatar}
-														name={res.user_info.name}
-													/>
-												}
-												message={res.message}
-												showReply={true}
-												reply={res.children.length}
-												showRightArr={true}
-												callback={() => {this.props.history.push(
-													"/manager/class/" +
-														this.id +
-														"/comment-detail/" +
-														res.id
-												);}}
-												timeString={
-													res.user_info.name +
-													" at " +
-													moment(res.created_at).format("DD MMM, h:mm a")
-												}
-											></CommentDashItem>
-										);
-									}
-								)}
-							</>
-						) : (
-							<></>
-						)}
-					</div>
+			<>
+				<div className='class-attendance-body mt-16 p-24'>
+					<BadgeListDash badges={badgeData} key='st_badge_list'></BadgeListDash>
 				</div>
-			</div>
+			</>
 		);
 	};
 
@@ -212,6 +191,11 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 									</span>
 									<span className='ml-16 fc-second'>
 										{this.props.classes && this.props.classes.viewClass?.name}
+									</span>
+									<span className='ml-16 fc-second'>/</span>
+									<span className='ml-16 fc-second'>
+										{this.props.authUser &&
+											this.props.authUser.otherUserinfo?.name}
 									</span>
 								</div>
 
@@ -248,14 +232,14 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 									<div className='mr-16'></div>
 
 									<div className='f-40 fw-500'>
-										<span>All comments</span>
+										<span>All Badges</span>
 									</div>
 								</div>
 							</div>
 						</div>
 
 						<div className='class-detail-body'>
-							<>{this.renderComment()}</>
+							<>{this.renderBadgetList()}</>
 						</div>
 					</div>
 				</div>
@@ -267,19 +251,25 @@ const mapStateToProps = ({
 	authUser,
 	classes,
 	response,
+	schools,
 }: StoreState): {
 	authUser: AuthInterface;
 	classes: any;
 	response: any;
+	schools:any;
 } => {
 	return {
 		authUser,
 		classes,
 		response,
+		schools
 	};
 };
 
-export default connect(mapStateToProps, { getClassObject, })(
-	AdminAllCommentClass
-);
+export default connect(mapStateToProps, {
+	getUserInfo,
+	getClassObject,
+	getSchoolObj,
+})(AdminAllBadgetsStudent);
+
 

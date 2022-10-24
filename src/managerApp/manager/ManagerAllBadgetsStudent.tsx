@@ -218,7 +218,7 @@ class ManagerAllBadgetsStudent extends React.Component<IProps, IStates> {
 									<div className='mr-16'></div>
 
 									<div className='f-40 fw-500'>
-										<span>All Badgets</span>
+										<span>All Badges</span>
 									</div>
 								</div>
 							</div>

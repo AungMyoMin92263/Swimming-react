@@ -145,12 +145,12 @@ class AdminLoginPage extends React.Component<IProps, IStates> {
 				{/* { this.state.isNewUser === 't' && <Navigate to='/admin/welcome' replace={true} />}
 				{ this.state.isNewUser === 'f' && <Navigate to='/admin/dashboard' replace={true} />} */}
 
-				{authUser.isSignedIn && isNewUser === "t" && (
+				{authUser.isSignedIn && authUser.first_time && (
 					<Navigate to='/admin/welcome' replace={true} />
 				)}
-				{/* {authUser.isSignedIn && isNewUser === "t" && (
+				{authUser.isSignedIn && !authUser.first_time && (
 					<Navigate to='/admin/dashboard' replace={true} />
-				)} */}
+				)}
 
 				<div className='primary f-16 project-header'>
 					<span>My Report Cards</span>

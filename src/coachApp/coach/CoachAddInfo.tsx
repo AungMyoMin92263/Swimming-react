@@ -50,7 +50,7 @@ class CoachAddInfoPage extends React.Component<IProps, IStates> {
   }
 
   isValid = () => {
-    if (this.state.name.length === 0 || this.state.logo === "") return false;
+    if (this.state.name.length === 0) return false;
     else return true;
   };
 

@@ -16,6 +16,7 @@ import { ClassInterface } from "./../../stores/model/class-interface";
 import { Navigate } from "react-router-dom";
 import ListBoxUI from "../../molecules/ListBox";
 import moment from "moment";
+import { AnyARecord } from "dns";
 interface IStates {
 	step: number;
 	user_name: string;
@@ -36,6 +37,7 @@ interface IProps {
 	authUser: AuthInterface;
 	getclassesByDateRange: Function;
 	classListR: any;
+	classes: any;
 }
 
 class StudentClassesPage extends React.Component<IProps, IStates> {
@@ -91,7 +93,11 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 					await this.setState({
 						schoolId: user.userInfo.assign_class[0].classes.school_id,
 					});
-					this.getClassbyDateR();
+					if (
+						!this.props.classes.class_list ||
+						this.props.classes.class_list.length == 0
+					)
+						this.getClassbyDateR();
 				}
 			}
 		}
@@ -142,16 +148,13 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 			"past=" +
 			this.state.pastClasses;
 		await this.props.getclassesByDateRange(url);
-		this.setDataComponents();
+		this.setDataComponents(this.props.classes.class_list);
 	};
 
-	setDataComponents = async () => {
-		if (
-			this.props.classListR.result &&
-			this.props.classListR.result.length > 0
-		) {
+	setDataComponents = async (classListR: any[]) => {
+		if (classListR.length > 0) {
 			let temp = this.state.classList;
-			this.props.classListR.result.map((classesObj: any) => {
+			classListR.map((classesObj: any) => {
 				let tempObj: any[] = classesObj.class_list || [];
 				if (tempObj.length > 0) {
 					let tempInnerList = [];
@@ -189,10 +192,7 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 					});
 				}
 			});
-			let date = moment(
-				this.props.classListR.result[this.props.classListR.result.length - 1]
-					.date
-			)
+			let date = moment(classListR[classListR.length - 1].date)
 				.utc()
 				.format();
 			if (this.state.pastClasses) {
@@ -210,7 +210,9 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 			this.setState({
 				classList: temp,
 			});
+			console.log(this.state);
 		} else {
+			this.noClassFunc();
 			this.setState({
 				noMoreData: true,
 			});
@@ -240,6 +242,9 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 			" " +
 			this.displayMonth(new Date().getMonth());
 		this.getAuthFromLocal();
+		if (this.props.classes) {
+			this.setDataComponents(this.props.classes.class_list);
+		}
 	}
 
 	noClassFunc = () => {
@@ -277,11 +282,10 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 								}}
 							/>
 						</div>
-						{!this.state.pastClasses
-							? classList &&
-							  classList.length > 0 &&
-							  classList.map((classes: any) => (
-									<div className='mb-8'>
+						{!this.state.pastClasses ? (
+							classList && classList.length > 0 ? (
+								classList.map((classes: any) => (
+									<div className='mb-8' key={"classdate" + classes.date}>
 										{moment(classes.date).format(moment.HTML5_FMT.DATE) !==
 										moment(new Date()).format(moment.HTML5_FMT.DATE) ? (
 											<ListBoxUI
@@ -289,6 +293,7 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 												callback={() => {}}
 												more={false}
 												noBtn={true}
+												key={"ListBox2" + classes.id}
 											>
 												<>
 													{classes.list &&
@@ -299,6 +304,7 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 																callback={() =>
 																	this.classCallback(classe.id, classes.date)
 																}
+																key={"classesId" + classes.id}
 																arrowRight={true}
 															>
 																<WatchLaterIcon />
@@ -321,6 +327,7 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 														callback={() => {}}
 														more={false}
 														noBtn={true}
+														key={"ListBox1"}
 													>
 														<>
 															{classes.list &&
@@ -336,6 +343,7 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 																					classes.date
 																				)
 																			}
+																			key={"classesId2" + classes.id}
 																			arrowRight={true}
 																		>
 																			<WatchLaterIcon />
@@ -347,7 +355,7 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 																			</label>
 																		</ListItem>
 																	) : (
-																		<>{this.noClassFunc()}</>
+																		<></>
 																	)
 																)}
 														</>
@@ -356,86 +364,128 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 											</>
 										)}
 									</div>
-							  ))
-							: classList &&
-							  classList.length > 0 &&
-							  classList.map((classes: any) => (
-									<div className='mb-8'>
-										{moment(classes.date).format(moment.HTML5_FMT.DATE) !==
-										moment(new Date()).format(moment.HTML5_FMT.DATE) ? (
-											<ListBoxUI
-												title={classes.date}
+								))
+							) : (
+								<>
+									<ListBoxUI
+										title={"My Classes"}
+										callback={() => {}}
+										more={false}
+										noBtn={true}
+									>
+										<>
+											<ListItem
+												smallText='There is no class'
 												callback={() => {}}
-												more={false}
-												noBtn={true}
+												arrowRight={false}
 											>
-												<>
-													{classes.list &&
-														classes.list.length > 0 &&
-														classes.list.map((classe: any, index: any) => (
-															<ListItem
-																{...classe.obj}
-																callback={() =>
-																	this.classCallback(classe.id, classes.date)
-																}
-																arrowRight={true}
-															>
-																<WatchLaterIcon />
-																<label>
-																	{moment(classe.start_time, "hh:mm").format(
-																		"hh:mm A"
-																	)}
-																</label>
-															</ListItem>
-														))}
-												</>
-											</ListBoxUI>
-										) : (
+												<label></label>
+											</ListItem>
+										</>
+									</ListBoxUI>
+								</>
+							)
+						) : classList && classList.length > 0 ? (
+							classList.map((classes: any) => (
+								<div className='mb-8' key={"classID2" + classes.date}>
+									{moment(classes.date).format(moment.HTML5_FMT.DATE) !==
+									moment(new Date()).format(moment.HTML5_FMT.DATE) ? (
+										<ListBoxUI
+											title={classes.date}
+											callback={() => {}}
+											more={false}
+											noBtn={true}
+											key={"ListBox1" + classes.id}
+										>
 											<>
-												{this.state.noClassOld ? (
-													<></>
-												) : (
-													<ListBoxUI
-														title={classes.date}
-														callback={() => {}}
-														more={false}
-														noBtn={true}
-													>
-														<>
-															{classes.list &&
-																classes.list.length > 0 &&
-																classes.list.map((classe: any, index: any) =>
-																	moment(classe.start_time, "hh:mm") <
-																	moment(new Date()) ? (
-																		<ListItem
-																			{...classe.obj}
-																			callback={() =>
-																				this.classCallback(
-																					classe.id,
-																					classes.date
-																				)
-																			}
-																			arrowRight={true}
-																		>
-																			<WatchLaterIcon />
-																			<label>
-																				{moment(
-																					classe.start_time,
-																					"hh:mm"
-																				).format("hh:mm A")}
-																			</label>
-																		</ListItem>
-																	) : (
-																		<>{this.noClassOldFunc()}</>
-																	)
+												{classes.list &&
+													classes.list.length > 0 &&
+													classes.list.map((classe: any, index: any) => (
+														<ListItem
+															{...classe.obj}
+															callback={() =>
+																this.classCallback(classe.id, classes.date)
+															}
+															key={"classId" + classes.id}
+															arrowRight={true}
+														>
+															<WatchLaterIcon />
+															<label>
+																{moment(classe.start_time, "hh:mm").format(
+																	"hh:mm A"
 																)}
-														</>
-													</ListBoxUI>
-												)}
+															</label>
+														</ListItem>
+													))}
 											</>
-										)}
-									</div>
-							  ))}
+										</ListBoxUI>
+									) : (
+										<>
+											{this.state.noClassOld ? (
+												<></>
+											) : (
+												<ListBoxUI
+													title={classes.date}
+													callback={() => {}}
+													more={false}
+													noBtn={true}
+												>
+													<>
+														{classes.list &&
+															classes.list.length > 0 &&
+															classes.list.map((classe: any, index: any) =>
+																moment(classe.start_time, "hh:mm") <
+																moment(new Date()) ? (
+																	<ListItem
+																		{...classe.obj}
+																		callback={() =>
+																			this.classCallback(
+																				classe.id,
+																				classes.date
+																			)
+																		}
+																		key={"classId2" + classes.id}
+																		arrowRight={true}
+																	>
+																		<WatchLaterIcon />
+																		<label>
+																			{moment(
+																				classe.start_time,
+																				"hh:mm"
+																			).format("hh:mm A")}
+																		</label>
+																	</ListItem>
+																) : (
+																	<>{this.noClassOldFunc()}</>
+																)
+															)}
+													</>
+												</ListBoxUI>
+											)}
+										</>
+									)}
+								</div>
+							))
+						) : (
+							<>
+								<ListBoxUI
+									title={"My Classes"}
+									callback={() => {}}
+									more={false}
+									noBtn={true}
+								>
+									<>
+										<ListItem
+											smallText='There is no class'
+											callback={() => {}}
+											arrowRight={false}
+										>
+											<label></label>
+										</ListItem>
+									</>
+								</ListBoxUI>
+							</>
+						)}
 						{!this.state.noMoreData && (
 							<span
 								className='f-10 fc-primary flex-center cursor m-16'
@@ -509,18 +559,19 @@ class StudentClassesPage extends React.Component<IProps, IStates> {
 const mapStateToProps = ({
 	authUser,
 	classListR,
+	classes,
 }: StoreState): {
 	authUser: AuthInterface;
 	classListR: any;
+	classes: AnyARecord;
 } => {
 	return {
 		authUser,
 		classListR,
+		classes,
 	};
 };
 
 export default connect(mapStateToProps, { getclassesByDateRange })(
 	StudentClassesPage
 );
-
-;

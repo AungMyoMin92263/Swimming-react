@@ -165,159 +165,175 @@ class AdminInviteCoachSummaryPage extends React.Component<IProps, IStates> {
       removeIndex,
     } = this.state;
     return (
-      <>
-        <div className="wrapper">
-          <div className="primary f-16 project-header">
-            <Link to="/admin/dashboard">
-              <span>My Report Cards</span>
-            </Link>
-          </div>
-          <div className="container-cus">
-            <div className="content col-lg-6 col-md-6 col-sm-12">
-              <div className="f-14 mb-32">
-                <Link
-                  to={"/admin/school/"+this.schoolId+"/class/" + classId}
-                  style={{ textDecoration: "none" }}
-                >
-                  <ArrowBackIcon
-                    sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-                  ></ArrowBackIcon>
-                  <span>Back</span>
-                </Link>
-              </div>
-              <div className="mb-8 align-center">
-                <img
-                  src={
-                    class_logo
-                      ? process.env.REACT_APP_API_ENDPOINT + "/" + class_logo
-                      : placeholder
-                  }
-                  alt="logo"
-                  className={`${class_logo ? "item-icon" : "w-48"}`}
-                />
-                <span className="f-16">{class_name}</span>
-                <span className="fc-second">({school_name})</span>
-              </div>
-              <div className="hr mb-32"></div>
+			<>
+				<div className='wrapper'>
+					<div className='primary f-16 project-header'>
+						<Link to='/admin/dashboard'>
+							<span>My Report Cards</span>
+						</Link>
+					</div>
+					<div className='container-cus'>
+						<div className='content col-lg-6 col-md-6 col-sm-12'>
+							<div className='f-14 mb-32'>
+								<Link
+									to={"/admin/school/" + this.schoolId + "/class/" + classId}
+									style={{ textDecoration: "none" }}
+								>
+									<ArrowBackIcon
+										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+									></ArrowBackIcon>
+									<span>Back</span>
+								</Link>
+							</div>
+							<div className='mb-8 align-center'>
+								<img
+									src={
+										class_logo
+											? process.env.REACT_APP_API_ENDPOINT + "/" + class_logo
+											: placeholder
+									}
+									alt='logo'
+									className={`${class_logo ? "item-icon" : "w-48"}`}
+								/>
+								<span className='f-16'>{class_name}</span>
+								<span className='fc-second'>({school_name})</span>
+							</div>
+							<div className='hr mb-32'></div>
 
-              <div className="f-32 fw-500 mb-32">
-                <span>My Coaches.</span>
-              </div>
+							<div className='f-32 fw-500 mb-32'>
+								<span>My Coaches.</span>
+							</div>
 
-              {coachList &&
-                coachList.length > 0 &&
-                coachList.map((coach: any, index: number) => (
-                  <>
-                    <div className="f-16 mb-32 align-center justify-space-between">
-                      <div className="align-center">
-                        <InitialIcon
-                          initials={(coach.user ? coach.user.email : "")
-                            .substr(0, 1)
-                            .toUpperCase()}
-                          isFooterMenu={false}
-                        />
-                        <span className="ml-16">
-                          {coach.user && coach.user.name
-                            ? coach.user.name
-                            : coach.user.email}
-                        </span>
-                      </div>
-                      <div>
-                        <DeleteOutlineOutlinedIcon
-                          sx={{
-                            color: "#0070F8",
-                            fontSize: 24,
-                            cursor: "pointer",
-                          }}
-                          // onClick={() => this.handleDelete(coach.id)}
-                          onClick={() =>
-                            this.setState({
-                              removeIndex: index,
-                              modalShow: true,
-                            })
-                          }
-                        ></DeleteOutlineOutlinedIcon>
-                      </div>
-                    </div>
+							{coachList &&
+								coachList.length > 0 &&
+								coachList.map((coach: any, index: number) => (
+									<>
+										<div className='f-16 mb-32 align-center justify-space-between'>
+											<div className='align-center'>
+												<InitialIcon
+													initials={(coach.user ? coach.user.email : "")
+														.substr(0, 1)
+														.toUpperCase()}
+													isFooterMenu={false}
+												/>
+												<div className='ml-16 width-300'>
+													<span>
+														{coach.user.name
+															? coach.user.name
+															: coach.user.email}{" "}
+														&nbsp;
+													</span>
+													<span className='secondary'>
+														(
+														{coach.user.password && coach.user.password !== ""
+															? "Onboarded"
+															: "Pending"}
+														)
+													</span>
+												</div>
+											</div>
+											<div>
+												<DeleteOutlineOutlinedIcon
+													sx={{
+														color: "#0070F8",
+														fontSize: 24,
+														cursor: "pointer",
+													}}
+													// onClick={() => this.handleDelete(coach.id)}
+													onClick={() =>
+														this.setState({
+															removeIndex: index,
+															modalShow: true,
+														})
+													}
+												></DeleteOutlineOutlinedIcon>
+											</div>
+										</div>
 
-                    <div className="hr mb-16"></div>
-                  </>
-                ))}
-              <Link
-                to={"/admin/school/"+this.schoolId+"/invite-coach/" + this.id}
-                style={{ textDecoration: "none" }}
-              >
-                <div className="mb-16 align-center">
-                  <AddIcon
-                    sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-                  ></AddIcon>
-                  <span className="primary">Add another coach</span>
-                </div>
-              </Link>
+										<div className='hr mb-16'></div>
+									</>
+								))}
+							<Link
+								to={
+									"/admin/school/" + this.schoolId + "/invite-coach/" + this.id
+								}
+								style={{ textDecoration: "none" }}
+							>
+								<div className='mb-16 align-center'>
+									<AddIcon
+										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+									></AddIcon>
+									<span className='primary'>Add another coach</span>
+								</div>
+							</Link>
 
-              <div className="hr mb-32"></div>
-              {this.state.errorMsg && (
-                <p className="text-danger">{this.state.errorMsg}</p>
-              )}
-              <Link to={url} style={{ textDecoration: "none" }}>
-                <button type="submit" className="primary-btn right">
-                  Done
-                </button>
-              </Link>
-            </div>
-          </div>
+							<div className='hr mb-32'></div>
+							{this.state.errorMsg && (
+								<p className='text-danger'>{this.state.errorMsg}</p>
+							)}
+							<Link to={url} style={{ textDecoration: "none" }}>
+								<button type='submit' className='primary-btn right'>
+									Done
+								</button>
+							</Link>
+						</div>
+					</div>
 
-          <Modal
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-            dialogClassName={"confirm-modal"}
-            show={this.state.modalShow}
-            onHide={() => {
-              this.setState({
-                ...this.state,
-                modalShow: false,
-              });
-            }}
-          >
-            <div className="mb-16">
-              <span className="f-20 fw-500">
-                Remove Coach {''}‘
-                {coachList[removeIndex] && coachList[removeIndex].user && (coachList[removeIndex].user.name? 
-				coachList[removeIndex].user.name : coachList[removeIndex].user.email)} ’?
-              </span>
-            </div>
-            <div className="mb-16">
-              <span className="f-16">
-                This action cannot be undone. This action will only remove the
-                coach from this class, not your school.
-              </span>
-            </div>
-            <div className="flex-center">
-              <button
-                type="submit"
-                className="secondary-btn mr-8"
-                onClick={() =>
-                  this.setState({
-                    ...this.state,
-                    modalShow: false,
-                  })
-                }
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="secondary-btn"
-                style={{ color: "#F80000", borderColor: "#F80000" }}
-                onClick={this.handleDelete}
-              >
-                Remove
-              </button>
-            </div>
-          </Modal>
-        </div>
-      </>
-    );
+					<Modal
+						aria-labelledby='contained-modal-title-vcenter'
+						centered
+						dialogClassName={"confirm-modal"}
+						show={this.state.modalShow}
+						onHide={() => {
+							this.setState({
+								...this.state,
+								modalShow: false,
+							});
+						}}
+					>
+						<div className='mb-16'>
+							<span className='f-20 fw-500'>
+								Remove Coach {""}‘
+								{coachList[removeIndex] &&
+									coachList[removeIndex].user &&
+									(coachList[removeIndex].user.name
+										? coachList[removeIndex].user.name
+										: coachList[removeIndex].user.email)}{" "}
+								’?
+							</span>
+						</div>
+						<div className='mb-16'>
+							<span className='f-16'>
+								This action cannot be undone. This action will only remove the
+								coach from this class, not your school.
+							</span>
+						</div>
+						<div className='flex-center'>
+							<button
+								type='submit'
+								className='secondary-btn mr-8'
+								onClick={() =>
+									this.setState({
+										...this.state,
+										modalShow: false,
+									})
+								}
+							>
+								Cancel
+							</button>
+							<button
+								type='submit'
+								className='secondary-btn'
+								style={{ color: "#F80000", borderColor: "#F80000" }}
+								onClick={this.handleDelete}
+							>
+								Remove
+							</button>
+						</div>
+					</Modal>
+				</div>
+			</>
+		);
   }
 }
 

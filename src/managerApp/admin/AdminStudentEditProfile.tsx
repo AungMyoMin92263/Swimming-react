@@ -125,7 +125,7 @@ class AdminStudentEditProfilePage extends React.Component<IProps, IStates> {
 	};
 
 	isValid = () => {
-		if (this.state.name === "" || this.state.logo === "") return false;
+		if (this.state.name === "") return false;
 		else return true;
 	};
 	handleChangeAge = (event: SelectChangeEvent) => {
@@ -270,16 +270,11 @@ class AdminStudentEditProfilePage extends React.Component<IProps, IStates> {
 					</div>
 					<div className='container-cus'>
 						<div className='content col-6 col-md-6 col-sm-12'>
-							<div className='f-14 mb-32'>
-								<Link
-									to='/admin/dashboard'
-									style={{ textDecoration: "none" }}
-								>
+							<div className='f-14 mb-32 cursor' onClick={()=> this.props.history.back()}>
 									<ArrowBackIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 									></ArrowBackIcon>
 									<span>Back</span>
-								</Link>
 							</div>
 
 							<div className='f-32 fw-500 mb-8'>

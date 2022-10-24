@@ -17,6 +17,7 @@ import { CommentInterface } from "../model/comment.interface";
 import { commentReducers } from "./comment-reducers";
 import { attandanceReducers } from "./attandance-reducers";
 import { badgeReducers } from "./badge-reducers";
+import { S3FileReducres } from "./s3-file-upload-reducres";
 export interface StoreState {
   authUser: any;
   signedUpUser: any;
@@ -39,6 +40,7 @@ export interface StoreState {
   badges: any
   attendance: any;
   user : any;
+  s3File: any;
 }
 export const reducers = combineReducers<StoreState>({
   signedUpUser: authReducers,
@@ -63,5 +65,5 @@ export const reducers = combineReducers<StoreState>({
   attendance: attandanceReducers,
   badges: badgeReducers,
   user : authReducers,
-
+  s3File: S3FileReducres,
 });

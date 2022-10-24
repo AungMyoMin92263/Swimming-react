@@ -105,7 +105,7 @@ class ManagerEditProfilePage extends React.Component<IProps, IStates> {
   };
 
   isValid = () => {
-    if (this.state.name === "" || this.state.logo === "") return false;
+    if (this.state.name === "") return false;
     else return true;
   };
   

@@ -157,179 +157,188 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
       removeIndex
     } = this.state;
     return (
-      <>
-        <div className="container-cus">
-          {isLogout && <Navigate to="/admin/login" replace={true} />}
-          <div className="dashboard">
-            {/* DASHBOARD HEADER */}
-            <div className="dashboard-header">
-              <div className="justify-end">
-                <div className="dropdown">
-                  <div className="email-div cursor" onClick={this.toggleOpen}>
-                    <InitialIcon
-                      initials={email.substr(0, 1).toUpperCase()}
-                      isFooterMenu={false}
-                    />
-                    <span>{email} </span>
-                  </div>
-                  <div
-                    className={`dropdown-menu dropdown-menu-right ${
-                      dropdown ? "show" : ""
-                    }`}
-                    aria-labelledby="dropdownMenuButton"
-                  >
-                    {/* <div className="dropdown-item" >
+			<>
+				<div className='container-cus'>
+					{isLogout && <Navigate to='/admin/login' replace={true} />}
+					<div className='dashboard'>
+						{/* DASHBOARD HEADER */}
+						<div className='dashboard-header'>
+							<div className='justify-end'>
+								<div className='dropdown'>
+									<div className='email-div cursor' onClick={this.toggleOpen}>
+										<InitialIcon
+											initials={email.substr(0, 1).toUpperCase()}
+											isFooterMenu={false}
+										/>
+										<span>{email} </span>
+									</div>
+									<div
+										className={`dropdown-menu dropdown-menu-right ${
+											dropdown ? "show" : ""
+										}`}
+										aria-labelledby='dropdownMenuButton'
+									>
+										{/* <div className="dropdown-item" >
 					<EditOutlinedIcon sx={{ color: '#0070F8', fontSize: 32, mr: 2 }} ></EditOutlinedIcon>
 					<span>Edit Profile</span>
                     </div>
 					<div className="dropdown-divider"></div> */}
-                    <div className="dropdown-item cursor" onClick={this.logout}>
-                      <LogoutOutlinedIcon
-                        sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
-                      ></LogoutOutlinedIcon>
-                      <span>Logout</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="row justify-center">
-                <div className="col-8 col-md-6 justify-start align-center">
-                  <div className="f-40 fw-500">Schools</div>
-                </div>
+										<div className='dropdown-item cursor' onClick={this.logout}>
+											<LogoutOutlinedIcon
+												sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
+											></LogoutOutlinedIcon>
+											<span>Logout</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div className='row justify-center'>
+								<div className='col-8 col-md-6 justify-start align-center'>
+									<div className='f-40 fw-500'>Schools</div>
+								</div>
 
-                <div className="col-4 col-md-6 justify-end">
-                  <Link to="/admin/add-school">
-                    <button
-                      type="submit"
-                      className="primary-btn"
-                      // style={{ width: "140px" }}
-                    >
-                      Add School
-                      <AddIcon
-                        sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
-                      ></AddIcon>
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </div>
+								<div className='col-4 col-md-6 justify-end'>
+									<Link to='/admin/add-school'>
+										<button
+											type='submit'
+											className='primary-btn'
+											// style={{ width: "140px" }}
+										>
+											Add School
+											<AddIcon
+												sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
+											></AddIcon>
+										</button>
+									</Link>
+								</div>
+							</div>
+						</div>
 
-            {/* DASHBOARD BODY */}
-            <div className="dashboard-body">
-              <div className="tableBody">
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th className="col-6">
-                        {" "}
-                        <span className="ml-56">SCHOOL</span>
-                      </th>
-                      <th className="col-3">MANAGER(s)</th>
-                      <th className="col-3">NO. STUDENT</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {schools &&
-                      schools.length > 0 &&
-                      schools.map((school: School, index: any) => (
-                        <tr>
-                          <td>
-                            <img
-                              src={
-                                school
-                                  ? process.env.REACT_APP_API_ENDPOINT +
-                                    "/" +
-                                    school.logo
-                                  : placeholder
-                              }
-                              alt="logo"
-                              id="logo"
-                              className={`${school ? "icon" : "w-48"}`}
-                            />
+						{/* DASHBOARD BODY */}
+						<div className='dashboard-body'>
+							<div className='tableBody'>
+								<table className='table'>
+									<thead>
+										<tr>
+											<th className='col-6'>
+												{" "}
+												<span className='ml-56'>SCHOOL</span>
+											</th>
+											<th className='col-3'>MANAGER(s)</th>
+											<th className='col-3'>NO. STUDENT</th>
+										</tr>
+									</thead>
+									<tbody>
+										{schools &&
+											schools.length > 0 &&
+											schools.map((school: School, index: any) => (
+												<tr>
+													<td>
+														<img
+															src={
+																school
+																	? process.env.REACT_APP_API_ENDPOINT +
+																	  "/" +
+																	  school.logo
+																	: placeholder
+															}
+															alt='logo'
+															id='logo'
+															className={`${school ? "icon" : "w-48"}`}
+														/>
 
-                            <span className="ml-16">{school.name}</span>
-                          </td>
-                          <td className="emailInitialIcon">
-                            {school.assign_user.map((user: any, index) =>
-                              user.type === "manager" && index === 0 ? (
-                                <InitialIcon
-                                  initials={user.user.email
-                                    .substr(0, 1)
-                                    .toUpperCase()}
-                                  isFooterMenu={false}
-                                />
-                              ) : (
-                                <InitialIconList
-                                  initials={user.user.email
-                                    .substr(0, 1)
-                                    .toUpperCase()}
-                                  isFooterMenu={false}
-                                />
-                              )
-                            )}
-                          </td>
-                          <td>
-                            <div className="flex justify-space-between">
-                              <span>{school.student_count}</span>
+														<span className='ml-16'>{school.name}</span>
+													</td>
+													<td className='emailInitialIcon'>
+														{school.assign_user.map((user: any, index) =>
+															user.type === "manager" && index === 0 ? (
+																<InitialIcon
+																	initials={user.user.email
+																		.substr(0, 1)
+																		.toUpperCase()}
+																	isFooterMenu={false}
+																/>
+															) : (
+																user.type ===
+																"manager"  && (
+																	<InitialIconList
+																		initials={user.user.email
+																			.substr(0, 1)
+																			.toUpperCase()}
+																		isFooterMenu={false}
+																	/>
+																)
+															)
+														)}
+													</td>
+													<td>
+														<div className='flex justify-space-between'>
+															<span>{school.student_count}</span>
 
-                              <Dropdown className="more-dropdown">
-                                <Dropdown.Toggle
-                                  id="dropdown-basic"
-                                  className="more-list-btn"
-                                >
-                                  <MoreVertIcon />
-                                </Dropdown.Toggle>
+															<Dropdown className='more-dropdown'>
+																<Dropdown.Toggle
+																	id='dropdown-basic'
+																	className='more-list-btn'
+																>
+																	<MoreVertIcon />
+																</Dropdown.Toggle>
 
-                                <Dropdown.Menu>
-                                  <Dropdown.Item
-                                    href={
-                                      "/admin/edit-school/" +
-                                      this.state.schools[index].id
-                                    }
-                                  >
-                                    <span>Edit School</span>
-                                  </Dropdown.Item>
+																<Dropdown.Menu>
+																	<Dropdown.Item
+																		href={
+																			"/admin/edit-school/" +
+																			this.state.schools[index].id
+																		}
+																	>
+																		<span>Edit School</span>
+																	</Dropdown.Item>
 
-                                  <div className="dropdown-divider"></div>
+																	<div className='dropdown-divider'></div>
 
-                                  
-                                    <Dropdown.Item href={"/admin/invite-manager-summary/" + this.state.schools[index].id}>
-                                      <span>Edit School Managers</span>
-                                    </Dropdown.Item>
-                                    <div className="dropdown-divider"></div>
+																	<Dropdown.Item
+																		href={
+																			"/admin/invite-manager-summary/" +
+																			this.state.schools[index].id
+																		}
+																	>
+																		<span>Edit School Managers</span>
+																	</Dropdown.Item>
+																	<div className='dropdown-divider'></div>
 
-                                  <Dropdown.Item
-                                     href={
-                                      "/admin/school/" +
-                                      this.state.schools[index].id
-                                    }
-                                  >
-                                    <span>View</span>
-                                  </Dropdown.Item>
-                                  <div className="dropdown-divider"></div>
+																	<Dropdown.Item
+																		href={
+																			"/admin/school/" +
+																			this.state.schools[index].id
+																		}
+																	>
+																		<span>View</span>
+																	</Dropdown.Item>
+																	<div className='dropdown-divider'></div>
 
-                                  <Dropdown.Item
-                                    onClick={() => this.setState({
-                                      removeIndex: index,
-                                      modalShow: true,
-                                    })}
-                                  >
-                                    <span>Remove</span>
-                                  </Dropdown.Item>
-                                </Dropdown.Menu>
-                              </Dropdown>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+																	<Dropdown.Item
+																		onClick={() =>
+																			this.setState({
+																				removeIndex: index,
+																				modalShow: true,
+																			})
+																		}
+																	>
+																		<span>Remove</span>
+																	</Dropdown.Item>
+																</Dropdown.Menu>
+															</Dropdown>
+														</div>
+													</td>
+												</tr>
+											))}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
 
-        <Modal
+				<Modal
 					aria-labelledby='contained-modal-title-vcenter'
 					centered
 					dialogClassName={"confirm-modal"}
@@ -375,8 +384,8 @@ class AdminDashboardPage extends React.Component<IProps, IStates> {
 						</button>
 					</div>
 				</Modal>
-      </>
-    );
+			</>
+		);
   }
 }
 

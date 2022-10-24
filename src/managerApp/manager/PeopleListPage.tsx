@@ -308,11 +308,12 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 								<table className='table'>
 									<thead>
 										<tr>
-											<th className='col-4'>
+											<th className='col-3'>
 												<span className='ml-56'>Name</span>
 											</th>
-											<th className='col-4'>Email</th>
-											<th className='col-4'>Role</th>
+											<th className='col-3'>Email</th>
+											<th className='col-3'>Status</th>
+											<th className='col-3'>Role</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -360,6 +361,20 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 														</td>
 														<td>
 															<span className=''>{user && user.email}</span>
+														</td>
+
+														<td>
+															<span
+																className={`${
+																	user.password && user.password !== ""
+																		? "onboarded"
+																		: "pending"
+																}`}
+															>
+																{user.password && user.password !== ""
+																	? "Onboarded"
+																	: "Pending"}
+															</span>
 														</td>
 
 														<td>
@@ -459,6 +474,19 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 															user.student.parent_email
 																? user.student.parent_email
 																: "-"}
+														</span>
+													</td>
+													<td>
+														<span
+															className={`${
+																user.parent_password && user.parent_password !== ""
+																	? "onboarded"
+																	: "pending"
+															}`}
+														>
+															{user.parent_password && user.parent_password !== ""
+																? "Onboarded"
+																: "Pending"}
 														</span>
 													</td>
 
@@ -583,8 +611,17 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 				>
 					<div className='mb-16'>
 						<span className='f-20 fw-500'>
-							Remove {users && users.length > 0 && users[removeIndex] && users[removeIndex].role} ‘{" "}
-							{users && users.length > 0 && users[removeIndex] && users[removeIndex].name} ’?{" "}
+							Remove{" "}
+							{users &&
+								users.length > 0 &&
+								users[removeIndex] &&
+								users[removeIndex].role}{" "}
+							‘{" "}
+							{users &&
+								users.length > 0 &&
+								users[removeIndex] &&
+								users[removeIndex].name}{" "}
+							’?{" "}
 						</span>
 					</div>
 					<div className='mb-16'>

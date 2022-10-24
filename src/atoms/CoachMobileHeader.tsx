@@ -19,7 +19,7 @@ interface ICoachMobileHeader {
 }
 function logoutFun () {
   removeItem('authUser')
-  window.location.replace('/coach/login')
+  window.location.replace('/login')
 }
 const CoachMobileHeader = (props: ICoachMobileHeader) => {
   const navigate = useNavigate();

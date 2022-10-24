@@ -5,7 +5,6 @@ import SupervisedUserCircleOutlinedIcon from "@mui/icons-material/SupervisedUser
 import "./menuSideBar.css";
 
 const SideBar = (props: IPageProp) => {
-  console.log(props.history.location);
   let path = props.history.location.pathname.split("/");
 
   return (

@@ -32,12 +32,12 @@ export const getMyBadges = (user_id: number) => {
   };
 };
 
-export const getAllBadges = () => {
+export const getAllBadges = (schoolId : any) => {
   let options = refreshHeaderOptionToken();
   return async (dispatch: Dispatch) => {
     try {
       dispatch({ type: ActionTypes.loading, payload: true })
-      const response = await apiServer.get<GetMyBadgesAction>(`badge`, options?.option);
+      const response = await apiServer.get<GetMyBadgesAction>(`badge/school/`+schoolId, options?.option);
       dispatch<GetMyBadgesAction>({
         type: ActionTypes.getAllBadges,
         payload: response.data,

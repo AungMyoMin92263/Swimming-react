@@ -138,6 +138,7 @@ export interface createClassProgramAction {
 }
 export const postClassProgram = (classProgram: ClassProgramInterface, url: string) => {
   let options = refreshHeaderOptionToken();
+  console.log('classProgram',classProgram)
   return async (dispatch: Dispatch) => {
     try {
       let response

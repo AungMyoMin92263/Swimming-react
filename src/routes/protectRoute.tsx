@@ -37,7 +37,7 @@ const ProtectedRoute = (prop: CustomRouteInterface) => {
     }
   }
   if (!token && !allows.includes(prop.path)) {
-    return <Navigate to={prop.appname + "/login"} replace />;
+    return <Navigate to={"/login"} replace />;
   }
   return prop?.children;
 };

@@ -31,38 +31,57 @@ class CocahGiveBadgePage extends React.Component<IProps, IStates> {
   }
 
   componentDidMount() {
-    if (!this.props.authUser.otherUserinfo)
+    this.auth();
+    if(!this.props.authUser.otherUserinfo){
       this.props.history.back()
-    this.setState({
+    }
+  }
+
+  auth = async() => {
+    const authUser = JSON.parse(localStorage.getItem("authUser") || "null");
+  if (authUser && authUser.userInfo) {
+    await this.setState({
       ...this.state,
-      userInfo: this.props.authUser.otherUserinfo
+      userInfo: this.props.authUser.userInfo
     })
+  }else this.props.history.back();
   }
 
   render() {
-    const { receiverId, userInfo } = this.state
+    const { receiverId } = this.state
+    let userInfo = this.props.authUser.otherUserinfo;
     return (
-      <div className="wrapper-mobile bg-w">
-        <div className="content-mobile-cus-space col-sm-12 rm-padding">
-          <div className="pl-16 pr-16">
-            <CoachMobileHeader backBtn={true}></CoachMobileHeader>
-            <div className="mini-profile pt-24">
-              <div className="img-profile">
-                <CreateProfile image_url={userInfo?.avatar} name={userInfo?.name || "User"} />
-              </div>
-              <div className="profile-name">
-                {userInfo?.name || userInfo?.email}
-              </div>
-            </div>
-            <div className='page-tile pt-16 pb-40'>
-              Select Badge <br />
-              to Send
-            </div>
-          </div>
-          <BadgesPage receiverId={receiverId} defaultPath={'/coach'} history={this.props.history}></BadgesPage>
-        </div>
-      </div>
-    )
+			<div className='wrapper-mobile bg-w'>
+				<div className='content-mobile-cus-space col-sm-12 rm-padding'>
+					<div className='pl-16 pr-16'>
+						<CoachMobileHeader backBtn={true}></CoachMobileHeader>
+						<div className='mini-profile pt-24'>
+							<div className='img-profile'>
+								<CreateProfile
+									image_url={userInfo?.avatar}
+									name={userInfo?.name || "User"}
+								/>
+							</div>
+							<div className='profile-name'>
+								{userInfo?.name || userInfo?.email}
+							</div>
+						</div>
+						<div className='page-tile pt-16 pb-40'>
+							Select Badge <br />
+							to Send
+						</div>
+					</div>
+					<BadgesPage
+						receiverId={receiverId}
+						defaultPath={"/coach"}
+						history={this.props.history}
+						schoolId={
+							this.props.authUser?.userInfo?.assign_school?.school_id
+						}
+					></BadgesPage>
+				</div>
+			</div>
+		);
   }
 }
 

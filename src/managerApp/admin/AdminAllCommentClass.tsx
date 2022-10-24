@@ -1,8 +1,8 @@
 import React from "react";
 
 // import css
-import "./ManagerDashboard.css";
-import "./ManagerClassDetailPage.css";
+import "../manager/ManagerDashboard.css";
+import "../manager/ManagerClassDetailPage.css";
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -13,6 +13,7 @@ import {
 	getClassProgram,
 	postClassProgram,
 	getAssignUserByClass,
+	getSchoolObj
 } from "../../stores/actions";
 import { connect } from "react-redux";
 import { signOut, LoadingActionFunc } from "../../stores/actions";
@@ -63,16 +64,20 @@ interface IProps {
 	LoadingActionFunc: Function;
 	classes: any;
 	comments: any;
+	getSchoolObj : Function;
+	schools : any;
 }
 
-class AdminAllCommentClass extends React.Component<IProps, IStates> {
+class ManagerAllCommentClass extends React.Component<IProps, IStates> {
 	id: any;
-	class_id: any;
+	class_id: any;school_id:any;
 	url = "/manager/student-edit-profile/";
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
-		this.class_id = path[4];
+		
+		this.class_id = path[6];
+		this.school_id = path[4];
 		this.state = {
 			email: "",
 			logo: "",
@@ -89,11 +94,21 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 	componentDidMount() {
 		this.authFromLocal();
 		this.getClass();
-		//loading
+		this.getSchool();
 	}
 
+	getSchool = async () => {
+		await this.props.getSchoolObj("schools/" + this.school_id);
+		let school = this.props.schools.result;
+		if (school) {
+		  await this.setState({
+			school_name: school.name
+		  });
+		}
+	  };
+
 	getClass = async () => {
-		let url = "school/" + this.state.schoolId + "/class/" + this.state.id;
+		let url = "school/" + this.school_id + "/class/" + this.class_id;
 		await this.props.getClassObject(url, true);
 		
 	};
@@ -114,9 +129,6 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 					? user.userInfo.assign_school.school_id
 					: -1,
 			});
-			let classUrl =
-				"school/" + this.state.schoolId + "/class/" + this.class_id;
-			this.props.getClassObject(classUrl, true);
 		}
 	};
 	toggleOpen = () => {
@@ -163,8 +175,8 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 												reply={res.children.length}
 												showRightArr={true}
 												callback={() => {this.props.history.push(
-													"/manager/class/" +
-														this.id +
+													"/admin/school/"+this.school_id + "/class/" +
+														this.class_id +
 														"/comment-detail/" +
 														res.id
 												);}}
@@ -266,20 +278,22 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 const mapStateToProps = ({
 	authUser,
 	classes,
-	response,
+	response,schools,
 }: StoreState): {
 	authUser: AuthInterface;
 	classes: any;
 	response: any;
+	schools : any;
 } => {
 	return {
 		authUser,
 		classes,
 		response,
+		schools,
 	};
 };
 
-export default connect(mapStateToProps, { getClassObject, })(
-	AdminAllCommentClass
+export default connect(mapStateToProps, { getClassObject,getSchoolObj })(
+	ManagerAllCommentClass
 );
 

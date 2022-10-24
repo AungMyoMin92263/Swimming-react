@@ -119,6 +119,7 @@ this.getSchool();
 							{school.assign_user &&
 								school.assign_user.length > 0 &&
 								school.assign_user.map((manager: any) => (
+									manager.user ? manager.type === "manager" &&
 									<>
 										<div className='f-16 mb-32 align-center justify-space-between'>
 											<div className='align-center'>
@@ -128,9 +129,22 @@ this.getSchool();
 														.toUpperCase()}
 													isFooterMenu={false}
 												/>
-												<span className='ml-16'>
-													{manager.user.name ? manager.user.name : "-"}
-												</span>
+												<div className='ml-16 width-300'>
+													<span>
+														{manager.user.name
+															? manager.user.name
+															: manager.user.email}{" "}
+														&nbsp;
+													</span>
+													<span className='secondary'>
+														(
+														{manager.user.password &&
+														manager.user.password !== ""
+															? "Onboarded"
+															: "Pending"}
+														)
+													</span>
+												</div>
 											</div>
 											<div>
 												<DeleteOutlineOutlinedIcon
@@ -145,7 +159,7 @@ this.getSchool();
 										</div>
 
 										<div className='hr mb-16'></div>
-									</>
+									</>: <></>
 								))}
 							<Link to={url} style={{ textDecoration: "none" }}>
 								<div className='mb-16 align-center'>

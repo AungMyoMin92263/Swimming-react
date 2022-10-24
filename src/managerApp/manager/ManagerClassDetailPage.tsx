@@ -41,6 +41,7 @@ import CommentDashItem from "../../atoms/CommentDash";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { Button } from "react-bootstrap";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
+import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 
 interface IStates {
   email: string;
@@ -87,7 +88,7 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
     let path = window.location.pathname.split("/");
     this.id = path[3];
     this.urlClassAllComments = "/manager/all-comments/class/" + this.id;
-    this.urlClassAllAttendances = "/manager/all-attendances/class/" + this.id
+    this.urlClassAllAttendances = "/manager/all-attendances/class/" + this.id;
     this.state = {
       email: "",
       logo: "",
@@ -150,7 +151,7 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
         display_item: [
           {
             title: "Date",
-            value: moment(new Date).format("D MMM YYYY"),
+            value: moment(new Date()).format("D MMM YYYY"),
           },
           {
             title: "Time",
@@ -193,38 +194,38 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
       let res = [];
       for (let i = 0; i < tempAttendances.length; i++) {
         res.push({
-					text: tempAttendances[i].user.name
-						? tempAttendances[i].user.name
-						: tempAttendances[i].user.email,
-					callback: () => console.log("log click item"),
-					smallText: "",
-					icon: tempAttendances[i].user.avatar ? (
-						<img
-							src={
-								process.env.REACT_APP_API_ENDPOINT +
-								"/" +
-								tempAttendances[i].user.avatar
-							}
-							className='logo-icon'
-						/>
-					) : (
-						<InitialIcon
-							initials={(
-								tempAttendances[i].user.name ||
-								tempAttendances[i].user.email ||
-								"User"
-							)
-								.substr(0, 1)
-								.toUpperCase()}
-							isFooterMenu={true}
-						/>
-					),
-					secondryText: true,
-					isBigIcon: true,
-					selectable: true,
-					student_id: tempAttendances[i].user_id,
-					checked: tempAttendances[i].attend,
-				});
+          text: tempAttendances[i].user.name
+            ? tempAttendances[i].user.name
+            : tempAttendances[i].user.email,
+          callback: () => console.log("log click item"),
+          smallText: "",
+          icon: tempAttendances[i].user.avatar ? (
+            <img
+              src={
+                process.env.REACT_APP_API_ENDPOINT +
+                "/" +
+                tempAttendances[i].user.avatar
+              }
+              className="logo-icon"
+            />
+          ) : (
+            <InitialIcon
+              initials={(
+                tempAttendances[i].user.name ||
+                tempAttendances[i].user.email ||
+                "User"
+              )
+                .substr(0, 1)
+                .toUpperCase()}
+              isFooterMenu={true}
+            />
+          ),
+          secondryText: true,
+          isBigIcon: true,
+          selectable: true,
+          student_id: tempAttendances[i].user_id,
+          checked: tempAttendances[i].attend,
+        });
       }
       this.setState({
         ...this.state,
@@ -263,16 +264,16 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
   createProfile = (image_url: string, name: string) => {
     if (image_url) {
       return (
-				<img
-					src={
-						image_url
-							? process.env.REACT_APP_API_ENDPOINT + "/" + image_url
-							: ""
-					}
-					className='logo-icon'
-					alt=''
-				/>
-			);
+        <img
+          src={
+            image_url
+              ? process.env.REACT_APP_API_ENDPOINT + "/" + image_url
+              : ""
+          }
+          className="logo-icon"
+          alt=""
+        />
+      );
     } else {
       return (
         <InitialIcon
@@ -299,7 +300,7 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
     });
   };
 
-  largePic = (src : string) => {
+  largePic = (src: string) => {
     window.open(src);
   };
 
@@ -370,7 +371,13 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
               <>
                 <Button
                   className="preview-icon-btn"
-                  onClick={() => this.largePic(process.env.REACT_APP_API_ENDPOINT +"/" +classProgram.image_url)}
+                  onClick={() =>
+                    this.largePic(
+                      process.env.REACT_APP_API_ENDPOINT +
+                        "/" +
+                        classProgram.image_url
+                    )
+                  }
                 >
                   <OpenInFullIcon
                     sx={{ color: "#FFF", fontSize: 24, m: "auto" }}
@@ -419,168 +426,168 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
           </div>
           {this.props.classes.assignUser?.map((coach: any, index: any) => {
             return (
-							<>
-								{coach.type === "coache" && (
-									<div
-										className='class-attendance-content flex align-center cursor p-16'
-										onClick={() => this.goCoachDetail(coach.user.id)}
-									>
-										<div className='student-content flex align-center col-10'>
-											<div className='plus flex-center'>
-												<InitialIcon
-													isFooterMenu={true}
-													initials={(coach.user
-														? coach.user.name || coach.user.email
-														: "User"
-													)
-														.substr(0, 1)
-														.toUpperCase()}
-												/>
-											</div>
+              <>
+                {coach.type === "coache" && (
+                  <div
+                    className="class-attendance-content flex align-center cursor p-16"
+                    onClick={() => this.goCoachDetail(coach.user.id)}
+                  >
+                    <div className="student-content flex align-center col-10">
+                      <div className="plus flex-center">
+                        <InitialIcon
+                          isFooterMenu={true}
+                          initials={(coach.user
+                            ? coach.user.name || coach.user.email
+                            : "User"
+                          )
+                            .substr(0, 1)
+                            .toUpperCase()}
+                        />
+                      </div>
 
-											<span className='f-16 ml-16'>
-												{coach.user ? coach.user.name || coach.user.email : ""}
-											</span>
-										</div>
-										<div className='col-2'>
-											<div className='justify-end'>
-												<ArrowForwardIosIcon></ArrowForwardIosIcon>
-											</div>
-										</div>
-									</div>
-								)}
-							</>
-						);
+                      <span className="f-16 ml-16">
+                        {coach.user ? coach.user.name || coach.user.email : ""}
+                      </span>
+                    </div>
+                    <div className="col-2">
+                      <div className="justify-end">
+                        <ArrowForwardIosIcon></ArrowForwardIosIcon>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            );
           })}
         </div>
       </>
     );
   };
   renderComment = () => {
-    let commentDetailUrl = ""
+    let commentDetailUrl = "";
     return (
-			<div className='mt-24'>
-				<div className='class-comment-header flex justify-space-between '>
-					<span className='fc-second'>Class Comments</span>
-					<Link to={this.urlClassAllComments}>
-						<span className='fc-primary'>View All</span>
-					</Link>
-				</div>
-				<div className='class-attendance-body mt-16'>
-					<div className="ml-8">
-						{this.state.classe.comments ? (
-							<>
-								{this.state.classe.comments.map((res: any, index: number) => {
-									return (
-										<CommentDashItem
-											profile={this.createProfile(
-												res.user_info ? res.user_info.avatar : "",
-												res.user_info ? res.user_info.name : ""
-											)}
-											message={res.message}
-											callback={() => {
-												this.props.history.push(
-													"/manager/class/" +
-														this.id +
-														"/comment-detail/" +
-														res.id
-												);
-											}}
-											timeString={
-												res.user_info &&
-												res.user_info.name +
-													" at " +
-													moment(res.created_at).format("DD MMM, h:mm a")
-											}
-											showReply={true}
-											reply={res.children.length}
-											showRightArr={true}
-											key={`cmd-${index}`}
-										></CommentDashItem>
-									);
-								})}
-							</>
-						) : (
-							<CommentDashItem
-								profile={this.createProfile("", "")}
-								message={"There is no comment"}
-								callback={() => {}}
-								timeString={""}
-								key={""}
-								showRightArr={true}
-							></CommentDashItem>
-						)}
-					</div>
-				</div>
-			</div>
-		);
+      <div className="mt-24">
+        <div className="class-comment-header flex justify-space-between ">
+          <span className="fc-second">Class Comments</span>
+          <Link to={this.urlClassAllComments}>
+            <span className="fc-primary">View All</span>
+          </Link>
+        </div>
+        <div className="class-attendance-body mt-16">
+          <div className="ml-8">
+            {this.state.classe.comments ? (
+              <>
+                {this.state.classe.comments.map((res: any, index: number) => {
+                  return (
+                    <CommentDashItem
+                      profile={this.createProfile(
+                        res.user_info ? res.user_info.avatar : "",
+                        res.user_info ? res.user_info.name : ""
+                      )}
+                      message={res.message}
+                      callback={() => {
+                        this.props.history.push(
+                          "/manager/class/" +
+                            this.id +
+                            "/comment-detail/" +
+                            res.id
+                        );
+                      }}
+                      timeString={
+                        res.user_info &&
+                        res.user_info.name +
+                          " at " +
+                          moment(res.created_at).format("DD MMM, h:mm a")
+                      }
+                      showReply={true}
+                      reply={res.children.length}
+                      showRightArr={true}
+                      key={`cmd-${index}`}
+                    ></CommentDashItem>
+                  );
+                })}
+              </>
+            ) : (
+              <CommentDashItem
+                profile={this.createProfile("", "")}
+                message={"There is no comment"}
+                callback={() => {}}
+                timeString={""}
+                key={""}
+                showRightArr={true}
+              ></CommentDashItem>
+            )}
+          </div>
+        </div>
+      </div>
+    );
   };
   renderAttendance = () => {
     let editAddStudentUrl = "/manager/invite-student-summary/" + this.state.id;
     return (
       <>
-      <div className='mt-24'>
-      <div className='class-comment-header flex justify-space-between '>
-					<span className='fc-second'>Attendances</span>
-					<Link to={this.urlClassAllAttendances}>
-						<span className='fc-primary'>View All</span>
-					</Link>
-				</div>
-        <div className="class-attendance-body mt-16 ">
-          <div className="class-attendance-sub-header flex mt-16 ml-16">
-            <div className="col-10 f-10">
-              <span className="ml-56">Students</span>
-            </div>
-            <div className="col-2 f-10">
-              <span className="ml-16">Attendace</span>
-            </div>
+        <div className="mt-24">
+          <div className="class-comment-header flex justify-space-between ">
+            <span className="fc-second">Attendances</span>
+            <Link to={this.urlClassAllAttendances}>
+              <span className="fc-primary">View All</span>
+            </Link>
           </div>
-          <div className="class-attendance-content flex align-center">
-            <div className="student-content col-10 flex align-center">
-              <div className="plus flex-center ml-16 cursor">
-                <AddIcon />
+          <div className="class-attendance-body mt-16 ">
+            <div className="class-attendance-sub-header flex mt-16 ml-16">
+              <div className="col-10 f-10">
+                <span className="ml-56">Students</span>
               </div>
-              <Link to={editAddStudentUrl}>
-                <span className="f-16 ml-16 fc-primary fw-500">
-                  Add/Edit Student
-                </span>
-              </Link>
+              <div className="col-2 f-10">
+                <span className="ml-16">Attendace</span>
+              </div>
             </div>
-          </div>
-          {this.state.attendances.slice(0, 5).map((attend, index) => {
-            return (
-              <>
-                <div
-                  className="class-attendance-content flex align-center cursor"
-                  onClick={() => this.goStudentDetail(attend.student_id)}
-                >
-                  <div className="student-content col-10 flex align-center">
-                    <div className="plus flex-center ml-16">{attend.icon}</div>
+            <div className="class-attendance-content flex align-center">
+              <div className="student-content col-10 flex align-center">
+                <div className="plus flex-center ml-16 cursor">
+                  <AddIcon />
+                </div>
+                <Link to={editAddStudentUrl}>
+                  <span className="f-16 ml-16 fc-primary fw-500">
+                    Add/Edit Student
+                  </span>
+                </Link>
+              </div>
+            </div>
+            {this.state.attendances.slice(0, 5).map((attend, index) => {
+              return (
+                <>
+                  <div
+                    className="class-attendance-content flex align-center cursor"
+                    onClick={() => this.goStudentDetail(attend.student_id)}
+                  >
+                    <div className="student-content col-10 flex align-center">
+                      <div className="plus flex-center ml-16">
+                        {attend.icon}
+                      </div>
 
-                    <span className="f-16 ml-16">{attend.text}</span>
-                  </div>
+                      <span className="f-16 ml-16">{attend.text}</span>
+                    </div>
 
-                  <div className="attendance-content col-2 align-center justify-space-around">
-                    {attend.checked}
-                    <Checkbox
-                      disabled
-                      checked={attend.checked}
-                      icon={<RadioButtonUncheckedIcon />}
-                      checkedIcon={<CheckCircleIcon />}
-                    />
-                    <div className="justify-end">
-                      <></>
-                      <ArrowForwardIosIcon></ArrowForwardIosIcon>
+                    <div className="attendance-content col-2 align-center justify-space-around">
+                      {attend.checked}
+                      <Checkbox
+                        disabled
+                        checked={attend.checked}
+                        icon={<RadioButtonUncheckedIcon />}
+                        checkedIcon={<CheckCircleIcon />}
+                      />
+                      <div className="justify-end">
+                        <></>
+                        <ArrowForwardIosIcon></ArrowForwardIosIcon>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </>
-            );
-          })}
+                </>
+              );
+            })}
+          </div>
         </div>
-        
-      </div>
-        
       </>
     );
   };
@@ -663,7 +670,11 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
                       className="secondary-btn"
                       // style={{ width: "140px" }}
                     >
-                      Edit Class
+                      <ModeEditOutlineOutlinedIcon
+                        fontSize="small"
+                        className="mr-8"
+                      />{" "}
+                      <span>Edit Class</span>
                       <AddIcon
                         sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
                       ></AddIcon>

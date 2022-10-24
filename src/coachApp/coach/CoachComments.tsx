@@ -22,10 +22,12 @@ class CoachCommentsPage extends React.Component<IProps, IStates> {
 	id: any;
 	urlDailyProgram = "";
 	urlEnterComment = "";
+	from : any;
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
 		this.id = path[4];
+		this.from = path[2];
 		this.state = {
 			classId: this.id ? this.id : -1,
 			schoolId: -1,
@@ -43,7 +45,7 @@ class CoachCommentsPage extends React.Component<IProps, IStates> {
 		let comment = JSON.parse(getItem("comment") || "null");
 		if (comment) {
 			this.props.history.push(
-				"/coach/dashboard/reply-comments/" +
+				"/coach/"+this.from+"/reply-comments/" +
 					this.state.classId +
 					"/" +
 					this.state.commentType +
@@ -63,7 +65,7 @@ class CoachCommentsPage extends React.Component<IProps, IStates> {
 						addBtn={true}
 						callback={() => {
 							this.props.history.push(
-								"/coach/dashboard/enter-comments/" +
+								"/coach/"+this.from+"/enter-comments/" +
 									classId +
 									"/" +
 									this.state.commentType

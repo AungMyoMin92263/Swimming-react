@@ -36,14 +36,15 @@ interface IStates {
   removeIndex: number;
 }
 interface UserSignInPage {
-  signIn: Function;
-  authUser: AuthInterface;
-  signOut: Function;
-  getAllUsers: Function;
-  users: any;
-  LoadingActionFunc: Function;
-  deleteUser: Function;
-  user: any;
+	signIn: Function;
+	authUser: AuthInterface;
+	signOut: Function;
+	getAllUsers: Function;
+	users: any;
+	LoadingActionFunc: Function;
+	deleteUser: Function;
+	user: any;
+	history: any;
 }
 
 type IProps = UserSignInPage;
@@ -156,64 +157,64 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
       filterText,
     } = this.state;
     return (
-      <>
-        <div className="container-cus">
-          {isLogout && <Navigate to="/admin/login" replace={true} />}
-          <div className="dashboard">
-            {/* DASHBOARD HEADER */}
-            <div className="dashboard-header">
-              <div className="justify-end">
-                <div className="dropdown">
-                  <div className="email-div cursor" onClick={this.toggleOpen}>
-                    <InitialIcon
-                      initials={email.substr(0, 1).toUpperCase()}
-                      isFooterMenu={false}
-                    />
-                    <span>{email} </span>
-                  </div>
-                  <div
-                    className={`dropdown-menu dropdown-menu-right ${
-                      dropdown ? "show" : ""
-                    }`}
-                    aria-labelledby="dropdownMenuButton"
-                  >
-                    <div className="dropdown-item cursor" onClick={this.logout}>
-                      <LogoutOutlinedIcon
-                        sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
-                      ></LogoutOutlinedIcon>
-                      <span>Logout</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="row justify-center">
-                <div className="col-9 col-md-12 justify-start align-center">
-                  <div className="f-40 fw-500">
-                    <span>People</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* DASHBOARD BODY */}
-            <div className="dashboard-body">
-              <div className="tableBody">
-                <div className="tableSearch">
-                  <div className="textArea">
-                    <div className="dash-search-div">
-                      <div className="dash-search-icon-div">
-                        <SearchIcon
-                          sx={{ color: "#808080", fontSize: 16, mr: 0.5 }}
-                        />
-                      </div>
-                      <input
-                        className="dash-input-div"
-                        placeholder="Search by name or role"
-                        value={filterText}
-                        onChange={this.searchChanged}
-                      />
-                    </div>
-                    <div className="dash-filter-div">
-                      {/* <FilterListIcon
+			<>
+				<div className='container-cus'>
+					{isLogout && <Navigate to='login' replace={true} />}
+					<div className='dashboard'>
+						{/* DASHBOARD HEADER */}
+						<div className='dashboard-header'>
+							<div className='justify-end'>
+								<div className='dropdown'>
+									<div className='email-div cursor' onClick={this.toggleOpen}>
+										<InitialIcon
+											initials={email.substr(0, 1).toUpperCase()}
+											isFooterMenu={false}
+										/>
+										<span>{email} </span>
+									</div>
+									<div
+										className={`dropdown-menu dropdown-menu-right ${
+											dropdown ? "show" : ""
+										}`}
+										aria-labelledby='dropdownMenuButton'
+									>
+										<div className='dropdown-item cursor' onClick={this.logout}>
+											<LogoutOutlinedIcon
+												sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
+											></LogoutOutlinedIcon>
+											<span>Logout</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div className='row justify-center'>
+								<div className='col-9 col-md-12 justify-start align-center'>
+									<div className='f-40 fw-500'>
+										<span>People</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						{/* DASHBOARD BODY */}
+						<div className='dashboard-body'>
+							<div className='tableBody'>
+								<div className='tableSearch'>
+									<div className='textArea'>
+										<div className='dash-search-div'>
+											<div className='dash-search-icon-div'>
+												<SearchIcon
+													sx={{ color: "#808080", fontSize: 16, mr: 0.5 }}
+												/>
+											</div>
+											<input
+												className='dash-input-div'
+												placeholder='Search by name or role'
+												value={filterText}
+												onChange={this.searchChanged}
+											/>
+										</div>
+										<div className='dash-filter-div'>
+											{/* <FilterListIcon
 												sx={{
 													color: "#0070F8",
 													fontSize: 18,
@@ -222,193 +223,207 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 												}}
 											/>
 											Filter */}
-                    </div>
-                  </div>
-                </div>
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th className="col-6">
-                        {" "}
-                        <span className="ml-56">Name</span>
-                      </th>
-                      <th className="col-3">Status</th>
-                      <th className="col-3">Role</th>
-                      {/* <th className='col-1'></th> */}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users &&
-                      users.length > 0 &&
-                      users
-                        .filter((user: any) => {
-                          if (!filterText) {
-                            return true;
-                          } else {
-                            return (user.name || "")
-                              .toLowerCase()
-                              .startsWith(filterText.toLowerCase());
-                          }
-                        })
-                        .map((user: any, index: any) => (
-                          <tr>
-                            <td className="flex justify-center">
-                              <InitialIcon
-                                initials={
-                                  user.email
-                                    ? user.email.substr(0, 1).toUpperCase()
-                                    : ""
-                                }
-                                isFooterMenu={false}
-                              />
-                              <span className="ml-16">
-                                {!user.name || user.name === ""
-                                  ? "-"
-                                  : user.name}
-                              </span>
-                            </td>
+										</div>
+									</div>
+								</div>
+								<table className='table'>
+									<thead>
+										<tr>
+											<th className='col-3'>
+												{" "}
+												<span className='ml-56'>Name</span>
+											</th>
+											<th className='col-3'>Email</th>
+											<th className='col-1'>School</th>
+											<th className='col-2'>Status</th>
+											<th className='col-3'>Role</th>
+											{/* <th className='col-1'></th> */}
+										</tr>
+									</thead>
+									<tbody>
+										{users &&
+											users.length > 0 &&
+											users
+												.filter((user: any) => {
+													if (!filterText) {
+														return true;
+													} else {
+														return (user.name || user.email || "")
+															.toLowerCase()
+															.startsWith(filterText.toLowerCase());
+													}
+												})
+												.map((user: any, index: any) => (
+													<tr>
+														<td className='flex justify-center'>
+															<InitialIcon
+																initials={
+																	user.email
+																		? user.email.substr(0, 1).toUpperCase()
+																		: ""
+																}
+																isFooterMenu={false}
+															/>
+															<span className='ml-16'>
+																{!user.name || user.name === ""
+																	? "-"
+																	: user.name}
+															</span>
+														</td>
 
-                            <td>
-                              <span
-                                className={`${
-                                  user.password && user.password !== ""
-                                    ? "onboarded"
-                                    : "pending"
-                                }`}
-                              >
-                                {user.password && user.password !== ""
-                                  ? "Onboarded"
-                                  : "Pending"}
-                              </span>
-                            </td>
+														<td>
+															<span>{user.email}</span>
+														</td>
+														<td className="cursor" onClick={()=>this.props.history.push("/admin/school/"+ user?.assign_school?.school_id)}>
+															{/* <span>{user?.assign_school?.school?.name}</span> */}
+															<img src={process.env.REACT_APP_API_ENDPOINT + "/" + user?.assign_school?.school?.logo} className="icon"/>
+														</td>
 
-                            <td>
-                              <span>
-                                {user.role === "coache"
-                                  ? "Coach"
-                                  : user.role === "admin"
-                                  ? "Admin"
-                                  : user.role === "manager"
-                                  ? "School Manager"
-                                  : user.role === "student"
-                                  ? "Student"
-                                  : user.role === "parent"
-                                  ? "Parent"
-                                  : user.role}
-                              </span>
-                            </td>
-                            <td className="mr-16">
-                              <Dropdown className="more-dropdown">
-                                <Dropdown.Toggle
-                                  id="dropdown-basic"
-                                  className="more-list-btn"
-                                >
-                                  <MoreVertIcon />
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                  {user && user.role === "coache" ? (
-                                    <Dropdown.Item
-                                      href={
-                                        "/admin/coach-edit-profile/" + user.id
-                                      }
-                                    >
-                                      <span>Edit</span>
-                                    </Dropdown.Item>
-                                  ) : (
-                                    <>
-                                      {user && user.role === "student" ? (
-                                        <Dropdown.Item
-                                          href={
-                                            "/admin/student-edit-profile/" +
-                                            user.id
-                                          }
-                                        >
-                                          <span>Edit</span>
-                                        </Dropdown.Item>
-                                      ) : (
-                                        <Dropdown.Item
-                                          href={
-                                            "/admin/manager-edit-profile/" +
-                                            user.id
-                                          }
-                                        >
-                                          <span>Edit</span>
-                                        </Dropdown.Item>
-                                      )}
-                                    </>
-                                  )}
+														<td>
+															<span
+																className={`${
+																	user.password && user.password !== ""
+																		? "onboarded"
+																		: "pending"
+																}`}
+															>
+																{user.password && user.password !== ""
+																	? "Onboarded"
+																	: "Pending"}
+															</span>
+														</td>
 
-                                  <div className="dropdown-divider"></div>
+														<td>
+															<span>
+																{user.role === "coache"
+																	? "Coach"
+																	: user.role === "admin"
+																	? "Admin"
+																	: user.role === "manager"
+																	? "School Manager"
+																	: user.role === "student"
+																	? "Student"
+																	: user.role === "parent"
+																	? "Parent"
+																	: user.role}
+															</span>
+														</td>
+														<td className='mr-16'>
+															<Dropdown className='more-dropdown'>
+																<Dropdown.Toggle
+																	id='dropdown-basic'
+																	className='more-list-btn'
+																>
+																	<MoreVertIcon />
+																</Dropdown.Toggle>
+																<Dropdown.Menu>
+																	{user && user.role === "coache" ? (
+																		<Dropdown.Item
+																			href={
+																				"/admin/coach-edit-profile/" + user.id
+																			}
+																		>
+																			<span>Edit</span>
+																		</Dropdown.Item>
+																	) : (
+																		<>
+																			{user && user.role === "student" ? (
+																				<Dropdown.Item
+																					href={
+																						"/admin/student-edit-profile/" +
+																						user.id
+																					}
+																				>
+																					<span>Edit</span>
+																				</Dropdown.Item>
+																			) : (
+																				<Dropdown.Item
+																					href={
+																						"/admin/manager-edit-profile/" +
+																						user.id
+																					}
+																				>
+																					<span>Edit</span>
+																				</Dropdown.Item>
+																			)}
+																		</>
+																	)}
 
-                                  <Dropdown.Item
-                                    onClick={() =>
-                                      this.setState({
-                                        removeIndex: index,
-                                        modalShow: true,
-                                      })
-                                    }
-                                  >
-                                    <span>Remove</span>
-                                  </Dropdown.Item>
-                                </Dropdown.Menu>
-                              </Dropdown>
-                            </td>
-                          </tr>
-                        ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+																	<div className='dropdown-divider'></div>
 
-        <Modal
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-          dialogClassName={"confirm-modal"}
-          show={this.state.modalShow}
-          onHide={() => {
-            this.setState({
-              ...this.state,
-              modalShow: false,
-            });
-          }}
-        >
-          <div className="mb-16">
-            <span className="f-20 fw-500">
-              Remove {users[removeIndex]?.role} ‘ {users[removeIndex]?.name} ’?{" "}
-            </span>
-          </div>
-          <div className="mb-16">
-            <span className="f-16">
-              This action cannot be undone. This action will remove the school.
-            </span>
-          </div>
-          <div className="flex-center">
-            <button
-              type="submit"
-              className="secondary-btn mr-8"
-              onClick={() =>
-                this.setState({
-                  ...this.state,
-                  modalShow: false,
-                })
-              }
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="secondary-btn"
-              style={{ color: "#F80000", borderColor: "#F80000" }}
-              onClick={this.remove}
-            >
-              Remove
-            </button>
-          </div>
-        </Modal>
-      </>
-    );
+																	<Dropdown.Item
+																		onClick={() =>
+																			this.setState({
+																				removeIndex: index,
+																				modalShow: true,
+																			})
+																		}
+																	>
+																		<span>Remove</span>
+																	</Dropdown.Item>
+																</Dropdown.Menu>
+															</Dropdown>
+														</td>
+													</tr>
+												))}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<Modal
+					aria-labelledby='contained-modal-title-vcenter'
+					centered
+					dialogClassName={"confirm-modal"}
+					show={this.state.modalShow}
+					onHide={() => {
+						this.setState({
+							...this.state,
+							modalShow: false,
+						});
+					}}
+				>
+					<div className='mb-16'>
+						<span className='f-20 fw-500'>
+							Remove {users[removeIndex]?.role} ‘{" "}
+							{users[removeIndex]?.name && users[removeIndex]?.name
+								? users[removeIndex]?.name
+								: users[removeIndex]?.email}{" "}
+							’?{" "}
+						</span>
+					</div>
+					<div className='mb-16'>
+						<span className='f-16'>
+							This action cannot be undone. This action will remove the school.
+						</span>
+					</div>
+					<div className='flex-center'>
+						<button
+							type='submit'
+							className='secondary-btn mr-8'
+							onClick={() =>
+								this.setState({
+									...this.state,
+									modalShow: false,
+								})
+							}
+						>
+							Cancel
+						</button>
+						<button
+							type='submit'
+							className='secondary-btn'
+							style={{ color: "#F80000", borderColor: "#F80000" }}
+							onClick={this.remove}
+						>
+							Remove
+						</button>
+					</div>
+				</Modal>
+			</>
+		);
   }
 }
 

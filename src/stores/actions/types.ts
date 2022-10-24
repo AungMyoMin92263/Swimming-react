@@ -9,6 +9,7 @@ import { createStudentAction, deleteStudentAction, editStudentAction, getStudent
 import { CommentAction } from "./comment-action";
 import { CreateAttendanceAction, GetMyAttendanceAction } from "./attendance-action";
 import { CreateBadgeAction, CreatingBadgeAction, GetMyBadgesAction } from "./badge-action";
+import { S3FileUploadAction } from "./s3-file-upload.action";
 
 export enum ActionTypes {
   signUp,
@@ -84,7 +85,7 @@ export enum ActionTypes {
   createCoach,
   editCoach,
   deleteCoach,
-
+  uploadFileS3,
 
    //student
    getStudent,
@@ -153,3 +154,4 @@ export type Action = SignUpAction
   | SetStudentViewAction
   | EventRecordAction
   | deleteUserAction
+  | S3FileUploadAction

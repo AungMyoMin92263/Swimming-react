@@ -31,14 +31,14 @@ class CoachBadgeSentPage extends React.Component<IProps, IStates> {
   componentDidMount() {
     console.log("authUser", this.props.badges);
     //loading
-    if (!this.props.authUser.otherUserinfo && !this.props.badges.selectedBadge) {
+    if (!this.props.authUser.userInfo && !this.props.badges.selectedBadge) {
       this.props.history.back()
     }
   }
 
   sendBage = async () => {
     let postData = {
-      user_id: this.props.authUser.otherUserinfo.id,
+      user_id: this.props.authUser.otherUserinfo?.id,
       badge_id: this.props.badges.selectedBadge.id
     }
     await this.props.giveBadgeToStudent(postData)
@@ -69,8 +69,8 @@ class CoachBadgeSentPage extends React.Component<IProps, IStates> {
               <div className="flex-center mb-32">
                 <div className="email-div-new">
                   {/* <InitialIcon initials={"AR"} isFooterMenu={false} /> */}
-                  <CreateProfile image_url={receiver.avatar} name={receiver?.name || "User"} />
-                  <span className="email-div-name">{receiver.name}</span>
+                  <CreateProfile image_url={receiver?.avatar || ''} name={receiver?.name || "User"} />
+                  <span className="email-div-name">{receiver?.name}</span>
                 </div>
               </div>
             </div>

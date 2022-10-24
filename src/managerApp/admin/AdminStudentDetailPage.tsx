@@ -1,18 +1,21 @@
 import React from "react";
 
 // import css
-import "./ManagerDashboard.css";
-import "./ManagerClassDetailPage.css";
+import "../manager/ManagerDashboard.css";
+import "../manager/ManagerClassDetailPage.css";
+
 // icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { StoreState } from "../../stores/reducers";
-import {getClassObject,
+import {
+	getClassObject,
 	getAllComment,
 	getAllEvents,
 	getDetailEvents,
 	getUserInfo,
-	getAll
+	getAll,
+	getSchoolObj,
 } from "../../stores/actions";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -42,7 +45,9 @@ import BadgeList from "../../molecules/BadgeList";
 import { CreateProfile } from "../../atoms/createProfile";
 import BadgeListDash from "../../molecules/BadgeListDash";
 import CommentDashItem from "../../atoms/CommentDash";
-import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+
+import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
+
 interface IStates {
 	email: string;
 	logo: string;
@@ -73,11 +78,14 @@ interface IProps {
 	defaultPath: string;
 	signOut: Function;
 	LoadingActionFunc: Function;
+	getSchoolObj: Function;
+	schools: any;
 }
 
-class AdminStudentDetailPage extends React.Component<IProps, IStates> {
+class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
 	id: any;
-	class_id:any;
+	class_id: any;
+	school_id: any;
 	urlStudentAllComments: any;
 	urlStudentBadgetList: any;
 	urlStudentAllAttendacnes: any;
@@ -87,16 +95,40 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
-		this.id = path[3];
-		this.class_id = path[5]
-		this.urlStudentAllComments = "/manager/all-comments/user/" + this.id+"/class/"+this.class_id;
+		this.id = path[5];
+		this.class_id = path[7];
+		this.school_id = path[3];
+
+		this.urlStudentAllComments =
+			"/admin/all-comments/school/" +
+			this.school_id +
+			"/class/" +
+			this.class_id +
+			"/user/" +
+			this.id;
 		this.urlStudentBadgetList =
-			"/manager/all-badgets/user/" + this.id + "/class/" + this.class_id;
-		this.urlStudentAllAttendacnes = "/manager/all-attendances/user/" + this.id + "/class/"+ this.class_id;
+			"/admin/all-badgets/school/" +
+			this.school_id +
+			"/class/" +
+			this.class_id +
+			"/user/" +
+			this.id;
+		this.urlStudentAllAttendacnes =
+			"/admin/all-attendances/school/" +
+			this.school_id +
+			"/class/" +
+			this.class_id +
+			"/user/" +
+			this.id;
 		this.urlStudentEventList =
-			"/manager/all-events/user/" + this.id + "/class/" + this.class_id;
+			"/admin/all-events/school/" +
+			this.school_id +
+			"/user/" +
+			this.id +
+			"/class/" +
+			this.class_id;
 		this.state = {
-			attendances : [],
+			attendances: [],
 			email: "",
 			logo: "",
 			school_name: "",
@@ -110,12 +142,22 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 		};
 	}
 	componentDidMount() {
-		this.authFromLocal()
+		this.authFromLocal();
 		this.getDetailAll();
-		//loading
+		this.getSchool();
 	}
 
-	authFromLocal = async ()=>{
+	getSchool = async () => {
+		await this.props.getSchoolObj("schools/" + this.school_id);
+		let school = this.props.schools.result;
+		if (school) {
+			await this.setState({
+				school_name: school.name,
+			});
+		}
+	};
+
+	authFromLocal = async () => {
 		const user = JSON.parse(getItem("authUser") || "null");
 		console.log(user.userInfo);
 		if (user && user.userInfo) {
@@ -133,26 +175,22 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 			});
 			let classUrl =
 				"school/" + this.state.schoolId + "/class/" + this.class_id;
-			this.props.getClassObject(classUrl, true)
+			this.props.getClassObject(classUrl, true);
 		}
-
-	}
+	};
 	getDetailAll = async () => {
-		
 		let cmdUrl = "comment/by-student/" + this.id;
 		let eventUrl = "assigned/event/by-users/" + this.id;
 		await Promise.all([
-			
 			this.props.getUserInfo(this.id, true),
 			this.props.getAllComment(cmdUrl),
 			this.props.getAllEvents(eventUrl),
-			this.getAttendanceByStudent()
+			this.getAttendanceByStudent(),
 		]);
 	};
 
-		getAttendanceByStudent = async () => {
-		let url =
-			"attendance/student/" + this.id + "/class/"+ this.class_id
+	getAttendanceByStudent = async () => {
+		let url = "attendance/student/" + this.id + "/class/" + this.class_id;
 		await this.props.getAll(url);
 		if (
 			this.props.response &&
@@ -167,8 +205,8 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 					callback: () => console.log("log click item"),
 					smallText: "",
 					logo: tempAttendances[i].classes.logo,
-					attended:tempAttendances[i].attend,
-					record_date:tempAttendances[i].record_date,
+					attended: tempAttendances[i].attend,
+					record_date: tempAttendances[i].record_date,
 					secondryText: true,
 					isBigIcon: false,
 					selectable: true,
@@ -179,7 +217,7 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 				attendances: res,
 			});
 		}
-	}
+	};
 
 	toggleOpen = () => {
 		let dropdownVal = !this.state.dropdown;
@@ -210,17 +248,17 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 
 	createProfile = (image_url: string, name: string) => {
 		if (image_url) {
-			 return (
-					<img
-						src={
-							image_url
-								? process.env.REACT_APP_API_ENDPOINT + "/" + image_url
-								: ""
-						}
-						className='logo-icon'
-						alt=''
-					/>
-				);
+			return (
+				<img
+					src={
+						image_url
+							? process.env.REACT_APP_API_ENDPOINT + "/" + image_url
+							: ""
+					}
+					className='logo-icon'
+					alt=''
+				/>
+			);
 		} else {
 			return (
 				<InitialIcon
@@ -247,7 +285,7 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 		return (
 			<>
 				<div className='class-comment-header flex justify-space-between mt-16'>
-					<span className='fc-second'>Badgets</span>
+					<span className='fc-second'>Badges</span>
 					<Link to={this.urlStudentBadgetList}>
 						<span className='fc-primary'>View All</span>
 					</Link>
@@ -287,13 +325,18 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 											reply={res.children.length}
 											showRightArr={true}
 											message={res.message}
-											
-											callback={() => {this.props.history.push(
-													"/manager/user/" +
+											callback={() => {
+												this.props.history.push(
+													"/admin/school/" +
+														this.school_id +
+														"/class/" +
+														this.class_id +
+														"/user/" +
 														this.id +
 														"/comment-detail/" +
 														res.id
-												);}}
+												);
+											}}
 											timeString={
 												res.user_info.name +
 												" at " +
@@ -398,7 +441,7 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 							</th>
 						</thead>
 						<tbody>
-							{events  && events.length > 0 ? (
+							{events && events.length > 0 ? (
 								<>
 									{events.map((event: any, index: number) => {
 										return (
@@ -438,9 +481,11 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 		const profile: IProfile = {
 			isLogo: true,
 			logo: this.props.authUser.otherUserinfo?.avatar,
-			title: this.props.authUser.otherUserinfo? this.props.authUser.otherUserinfo.name
+			title: this.props.authUser.otherUserinfo
 				? this.props.authUser.otherUserinfo.name
-				: this.props.authUser.otherUserinfo?.email: '',
+					? this.props.authUser.otherUserinfo.name
+					: this.props.authUser.otherUserinfo?.email
+				: "",
 			display_item: [
 				{
 					title: "Age",
@@ -488,7 +533,7 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 											this.props.classes.viewClass?.name && (
 												<span className='ml-16 fc-second'>/</span>
 											)}
-										<span className="ml-16">
+										<span className='ml-16'>
 											{this.props.classes && this.props.classes.viewClass?.name}
 										</span>
 									</span>
@@ -534,7 +579,7 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 													profile.logo
 												}
 												alt=''
-												className="big-logo"
+												className='big-logo'
 											/>
 										) : profile.title ? (
 											<InitialIcon
@@ -551,20 +596,21 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 										<span>{profile?.title}</span>
 									</div>
 								</div>
-								<div className='col-4 col-md-4 justify-end'>
+								{/* <div className='col-4 col-md-4 justify-end'>
 									<Link to={this.state.url}>
 										<button
 											type='submit'
 											className='secondary-btn'
 											// style={{ width: "140px" }}
 										>
-										<ModeEditOutlineOutlinedIcon fontSize='small' className="mr-8" /> <span>Edit Student</span>
+											<ModeEditOutlineOutlinedIcon fontSize='small' className="mr-8" /> <span>Edit Student</span>
+
 											<AddIcon
 												sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
 											></AddIcon>
 										</button>
 									</Link>
-								</div>
+								</div> */}
 							</div>
 						</div>
 						<div className='mt-24 class-daily'>
@@ -636,13 +682,15 @@ const mapStateToProps = ({
 	comments,
 	eventList,
 	response,
-	classes
+	classes,
+	schools,
 }: StoreState): {
 	authUser: AuthInterface;
 	comments: any;
 	eventList: any;
 	response: any;
-	classes:any;
+	classes: any;
+	schools: any;
 } => {
 	return {
 		authUser,
@@ -650,6 +698,7 @@ const mapStateToProps = ({
 		comments,
 		eventList,
 		response,
+		schools,
 	};
 };
 
@@ -662,4 +711,5 @@ export default connect(mapStateToProps, {
 	getDetailEvents,
 	signOut,
 	LoadingActionFunc,
-})(AdminStudentDetailPage);
+	getSchoolObj,
+})(ManagerStudentDetailPage);

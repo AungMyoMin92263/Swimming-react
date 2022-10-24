@@ -10,6 +10,7 @@ import InputFormAtom from "../../atoms/InputFormAtom";
 import { Link, Navigate } from "react-router-dom";
 import CoachMobileHeader from "../../atoms/CoachMobileHeader";
 import { createBadge } from "../../stores/actions/badge-action";
+import { getItem } from "../../auth/LocalStorage";
 
 interface IStates {
   id: number;
@@ -25,6 +26,7 @@ interface IStates {
   isDesValid: boolean;
   isDesEmpty: boolean;
   goBadges: boolean;
+  schoolId : any;
 }
 
 interface IProps {
@@ -52,13 +54,27 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
       isDesValid: true,
       isDesEmpty: false,
       goBadges: false,
-      color: ""
+      color: "",
+      schoolId : -1,
     };
   }
   componentDidMount() {
     console.log("authUser", this.props.authUser);
-    //loading
+    this.authFromLocal();
   }
+
+  authFromLocal = async () => {
+		let user = JSON.parse(getItem("authUser") || "null");
+		if (user && user.userInfo) {
+			if (user.userInfo.assign_class && user.userInfo.assign_class.length > 0) {
+				if (user.userInfo.assign_class[0].classes) {
+					await this.setState({
+						schoolId: user.userInfo.assign_class[0].classes.school_id,
+					});
+				}
+			}
+		}
+	};
 
   handleChange = (e: any) => {
     var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
@@ -84,6 +100,7 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
       "name": this.state.name,
       "logo": this.props.badges.selectedIcon || "/assets/icons/star.svg",
       "color": this.state.color,
+      "school_id" : this.state.schoolId,
       "description": this.state.description
     }
     await this.props.createBadge(postData)
