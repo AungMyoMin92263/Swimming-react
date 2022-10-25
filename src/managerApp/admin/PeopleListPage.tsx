@@ -156,6 +156,7 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
       removeIndex,
       filterText,
     } = this.state;
+	    let parents = users?.filter((u: any) => u.role === "student");
     return (
 			<>
 				<div className='container-cus'>
@@ -229,15 +230,16 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 								<table className='table'>
 									<thead>
 										<tr>
-											<th className='col-3'>
+											<th className='col-1'></th>
+											<th className='col-2'>
 												{" "}
-												<span className='ml-56'>Name</span>
+												<span className=''>Name</span>
 											</th>
 											<th className='col-3'>Email</th>
 											<th className='col-1'>School</th>
 											<th className='col-2'>Status</th>
-											<th className='col-3'>Role</th>
-											{/* <th className='col-1'></th> */}
+											<th className='col-1'>Role</th>
+											<th className='col-1'></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -247,6 +249,16 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 												.filter((user: any) => {
 													if (!filterText) {
 														return true;
+													} else if (
+														filterText.toLowerCase() === "student" ||
+														filterText.toLowerCase() === "coach"
+													) {
+														return (
+															(user.role || "").toLowerCase() ===
+															(filterText.toLowerCase() === "coach"
+																? "coache"
+																: filterText.toLowerCase())
+														);
 													} else {
 														return (user.name || user.email || "")
 															.toLowerCase()
@@ -255,7 +267,7 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 												})
 												.map((user: any, index: any) => (
 													<tr>
-														<td className='flex justify-center'>
+														<td>
 															<InitialIcon
 																initials={
 																	user.email
@@ -264,19 +276,36 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 																}
 																isFooterMenu={false}
 															/>
-															<span className='ml-16'>
+														</td>
+														<td className='flex justify-center'>
+															<span className=''>
 																{!user.name || user.name === ""
 																	? "-"
 																	: user.name}
 															</span>
 														</td>
 
-														<td>
+														<td className='setWidth concat'>
 															<span>{user.email}</span>
 														</td>
-														<td className="cursor" onClick={()=>this.props.history.push("/admin/school/"+ user?.assign_school?.school_id)}>
+														<td
+															className='cursor'
+															onClick={() =>
+																this.props.history.push(
+																	"/admin/school/" +
+																		user?.assign_school?.school_id
+																)
+															}
+														>
 															{/* <span>{user?.assign_school?.school?.name}</span> */}
-															<img src={process.env.REACT_APP_API_ENDPOINT + "/" + user?.assign_school?.school?.logo} className="icon"/>
+															<img
+																src={
+																	process.env.REACT_APP_API_ENDPOINT +
+																	"/" +
+																	user?.assign_school?.school?.logo
+																}
+																className='icon'
+															/>
 														</td>
 
 														<td>
@@ -366,6 +395,152 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 														</td>
 													</tr>
 												))}
+										{/* {parents &&
+											parents.length > 0 &&
+											parents
+												.filter((user: any) => {
+													if (!filterText) {
+														return true;
+													} else if (
+														filterText.toLowerCase() === "student" ||
+														filterText.toLowerCase() === "coach"
+													) {
+														return (
+															(user.role || "").toLowerCase() ===
+															(filterText.toLowerCase() === "coach"
+																? "coache"
+																: filterText.toLowerCase())
+														);
+													} else {
+														return (user.name || user.email || "")
+															.toLowerCase()
+															.startsWith(filterText.toLowerCase());
+													}
+												})
+												.map((user: any, index: any) => (
+													<tr>
+														<td>
+															<InitialIcon
+																initials={
+																	user &&
+																	user.student &&
+																	user.student.parent_email &&
+																	user.student.parent_email
+																		? user.student.parent_email
+																				.substring(0, 1)
+																				.toUpperCase()
+																		: ""
+																}
+																isFooterMenu={false}
+															/>
+														</td>
+														<td className='flex justify-center'>
+															<span className='ml-16'>
+																{user &&
+																user.student &&
+																user.student.parent_name &&
+																user.student.parent_name
+																	? user.student.parent_name
+																	: "-"}
+															</span>
+														</td>
+
+														<td>
+															<span className=''>
+																{user &&
+																user.student &&
+																user.student.parent_email &&
+																user.student.parent_email
+																	? user.student.parent_email
+																	: "-"}
+															</span>
+														</td>
+														<td
+															className='cursor'
+															onClick={() =>
+																this.props.history.push(
+																	"/admin/school/" +
+																		user?.assign_school?.school_id
+																)
+															}
+														>
+															
+															<img
+																src={
+																	process.env.REACT_APP_API_ENDPOINT +
+																	"/" +
+																	user?.assign_school?.school?.logo
+																}
+																className='icon'
+															/>
+														</td>
+														<td>
+															<span
+																className={`${
+																	user.parent_password &&
+																	user.parent_password !== ""
+																		? "onboarded"
+																		: "pending"
+																}`}
+															>
+																{user.parent_password &&
+																user.parent_password !== ""
+																	? "Onboarded"
+																	: "Pending"}
+															</span>
+														</td>
+
+														<td>
+															<td>
+																<span>Parent</span>
+															</td>
+														</td>
+														<td className='mr-16'>
+															<Dropdown className='more-dropdown'>
+																<Dropdown.Toggle
+																	id='dropdown-basic'
+																	className='more-list-btn'
+																>
+																	<MoreVertIcon />
+																</Dropdown.Toggle>
+																<Dropdown.Menu>
+																	{user && user.role === "coache" ? (
+																		<Dropdown.Item
+																			href={
+																				"/manager/coach-edit-profile/" +
+																				parents[index].id
+																			}
+																		>
+																			<span>Edit</span>
+																		</Dropdown.Item>
+																	) : (
+																		<Dropdown.Item
+																			href={
+																				"/manager/student-edit-profile/" +
+																				parents[index].id
+																			}
+																		>
+																			<span>Edit</span>
+																		</Dropdown.Item>
+																	)}
+
+																	<div className='dropdown-divider'></div>
+
+																	<Dropdown.Item
+																		onClick={() =>
+																			this.setState({
+																				removeIndex: index,
+																				modalShow: true,
+																			})
+																		}
+																	>
+																		<span>Remove</span>
+																	</Dropdown.Item>
+																</Dropdown.Menu>
+															</Dropdown>
+														</td>
+													</tr>
+												))} */}
 									</tbody>
 								</table>
 							</div>

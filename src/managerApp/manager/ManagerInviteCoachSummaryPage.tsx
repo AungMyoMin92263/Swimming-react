@@ -16,6 +16,12 @@ import { getClassObject, getAll } from "../../stores/actions";
 import { deleteCoach } from "./../../stores/actions/coach-action";
 import { Modal } from "react-bootstrap";
 import { getAssignUserByClass } from "./../../stores/actions/class-action";
+
+//add coaches
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
+import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
+import SearchIcon from "@mui/icons-material/Search";
 interface IStates {
 	school: any;
 	errorMsg: string;
@@ -40,6 +46,7 @@ interface IProps {
 	classes: any;
 	deleteCoach: Function;
 	coach: any;
+	history : any;
 }
 class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 	id: any;
@@ -241,7 +248,7 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 										<div className='hr mb-16'></div>
 									</>
 								))}
-							<Link
+							{/* <Link
 								to={"/manager/invite-coach/" + this.id}
 								style={{ textDecoration: "none" }}
 							>
@@ -251,7 +258,44 @@ class ManagerInviteCoachSummaryPage extends React.Component<IProps, IStates> {
 									></AddIcon>
 									<span className='primary'>Add another coach</span>
 								</div>
-							</Link>
+							</Link> */}
+
+							<div className='mb-16'>
+								<div className='mb-16'>
+									<span className='f-12'>Invite New Coaches</span>
+								</div>
+								<div
+									className='mb-16 cursor'
+									onClick={() =>
+										this.props.history.push("/manager/invite-coach/" + this.id)
+									}
+								>
+									<PersonAddAltIcon
+										sx={{ color: "#0070F8", fontSize: 24, mr: 0.5 }}
+									></PersonAddAltIcon>
+									<span className='f-16 fc-primary fw-500 ml-16'>
+										Invite New Coach via Email
+									</span>
+								</div>
+								<div
+									className='mb-16 cursor'
+									onClick={() =>
+										this.props.history.push(
+											"/manager/school/" +
+												this.state.schoolId +
+												"/invite-old-coaches/" +
+												this.id
+										)
+									}
+								>
+									<PersonAddAltIcon
+										sx={{ color: "#0070F8", fontSize: 24, mr: 0.5 }}
+									></PersonAddAltIcon>
+									<span className='f-16 fc-primary fw-500 ml-16'>
+										Invite Existing Coach from School
+									</span>
+								</div>
+							</div>
 
 							<div className='hr mb-32'></div>
 							{this.state.errorMsg && (

@@ -611,100 +611,109 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
       this.state;
 
     return (
-      <>
-        <div className="container-cus">
-          <div className="dashboard">
-            <div className="dashboard-header">
-              <div className="justify-center justify-space-between" onClick={()=> this.props.history.back()}>
-                {/* <Link
+			<>
+				<div className='container-cus'>
+					<div className='dashboard'>
+						<div className='dashboard-header'>
+							<div className='justify-center justify-space-between'>
+								{/* <Link
                   to={'/admin/school/'+this.schoolId}
                   style={{ textDecoration: "none" }}
                 > */}
-                  <div className="cursor">
-                  <ArrowBackIcon
-                    sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-                  ></ArrowBackIcon>
-                  <span className="primary">Back</span>
-                  <span className="ml-16 fc-second">Schools /  {this.state.school_name}</span>
-                  </div>
-                {/* </Link> */}
-                <div className="justify-end">
-                  <div className="dropdown">
-                    <div className="email-div cursor" onClick={this.toggleOpen}>
-                      <InitialIcon
-                        initials={email.substr(0, 1).toUpperCase()}
-                        isFooterMenu={false}
-                      />
-                      <span>{email} </span>
-                    </div>
-                    <div
-                      className={`dropdown-menu dropdown-menu-right ${
-                        this.state.dropdown ? "show" : ""
-                      }`}
-                      aria-labelledby="dropdownMenuButton"
-                    >
-                      <div
-                        className="dropdown-item cursor"
-                        onClick={this.logout}
-                      >
-                        <LogoutOutlinedIcon
-                          sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
-                        ></LogoutOutlinedIcon>
-                        <span>Logout</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+								<div
+									className='cursor'
+									onClick={() => this.props.history.back()}
+								>
+									<ArrowBackIcon
+										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+									></ArrowBackIcon>
+									<span className='primary'>Back</span>
+									<span className='ml-16 fc-second'>
+										Schools / {this.state.school_name}
+									</span>
+								</div>
+								{/* </Link> */}
+								<div className='justify-end'>
+									<div className='dropdown'>
+										<div className='email-div cursor' onClick={this.toggleOpen}>
+											<InitialIcon
+												initials={email.substr(0, 1).toUpperCase()}
+												isFooterMenu={false}
+											/>
+											<span>{email} </span>
+										</div>
+										<div
+											className={`dropdown-menu dropdown-menu-right ${
+												this.state.dropdown ? "show" : ""
+											}`}
+											aria-labelledby='dropdownMenuButton'
+										>
+											<div
+												className='dropdown-item cursor'
+												onClick={this.logout}
+											>
+												<LogoutOutlinedIcon
+													sx={{ color: "#0070F8", fontSize: 32, mr: 2 }}
+												></LogoutOutlinedIcon>
+												<span>Logout</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 
-              <div className="justify-center">
-                <div className="col-8 col-md-8 justify-start align-center">
-                  <div className="mr-16">
-                    <img
-                      src={
-                        this.state.profile.logo
-                          ? process.env.REACT_APP_API_ENDPOINT +
-                            "/" +
-                            this.state.profile.logo
-                          : placeholder
-                      }
-                      alt="logo"
-                      className="big-logo"
-                    />
-                  </div>
+							<div className='justify-center'>
+								<div className='col-8 col-md-8 justify-start align-center'>
+									<div className='mr-16'>
+										<img
+											src={
+												this.state.profile.logo
+													? process.env.REACT_APP_API_ENDPOINT +
+													  "/" +
+													  this.state.profile.logo
+													: placeholder
+											}
+											alt='logo'
+											className='big-logo'
+										/>
+									</div>
 
-                  <div className="f-40 fw-500">
-                    <span>{this.state.profile.title}</span>
-                  </div>
-                </div>
-                <div className="col-4 col-md-4 justify-end">
-                  <Link to={this.editUrl}>
-                    <button
-                      type="submit"
-                      className="secondary-btn"
-                      // style={{ width: "140px" }}
-                    >
-                      <ModeEditOutlineOutlinedIcon fontSize='small' className="mr-8" /> <span>Edit Class</span>
-                      <AddIcon
-                        sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
-                      ></AddIcon>
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="class-detail-body">
-              <>
-                {this.renderClassDaily()}
-                {this.renderCoaches()}
-                {this.renderComment()}
-                {this.renderAttendance()}
-              </>
-            </div>
-          </div>
-        </div>
-      </>
-    );
+									<div className='f-40 fw-500'>
+										<span>{this.state.profile.title}</span>
+									</div>
+								</div>
+								<div className='col-4 col-md-4 justify-end'>
+									<Link to={this.editUrl}>
+										<button
+											type='submit'
+											className='secondary-btn'
+											// style={{ width: "140px" }}
+										>
+											<ModeEditOutlineOutlinedIcon
+												fontSize='small'
+												className='mr-8'
+											/>{" "}
+											<span>Edit Class</span>
+											<AddIcon
+												sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
+											></AddIcon>
+										</button>
+									</Link>
+								</div>
+							</div>
+						</div>
+						<div className='class-detail-body'>
+							<>
+								{this.renderClassDaily()}
+								{this.renderCoaches()}
+								{this.renderComment()}
+								{this.renderAttendance()}
+							</>
+						</div>
+					</div>
+				</div>
+			</>
+		);
   }
 }
 const mapStateToProps = ({

@@ -19,6 +19,12 @@ import {
 import { getClassObject, getAll } from "../../stores/actions";
 import { deleteStudent } from "./../../stores/actions/student-action";
 import { Modal } from "react-bootstrap";
+
+//add students
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
+import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
+import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
+
 interface IStates {
   school: any;
   errorMsg: string;
@@ -226,7 +232,8 @@ class AdminInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 													</span>
 													<span className='secondary'>
 														(
-														{student.user.password && student.user.password !== ""
+														{student.user.password &&
+														student.user.password !== ""
 															? "Onboarded"
 															: "Pending"}
 														)
@@ -254,7 +261,7 @@ class AdminInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 										<div className='hr mb-16'></div>
 									</>
 								))}
-							<Link
+							{/* <Link
 								// to={"/admin/invite-student"}
 								to={
 									"/admin/school/" +
@@ -264,13 +271,54 @@ class AdminInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 								}
 								style={{ textDecoration: "none" }}
 							>
-								<div className='mb-16 align-center'>
-									<AddIcon
+								
+							</Link> */}
+							<div className='mb-16'>
+								{/* <AddIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 									></AddIcon>
-									<span className='primary'>Add another student</span>
+									<span className='primary'>Add another student</span> */}
+
+								<div className='mb-16'>
+									<span className='f-12 fw-400'>Invite New Students</span>
 								</div>
-							</Link>
+								<div
+									className='mb-16 cursor'
+									onClick={() =>
+										this.props.history.push(
+											"/admin/school/" +
+												this.schoolId +
+												"/invite-student/" +
+												this.id
+										)
+									}
+								>
+									<PersonAddAltIcon
+										sx={{ color: "#0070F8", fontSize: 24, mr: 0.5 }}
+									></PersonAddAltIcon>
+									<span className='f-16 fc-primary fw-500 ml-16'>
+										Invite New Student via Email
+									</span>
+								</div>
+								<div
+									className='mb-16 cursor'
+									onClick={() =>
+										this.props.history.push(
+											"/admin/school/" +
+												this.schoolId +
+												"/invite-old-students/" +
+												this.id
+										)
+									}
+								>
+									<PersonAddAltIcon
+										sx={{ color: "#0070F8", fontSize: 24, mr: 0.5 }}
+									></PersonAddAltIcon>
+									<span className='f-16 fc-primary fw-500 ml-16'>
+										Invite Existing Student from School
+									</span>
+								</div>
+							</div>
 
 							<div className='hr mb-32'></div>
 							<Link to={url} style={{ textDecoration: "none" }}>

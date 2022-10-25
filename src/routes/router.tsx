@@ -44,6 +44,9 @@ import AddManagerNamePage from "../managerApp/manager/AddManagerName";
 import ManagerEditProfilePage from "../managerApp/manager/ManagerEditProfile";
 import ManagerInviteCoachSummaryPage from "../managerApp/manager/ManagerInviteCoachSummaryPage";
 import ManagerInviteStudentSummaryPage from "../managerApp/manager/ManagerInviteStudentSummaryPage";
+import ManagerAddOldCoach from "../managerApp/manager/ManagerAddOldCoach";
+import ManagerAddOldStudents from "../managerApp/manager/ManagerAddOldStudents";
+
 
 import LoginPage from "../managerApp/manager/Login";
 import AssignStudentPage from "../managerApp/manager/AssignStudent";
@@ -52,7 +55,6 @@ import PeopleListPage from "../managerApp/manager/PeopleListPage";
 import ManagerLoginPage from "../managerApp/manager/ManagerLogin";
 import ManagerClassDetailPage from "../managerApp/manager/ManagerClassDetailPage";
 import ManagerWelcomePage from "../managerApp/manager/ManagerWelcome";
-
 
 //student
 import StudentLoginPage from "../studentApp/student/StudentLogin";
@@ -156,6 +158,9 @@ import AdminStudentCommentDetail from "../managerApp/admin/AdminStudentCommentDe
 import AdminAllEventsStudentPage from "../managerApp/admin/AdminAllEventsStudentPage";
 import AdminAllBadgetsStudent from "../managerApp/admin/AdminAllBadgetsStudent";
 import AdminAllAttendancesStudent from "../managerApp/admin/AdminAllAttendancesStudent";
+import AdminAddOldStudents from "../managerApp/admin/AdminAddOldStudents";
+import AdminAddOldCoach from "../managerApp/admin/AdminAddOldCoach";
+
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -483,6 +488,31 @@ const routes = [
 				isSideBar: true,
 				isMobileFooter: false,
 			},
+			{
+				path: "school/:schoolId/invite-old-students/:classId",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<AdminAddOldStudents {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "school/:schoolId/invite-old-coaches/:classId",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<AdminAddOldCoach {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			
 			{
 				path: "add-class",
 				sideBar: (props: any) => (
@@ -1523,6 +1553,30 @@ const routes = [
 				main: (props: any) => (
 					<>
 						<ManagerEventEditInvitePage {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "school/:schoolId/invite-old-coaches/:classId",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ManagerAddOldCoach {...props} />
+					</>
+				),
+				footer: (props: any) => <></>,
+				isSideBar: false,
+				isMobileFooter: false,
+			},
+			{
+				path: "school/:schoolId/invite-old-students/:classId",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<ManagerAddOldStudents {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
@@ -2702,7 +2756,7 @@ const routes = [
 
 class RouteList extends React.Component {
 	componentDidMount() {
-		console.log('Router')
+		console.log("Router");
 	}
 	renderPage = (child: any, index: any, porps: any, appname: string) => {
 		let prop: any = { history: porps };
@@ -2775,23 +2829,32 @@ class RouteList extends React.Component {
 			<div>
 				<HistoryRouter history={windowHistory}>
 					<Routes>
-						{routes && routes.length > 0 && routes.map((route, index) => (
-							<Route
-								key={index + "app-aside"}
-								path={route.path}
-								element={
-									<div className='app-layout'>
-										<Outlet key={index + "child-layout"} />
-									</div>
-								}
-							>
-								{route.child && route.child.length > 0 && route.child.map((child, index) => (
-									<React.Fragment key={index + "child-" + index}>
-										{this.renderPage(child, index, windowHistory, route.path)}
-									</React.Fragment>
-								))}
-								{/* <Route index element={<Home />} /> */}
-								{/* {route.child.map((child, index) => (
+						{routes &&
+							routes.length > 0 &&
+							routes.map((route, index) => (
+								<Route
+									key={index + "app-aside"}
+									path={route.path}
+									element={
+										<div className='app-layout'>
+											<Outlet key={index + "child-layout"} />
+										</div>
+									}
+								>
+									{route.child &&
+										route.child.length > 0 &&
+										route.child.map((child, index) => (
+											<React.Fragment key={index + "child-" + index}>
+												{this.renderPage(
+													child,
+													index,
+													windowHistory,
+													route.path
+												)}
+											</React.Fragment>
+										))}
+									{/* <Route index element={<Home />} /> */}
+									{/* {route.child.map((child, index) => (
                 // <div>
                 <Route path={child.path} key={index + 'child-aside'}
                   element={
@@ -2815,8 +2878,8 @@ class RouteList extends React.Component {
                   }
                 />
               ))} */}
-							</Route>
-						))}
+								</Route>
+							))}
 					</Routes>
 				</HistoryRouter>
 			</div>
