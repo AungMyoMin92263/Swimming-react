@@ -29,6 +29,8 @@ import AdminStudentDetailPage from "../managerApp/admin/AdminStudentDetailPage";
 import AdminAllCommentClass from "../managerApp/admin/AdminAllCommentClass";
 import AdminAllAttendancesClasses from "../managerApp/admin/AdminAllAttendancesClasses";
 
+import banner from '../assets/images/banner.png';
+
 import ManagerSideBar from "../Layouts/ManagerMenuSideBar";
 import InviteStudentEvent from "../managerApp/manager/InviteStudentEvent";
 import ManagerChangePassword from "../managerApp/manager/ManagerChangePassword";
@@ -160,7 +162,6 @@ import AdminAllBadgetsStudent from "../managerApp/admin/AdminAllBadgetsStudent";
 import AdminAllAttendancesStudent from "../managerApp/admin/AdminAllAttendancesStudent";
 import AdminAddOldStudents from "../managerApp/admin/AdminAddOldStudents";
 import AdminAddOldCoach from "../managerApp/admin/AdminAddOldCoach";
-
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -515,114 +516,86 @@ const routes = [
 			
 			{
 				path: "add-class",
-				sideBar: (props: any) => (
-					<>
-						<SideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AdminAddClass {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
 				path: "add-class/:id",
-				sideBar: (props: any) => (
-					<>
-						<SideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AdminAddClass {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
 				path: "school/:schoolId/set-date-time/:id",
-				sideBar: (props: any) => (
-					<>
-						<SideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AdminSetDateTime {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
 				path: "school/:schoolId/invite-coach/:id",
-				sideBar: (props: any) => (
-					<>
-						<SideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AdminInviteCoachPage {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
 				path: "school/:schoolId/invite-coach-summary/:id",
-				sideBar: (props: any) => (
-					<>
-						<SideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AdminInviteCoachSummaryPage {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
 				path: "school/:schoolId/invite-coach-summary/new/:id",
-				sideBar: (props: any) => (
-					<>
-						<SideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AdminInviteCoachSummaryPage {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
 				path: "school/:schoolId/invite-student",
-				sideBar: (props: any) => (
-					<>
-						<SideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AdminInviteStudent {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 
@@ -665,98 +638,74 @@ const routes = [
 
 			{
 				path: "school/:schoolId/invite-student/:id",
-				sideBar: (props: any) => (
-					<>
-						<SideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AdminInviteStudent {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
 				path: "school/:schoolId/invite-student-summary/:id",
-				sideBar: (props: any) => (
-					<>
-						<SideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AdminInviteStudentSummaryPage {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
 				path: "school/:schoolId/invite-student-summary/new/:id",
-				sideBar: (props: any) => (
-					<>
-						<SideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AdminInviteStudentSummaryPage {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
 				path: "school/:schoolId/edit-class/:id",
-				sideBar: (props: any) => (
-					<>
-						<SideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AdminEditClass {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
 				path: "edit-class/:id",
-				sideBar: (props: any) => (
-					<>
-						<SideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AdminEditClass {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
 				path: "school/:schoolId/edit-set-date-time/:id",
-				sideBar: (props: any) => (
-					<>
-						<SideBar {...props} />
-					</>
-				),
+				sideBar: (props: any) => <></>,
 				main: (props: any) => (
 					<>
 						<AdminEditSetDateTime {...props} />
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
@@ -2809,7 +2758,7 @@ class RouteList extends React.Component {
 									<div>
 										<div className='banner-box'></div>
 										<img
-											src='../../../assets/images/banner.png'
+											src={banner}
 											alt='banner'
 											className='banner-image'
 										/>
