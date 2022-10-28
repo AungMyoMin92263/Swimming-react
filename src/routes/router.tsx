@@ -429,7 +429,7 @@ const routes = [
 				path: "student-edit-profile/:id",
 				sideBar: (props: any) => (
 					<>
-						<SideBar {...props} />
+						
 					</>
 				),
 				main: (props: any) => (
@@ -438,14 +438,14 @@ const routes = [
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{
 				path: "coach-edit-profile/:id",
 				sideBar: (props: any) => (
 					<>
-						<SideBar {...props} />
+						
 					</>
 				),
 				main: (props: any) => (
@@ -454,7 +454,7 @@ const routes = [
 					</>
 				),
 				footer: (props: any) => <></>,
-				isSideBar: true,
+				isSideBar: false,
 				isMobileFooter: false,
 			},
 			{

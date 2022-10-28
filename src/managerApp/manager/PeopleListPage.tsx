@@ -10,13 +10,13 @@ import { School } from "../../stores/model/school";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import {
-  signIn,
-  signOut,
-  getAll,
-  LoadingActionFunc,
-  deleteStudent,
-  deleteCoach,
-  deleteUser,
+	signIn,
+	signOut,
+	getAll,
+	LoadingActionFunc,
+	deleteStudent,
+	deleteCoach,
+	deleteUser,
 } from "../../stores/actions";
 import { Link, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
@@ -29,212 +29,210 @@ import Dropdown from "react-bootstrap/Dropdown";
 import { Modal } from "react-bootstrap";
 
 interface IStates {
-  schools: School[];
-  school_id: any;
-  email: string;
-  dropdown: boolean;
-  dropdownMore: boolean;
-  currentIndex: number;
-  isLogout: boolean;
-  users: any[];
-  filteredUsers: any[];
-  search: string;
-  viewStudentUrl: string;
-  editStudentUrl: string;
-  viewCoachUrl: string;
-  editCoachUrl: string;
-  modalShow : boolean;
-  removeIndex : number;
+	schools: School[];
+	school_id: any;
+	email: string;
+	dropdown: boolean;
+	dropdownMore: boolean;
+	currentIndex: number;
+	isLogout: boolean;
+	users: any[];
+	filteredUsers: any[];
+	search: string;
+	viewStudentUrl: string;
+	editStudentUrl: string;
+	viewCoachUrl: string;
+	editCoachUrl: string;
+	modalShow: boolean;
+	removeIndex: number;
 }
 interface UserSignInPage {
-  signIn: Function;
-  authUser: AuthInterface;
-  signOut: Function;
-  getAll: Function;
-  users: any;
-  LoadingActionFunc: Function;
-  deleteStudent: Function;
-  student: any;
-  coach: any;
-  deleteCoach: Function;
-  deleteUser: Function;
-  user: any;
+	signIn: Function;
+	authUser: AuthInterface;
+	signOut: Function;
+	getAll: Function;
+	users: any;
+	LoadingActionFunc: Function;
+	deleteStudent: Function;
+	student: any;
+	coach: any;
+	deleteCoach: Function;
+	deleteUser: Function;
+	user: any;
 }
 
 type IProps = UserSignInPage;
 
 class PeopleListPage extends React.Component<IProps, IStates> {
-  editStudentUrl = "/manager/student-edit-profile/";
-  viewStudentUrl = "/manager/student-detail/";
-  editCoachUrl = "/manager/coach-edit-profile/";
-  viewCoachUrl = "/manager/coach-detail/";
+	editStudentUrl = "/manager/student-edit-profile/";
+	viewStudentUrl = "/manager/student-detail/";
+	editCoachUrl = "/manager/coach-edit-profile/";
+	viewCoachUrl = "/manager/coach-detail/";
 
-  constructor(props: any) {
-    super(props);
+	constructor(props: any) {
+		super(props);
 
-    this.state = {
-      schools: [],
-      email: "",
-      school_id: -1,
-      dropdown: false,
-      dropdownMore: false,
-      currentIndex: -1,
-      isLogout: false,
-      users: [],
-      filteredUsers: [],
-      search: "",
-      viewStudentUrl: "",
-      editStudentUrl: "",
-      viewCoachUrl: "",
-      editCoachUrl: "",
-      modalShow : false,
-      removeIndex : -1,
-    };
-    this.props.LoadingActionFunc(true);
-  }
+		this.state = {
+			schools: [],
+			email: "",
+			school_id: -1,
+			dropdown: false,
+			dropdownMore: false,
+			currentIndex: -1,
+			isLogout: false,
+			users: [],
+			filteredUsers: [],
+			search: "",
+			viewStudentUrl: "",
+			editStudentUrl: "",
+			viewCoachUrl: "",
+			editCoachUrl: "",
+			modalShow: false,
+			removeIndex: -1,
+		};
+		this.props.LoadingActionFunc(true);
+	}
 
-  componentDidMount() {
-    //loading
-    this.setUserInfo();
-    this.props.LoadingActionFunc(false);
-  }
+	componentDidMount() {
+		//loading
+		this.setUserInfo();
+		this.props.LoadingActionFunc(false);
+	}
 
-  setUserInfo = async () => {
-    const user = JSON.parse(getItem("authUser") || "null");
-    if (user && user.userInfo) {
-      this.setState({
-        email: user.userInfo.email,
-      });
-      if (user.userInfo.assign_school) {
-        await this.setState({
-          school_id: user.userInfo.assign_school.school_id,
-        })
-        this.getUsers(user.userInfo.assign_school.school_id);
-      }
-    }
-  };
+	setUserInfo = async () => {
+		const user = JSON.parse(getItem("authUser") || "null");
+		if (user && user.userInfo) {
+			this.setState({
+				email: user.userInfo.email,
+			});
+			if (user.userInfo.assign_school) {
+				await this.setState({
+					school_id: user.userInfo.assign_school.school_id,
+				});
+				this.getUsers(user.userInfo.assign_school.school_id);
+			}
+		}
+	};
 
-  getUsers = async (id : number) => {
-    let getUserUrl = "schools/all-user/" + id;
-    await this.props.getAll(getUserUrl);
-    await this.setState({
-      users: this.props.users.result,
-    });
-    this.props.LoadingActionFunc(false);
-  };
+	getUsers = async (id: number) => {
+		let getUserUrl = "schools/all-user/" + id;
+		await this.props.getAll(getUserUrl);
+		await this.setState({
+			users: this.props.users.result,
+		});
+		this.props.LoadingActionFunc(false);
+	};
 
-  toggleOpen = () => {
-    let dropdownVal = !this.state.dropdown;
-    this.setState({
-      dropdown: dropdownVal,
-    });
-  };
+	toggleOpen = () => {
+		let dropdownVal = !this.state.dropdown;
+		this.setState({
+			dropdown: dropdownVal,
+		});
+	};
 
-  logout = async () => {
-    await this.props.signOut();
-    this.props.LoadingActionFunc(true);
-    removeItem("authUser");
-    removeItem("class");
-    this.setState({
-      isLogout: true,
-    });
-  };
+	logout = async () => {
+		await this.props.signOut();
+		this.props.LoadingActionFunc(true);
+		removeItem("authUser");
+		removeItem("class");
+		this.setState({
+			isLogout: true,
+		});
+	};
 
-  searchChanged = async (e: any) => {
-    await this.setState({
-      search: e.target.value,
-    });
+	searchChanged = async (e: any) => {
+		await this.setState({
+			search: e.target.value,
+		});
+	};
 
-  };
+	toggleOpenMore = (index: number) => {
+		let dropdownVal = !this.state.dropdownMore;
+		this.setState({
+			currentIndex: index,
+			dropdownMore: dropdownVal,
+			viewStudentUrl: this.viewStudentUrl + this.state.users[index].id,
+			editStudentUrl: this.editStudentUrl + this.state.users[index].id,
+			editCoachUrl: this.editCoachUrl + this.state.users[index].id,
+			viewCoachUrl: this.viewCoachUrl + this.state.users[index].id,
+		});
+	};
 
-  toggleOpenMore = (index: number) => {
-    let dropdownVal = !this.state.dropdownMore;
-    this.setState({
-      currentIndex: index,
-      dropdownMore: dropdownVal,
-      viewStudentUrl: this.viewStudentUrl + this.state.users[index].id,
-      editStudentUrl: this.editStudentUrl + this.state.users[index].id,
-      editCoachUrl: this.editCoachUrl + this.state.users[index].id,
-      viewCoachUrl: this.viewCoachUrl + this.state.users[index].id,
-    });
-  };
+	remove = async () => {
+		//this.removeUser(this.state.users[index].id,this.state.users[index].role);
+		await this.props.deleteUser(
+			"users",
+			this.state.users[this.state.removeIndex].id
+		);
+		console.log("this.props.user", this.props.user);
+		if (
+			this.props.user &&
+			this.props.user.result &&
+			this.props.user.result.data.statusText === "success"
+		) {
+			this.setState({
+				modalShow: this.state.modalShow ? false : this.state.modalShow,
+			});
+			this.getUsers(this.state.school_id);
+		}
+	};
 
+	removeUser = async (id: any, role: string) => {
+		switch (role) {
+			case "coache": {
+				this.deleteCoach(id);
+				break;
+			}
+			case "student": {
+				this.deleteStudent(id);
+				break;
+			}
+			default: {
+				console.log("No User Type");
+				break;
+			}
+		}
+	};
 
+	deleteStudent = async (id: any) => {
+		await this.props.deleteStudent("student", id);
+		if (
+			this.props.student.result &&
+			this.props.student.result.data.statusText === "success"
+		) {
+			this.getUsers(this.state.school_id);
+		}
+	};
 
-  remove = async () => {
-    //this.removeUser(this.state.users[index].id,this.state.users[index].role);
-    await this.props.deleteUser("users", this.state.users[this.state.removeIndex].id);
-    console.log("this.props.user", this.props.user);
-    if (
-      this.props.user &&
-      this.props.user.result &&
-      this.props.user.result.data.statusText === "success"
-    ) {
-      this.setState({
-        modalShow : this.state.modalShow? false : this.state.modalShow,
-        });
-      this.getUsers(this.state.school_id);
-    }
-  };
+	deleteCoach = async (id: any) => {
+		await this.props.deleteCoach("coach", id);
+		if (
+			this.props.coach.result &&
+			this.props.coach.result.data.statusText === "success"
+		) {
+			this.getUsers(this.state.school_id);
+		}
+	};
 
-  removeUser = async (id: any, role: string) => {
-    switch (role) {
-      case "coache": {
-        this.deleteCoach(id);
-        break;
-      }
-      case "student": {
-        this.deleteStudent(id);
-        break;
-      }
-      default: {
-        console.log("No User Type");
-        break;
-      }
-    }
-  };
-
-  deleteStudent = async (id: any) => {
-    await this.props.deleteStudent("student", id);
-    if (
-      this.props.student.result &&
-      this.props.student.result.data.statusText === "success"
-    ) {
-      this.getUsers(this.state.school_id);
-    }
-  };
-
-  deleteCoach = async (id: any) => {
-    await this.props.deleteCoach("coach", id);
-    if (
-      this.props.coach.result &&
-      this.props.coach.result.data.statusText === "success"
-    ) {
-      this.getUsers(this.state.school_id);
-    }
-  };
-
-  render() {
-    const {
-      users,
-      email,
-      dropdown,
-      isLogout,
-      filteredUsers,
-      search,
-      dropdownMore,
-      currentIndex,
-      viewStudentUrl,
-      editStudentUrl,
-      viewCoachUrl,
-      editCoachUrl,
-      removeIndex
-    } = this.state;
-    let parents = users?.filter(
-			(u: any) => u.role === "student" 
-		)
-    console.log("parents", parents)
-    return (
+	render() {
+		const {
+			users,
+			email,
+			dropdown,
+			isLogout,
+			filteredUsers,
+			search,
+			dropdownMore,
+			currentIndex,
+			viewStudentUrl,
+			editStudentUrl,
+			viewCoachUrl,
+			editCoachUrl,
+			removeIndex,
+		} = this.state;
+		let parents = users?.filter((u: any) => u.role === "student");
+		console.log("parents", parents);
+		return (
 			<>
 				<div className='container-cus'>
 					{isLogout && <Navigate to='/manager/login' replace={true} />}
@@ -320,26 +318,18 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 										{users &&
 											users.length > 0 &&
 											users
-												.filter(
-													(u: any) => u.role !== "manager" && u.role !== "admin"
-												)
 												.filter((user: any) => {
-													if (!search) {
+													if (!this.state.search) {
 														return true;
-													} else if (
-														search.toLowerCase() === "student" ||
-														search.toLowerCase() === "coach"
-													) {
-														return (
-															(user.role || "").toLowerCase() ===
-															(search.toLowerCase() === "coach"
-																? "coache"
-																: search.toLowerCase())
-														);
 													} else {
-														return (user.name || "")
-															.toLowerCase()
-															.startsWith(search.toLowerCase());
+														return (
+															(user.name || "")
+																.toLowerCase()
+																.startsWith(this.state.search.toLowerCase()) ||
+															(user.role || "")
+																.toLowerCase()
+																.startsWith(this.state.search.toLowerCase())
+														);
 													}
 												})
 												.map((user: any, index: any) => (
@@ -440,63 +430,74 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 												))}
 										{parents &&
 											parents.length > 0 &&
-											parents.map((user: any, index: any) => (
-												<tr>
-													<td className='flex justify-center'>
-														<InitialIcon
-															initials={
+											parents
+												.filter((user: any) => {
+													if (!this.state.search) {
+														return true;
+													} else {
+														return (
+															(user.name || "")
+																.toLowerCase()
+																.startsWith(this.state.search.toLowerCase()) ||
+															("parent" || "")
+																.toLowerCase()
+																.startsWith(this.state.search.toLowerCase())
+														);
+													}
+												})
+												.map((user: any, index: any) => (
+													<tr>
+														<td className='flex justify-center'>
+															<InitialIcon
+																initials={
+																	user && user.parent_email && user.parent_email
+																		? user.parent_email
+																				.substring(0, 1)
+																				.toUpperCase()
+																		: ""
+																}
+																isFooterMenu={false}
+															/>
+															<span className='ml-16'>
+																{user &&
 																user &&
-																user.student &&
-																user.student.parent_email &&
-																user.student.parent_email
-																	? user.student.parent_email
-																			.substring(0, 1)
-																			.toUpperCase()
-																	: ""
-															}
-															isFooterMenu={false}
-														/>
-														<span className='ml-16'>
-															{user &&
-															user.student &&
-															user.student.parent_name &&
-															user.student.parent_name
-																? user.student.parent_name
-																: "-"}
-														</span>
-													</td>
-
-													<td>
-														<span className=''>
-															{user &&
-															user.student &&
-															user.student.parent_email &&
-															user.student.parent_email
-																? user.student.parent_email
-																: "-"}
-														</span>
-													</td>
-													<td>
-														<span
-															className={`${
-																user.parent_password && user.parent_password !== ""
-																	? "onboarded"
-																	: "pending"
-															}`}
-														>
-															{user.parent_password && user.parent_password !== ""
-																? "Onboarded"
-																: "Pending"}
-														</span>
-													</td>
-
-													<td>
-														<td>
-															<span>Parent</span>
+																user.parent_name &&
+																user.parent_name
+																	? user.parent_name
+																	: "-"}
+															</span>
 														</td>
-													</td>
-													<td className='mr-16'>
-														{/* <div className='dropdownMore mr-24'>
+
+														<td>
+															<span className=''>
+																{user && user.parent_email && user.parent_email
+																	? user.parent_email
+																	: "-"}
+															</span>
+														</td>
+														<td>
+															<span
+																className={`${
+																	user.parent_password &&
+																	user.parent_password !== ""
+																		? "onboarded"
+																		: "pending"
+																}`}
+															>
+																{user.parent_password &&
+																user.parent_password !== ""
+																	? "Onboarded"
+																	: "Pending"}
+															</span>
+														</td>
+
+														<td>
+															<td>
+																<span>Parent</span>
+															</td>
+														</td>
+														<td className='mr-16'>
+															{/* <div className='dropdownMore mr-24'>
 																<MoreVertIcon
 																	style={{
 																		color: "inherit",
@@ -545,51 +546,51 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 																	</div>
 																</div>
 															</div> */}
-														<Dropdown className='more-dropdown'>
-															<Dropdown.Toggle
-																id='dropdown-basic'
-																className='more-list-btn'
-															>
-																<MoreVertIcon />
-															</Dropdown.Toggle>
-															<Dropdown.Menu>
-																{user && user.role === "coache" ? (
-																	<Dropdown.Item
-																		href={
-																			"/manager/coach-edit-profile/" +
-																			parents[index].id
-																		}
-																	>
-																		<span>Edit</span>
-																	</Dropdown.Item>
-																) : (
-																	<Dropdown.Item
-																		href={
-																			"/manager/student-edit-profile/" +
-																			parents[index].id
-																		}
-																	>
-																		<span>Edit</span>
-																	</Dropdown.Item>
-																)}
-
-																<div className='dropdown-divider'></div>
-
-																<Dropdown.Item
-																	onClick={() =>
-																		this.setState({
-																			removeIndex: index,
-																			modalShow: true,
-																		})
-																	}
+															<Dropdown className='more-dropdown'>
+																<Dropdown.Toggle
+																	id='dropdown-basic'
+																	className='more-list-btn'
 																>
-																	<span>Remove</span>
-																</Dropdown.Item>
-															</Dropdown.Menu>
-														</Dropdown>
-													</td>
-												</tr>
-											))}
+																	<MoreVertIcon />
+																</Dropdown.Toggle>
+																<Dropdown.Menu>
+																	{user && user.role === "coache" ? (
+																		<Dropdown.Item
+																			href={
+																				"/manager/coach-edit-profile/" +
+																				parents[index].id
+																			}
+																		>
+																			<span>Edit</span>
+																		</Dropdown.Item>
+																	) : (
+																		<Dropdown.Item
+																			href={
+																				"/manager/student-edit-profile/" +
+																				parents[index].id
+																			}
+																		>
+																			<span>Edit</span>
+																		</Dropdown.Item>
+																	)}
+
+																	<div className='dropdown-divider'></div>
+
+																	<Dropdown.Item
+																		onClick={() =>
+																			this.setState({
+																				removeIndex: index,
+																				modalShow: true,
+																			})
+																		}
+																	>
+																		<span>Remove</span>
+																	</Dropdown.Item>
+																</Dropdown.Menu>
+															</Dropdown>
+														</td>
+													</tr>
+												))}
 									</tbody>
 								</table>
 							</div>
@@ -655,37 +656,37 @@ class PeopleListPage extends React.Component<IProps, IStates> {
 				</Modal>
 			</>
 		);
-  }
+	}
 }
 
 const mapStateToProps = ({
-  authUser,
-  users,
-  student,
-  coach,
-  user,
+	authUser,
+	users,
+	student,
+	coach,
+	user,
 }: StoreState): {
-  authUser: AuthInterface;
-  users: any;
-  student: any;
-  coach: any;
-  user: any;
+	authUser: AuthInterface;
+	users: any;
+	student: any;
+	coach: any;
+	user: any;
 } => {
-  return {
-    authUser,
-    users,
-    student,
-    coach,
-    user,
-  };
+	return {
+		authUser,
+		users,
+		student,
+		coach,
+		user,
+	};
 };
 
 export default connect(mapStateToProps, {
-  signIn,
-  signOut,
-  getAll,
-  LoadingActionFunc,
-  deleteStudent,
-  deleteCoach,
-  deleteUser,
+	signIn,
+	signOut,
+	getAll,
+	LoadingActionFunc,
+	deleteStudent,
+	deleteCoach,
+	deleteUser,
 })(PeopleListPage);

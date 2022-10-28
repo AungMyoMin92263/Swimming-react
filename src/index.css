@@ -1133,7 +1133,7 @@ table,
 th,
 td {
   border: none;
-  
+  align-items: center;
 }
 
 td{

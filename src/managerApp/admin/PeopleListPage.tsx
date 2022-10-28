@@ -7,11 +7,11 @@ import "../manager/ManagerDashboard.css";
 import { AuthInterface } from "../../stores/model/auth-interface";
 import { StoreState } from "../../stores/reducers";
 import {
-  signIn,
-  signOut,
-  getAllUsers,
-  LoadingActionFunc,
-  deleteUser,
+	signIn,
+	signOut,
+	getAllUsers,
+	LoadingActionFunc,
+	deleteUser,
 } from "../../stores/actions";
 
 import { Navigate } from "react-router-dom";
@@ -24,16 +24,16 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Modal } from "react-bootstrap";
 interface IStates {
-  users: any[];
-  email: string;
-  dropdown: boolean;
-  isLogout: boolean;
-  dropdownMore: boolean;
-  currentIndex: number;
-  url: string;
-  filterText: string;
-  modalShow: boolean;
-  removeIndex: number;
+	users: any[];
+	email: string;
+	dropdown: boolean;
+	isLogout: boolean;
+	dropdownMore: boolean;
+	currentIndex: number;
+	url: string;
+	filterText: string;
+	modalShow: boolean;
+	removeIndex: number;
 }
 interface UserSignInPage {
 	signIn: Function;
@@ -50,114 +50,114 @@ interface UserSignInPage {
 type IProps = UserSignInPage;
 
 class AdminPeopleListPage extends React.Component<IProps, IStates> {
-  constructor(props: any) {
-    super(props);
+	constructor(props: any) {
+		super(props);
 
-    this.state = {
-      users: [
-        {
-          role: "",
-          name: "",
-        },
-      ],
-      email: "",
-      dropdown: false,
-      isLogout: false,
-      dropdownMore: false,
-      currentIndex: -1,
-      url: "",
-      filterText: "",
-      modalShow: false,
-      removeIndex: -1,
-    };
-    this.props.LoadingActionFunc(true);
-  }
+		this.state = {
+			users: [
+				{
+					role: "",
+					name: "",
+				},
+			],
+			email: "",
+			dropdown: false,
+			isLogout: false,
+			dropdownMore: false,
+			currentIndex: -1,
+			url: "",
+			filterText: "",
+			modalShow: false,
+			removeIndex: -1,
+		};
+		this.props.LoadingActionFunc(true);
+	}
 
-  componentDidMount() {
-    const user = JSON.parse(getItem("authUser") || "null");
-    if (user && user.userInfo) {
-      this.setState({
-        email: user.userInfo.email,
-      });
-    }
-    this.getUsers();
-  }
+	componentDidMount() {
+		const user = JSON.parse(getItem("authUser") || "null");
+		if (user && user.userInfo) {
+			this.setState({
+				email: user.userInfo.email,
+			});
+		}
+		this.getUsers();
+	}
 
-  getUsers = async () => {
-    await this.props.getAllUsers();
-    let filtered = this.props.users.result.filter(
-      (u: any) => u.role !== "admin"
-    );
+	getUsers = async () => {
+		await this.props.getAllUsers();
+		let filtered = this.props.users.result.filter(
+			(u: any) => u.role !== "admin"
+		);
 
-    this.setState({
-      users: filtered,
-    });
-    this.props.LoadingActionFunc(false);
-  };
+		this.setState({
+			users: filtered,
+		});
+		this.props.LoadingActionFunc(false);
+	};
 
-  remove = async () => {
-    await this.props.deleteUser(
-      "users",
-      this.state.users[this.state.removeIndex].id
-    );
-    console.log("this.props.user", this.props.user);
-    if (
-      this.props.user &&
-      this.props.user.result &&
-      this.props.user.result.data.statusText === "success"
-    ) {
-      this.setState({
-        modalShow: this.state.modalShow ? false : this.state.modalShow,
-      });
-      this.getUsers();
-    }
-  };
+	remove = async () => {
+		await this.props.deleteUser(
+			"users",
+			this.state.users[this.state.removeIndex].id
+		);
+		console.log("this.props.user", this.props.user);
+		if (
+			this.props.user &&
+			this.props.user.result &&
+			this.props.user.result.data.statusText === "success"
+		) {
+			this.setState({
+				modalShow: this.state.modalShow ? false : this.state.modalShow,
+			});
+			this.getUsers();
+		}
+	};
 
-  toggleOpen = () => {
-    let dropdownVal = !this.state.dropdown;
-    this.setState({
-      dropdown: dropdownVal,
-    });
-  };
+	toggleOpen = () => {
+		let dropdownVal = !this.state.dropdown;
+		this.setState({
+			dropdown: dropdownVal,
+		});
+	};
 
-  logout = async () => {
-    await this.props.signOut();
-    removeItem("authUser");
-    removeItem("school");
-    this.setState({
-      isLogout: true,
-    });
-    this.props.LoadingActionFunc(true);
-  };
+	logout = async () => {
+		await this.props.signOut();
+		removeItem("authUser");
+		removeItem("school");
+		this.setState({
+			isLogout: true,
+		});
+		this.props.LoadingActionFunc(true);
+	};
 
-  toggleOpenMore = (index: number) => {
-    let dropdownVal = !this.state.dropdownMore;
-    this.setState({
-      currentIndex: index,
-      dropdownMore: dropdownVal,
-    });
-  };
+	toggleOpenMore = (index: number) => {
+		let dropdownVal = !this.state.dropdownMore;
+		this.setState({
+			currentIndex: index,
+			dropdownMore: dropdownVal,
+		});
+	};
 
-  searchChanged = (e: any) => {
-    this.setState({
-      ...this.state,
-      filterText: e.currentTarget.value,
-    });
-  };
+	searchChanged = (e: any) => {
+		this.setState({
+			...this.state,
+			filterText: e.currentTarget.value,
+		});
+	};
 
-  render() {
-    const {
-      users,
-      email,
-      dropdown,
-      isLogout,
-      dropdownMore,
-      currentIndex,
-      removeIndex,
-      filterText,
-    } = this.state;
-	    let parents = users?.filter((u: any) => u.role === "student");
-    return (
+	render() {
+		const {
+			users,
+			email,
+			dropdown,
+			isLogout,
+			dropdownMore,
+			currentIndex,
+			removeIndex,
+			filterText,
+		} = this.state;
+		let parents = users?.filter((u: any) => u.role === "student");
+		return (
 			<>
 				<div className='container-cus'>
 					{isLogout && <Navigate to='login' replace={true} />}
@@ -247,22 +247,19 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 											users.length > 0 &&
 											users
 												.filter((user: any) => {
-													if (!filterText) {
+													if (!this.state.filterText) {
 														return true;
-													} else if (
-														filterText.toLowerCase() === "student" ||
-														filterText.toLowerCase() === "coach"
-													) {
-														return (
-															(user.role || "").toLowerCase() ===
-															(filterText.toLowerCase() === "coach"
-																? "coache"
-																: filterText.toLowerCase())
-														);
 													} else {
-														return (user.name || user.email || "")
-															.toLowerCase()
-															.startsWith(filterText.toLowerCase());
+														return (
+															(user.name || "")
+																.toLowerCase()
+																.startsWith(
+																	this.state.filterText.toLowerCase()
+																) ||
+															(user.role || "")
+																.toLowerCase()
+																.startsWith(this.state.filterText.toLowerCase())
+														);
 													}
 												})
 												.map((user: any, index: any) => (
@@ -279,7 +276,7 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 														</td>
 														<td className='flex justify-center'>
 															<span className=''>
-																{!user.name || user.name === ""
+																{!user.name || user.name === "" || user.name 
 																	? "-"
 																	: user.name}
 															</span>
@@ -395,26 +392,23 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 														</td>
 													</tr>
 												))}
-										{/* {parents &&
+										{parents &&
 											parents.length > 0 &&
 											parents
 												.filter((user: any) => {
-													if (!filterText) {
+													if (!this.state.filterText) {
 														return true;
-													} else if (
-														filterText.toLowerCase() === "student" ||
-														filterText.toLowerCase() === "coach"
-													) {
-														return (
-															(user.role || "").toLowerCase() ===
-															(filterText.toLowerCase() === "coach"
-																? "coache"
-																: filterText.toLowerCase())
-														);
 													} else {
-														return (user.name || user.email || "")
-															.toLowerCase()
-															.startsWith(filterText.toLowerCase());
+														return (
+															(user.name || "")
+																.toLowerCase()
+																.startsWith(
+																	this.state.filterText.toLowerCase()
+																) ||
+															("parent" || "")
+																.toLowerCase()
+																.startsWith(this.state.filterText.toLowerCase())
+														);
 													}
 												})
 												.map((user: any, index: any) => (
@@ -422,11 +416,8 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 														<td>
 															<InitialIcon
 																initials={
-																	user &&
-																	user.student &&
-																	user.student.parent_email &&
-																	user.student.parent_email
-																		? user.student.parent_email
+																	user && user.parent_email && user.parent_email
+																		? user.parent_email
 																				.substring(0, 1)
 																				.toUpperCase()
 																		: ""
@@ -435,7 +426,7 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 															/>
 														</td>
 														<td className='flex justify-center'>
-															<span className='ml-16'>
+															<span className=''>
 																{user &&
 																user.student &&
 																user.student.parent_name &&
@@ -447,11 +438,8 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 
 														<td>
 															<span className=''>
-																{user &&
-																user.student &&
-																user.student.parent_email &&
-																user.student.parent_email
-																	? user.student.parent_email
+																{user && user.parent_email && user.parent_email
+																	? user.parent_email
 																	: "-"}
 															</span>
 														</td>
@@ -464,7 +452,7 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 																)
 															}
 														>
-															
+															{/* <span>{user?.assign_school?.school?.name}</span> */}
 															<img
 																src={
 																	process.env.REACT_APP_API_ENDPOINT +
@@ -496,6 +484,55 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 															</td>
 														</td>
 														<td className='mr-16'>
+															{/* <div className='dropdownMore mr-24'>
+																<MoreVertIcon
+																	style={{
+																		color: "inherit",
+																		cursor: "pointer",
+																	}}
+																	onClick={() => this.toggleOpenMore(index)}
+																/>
+																<div
+																	className={`dropdown-menu ${
+																		dropdownMore && currentIndex === index
+																			? "show"
+																			: ""
+																	}`}
+																	aria-labelledby='dropdownMenuButton'
+																>
+																	<Link
+																		to={
+																			user && user.role === "coache"
+																				? viewCoachUrl
+																				: viewStudentUrl
+																		}
+																	>
+																		<div className='dropdown-item cursor'>
+																			<span>View</span>
+																		</div>
+																	</Link>
+																	<div className='dropdown-divider'></div>
+
+																	<Link
+																		to={
+																			user && user.role === "coache"
+																				? editCoachUrl
+																				: editStudentUrl
+																		}
+																	>
+																		<div className='dropdown-item cursor'>
+																			<span>Edit</span>
+																		</div>
+																	</Link>
+																	<div className='dropdown-divider'></div>
+																	<div
+																		className='dropdown-item cursor'
+																		onClick={() => this.remove(index)}
+																	>
+																		<span>Remove</span>
+																	</div>
+																</div>
+															</div> */}
 															<Dropdown className='more-dropdown'>
 																<Dropdown.Toggle
 																	id='dropdown-basic'
@@ -504,25 +541,14 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 																	<MoreVertIcon />
 																</Dropdown.Toggle>
 																<Dropdown.Menu>
-																	{user && user.role === "coache" ? (
-																		<Dropdown.Item
-																			href={
-																				"/manager/coach-edit-profile/" +
-																				parents[index].id
-																			}
-																		>
-																			<span>Edit</span>
-																		</Dropdown.Item>
-																	) : (
-																		<Dropdown.Item
-																			href={
-																				"/manager/student-edit-profile/" +
-																				parents[index].id
-																			}
-																		>
-																			<span>Edit</span>
-																		</Dropdown.Item>
-																	)}
+																	<Dropdown.Item
+																		href={
+																			"/admin/student-edit-profile/" +
+																			parents[index].id
+																		}
+																	>
+																		<span>Edit</span>
+																	</Dropdown.Item>
 
 																	<div className='dropdown-divider'></div>
 
@@ -540,7 +566,7 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 															</Dropdown>
 														</td>
 													</tr>
-												))} */}
+												))}
 									</tbody>
 								</table>
 							</div>
@@ -599,29 +625,29 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 				</Modal>
 			</>
 		);
-  }
+	}
 }
 
 const mapStateToProps = ({
-  authUser,
-  users,
-  user,
+	authUser,
+	users,
+	user,
 }: StoreState): {
-  authUser: AuthInterface;
-  users: any;
-  user: any;
+	authUser: AuthInterface;
+	users: any;
+	user: any;
 } => {
-  return {
-    authUser,
-    users,
-    user,
-  };
+	return {
+		authUser,
+		users,
+		user,
+	};
 };
 
 export default connect(mapStateToProps, {
-  signIn,
-  signOut,
-  getAllUsers,
-  LoadingActionFunc,
-  deleteUser,
+	signIn,
+	signOut,
+	getAllUsers,
+	LoadingActionFunc,
+	deleteUser,
 })(AdminPeopleListPage);

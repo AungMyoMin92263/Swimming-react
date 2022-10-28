@@ -52,6 +52,7 @@ interface IStates {
 	student : any;
 	classObj : any;
 	isCompleted : boolean;
+	classCoaches : any[];
 }
 
 interface IProps {
@@ -102,13 +103,13 @@ class ManagerAddOldCoach extends React.Component<IProps, IStates> {
 	student : [],
 	classObj: null,
 	isCompleted : false,
+	classCoaches : []
 		};
 	}
 	componentDidMount() {
 		this.getClass();
 		this.getSchool();
 		this.props.LoadingActionFunc(false);
-    	this.getCoaches();
 		const classObject = JSON.parse(getItem("class") || "null");
       if (classObject) {
         this.setState({
@@ -126,15 +127,24 @@ class ManagerAddOldCoach extends React.Component<IProps, IStates> {
 		});
 	};
 
-	getCoaches = async () => {
+	getCoaches = async (classCoaches : any[]) => {
 		let url = "schools/all-user/" + this.schoolId + "?role=coache";
 		await this.props.getAllCoaches(url);
 		if (this.props.coachList && this.props.coachList.result) {
 			if (this.props.coachList.result.length > 0) {
-				await this.setState({
-					exisiting_users: this.props.coachList.result,
-					coachList: this.props.coachList.result,
-				});
+				let temp = this.props.coachList.result;
+				for (let i = 0; i < classCoaches.length; i++) {
+				  let ind = temp.findIndex(
+					(s : any) => s.id === classCoaches[i].user.id
+				  );
+				  if (ind > -1) temp.splice(ind, 1);
+				  if (i === classCoaches.length - 1) {
+					await this.setState({
+						exisiting_users: temp,
+						coachList: temp,
+					});
+				  }
+				}
 			}
 		}
 	};
@@ -163,6 +173,20 @@ class ManagerAddOldCoach extends React.Component<IProps, IStates> {
 				
 			});
 		}
+
+		if (this.props.classes) {
+
+			let studentTemp = [];
+			for (let i = 0; i < this.props.classes.assignUser.length; i++) {
+			  if (this.props.classes.assignUser[i].type === "coache") {
+				studentTemp.push(this.props.classes.assignUser[i]);
+			  }
+			}
+			await this.setState({
+				classCoaches: studentTemp,
+			});
+			this.getCoaches(studentTemp);
+		  }
 	};
 
 	getSchool = async () => {

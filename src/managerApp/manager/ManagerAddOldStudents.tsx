@@ -51,6 +51,7 @@ interface IStates {
 	student : any;
 	classObj : any;
 	isCompleted : boolean;
+	classStudents : any[],
 }
 
 interface IProps {
@@ -101,13 +102,13 @@ class ManagerAddOldStudents extends React.Component<IProps, IStates> {
 	student : [],
 	classObj: null,
 	isCompleted : false,
+	classStudents : []
 		};
 	}
 	componentDidMount() {
 		this.getClass();
 		this.getSchool();
 		this.props.LoadingActionFunc(false);
-    	this.getStudents();
 		const classObject = JSON.parse(getItem("class") || "null");
       if (classObject) {
         this.setState({
@@ -125,15 +126,24 @@ class ManagerAddOldStudents extends React.Component<IProps, IStates> {
 		});
 	};
 
-	getStudents = async () => {
+	getStudents = async (classStudents : any[]) => {
 		let url = "schools/all-user/" + this.schoolId + "?role=student";
 		await this.props.getAllStudents(url);
 		if (this.props.studentList && this.props.studentList.result) {
 			if (this.props.studentList.result.length > 0) {
-				await this.setState({
-					exisiting_users: this.props.studentList.result,
-					studentList: this.props.studentList.result,
-				});
+				let temp = this.props.studentList.result;
+        for (let i = 0; i < classStudents.length; i++) {
+          let ind = temp.findIndex(
+            (s : any) => s.id === classStudents[i].user.id
+          );
+          if (ind > -1) temp.splice(ind, 1);
+          if (i === classStudents.length - 1) {
+            await this.setState({
+              exisiting_users: temp,
+              studentList: temp,
+            });
+          }
+        }
 			}
 		}
 	};
@@ -144,7 +154,6 @@ class ManagerAddOldStudents extends React.Component<IProps, IStates> {
 		await this.props.getClassObject(classurl);
 		let url = "assigned/class/by-class/" + this.id;
 		await this.props.getAssignUserByClass(url);
-		console.log(this.props);
 		if (this.props.classes && this.props.classes.viewClass) {
 			this.setState({
 				class_logo: this.props.classes.viewClass.logo,
@@ -163,6 +172,20 @@ class ManagerAddOldStudents extends React.Component<IProps, IStates> {
 				
 			});
 		}
+
+		if (this.props.classes) {
+
+			let studentTemp = [];
+			for (let i = 0; i < this.props.classes.assignUser.length; i++) {
+			  if (this.props.classes.assignUser[i].type === "student") {
+				studentTemp.push(this.props.classes.assignUser[i]);
+			  }
+			}
+			await this.setState({
+			  classStudents: studentTemp,
+			});
+			this.getStudents(studentTemp);
+		  }
 	};
 
 	getSchool = async () => {
@@ -187,7 +210,6 @@ class ManagerAddOldStudents extends React.Component<IProps, IStates> {
 	selectUser = (id: number) => {
 		let temp = this.state.selected_users;
 		temp.push(this.state.exisiting_users.find((user: any) => user.id === id));
-    console.log(temp)
 		this.setState({
 			selected_users: temp,
 			filterText: "",
@@ -195,7 +217,6 @@ class ManagerAddOldStudents extends React.Component<IProps, IStates> {
 	};
 
 	submit = async () => {
-		console.log('this.state.selected_users',this.state.selected_users)
 		if (this.state.selected_users && this.state.selected_users.length > 0) {
 		  let temp = this.state.emails;
 		  let tempStu = this.state.student;

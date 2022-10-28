@@ -159,6 +159,7 @@ class AdminStudentEditProfilePage extends React.Component<IProps, IStates> {
 					});
 				}
 			}
+			this.props.LoadingActionFunc(false);
 		}
 	};
 
@@ -172,9 +173,7 @@ class AdminStudentEditProfilePage extends React.Component<IProps, IStates> {
 		} else
 			return (
 				<>
-					{this.state.isCompleted && (
-						<Navigate to='/admin/dashboard' replace={true} />
-					)}
+					
 					<button
 						type='submit'
 						className='primary-btn fw-600 ml-16'
@@ -258,6 +257,9 @@ class AdminStudentEditProfilePage extends React.Component<IProps, IStates> {
 
 		return (
 			<>
+				{this.state.isCompleted && (
+					this.props.history.back()
+				)}
 				<div className='wrapper'>
 					<div className='primary f-16 project-header'>
 						<Link to='/admin/dashboard'>
@@ -266,11 +268,14 @@ class AdminStudentEditProfilePage extends React.Component<IProps, IStates> {
 					</div>
 					<div className='container-cus'>
 						<div className='content col-6 col-md-6 col-sm-12'>
-							<div className='f-14 mb-32 cursor' onClick={()=> this.props.history.back()}>
-									<ArrowBackIcon
-										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-									></ArrowBackIcon>
-									<span>Back</span>
+							<div
+								className='f-14 mb-32 cursor'
+								onClick={() => this.props.history.back()}
+							>
+								<ArrowBackIcon
+									sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+								></ArrowBackIcon>
+								<span className='primary'>Back</span>
 							</div>
 
 							<div className='f-32 fw-500 mb-8'>
@@ -290,9 +295,8 @@ class AdminStudentEditProfilePage extends React.Component<IProps, IStates> {
 									showWarning={false}
 									isDropdown={false}
 									callback={(value: string) => {
-										
 										this.setState({
-											name:value
+											name: value,
 										});
 									}}
 									id='name'
@@ -313,9 +317,8 @@ class AdminStudentEditProfilePage extends React.Component<IProps, IStates> {
 									showWarning={false}
 									isDropdown={false}
 									callback={(value: string) => {
-
 										this.setState({
-											bio:value
+											bio: value,
 										});
 									}}
 									id='bio'
@@ -338,7 +341,7 @@ class AdminStudentEditProfilePage extends React.Component<IProps, IStates> {
 									showWarning={false}
 									callback={(value: string) => {
 										this.setState({
-											mobile:value
+											mobile: value,
 										});
 									}}
 									id='mobile'
@@ -362,7 +365,7 @@ class AdminStudentEditProfilePage extends React.Component<IProps, IStates> {
 									isDropdown={false}
 									callback={(value: string) => {
 										this.setState({
-											email:value
+											email: value,
 										});
 									}}
 									id='name'
@@ -375,7 +378,6 @@ class AdminStudentEditProfilePage extends React.Component<IProps, IStates> {
 									clickCallback={() => {}}
 								/>
 							</div>
-							
 
 							{errorMsg && <p className='text-danger'>{errorMsg}</p>}
 							<div className='right flex-center'>{this.renderBtn()}</div>

@@ -2,13 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import { StoreState } from "../../stores/reducers";
 // icon
-import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 import { Link } from "react-router-dom";
 
-import { getItem, setItemWithObject } from "../../auth/LocalStorage";
 import placeholder from "./../../assets/images/place-holder.png";
 import { InitialIcon } from "../../atoms/InitialIcon";
 import {
@@ -22,9 +20,6 @@ import { Modal } from "react-bootstrap";
 
 //add students
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
-import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
-
 interface IStates {
   school: any;
   errorMsg: string;
@@ -162,9 +157,7 @@ class AdminInviteStudentSummaryPage extends React.Component<IProps, IStates> {
   render() {
     const {
       url,
-      school_logo,
       school_name,
-      schoolId,
       classId,
       class_name,
       class_logo,

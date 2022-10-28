@@ -149,7 +149,7 @@ class AdminEditProfilePage extends React.Component<IProps, IStates> {
       return (
         <>
           {this.state.isCompleted && (
-            <Navigate to="/admin/dashboard" replace={true} />
+           this.props.history.back()
           )}
           <button
             type="submit"

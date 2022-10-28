@@ -93,14 +93,17 @@ class AdminStudentEditProfilePage extends React.Component<IProps, IStates> {
 			console.log("userboo", userObj)
 			this.setState({
 				id: userObj.student.id,
-				name: userObj.name,
+				name: userObj.name !== "null" ? userObj.name : "",
 				logo: userObj.avatar,
-				mobile: userObj.phone != "null" ? userObj.phone : "",
+				mobile: userObj.phone !== "null" ? userObj.phone : "",
 				email: userObj.email,
 				parentEmail: userObj.parent_email,
-				parentMobile: userObj.student.parent_phone,
-				favourite: userObj.favorite,
-				age: userObj.student.age
+				parentMobile:
+					userObj.student.parent_phone !== "null"
+						? userObj.student.parent_phone
+						: "",
+				favourite: userObj.favorite !== "null" ? userObj.favorite : "",
+				age: userObj.student.age,
 			});
 		}
 	};
@@ -125,7 +128,7 @@ class AdminStudentEditProfilePage extends React.Component<IProps, IStates> {
 	};
 
 	isValid = () => {
-		if (this.state.name === "") return false;
+		if (this.state.name === "") return true;
 		else return true;
 	};
 	handleChangeAge = (event: SelectChangeEvent) => {
@@ -274,7 +277,7 @@ class AdminStudentEditProfilePage extends React.Component<IProps, IStates> {
 									<ArrowBackIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 									></ArrowBackIcon>
-									<span>Back</span>
+									<span className="primary">Back</span>
 							</div>
 
 							<div className='f-32 fw-500 mb-8'>

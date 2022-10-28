@@ -607,8 +607,7 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
   };
 
   render() {
-    const { email, logo, school_name, step, isPreview, classProgram } =
-      this.state;
+    const { email, logo, school_name, step, isPreview, classProgram } = this.state;
 
     return (
 			<>
