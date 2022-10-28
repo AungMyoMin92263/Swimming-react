@@ -276,7 +276,7 @@ class AdminPeopleListPage extends React.Component<IProps, IStates> {
 														</td>
 														<td className='flex justify-center'>
 															<span className=''>
-																{!user.name || user.name === "" || user.name 
+																{!user.name || user.name === "null" || user.name === ""  
 																	? "-"
 																	: user.name}
 															</span>
