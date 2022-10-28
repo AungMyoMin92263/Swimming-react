@@ -402,7 +402,7 @@ class AdminSchoolDetailPage extends React.Component<IProps, IStates> {
 									{this.props?.schools?.result &&
 										this.props.schools.result?.assign_user?.length > 0 &&
 										this.props.schools.result?.assign_user
-											.slice(0, 7)
+
 											.filter((user: any) => {
 												if (!this.state.userFilterText) {
 													return true;
@@ -421,6 +421,7 @@ class AdminSchoolDetailPage extends React.Component<IProps, IStates> {
 													);
 												}
 											})
+											.slice(0, 7)
 
 											.map((user: any, index: any) => (
 												<tr>
@@ -447,7 +448,9 @@ class AdminSchoolDetailPage extends React.Component<IProps, IStates> {
 														)}
 
 														<span className='ml-16'>
-															{!user.user.name || user.user.name === "" || user.user.name === "null"
+															{!user.user.name ||
+															user.user.name === "" ||
+															user.user.name === "null"
 																? "-"
 																: user.user.name}
 														</span>
@@ -545,115 +548,115 @@ class AdminSchoolDetailPage extends React.Component<IProps, IStates> {
 													</td>
 												</tr>
 											))}
-									{
-										parents &&
+									{parents &&
 										parents.length > 0 &&
-										parents.filter((user: any) => {
-													if (!this.state.userFilterText) {
-														return true;
-													} else {
-														return (
-															(user.name || "")
-																.toLowerCase()
-																.startsWith(
-																	this.state.userFilterText.toLowerCase()
-																) ||
-															("parent" || "")
-																.toLowerCase()
-																.startsWith(
-																	this.state.userFilterText.toLowerCase()
-																)
-														);
-													}
-												}).map((user: any, index: any) => (
-											<tr>
-												<td className='flex justify-center'>
-													<InitialIcon
-														initials={
-															user &&
-															user.user.parent_email &&
-															user.user.parent_email
-																? user.user.parent_email
-																		.substring(0, 1)
-																		.toUpperCase()
-																: ""
-														}
-														isFooterMenu={false}
-													/>
-													<span className='ml-16'>
-														{user &&
-														user.user &&
-														user.user.student &&
-														user.user.student.parent_name &&
-														user.user.student.parent_name
-															? user.user.student.parent_name
-															: "-"}
-													</span>
-												</td>
-
-												<td>
-													<span
-														className={`${
-															user.parent_password &&
-															user.parent_password !== ""
-																? "onboarded"
-																: "pending"
-														}`}
-													>
-														{user.parent_password && user.parent_password !== ""
-															? "Onboarded"
-															: "Pending"}
-													</span>
-												</td>
-
-												<td>
-													<td>
-														<span>
-															Parent
+										parents
+											.filter((user: any) => {
+												if (!this.state.userFilterText) {
+													return true;
+												} else {
+													return (
+														(user.name || "")
+															.toLowerCase()
+															.startsWith(
+																this.state.userFilterText.toLowerCase()
+															) ||
+														("parent" || "")
+															.toLowerCase()
+															.startsWith(
+																this.state.userFilterText.toLowerCase()
+															)
+													);
+												}
+											})
+											.map((user: any, index: any) => (
+												<tr>
+													<td className='flex justify-center'>
+														<InitialIcon
+															initials={
+																user &&
+																user.user.parent_email &&
+																user.user.parent_email
+																	? user.user.parent_email
+																			.substring(0, 1)
+																			.toUpperCase()
+																	: ""
+															}
+															isFooterMenu={false}
+														/>
+														<span className='ml-16'>
+															{user &&
+															user.user &&
+															user.user.student &&
+															user.user.student.parent_name &&
+															user.user.student.parent_name
+																? user.user.student.parent_name
+																: "-"}
 														</span>
 													</td>
-												</td>
-												<td className='mr-16'>
-													<Dropdown className='more-dropdown'>
-														<Dropdown.Toggle
-															id='dropdown-basic'
-															className='more-list-btn'
+
+													<td>
+														<span
+															className={`${
+																user.parent_password &&
+																user.parent_password !== ""
+																	? "onboarded"
+																	: "pending"
+															}`}
 														>
-															<MoreVertIcon />
-														</Dropdown.Toggle>
-														<Dropdown.Menu>
-															<Dropdown.Item
-																href={
-																	"/admin/student-edit-profile/" +
-																	parents[index].user.id
-																}
-															>
-																<span>Edit</span>
-															</Dropdown.Item>
+															{user.parent_password &&
+															user.parent_password !== ""
+																? "Onboarded"
+																: "Pending"}
+														</span>
+													</td>
 
-															<div className='dropdown-divider'></div>
-
-															<Dropdown.Item
-																onClick={() =>
-																	this.setState({
-																		removeUserIndex:
-																			this.props.schools.result?.assign_user.indexOf(
-																				this.props.schools.result?.assign_user.find(
-																					(user: any) =>
-																						user.id === parents[index].id
-																				)
-																			),
-																		modalShow: true,
-																	})
-																}
+													<td>
+														<td>
+															<span>Parent</span>
+														</td>
+													</td>
+													<td className='mr-16'>
+														<Dropdown className='more-dropdown'>
+															<Dropdown.Toggle
+																id='dropdown-basic'
+																className='more-list-btn'
 															>
-																<span>Remove</span>
-															</Dropdown.Item>
-														</Dropdown.Menu>
-													</Dropdown>
-												</td>
-											</tr>
-										))}
+																<MoreVertIcon />
+															</Dropdown.Toggle>
+															<Dropdown.Menu>
+																<Dropdown.Item
+																	href={
+																		"/admin/student-edit-profile/" +
+																		parents[index].user.id
+																	}
+																>
+																	<span>Edit</span>
+																</Dropdown.Item>
+
+																<div className='dropdown-divider'></div>
+
+																<Dropdown.Item
+																	onClick={() =>
+																		this.setState({
+																			removeUserIndex:
+																				this.props.schools.result?.assign_user.indexOf(
+																					this.props.schools.result?.assign_user.find(
+																						(user: any) =>
+																							user.id === parents[index].id
+																					)
+																				),
+																			modalShow: true,
+																		})
+																	}
+																>
+																	<span>Remove</span>
+																</Dropdown.Item>
+															</Dropdown.Menu>
+														</Dropdown>
+													</td>
+												</tr>
+											))}
 								</tbody>
 							</table>
 						</div>
@@ -807,7 +810,7 @@ class AdminSchoolDetailPage extends React.Component<IProps, IStates> {
 								{this.state.classes &&
 									this.state.classes.length > 0 &&
 									this.state.classes
-										.slice(0, 5)
+										
 										.filter((user: any) => {
 											if (!this.state.classFilterText) {
 												return true;
@@ -816,7 +819,7 @@ class AdminSchoolDetailPage extends React.Component<IProps, IStates> {
 													.toLowerCase()
 													.startsWith(this.state.classFilterText.toLowerCase());
 											}
-										})
+										}).slice(0, 5)
 
 										.map((classe: Class, index: any) => (
 											<tr>
