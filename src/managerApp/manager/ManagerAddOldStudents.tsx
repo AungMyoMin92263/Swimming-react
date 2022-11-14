@@ -129,6 +129,12 @@ class ManagerAddOldStudents extends React.Component<IProps, IStates> {
 	getStudents = async (classStudents : any[]) => {
 		let url = "schools/all-user/" + this.schoolId + "?role=student";
 		await this.props.getAllStudents(url);
+		if (classStudents.length === 0) {
+			this.setState({
+				exisiting_users: this.props.studentList.result,
+				studentList: this.props.studentList.result,
+			});
+		}
 		if (this.props.studentList && this.props.studentList.result) {
 			if (this.props.studentList.result.length > 0) {
 				let temp = this.props.studentList.result;
@@ -144,6 +150,8 @@ class ManagerAddOldStudents extends React.Component<IProps, IStates> {
             });
           }
         }
+		console.log("lengths",classStudents)
+		
 			}
 		}
 	};

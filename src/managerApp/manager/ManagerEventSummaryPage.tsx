@@ -169,7 +169,7 @@ class ManagerEventSummaryPage extends React.Component<IProps, IStates> {
 								<ArrowBackIcon
 									sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 								></ArrowBackIcon>
-								<span>Back</span>
+								<span className="primary">Back</span>
 							</div>
 							<div className='mb-8 align-center'>
 								<img
