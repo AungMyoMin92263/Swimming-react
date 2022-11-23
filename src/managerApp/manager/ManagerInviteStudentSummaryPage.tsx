@@ -78,10 +78,12 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
   }
   componentDidMount() {
     this.authFromLocal();
+	console.log("clll");
   }
 
   authFromLocal = async () => {
     const user = JSON.parse(getItem("authUser") || "null");
+	console.log("clll")
     if (user && user.userInfo) {
       await this.setState({
         schoolId: user.userInfo.assign_school
@@ -201,8 +203,9 @@ class ManagerInviteStudentSummaryPage extends React.Component<IProps, IStates> {
 									alt='logo'
 									className={`${class_logo ? "item-icon" : "w-48"}`}
 								/>
-								<span className='f-16'>{school_name}/</span>
-								<span className='fc-second'>({class_name})</span>
+								
+								<span className='f-16 mr-8'>{class_name} </span>
+								<span className='fc-second'>({school_name})</span>
 							</div>
 							<div className='hr mb-32'></div>
 

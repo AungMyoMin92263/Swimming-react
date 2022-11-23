@@ -300,15 +300,18 @@ class ManagerAddOldStudents extends React.Component<IProps, IStates> {
 					</div>
 					<div className='container-cus'>
 						<div className='content col-lg-6 col-md-6 col-sm-12'>
-							<div className='f-14 mb-32 cursor' onClick={()=> this.props.history.back()}>
+							<div
+								className='f-14 mb-32 cursor'
+								onClick={() => this.props.history.back()}
+							>
 								{/* <Link
 									to={"/manager/class/" + classId}
 									style={{ textDecoration: "none" }}
 								> */}
-									<ArrowBackIcon
-										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-									></ArrowBackIcon>
-									<span className="fc-primary">Back</span>
+								<ArrowBackIcon
+									sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+								></ArrowBackIcon>
+								<span className='fc-primary'>Back</span>
 								{/* </Link> */}
 							</div>
 							<div className='mb-8 align-center'>
@@ -321,7 +324,7 @@ class ManagerAddOldStudents extends React.Component<IProps, IStates> {
 									alt='logo'
 									className={`${class_logo ? "item-icon" : "w-48"}`}
 								/>
-								<span className='f-16'>{class_name}</span>
+								<span className='f-16 mr-8'>{class_name} </span>
 								<span className='fc-second'>({school_name})</span>
 							</div>
 							<div className='hr mb-32'></div>
@@ -370,21 +373,21 @@ class ManagerAddOldStudents extends React.Component<IProps, IStates> {
 								})}
 							<div></div>
 
-							<div className='exisiting-user-lists'>
-								{this.state?.exisiting_users &&
-									this.state.exisiting_users
-										.filter((user: any) => {
-											if (!filterText) {
-												return false;
-											} else {
-												return (user.name || "")
-													.toLowerCase()
-													.startsWith(filterText.toLowerCase());
-											}
-										})
-										.map((user: any, index: any) => {
-											return (
-												<>
+							{this.state?.exisiting_users &&
+								this.state.exisiting_users
+									.filter((user: any) => {
+										if (!filterText) {
+											return false;
+										} else {
+											return (user.name || "")
+												.toLowerCase()
+												.startsWith(filterText.toLowerCase());
+										}
+									})
+									.map((user: any, index: any) => {
+										return (
+											<>
+												<div className='exisiting-user-lists'>
 													<div
 														className='exisiting-user'
 														onClick={() => {
@@ -393,9 +396,7 @@ class ManagerAddOldStudents extends React.Component<IProps, IStates> {
 													>
 														<div className='existing-user-content'>
 															<InitialIcon
-																initials={user.email
-																	.substr(0, 1)
-																	.toUpperCase()}
+																initials={user.email.substr(0, 1).toUpperCase()}
 																isFooterMenu={false}
 															/>
 															<span className='ml-16 fw-500 f-16'>
@@ -403,18 +404,22 @@ class ManagerAddOldStudents extends React.Component<IProps, IStates> {
 															</span>
 														</div>
 													</div>
-												</>
-											);
-										})}
-							</div>
+												</div>
+											</>
+										);
+									})}
 
 							<div className='hr mb-32'></div>
-							{errorMsg && <p className="text-danger">{errorMsg}</p>}
+							{errorMsg && <p className='text-danger'>{errorMsg}</p>}
 							{/* <Link to={url} style={{ textDecoration: "none" }}> */}
-								<button type='submit' className='primary-btn right' onClick={this.submit}
-								disabled={this.state.selected_users.length === 0}>
-									Done
-								</button>
+							<button
+								type='submit'
+								className='primary-btn right'
+								onClick={this.submit}
+								disabled={this.state.selected_users.length === 0}
+							>
+								Done
+							</button>
 							{/* </Link> */}
 						</div>
 					</div>

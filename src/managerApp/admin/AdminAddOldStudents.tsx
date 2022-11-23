@@ -362,7 +362,7 @@ class AdminAddOldStudents extends React.Component<IProps, IStates> {
                 })}
               <div></div>
 
-              <div className="exisiting-user-lists">
+              
                 {this.state?.exisiting_users &&
                   this.state.exisiting_users
                     .filter((user: any) => {
@@ -377,7 +377,8 @@ class AdminAddOldStudents extends React.Component<IProps, IStates> {
                     .map((user: any, index: any) => {
                       return (
                         <>
-                          <div
+                        <div className="exisiting-user-lists">
+<div
                             className="exisiting-user"
                             onClick={() => {
                               this.selectUser(user.id);
@@ -393,10 +394,12 @@ class AdminAddOldStudents extends React.Component<IProps, IStates> {
                               </span>
                             </div>
                           </div>
+                        </div>
+                          
                         </>
                       );
                     })}
-              </div>
+              
 
               <div className="hr mb-32"></div>
               {errorMsg && <p className="text-danger">{errorMsg}</p>}

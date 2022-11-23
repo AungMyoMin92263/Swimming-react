@@ -621,14 +621,14 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
                 > */}
 								<div
 									className='cursor'
-									onClick={() => this.props.history.back()}
+									onClick={() => this.props.history.push("/admin/dashboard")}
 								>
 									<ArrowBackIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 									></ArrowBackIcon>
 									<span className='primary'>Back</span>
 									<span className='ml-16 fc-second'>
-										Schools / {this.state.school_name}
+										{this.state.school_name}
 									</span>
 								</div>
 								{/* </Link> */}

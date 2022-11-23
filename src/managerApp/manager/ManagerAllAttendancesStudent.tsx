@@ -333,7 +333,7 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
                   <span className="ml-16 fc-second">
                     {this.props.classes && this.props.classes.viewClass?.name}
                   </span>
-                  <span className="ml-16 fc-second">/</span>
+                  {/* <span className="ml-16 fc-second">/</span> */}
                   <span className="ml-16 fc-second">
                     {this.props.authUser &&
                       this.props.authUser.otherUserinfo?.name}
@@ -395,7 +395,7 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 
                   <div className="f-40 fw-500">
                     <span>
-                      {this.props.authUser.otherUserinfo && this.props.authUser.otherUserinfo?.name ? this.props.authUser.otherUserinfo?.name : this.props.authUser.otherUserinfo?.email}
+                      {this.props.authUser.otherUserinfo && this.props.authUser.otherUserinfo?.name ? this.props.authUser.otherUserinfo?.name : this.props.authUser.otherUserinfo?.email.substr(0,16)}
                     </span>
                   </div>
                 </div>

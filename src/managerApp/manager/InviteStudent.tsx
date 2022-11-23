@@ -398,9 +398,9 @@ class InviteStudentPage extends React.Component<IProps, IStates> {
 										classObj && classObj.logo ? "item-icon" : "w-48"
 									}`}
 								/>
-								<span className='f-16'>
-									{classObj && classObj.name} ({school_name})
-								</span>
+
+								<span className='f-16 mr-8'>{classObj && classObj.name} </span>
+								<span className='fc-second'>({school_name})</span>
 							</div>
 							<div className='hr mb-32'></div>
 							<div className='f-32 fw-500'>

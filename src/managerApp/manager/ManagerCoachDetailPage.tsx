@@ -165,16 +165,19 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 					<div className='dashboard'>
 						<div className='dashboard-header'>
 							<div className='justify-center justify-space-between'>
-								<div>
-									<Link
-										to='/manager/dashboard'
+								<div className='flex cursor align-center '>
+									<div
+										className='flex cursor align-center '
+										onClick={() =>
+											this.props.history.push("/manager/class/" + this.class_id)
+										}
 										style={{ textDecoration: "none" }}
 									>
 										<ArrowBackIcon
 											sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 										></ArrowBackIcon>
-										<span>Back</span>
-									</Link>
+										<span className='fc-primary'>Back</span>
+									</div>
 									<span className='ml-16 fc-second'>
 										{this.state.school_name}
 									</span>
@@ -248,8 +251,11 @@ class ManagerCoachDetailPage extends React.Component<IProps, IStates> {
 											className='secondary-btn'
 											// style={{ width: "140px" }}
 										>
-											<ModeEditOutlineOutlinedIcon fontSize='small' className="mr-8" /> <span>Edit Coach</span>
-
+											<ModeEditOutlineOutlinedIcon
+												fontSize='small'
+												className='mr-8'
+											/>{" "}
+											<span>Edit Coach</span>
 											<AddIcon
 												sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
 											></AddIcon>

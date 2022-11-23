@@ -553,7 +553,7 @@ class AdminSchoolDetailPage extends React.Component<IProps, IStates> {
 										parents
 											.filter((user: any) => {
 												if (!this.state.userFilterText) {
-													return true;
+													return false;
 												} else {
 													return (
 														(user.name || "")
@@ -962,7 +962,7 @@ class AdminSchoolDetailPage extends React.Component<IProps, IStates> {
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 									></ArrowBackIcon>
 									<span>Back</span>
-									<span className='ml-16 fc-second'>Schools</span>
+									
 								</Link>
 								<div className='justify-end'>
 									<div className='dropdown'>

@@ -254,137 +254,140 @@ class AdminInviteCoachPage extends React.Component<IProps, IStates> {
     const { coaches, coachEmailMsg, school_name, classObj } = this.state;
 
     return (
-      <>
-        {this.state.isCompleted && <Navigate to={this.url} replace={true} />}
-        <div className="wrapper scroll-y">
-          <div className="primary f-16 project-header">
-            <Link to="/admin/dashboard">
-              <span>My Report Cards</span>
-            </Link>
-          </div>
-          <div className="container-cus">
-            <div className="content col-lg-6">
-              <div className="f-14 mb-32">
-                <Link
-                  to={
-                    this.id
-                      ? "/admin/school/"+this.schoolId+"/invite-coach-summary/" + this.id
-                      : "/admin/school/"+this.schoolId+"/set-date-time"
-                  }
-                  style={{ textDecoration: "none" }}
-                >
-                  <ArrowBackIcon
-                    sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-                  ></ArrowBackIcon>
-                  <span>Back</span>
-                </Link>
-              </div>
+			<>
+				{this.state.isCompleted && <Navigate to={this.url} replace={true} />}
+				<div className='wrapper scroll-y'>
+					<div className='primary f-16 project-header'>
+						<Link to='/admin/dashboard'>
+							<span>My Report Cards</span>
+						</Link>
+					</div>
+					<div className='container-cus'>
+						<div className='content col-lg-6'>
+							<div className='f-14 mb-32'>
+								<Link
+									to={
+										this.id
+											? "/admin/school/" +
+											  this.schoolId +
+											  "/invite-coach-summary/" +
+											  this.id
+											: "/admin/school/" + this.schoolId + "/set-date-time"
+									}
+									style={{ textDecoration: "none" }}
+								>
+									<ArrowBackIcon
+										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+									></ArrowBackIcon>
+									<span>Back</span>
+								</Link>
+							</div>
 
-              <div className="mb-16 align-center">
-                <img
-                  src={
-                    classObj && classObj.logo
-                      ? process.env.REACT_APP_API_ENDPOINT + "/" + classObj.logo
-                      : placeholder
-                  }
-                  alt="logo"
-                  className={`${
-                    classObj && classObj.logo ? "item-icon" : "w-48"
-                  }`}
-                />
-                <span className="f-16">
-                  {classObj && classObj.name} ({school_name})
-                </span>
-              </div>
-              <div className="hr mb-32"></div>
-              <div className="f-32 fw-500">
-                <span>Invite a Coach.</span>
-              </div>
-              <div className="f-16 mb-32">
-                <span>Invite a coach to your class.</span>
-              </div>
-              {coaches &&
-                coaches.length > 0 &&
-                coaches.map((coach: any, index) => (
-                  <>
-                    <div>
-                      <div className="f-16 mb-16 fw-500 flex justify-space-between">
-                        <span>Coach #{index + 1}</span>
-                        {index >= 0 && (
-                          <div
-                            onClick={() => {
-                              this.removeCoach(index);
-                            }}
-                            className="fc-primary cursor"
-                          >
-                            Clear
-                          </div>
-                        )}
-                      </div>
+							<div className='mb-16 align-center'>
+								<img
+									src={
+										classObj && classObj.logo
+											? process.env.REACT_APP_API_ENDPOINT + "/" + classObj.logo
+											: placeholder
+									}
+									alt='logo'
+									className={`${
+										classObj && classObj.logo ? "item-icon" : "w-48"
+									}`}
+								/>
+								
+								<span className='f-16 mr-8'>{classObj && classObj.name}</span>
+								<span className='fc-second'>({school_name})</span>
+							</div>
+							<div className='hr mb-32'></div>
+							<div className='f-32 fw-500'>
+								<span>Invite a Coach.</span>
+							</div>
+							<div className='f-16 mb-32'>
+								<span>Invite a coach to your class.</span>
+							</div>
+							{coaches &&
+								coaches.length > 0 &&
+								coaches.map((coach: any, index) => (
+									<>
+										<div>
+											<div className='f-16 mb-16 fw-500 flex justify-space-between'>
+												<span>Coach #{index + 1}</span>
+												{index >= 0 && (
+													<div
+														onClick={() => {
+															this.removeCoach(index);
+														}}
+														className='fc-primary cursor'
+													>
+														Clear
+													</div>
+												)}
+											</div>
 
-                      <div className="fw-400 mb-16">
-                        <InputFormAtom
-                          label="Coach Email"
-                          placeholder={"Enter Email"}
-                          warning={coach.errorMsg}
-                          type="text"
-                          disabled={coach.status === 'success'}
-                          showWarning={false}
-                          isDropdown={false}
-                          callback={(value: string) => {
-                            this.isValidated();
-                            let temp = coaches;
-                            temp[index].coachEmail = value;
-                            this.setState({
-                              coaches: temp,
-                            });
-                          }}
-                          id="inviteCoachEmail"
-                          name="inviteCoachEmail"
-                          value={coach.coachEmail}
-                          required={true}
-                          maxLength={200}
-                          className=""
-                          clickCallback={() => {}}
-                          focusCallback={() => {
-                            let temp = coaches;
-                            temp[index].iscoachEmailEmpty = false;
-                            temp[index].iscoachEmailValid = true;
-                            temp[index].status = "init";
-                            this.setState({
-                              coaches: temp,
-                            });
-                          }}
-                          status={coach.status}
-                        />
-                      </div>
-                      {coach && coach.errorMsg !== "" && (
-                        <p className="text-danger">{coach.errorMsg}</p>
-                      )}
-                    </div>
-                  </>
-                ))}
+											<div className='fw-400 mb-16'>
+												<InputFormAtom
+													label='Coach Email'
+													placeholder={"Enter Email"}
+													warning={coach.errorMsg}
+													type='text'
+													disabled={coach.status === "success"}
+													showWarning={false}
+													isDropdown={false}
+													callback={(value: string) => {
+														this.isValidated();
+														let temp = coaches;
+														temp[index].coachEmail = value;
+														this.setState({
+															coaches: temp,
+														});
+													}}
+													id='inviteCoachEmail'
+													name='inviteCoachEmail'
+													value={coach.coachEmail}
+													required={true}
+													maxLength={200}
+													className=''
+													clickCallback={() => {}}
+													focusCallback={() => {
+														let temp = coaches;
+														temp[index].iscoachEmailEmpty = false;
+														temp[index].iscoachEmailValid = true;
+														temp[index].status = "init";
+														this.setState({
+															coaches: temp,
+														});
+													}}
+													status={coach.status}
+												/>
+											</div>
+											{coach && coach.errorMsg !== "" && (
+												<p className='text-danger'>{coach.errorMsg}</p>
+											)}
+										</div>
+									</>
+								))}
 
-              <div className="flex-center justify-space-between">
-                <div className="flex-center">
-                  <div onClick={this.addCoach} className="cursor">
-                    <AddIcon
-                      sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
-                    ></AddIcon>
-                    <span className="primary">Add another coach</span>
-                  </div>
-                </div>
+							<div className='flex-center justify-space-between'>
+								<div className='flex-center'>
+									<div onClick={this.addCoach} className='cursor'>
+										<AddIcon
+											sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
+										></AddIcon>
+										<span className='primary'>Add another coach</span>
+									</div>
+								</div>
 
-                <div className="flex-center">
-                  <span className="secondary">3 of 4</span>
-                  {this.renderBtn()}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
+								<div className='flex-center'>
+									<span className='secondary'>3 of 4</span>
+									{this.renderBtn()}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</>
+		);
   }
 }
 

@@ -271,15 +271,16 @@ class ManagerStudentEditProfilePage extends React.Component<IProps, IStates> {
 					<div className='container-cus'>
 						<div className='content col-6 col-md-6 col-sm-12'>
 							<div className='f-14 mb-32'>
-								<Link
-									to='/manager/dashboard'
+								<div
+									className='flex cursor align-center '
+									onClick={() => this.props.history.back()}
 									style={{ textDecoration: "none" }}
 								>
 									<ArrowBackIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}
 									></ArrowBackIcon>
-									<span>Back</span>
-								</Link>
+									<span className='fc-primary'>Back</span>
+								</div>
 							</div>
 
 							<div className='f-32 fw-500 mb-8'>

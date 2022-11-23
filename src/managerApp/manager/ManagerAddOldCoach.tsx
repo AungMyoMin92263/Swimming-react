@@ -292,7 +292,7 @@ class ManagerAddOldCoach extends React.Component<IProps, IStates> {
 									alt='logo'
 									className={`${class_logo ? "item-icon" : "w-48"}`}
 								/>
-								<span className='f-16'>{class_name}</span>
+								<span className='f-16 mr-8'>{class_name}</span>
 								<span className='fc-second'>({school_name})</span>
 							</div>
 							<div className='hr mb-32'></div>
@@ -341,7 +341,7 @@ class ManagerAddOldCoach extends React.Component<IProps, IStates> {
 								})}
 							<div></div>
 
-							<div className='exisiting-user-lists'>
+							
 								{this.state?.exisiting_users &&
 									this.state.exisiting_users
 										.filter((user: any) => {
@@ -356,28 +356,30 @@ class ManagerAddOldCoach extends React.Component<IProps, IStates> {
 										.map((user: any, index: any) => {
 											return (
 												<>
-													<div
-														className='exisiting-user'
-														onClick={() => {
-															this.selectUser(user.id);
-														}}
-													>
-														<div className='existing-user-content'>
-															<InitialIcon
-																initials={user.email
-																	.substr(0, 1)
-																	.toUpperCase()}
-																isFooterMenu={false}
-															/>
-															<span className='ml-16 fw-500 f-16'>
-																{user.name}
-															</span>
+													<div className='exisiting-user-lists'>
+														<div
+															className='exisiting-user'
+															onClick={() => {
+																this.selectUser(user.id);
+															}}
+														>
+															<div className='existing-user-content'>
+																<InitialIcon
+																	initials={user.email
+																		.substr(0, 1)
+																		.toUpperCase()}
+																	isFooterMenu={false}
+																/>
+																<span className='ml-16 fw-500 f-16'>
+																	{user.name}
+																</span>
+															</div>
 														</div>
 													</div>
 												</>
 											);
 										})}
-							</div>
+							
 
 							<div className='hr mb-32'></div>
 							{errorMsg && <p className="text-danger">{errorMsg}</p>}

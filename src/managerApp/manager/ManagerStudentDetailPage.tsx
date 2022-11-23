@@ -440,7 +440,7 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 			logo: this.props.authUser.otherUserinfo?.avatar,
 			title: this.props.authUser.otherUserinfo? this.props.authUser.otherUserinfo.name
 				? this.props.authUser.otherUserinfo.name
-				: this.props.authUser.otherUserinfo?.email: '',
+				: this.props.authUser.otherUserinfo?.email.substr(0,16): '',
 			display_item: [
 				{
 					title: "Age",
@@ -472,7 +472,9 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 								<div className='flex cursor align-center '>
 									<div
 										className='flex cursor align-center '
-										onClick={() => this.props.history.back()}
+										onClick={() =>
+											this.props.history.push("/manager/class/" + this.class_id)
+										}
 										style={{ textDecoration: "none" }}
 									>
 										<ArrowBackIcon
@@ -488,7 +490,7 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 											this.props.classes.viewClass?.name && (
 												<span className='ml-16 fc-second'>/</span>
 											)}
-										<span className="ml-16">
+										<span className='ml-16'>
 											{this.props.classes && this.props.classes.viewClass?.name}
 										</span>
 									</span>
@@ -534,7 +536,7 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 													profile.logo
 												}
 												alt=''
-												className="big-logo"
+												className='big-logo'
 											/>
 										) : profile.title ? (
 											<InitialIcon
@@ -558,7 +560,11 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 											className='secondary-btn'
 											// style={{ width: "140px" }}
 										>
-										<ModeEditOutlineOutlinedIcon fontSize='small' className="mr-8" /> <span>Edit Student</span>
+											<ModeEditOutlineOutlinedIcon
+												fontSize='small'
+												className='mr-8'
+											/>{" "}
+											<span>Edit Student</span>
 											<AddIcon
 												sx={{ color: "#fff", fontSize: 18, mr: 0.5 }}
 											></AddIcon>
