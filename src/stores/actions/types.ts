@@ -8,7 +8,7 @@ import { createCoachAction, deleteCoachAction, editCoachAction, getCoachAction,g
 import { createStudentAction, deleteStudentAction, editStudentAction, getStudentAction,getStudentObjAction } from "./student-action";
 import { CommentAction } from "./comment-action";
 import { CreateAttendanceAction, GetMyAttendanceAction } from "./attendance-action";
-import { CreateBadgeAction, CreatingBadgeAction, GetMyBadgesAction } from "./badge-action";
+import { CreateBadgeAction, CreatingBadgeAction, editBadgeAction, getBadgeObjAction, GetMyBadgesAction } from "./badge-action";
 import { S3FileUploadAction } from "./s3-file-upload.action";
 
 export enum ActionTypes {
@@ -61,8 +61,10 @@ export enum ActionTypes {
   createBadges,
   giveBadges,
   getAllBadges,
+  getBadge,
   selectBadgeIcon,
   selectGiveBadge,
+  editBadge,
 
   inviteStudent,
   inviteCoach,
@@ -155,3 +157,5 @@ export type Action = SignUpAction
   | EventRecordAction
   | deleteUserAction
   | S3FileUploadAction
+  | getBadgeObjAction
+  | editBadgeAction

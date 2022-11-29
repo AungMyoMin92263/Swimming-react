@@ -44,6 +44,8 @@ interface IStates {
 	profile: IProfile;
 	classProgram: any;
 	isPreview: boolean;
+	attendCount : number;
+	totalCount : number;
 }
 
 interface IProps {
@@ -70,6 +72,7 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 		third_slot: 20,
 	};
 	from : any;
+	displayTitle = "";
 	constructor(props: any) {
 		super(props);
 		let path = window.location.pathname.split("/");
@@ -89,6 +92,8 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 			goEnterComment: false,
 			profile: { title: "" },
 			isPreview: false,
+			attendCount : 0,
+	totalCount : 0,
 		};
 	}
 	componentDidMount() {
@@ -220,9 +225,12 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 					checked: tempAttendances[i].attend,
 				});
 			}
+		
 			this.setState({
 				...this.state,
 				attendances: res,
+				totalCount : res.length,
+				attendCount : tempAttendances.filter((a : any)=> a.attend === true).length,
 			});
 		}
 	};
@@ -352,6 +360,8 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 			isBigIcon: false,
 		};
 
+
+
 		const {
 			classe,
 			attendances,
@@ -361,7 +371,11 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 			profile,
 			classProgram,
 			isPreview,
+			attendCount,
+			totalCount
 		} = this.state;
+
+		const displayTitle = 'Attendance (' +  attendCount + '/' + totalCount + ')';
 
 		return (
 			<>
@@ -582,10 +596,12 @@ class CoachDailyProgramPage extends React.Component<IProps, IStates> {
 								)}
 							</ListBoxUI>
 						</div>
+						
 						{attendances.length > 0 ? (
 							<div className='mb-8'>
 								<ListBoxUI
-									title='Attendance'
+								noAttendance={true}
+									title={displayTitle}
 									callback={() => {
 										this.props.history.push(
 											"/coach/class/attendance/" +

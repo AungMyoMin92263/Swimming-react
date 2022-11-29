@@ -25,6 +25,20 @@ export const badgeReducers = (
         error: null,
       };
 
+      case ActionTypes.getBadge:
+        return {
+          ...state,
+          result: action.payload,
+          error: null,
+        };
+
+        case ActionTypes.editBadge:
+        return {
+          ...state,
+          editBadge: action.payload,
+          error: null,
+        };
+
     case ActionTypes.createBadges:
       return {
         ...state,

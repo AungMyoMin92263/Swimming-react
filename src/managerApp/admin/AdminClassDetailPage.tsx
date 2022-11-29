@@ -487,7 +487,8 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
 				</div>
 				<div className='class-attendance-body mt-16'>
 					<div className="ml-8">
-						{this.state.classe.comments ? (
+            
+						{this.state.classe.comments && this.state.classe.comments.length > 0 ? (
 							<>
 								{this.state.classe.comments.map((res: any, index: number) => {
 									return (
@@ -522,14 +523,17 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
 								})}
 							</>
 						) : (
-							<CommentDashItem
-								profile={this.createProfile("", "")}
-								message={"There is no comment"}
-								callback={() => {}}
-								timeString={""}
-								key={""}
-								showRightArr={true}
-							></CommentDashItem>
+							// <CommentDashItem
+							// 	profile={this.createProfile("", "")}
+							// 	message={"There is no comment"}
+							// 	callback={() => {}}
+							// 	timeString={""}
+							// 	key={""}
+							// 	showRightArr={true}
+							// ></CommentDashItem>
+              <div className="no-bagde">
+                <span>There is no comments</span>
+              </div>
 						)}
 					</div>
 				</div>
@@ -621,7 +625,7 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
                 > */}
 								<div
 									className='cursor'
-									onClick={() => this.props.history.push("/admin/dashboard")}
+									onClick={() => this.props.history.back()}
 								>
 									<ArrowBackIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}

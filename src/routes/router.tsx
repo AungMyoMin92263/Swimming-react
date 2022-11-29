@@ -162,6 +162,7 @@ import AdminAllBadgetsStudent from "../managerApp/admin/AdminAllBadgetsStudent";
 import AdminAllAttendancesStudent from "../managerApp/admin/AdminAllAttendancesStudent";
 import AdminAddOldStudents from "../managerApp/admin/AdminAddOldStudents";
 import AdminAddOldCoach from "../managerApp/admin/AdminAddOldCoach";
+import CoachEditBadgePage from "../coachApp/coach/CoachEditBadgePage";
 
 const windowHistory = createBrowserHistory({ window });
 
@@ -2452,6 +2453,22 @@ const routes = [
 				main: (props: any) => (
 					<>
 						<CoachCreateBadgePage {...props} />
+					</>
+				),
+				footer: (props: any) => (
+					<>
+						<FooterMobileMenu {...props} />
+					</>
+				),
+				isSideBar: false,
+				isMobileFooter: true,
+			},
+			{
+				path: "edit-badge/:id",
+				sideBar: (props: any) => <></>,
+				main: (props: any) => (
+					<>
+						<CoachEditBadgePage {...props} />
 					</>
 				),
 				footer: (props: any) => (

@@ -18,6 +18,7 @@ interface IProps {
   clickCallback: Function;
   className: string;
   focusCallback?: Function;
+  enterCallback?: Function;
   description?: string;
   children?: React.ReactNode;
   disabled?: boolean;
@@ -182,6 +183,32 @@ class InputFormAtom extends React.Component<IProps, IStates> {
               <ErrorOutlineIcon
                 sx={{ color: "#FF5555", fontSize: 24, marginLeft: "-32px",marginTop: "16px" }}
               ></ErrorOutlineIcon>
+            </div>
+          </>
+        )}
+        {!isDropdown && type !== "textarea" && status && status === 'login_password' && (
+          <>
+            <div className="icon_input">
+              <input
+                id={id}
+                type={type}
+                name={name}
+                value={value}
+                placeholder={placeholder}
+                onChange={this.handleChange}
+								onKeyPress={(e) => {
+									if (e.key === "Enter") {
+                    if (this.props.enterCallback !== undefined) {
+                      this.props.enterCallback();
+                    }
+									}
+								}}
+                required={required}
+                maxLength={maxLength}
+                className={`${className}`}
+                onClick={() => clickCallback}
+                disabled={disabled ? true : false}
+              />
             </div>
           </>
         )}

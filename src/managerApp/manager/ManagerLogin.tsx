@@ -178,6 +178,8 @@ class ManagerLoginPage extends React.Component<IProps, IStates> {
 								maxLength={200}
 								className=''
 								clickCallback={() => {}}
+								status="login_password"
+								enterCallback={this.submit}
 							/>
 						</div>
 						{authUser.error && <p className='text-danger'>{authUser.error}</p>}

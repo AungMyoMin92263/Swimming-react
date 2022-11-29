@@ -59,12 +59,12 @@ class CoachBadgeSentPage extends React.Component<IProps, IStates> {
               <div className="f-32 fw-500 pt-40 mb-32">
                 <span>Confirm send?</span>
               </div>
-              <BadgeItem icon={badges.logo} callback={() => { }} isBig={true} color={badges.color} />
+              <BadgeItem icon={badges?.logo} callback={() => { }} isBig={true} color={badges?.color} />
               <div className="mb-16 f-14 fw-500">
-                <span>{badges.name}</span>
+                <span>{badges?.name}</span>
               </div>
               <div className="mb-16 f-14">
-                <span>{badges.description}</span>
+                <span>{badges?.description}</span>
               </div>
               <div className="flex-center mb-32">
                 <div className="email-div-new">
@@ -75,9 +75,15 @@ class CoachBadgeSentPage extends React.Component<IProps, IStates> {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary right w-100" onClick={() => { this.sendBage() }}>
+            <button type="submit" className="btn btn-primary right w-100 mb-16" onClick={() => { this.sendBage() }}>
               Send Badge
             </button>
+
+            <div className="w-100 flex-center">
+            <div className="email-div-new cursor" onClick={() => { this.props.history.push('/coach/edit-badge/'+this.props.badges.selectedBadge.id) }}>
+                 <span className="email-div-name">Edit Badge</span>
+            </div>
+            </div>
           </div>
         </div>
       </>

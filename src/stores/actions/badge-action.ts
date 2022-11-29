@@ -62,6 +62,7 @@ export interface CreateBadgeAction {
   payload: any;
 }
 
+
 export const createBadge = (data: any) => {
   let options = refreshHeaderOptionToken();
   return async (dispatch: Dispatch) => {
@@ -86,6 +87,37 @@ export const createBadge = (data: any) => {
     }
   }
 }
+
+export interface getBadgeObjAction {
+  type: ActionTypes.getBadge | ActionTypes.getError;
+  payload: any;
+}
+
+export const getBadgeObject = (url: string) => {
+  let options = refreshHeaderOptionToken();
+
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.get<any>(url, options.option);
+      dispatch<getBadgeObjAction>({
+        type: ActionTypes.getBadge,
+        payload: response.data,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err instanceof Error) {
+        dispatch<getBadgeObjAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};
 
 export const giveBadgeToStudent = (data: any) => {
   let options = refreshHeaderOptionToken();
@@ -127,3 +159,38 @@ export const selectGiveBadge = (badge: any) => {
     dispatch({ type: ActionTypes.selectGiveBadge, payload: badge })
   }
 }
+
+export interface editBadgeAction {
+  type: ActionTypes.editBadge | ActionTypes.getError;
+  payload: any;
+}
+
+export const putBadge = (Badge: any, url: string, id: number) => {
+  let options = refreshHeaderOptionToken();
+
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.put<any>(
+        url + '/' + id,
+        Badge,
+        options?.option
+      );
+      dispatch<editBadgeAction>({
+        type: ActionTypes.editBadge,
+        payload: response.data,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err: any) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err) {
+        dispatch<editBadgeAction>({
+          type: ActionTypes.getError,
+          payload: err.response.data.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};

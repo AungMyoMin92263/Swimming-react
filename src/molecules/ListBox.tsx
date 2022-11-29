@@ -11,6 +11,7 @@ export interface IListBoxUI {
   callback?: Function
   callback2?: Function
   noBtn?: boolean
+  noAttendance?: boolean
 }
 
 const ListBoxUI = (props: IListBoxUI) => {
@@ -21,12 +22,15 @@ const ListBoxUI = (props: IListBoxUI) => {
         {props.title}
       </div>}
 
-      <div className="list-body">
-        {childLen > 0 ? props.children :
-          <div className='no-bagde'>
-            <span>There is no {props.title}</span>
-          </div>}
-      </div>
+{!props.noAttendance?
+ <div className="list-body">
+ {childLen > 0 ? props.children :
+   <div className='no-bagde'>
+     <span>There is no {props.title}</span>
+   </div>}
+</div> : <></>
+}
+     
       {props.noBtn ? <></> : <div className="list-footer" >
         {props.more ?
           <label className='box-btn' onClick={() => {
