@@ -162,12 +162,14 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 												showReply={true}
 												reply={res.children.length}
 												showRightArr={true}
-												callback={() => {this.props.history.push(
-													"/manager/class/" +
-														this.id +
-														"/comment-detail/" +
-														res.id
-												);}}
+												callback={() => {
+													this.props.history.push(
+														"/manager/class/" +
+															this.id +
+															"/comment-detail/" +
+															res.id
+													);
+												}}
 												timeString={
 													res.user_info.name +
 													" at " +
@@ -179,7 +181,9 @@ class AdminAllCommentClass extends React.Component<IProps, IStates> {
 								)}
 							</>
 						) : (
-							<></>
+							<div className='no-bagde'>
+								<span>There is no comments</span>
+							</div>
 						)}
 					</div>
 				</div>

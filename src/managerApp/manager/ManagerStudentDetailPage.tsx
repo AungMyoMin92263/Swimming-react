@@ -287,13 +287,14 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 											reply={res.children.length}
 											showRightArr={true}
 											message={res.message}
-											
-											callback={() => {this.props.history.push(
+											callback={() => {
+												this.props.history.push(
 													"/manager/user/" +
 														this.id +
 														"/comment-detail/" +
 														res.id
-												);}}
+												);
+											}}
 											timeString={
 												res.user_info.name +
 												" at " +
@@ -304,7 +305,9 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 								})}
 							</>
 						) : (
-							<></>
+							<div className='no-bagde'>
+								<span>There is no comments</span>
+							</div>
 						)}
 					</div>
 				</div>
@@ -322,49 +325,53 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 				</div>
 				<div className='class-attendance-body mt-16 '>
 					<table className='table mt-16'>
-						<thead className='ml-16'>
-							<tr>
-								<th className='col-5 f-10 '>
-									<span className='ml-40'>CLASS</span>
-								</th>
-								<th className='col-5 f-10'>DATE/TIME</th>
-								<th className='col-2 f-10'>ATTENDACE</th>
-							</tr>
+						<thead className='class-attendance-sub-header flex'>
+							<th className='col-5 f-10 '>
+								<span className='ml-40'>CLASS</span>
+							</th>
+							<th className='col-5 f-10'>DATE/TIME</th>
+							<th className='col-2 f-10'>ATTENDACE</th>
 						</thead>
 						<tbody>
-							{this.state.attendances.slice(0, 5).map((attend, index) => {
-								return (
-									<>
-										<tr className=''>
-											<td className='col-5 '>
-												<img
-													src={
-														process.env.REACT_APP_API_ENDPOINT +
-														"/" +
-														attend.logo
-													}
-													alt=''
-													className='logo-icon ml-16'
-												/>
-												<span className='f-16'>{attend.text}</span>
-											</td>
-											<td className='col-5 '>
-												<span className='f-16'>{attend.record_date}</span>
-											</td>
+							{this.state.attendances.length < 0 ? (
+								this.state.attendances.slice(0, 5).map((attend, index) => {
+									return (
+										<>
+											<tr className=''>
+												<td className='col-5 '>
+													<img
+														src={
+															process.env.REACT_APP_API_ENDPOINT +
+															"/" +
+															attend.logo
+														}
+														alt=''
+														className='logo-icon ml-16'
+													/>
+													<span className='f-16 ml-16'>{attend.text}</span>
+												</td>
+												<td className='col-5 '>
+													<span className='f-16'>{attend.record_date}</span>
+												</td>
 
-											<td className='attendance-content col-2 '>
-												{attend.checked}
-												<Checkbox
-													disabled
-													checked={attend.attended}
-													icon={<RadioButtonUncheckedIcon />}
-													checkedIcon={<CheckCircleIcon />}
-												/>
-											</td>
-										</tr>
-									</>
-								);
-							})}
+												<td className='attendance-content col-2 '>
+													{attend.checked}
+													<Checkbox
+														disabled
+														checked={attend.attended}
+														icon={<RadioButtonUncheckedIcon />}
+														checkedIcon={<CheckCircleIcon />}
+													/>
+												</td>
+											</tr>
+										</>
+									);
+								})
+							) : (
+								<div className='no-bagde'>
+									<span>There is no attendances</span>
+								</div>
+							)}
 						</tbody>
 					</table>
 				</div>
@@ -382,23 +389,23 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 					</Link>
 				</div>
 				<div className='class-attendance-body mt-16'>
-					<table className='event-list-table ml-16'>
+					<table className='table ml-16'>
 						<thead className='class-attendance-sub-header flex '>
 							<th className='col-4 f-10'>
-								<span className='fc-second fw-500'>EVENT</span>
+								<span className='fc-second'>EVENT</span>
 							</th>
 							<th className='col-3 f-10'>
-								<span className='fc-second fw-500'>GENDER</span>
+								<span className='fc-second'>GENDER</span>
 							</th>
 							<th className='col-3 f-10'>
-								<span className='fc-second fw-500'>AGE GROUP</span>
+								<span className='fc-second'>AGE GROUP</span>
 							</th>
 							<th className='col-2 f-10'>
-								<span className='fc-second fw-500'>RECORD</span>
+								<span className='fc-second'>RECORD</span>
 							</th>
 						</thead>
 						<tbody>
-							{events  && events.length > 0 ? (
+							{events && events.length > 0 ? (
 								<>
 									{events.map((event: any, index: number) => {
 										return (
@@ -424,7 +431,9 @@ class AdminStudentDetailPage extends React.Component<IProps, IStates> {
 									})}
 								</>
 							) : (
-								<span>There is no events</span>
+								<div className='no-bagde'>
+									<span>There is no events</span>
+								</div>
 							)}
 						</tbody>
 					</table>

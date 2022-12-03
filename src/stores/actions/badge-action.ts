@@ -194,3 +194,35 @@ export const putBadge = (Badge: any, url: string, id: number) => {
     }
   };
 };
+
+export interface deleteBadgeAction {
+  type: ActionTypes.deleteBadge | ActionTypes.getError;
+  payload: any;
+}
+
+export const deleteBadge = (url: string, id: number) => {
+  let options = refreshHeaderOptionToken();
+
+
+  return async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: ActionTypes.loading, payload: true })
+      const response = await apiServer.delete<any>(url + "/" + id, options?.option);
+      dispatch<deleteBadgeAction>({
+        type: ActionTypes.deleteBadge,
+        payload: response,
+      });
+      dispatch({ type: ActionTypes.loading, payload: false })
+    } catch (err) {
+      dispatch({ type: ActionTypes.loading, payload: false })
+      if (err instanceof Error) {
+        dispatch<deleteBadgeAction>({
+          type: ActionTypes.getError,
+          payload: err.message,
+        });
+      } else {
+        console.log("Unexpected error", err);
+      }
+    }
+  };
+};

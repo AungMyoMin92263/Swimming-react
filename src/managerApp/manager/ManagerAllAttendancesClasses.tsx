@@ -227,37 +227,47 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 					<span className='fc-second'>Attendances</span>
 				</div>
 				<div className='class-attendance-body mt-16 '>
-					<div className='class-attendance-sub-header flex mt-16 ml-16'>
-						<div className='col-10 f-10'>
-							<span className='ml-56'>Students</span>
-						</div>
-						<div className='col-2 f-10'>
-							<span className='ml-56'>Attendace</span>
-						</div>
-					</div>
-					{this.state.attendances.map((attend, index) => {
-						return (
-							<>
-								<div className='class-attendance-content flex align-center'>
-									<div className='student-content col-10 flex align-center'>
-										<div className='plus flex-center ml-16'>{attend.icon}</div>
+					<table className='table'>
+						<thead className='class-attendance-sub-header flex ml-16'>
+							<th className='col-10 f-10'>
+								<span className='ml-56'>Students</span>
+							</th>
+							<th className='col-2 f-10'>
+								<span className='ml-40'>Attendace</span>
+							</th>
+						</thead>
+						{this.state.attendances.length > 0 ? (
+							this.state.attendances.map((attend, index) => {
+								return (
+									<>
+										<tr className='class-attendance-content flex align-center'>
+											<td className='student-content col-10 flex align-center'>
+												<div className='plus flex-center ml-16'>
+													{attend.icon}
+												</div>
 
-										<span className='f-16 ml-16'>{attend.text}</span>
-									</div>
+												<span className='f-16 ml-16'>{attend.text}</span>
+											</td>
 
-									<div className='attendance-content col-2 align-center justify-space-around'>
-										{attend.checked}
-										<Checkbox
-											disabled
-											checked={attend.checked}
-											icon={<RadioButtonUncheckedIcon />}
-											checkedIcon={<CheckCircleIcon />}
-										/>
-									</div>
-								</div>
-							</>
-						);
-					})}
+											<td className='attendance-content col-2 align-center justify-space-around'>
+												{attend.checked}
+												<Checkbox
+													disabled
+													checked={attend.checked}
+													icon={<RadioButtonUncheckedIcon />}
+													checkedIcon={<CheckCircleIcon />}
+												/>
+											</td>
+										</tr>
+									</>
+								);
+							})
+						) : (
+							<div className='no-bagde'>
+								<span>There is no attendances</span>
+							</div>
+						)}
+					</table>
 				</div>
 			</>
 		);

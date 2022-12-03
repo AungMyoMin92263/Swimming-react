@@ -196,55 +196,61 @@ class ManagerAllAttendancesStudent extends React.Component<IProps, IStates> {
 
   renderAttendance = () => {
     return (
-      <>
-        <div className="class-attendance-body mt-16 ">
-          <div className="class-attendance-sub-header flex mt-16 ml-16">
-            <div className="col-5 f-10">
-              <span className="ml-40">CLASS</span>
-            </div>
-            <div className="col-4 f-10">
-              <span className="ml-16">DATE/TIME</span>
-            </div>
-            <div className="col-3 f-10 flex-center">
-              <span className="ml-16">ATTENDACE</span>
-            </div>
-          </div>
-          {this.state.attendances &&
-            this.state.attendances.length > 0 &&
-            this.state.attendances.map((attend, index) => {
-              return (
-                <>
-                  <div className="class-attendance-content flex align-center">
-                    <div className="student-content col-5 ">
-                      <img
-                        src={
-                          process.env.REACT_APP_API_ENDPOINT + "/" + attend.logo
-                        }
-                        alt=""
-                        className="logo-icon ml-16"
-                      />
-                      <span className="f-16 ml-16">{attend.text}</span>
-                    </div>
-                    <div className="student-content col-4">
-                      <span className="f-16 ml-16">{attend.record_date}</span>
-                    </div>
+			<>
+				<div className='class-attendance-body mt-16 '>
+					<table className='table mt-16'>
+						<thead className='class-attendance-sub-header flex'>
+							<th className='col-5 f-10 '>
+								<span className='ml-40'>CLASS</span>
+							</th>
+							<th className='col-5 f-10'>DATE/TIME</th>
+							<th className='col-2 f-10'>ATTENDACE</th>
+						</thead>
+						<tbody>
+							{this.state.attendances.length < 0 ? (
+								this.state.attendances.slice(0, 5).map((attend, index) => {
+									return (
+										<>
+											<tr className=''>
+												<td className='col-5 '>
+													<img
+														src={
+															process.env.REACT_APP_API_ENDPOINT +
+															"/" +
+															attend.logo
+														}
+														alt=''
+														className='logo-icon ml-16'
+													/>
+													<span className='f-16 ml-16'>{attend.text}</span>
+												</td>
+												<td className='col-5 '>
+													<span className='f-16'>{attend.record_date}</span>
+												</td>
 
-                    <div className="attendance-content col-3 flex-center mr-8">
-                      {attend.checked}
-                      <Checkbox
-                        disabled
-                        checked={attend.attended}
-                        icon={<RadioButtonUncheckedIcon />}
-                        checkedIcon={<CheckCircleIcon />}
-                      />
-                    </div>
-                  </div>
-                </>
-              );
-            })}
-        </div>
-      </>
-    );
+												<td className='attendance-content col-2 '>
+													{attend.checked}
+													<Checkbox
+														disabled
+														checked={attend.attended}
+														icon={<RadioButtonUncheckedIcon />}
+														checkedIcon={<CheckCircleIcon />}
+													/>
+												</td>
+											</tr>
+										</>
+									);
+								})
+							) : (
+								<div className='no-bagde'>
+									<span>There is no attendances</span>
+								</div>
+							)}
+						</tbody>
+					</table>
+				</div>
+			</>
+		);
   };
 
   getMyAttendance = async (date: any) => {

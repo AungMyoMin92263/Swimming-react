@@ -466,130 +466,128 @@ class ManagerClassDetailPage extends React.Component<IProps, IStates> {
   renderComment = () => {
     let commentDetailUrl = "";
     return (
-      <div className="mt-24">
-        <div className="class-comment-header flex justify-space-between ">
-          <span className="fc-second">Class Comments</span>
-          <Link to={this.urlClassAllComments}>
-            <span className="fc-primary">View All</span>
-          </Link>
-        </div>
-        <div className="class-attendance-body mt-16">
-          <div className="ml-8">
-            {this.state.classe.comments ? (
-              <>
-                {this.state.classe.comments.map((res: any, index: number) => {
-                  return (
-                    <CommentDashItem
-                      profile={this.createProfile(
-                        res.user_info ? res.user_info.avatar : "",
-                        res.user_info ? res.user_info.name : ""
-                      )}
-                      message={res.message}
-                      callback={() => {
-                        this.props.history.push(
-                          "/manager/class/" +
-                            this.id +
-                            "/comment-detail/" +
-                            res.id
-                        );
-                      }}
-                      timeString={
-                        res.user_info &&
-                        res.user_info.name +
-                          " at " +
-                          moment(res.created_at).format("DD MMM, h:mm a")
-                      }
-                      showReply={true}
-                      reply={res.children.length}
-                      showRightArr={true}
-                      key={`cmd-${index}`}
-                    ></CommentDashItem>
-                  );
-                })}
-              </>
-            ) : (
-              <CommentDashItem
-                profile={this.createProfile("", "")}
-                message={"There is no comment"}
-                callback={() => {}}
-                timeString={""}
-                key={""}
-                showRightArr={true}
-              ></CommentDashItem>
-            )}
-          </div>
-        </div>
-      </div>
-    );
+			<div className='mt-24'>
+				<div className='class-comment-header flex justify-space-between '>
+					<span className='fc-second'>Class Comments</span>
+					<Link to={this.urlClassAllComments}>
+						<span className='fc-primary'>View All</span>
+					</Link>
+				</div>
+				<div className='class-attendance-body mt-16'>
+					<div className='ml-8'>
+						{this.state.classe.comments &&
+						this.state.classe.comments.length > 0 ? (
+							<>
+								{this.state.classe.comments.map((res: any, index: number) => {
+									return (
+										<CommentDashItem
+											profile={this.createProfile(
+												res.user_info ? res.user_info.avatar : "",
+												res.user_info ? res.user_info.name : ""
+											)}
+											message={res.message}
+											callback={() => {
+												this.props.history.push(
+													"/manager/class/" +
+														this.id +
+														"/comment-detail/" +
+														res.id
+												);
+											}}
+											timeString={
+												res.user_info &&
+												res.user_info.name +
+													" at " +
+													moment(res.created_at).format("DD MMM, h:mm a")
+											}
+											showReply={true}
+											reply={res.children.length}
+											showRightArr={true}
+											key={`cmd-${index}`}
+										></CommentDashItem>
+									);
+								})}
+							</>
+						) : (
+							<div className='no-bagde'>
+								<span>There is no comments</span>
+							</div>
+						)}
+					</div>
+				</div>
+			</div>
+		);
   };
   renderAttendance = () => {
     let editAddStudentUrl = "/manager/invite-student-summary/" + this.state.id;
     return (
-      <>
-        <div className="mt-24">
-          <div className="class-comment-header flex justify-space-between ">
-            <span className="fc-second">Attendances</span>
-            <Link to={this.urlClassAllAttendances}>
-              <span className="fc-primary">View All</span>
-            </Link>
-          </div>
-          <div className="class-attendance-body mt-16 ">
-            <div className="class-attendance-sub-header flex mt-16 ml-16">
-              <div className="col-10 f-10">
-                <span className="ml-56">Students</span>
-              </div>
-              <div className="col-2 f-10">
-                <span className="ml-16">Attendace</span>
-              </div>
-            </div>
-            <div className="class-attendance-content flex align-center">
-              <div className="student-content col-10 flex align-center">
-                <div className="plus flex-center ml-16 cursor">
-                  <AddIcon />
-                </div>
-                <Link to={editAddStudentUrl}>
-                  <span className="f-16 ml-16 fc-primary fw-500">
-                    Add/Edit Student
-                  </span>
-                </Link>
-              </div>
-            </div>
-            {this.state.attendances.slice(0, 5).map((attend, index) => {
-              return (
-                <>
-                  <div
-                    className="class-attendance-content flex align-center cursor"
-                    onClick={() => this.goStudentDetail(attend.student_id)}
-                  >
-                    <div className="student-content col-10 flex align-center">
-                      <div className="plus flex-center ml-16">
-                        {attend.icon}
-                      </div>
+			<>
+				<div className='mt-24'>
+					<div className='class-comment-header flex justify-space-between '>
+						<span className='fc-second'>Attendances</span>
+						<Link to={this.urlClassAllAttendances}>
+							<span className='fc-primary'>View All</span>
+						</Link>
+					</div>
+					<div className='class-attendance-body mt-16 '>
+						<table className="table">
+							<thead className='class-attendance-sub-header flex mt-16 ml-16'>
+								<th className='col-10 f-10'>
+									<span className='ml-56'>Students</span>
+								</th>
+								<th className='col-2 f-10'>
+									<span className='ml-16'>Attendace</span>
+								</th>
+							</thead>
+							<div className='class-attendance-content flex align-center'>
+								<div className='student-content col-10 flex align-center'>
+									<div className='plus flex-center ml-16 cursor'>
+										<AddIcon />
+									</div>
+									<Link to={editAddStudentUrl}>
+										<span className='f-16 ml-16 fc-primary fw-500'>
+											Add/Edit Student
+										</span>
+									</Link>
+								</div>
+							</div>
+							{this.state.attendances.slice(0, 5).map((attend, index) => {
+								return (
+									<>
+										<div
+											className='class-attendance-content flex align-center cursor'
+											onClick={() => this.goStudentDetail(attend.student_id)}
+										>
+											<div className='student-content col-10 flex align-center'>
+												<div className='plus flex-center ml-16'>
+													{attend.icon}
+												</div>
 
-                      <span className="f-16 ml-16">{attend.text}</span>
-                    </div>
+												<span className='f-16 ml-16'>{attend.text}</span>
+											</div>
 
-                    <div className="attendance-content col-2 align-center justify-space-around">
-                      {attend.checked}
-                      <Checkbox
-                        disabled
-                        checked={attend.checked}
-                        icon={<RadioButtonUncheckedIcon />}
-                        checkedIcon={<CheckCircleIcon />}
-                      />
-                      <div className="justify-end">
-                        <></>
-                        <ArrowForwardIosIcon></ArrowForwardIosIcon>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              );
-            })}
-          </div>
-        </div>
-      </>
-    );
+											<div className='attendance-content col-2 align-center justify-space-around'>
+												{attend.checked}
+												<Checkbox
+													disabled
+													checked={attend.checked}
+													icon={<RadioButtonUncheckedIcon />}
+													checkedIcon={<CheckCircleIcon />}
+												/>
+												<div className='justify-end'>
+													<></>
+													<ArrowForwardIosIcon></ArrowForwardIosIcon>
+												</div>
+											</div>
+										</div>
+									</>
+								);
+							})}
+						</table>
+					</div>
+				</div>
+			</>
+		);
   };
 
   render() {

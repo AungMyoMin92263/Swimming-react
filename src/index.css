@@ -1453,3 +1453,8 @@ image preview */
   align-items: center;
 
 }
+
+.delete-btn {
+  background: red;
+  color: white;
+}

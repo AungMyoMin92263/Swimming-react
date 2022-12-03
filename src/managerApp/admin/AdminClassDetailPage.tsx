@@ -543,71 +543,73 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
   renderAttendance = () => {
     let editAddStudentUrl = "/admin/school/"+this.schoolId +"/invite-student-summary/" + this.state.id;
     return (
-      <>
-      <div className='mt-24'>
-      <div className='class-comment-header flex justify-space-between '>
-					<span className='fc-second'>Attendances</span>
-					<Link to={this.urlClassAllAttendances}>
-						<span className='fc-primary'>View All</span>
-					</Link>
-				</div>
-        <div className="class-attendance-body mt-16 ">
-          <div className="class-attendance-sub-header flex mt-16 ml-16">
-            <div className="col-10 f-10">
-              <span className="ml-56">Students</span>
-            </div>
-            <div className="col-2 f-10">
-              <span className="">Attendace</span>
-            </div>
-          </div>
-          <div className="class-attendance-content flex align-center">
-            <div className="student-content col-10 flex align-center">
-              <div className="plus flex-center ml-16 cursor">
-                <AddIcon />
-              </div>
-              <Link to={editAddStudentUrl}>
-                <span className="f-16 ml-16 fc-primary fw-500">
-                  Add/Edit Student
-                </span>
-              </Link>
-            </div>
-          </div>
-          {this.state.attendances.slice(0, 5).map((attend, index) => {
-            return (
-							<>
-								<div
-									className='class-attendance-content flex align-center cursor'
-									onClick={() => this.goStudentDetail(attend.student_id)}
-								>
-									<div className='student-content col-10 flex align-center'>
-										<div className='plus flex-center ml-16'>{attend.icon}</div>
-
-										<span className='f-16 ml-16'>{attend.text}</span>
+			<>
+				<div className='mt-24'>
+					<div className='class-comment-header flex justify-space-between '>
+						<span className='fc-second'>Attendances</span>
+						<Link to={this.urlClassAllAttendances}>
+							<span className='fc-primary'>View All</span>
+						</Link>
+					</div>
+					<div className='class-attendance-body mt-16 '>
+						<table className='table'>
+							<thead className='class-attendance-sub-header flex mt-16 ml-16'>
+								<th className='col-10 f-10'>
+									<span className='ml-56'>Students</span>
+								</th>
+								<th className='col-2 f-10'>
+									<span className=''>Attendace</span>
+								</th>
+							</thead>
+							<div className='class-attendance-content flex align-center'>
+								<div className='student-content col-10 flex align-center'>
+									<div className='plus flex-center ml-16 cursor'>
+										<AddIcon />
 									</div>
-
-									<div className='attendance-content col-2 align-center justify-space-around'>
-										{attend.checked}
-										<Checkbox
-											disabled
-											checked={attend.checked}
-											icon={<RadioButtonUncheckedIcon />}
-											checkedIcon={<CheckCircleIcon />}
-										/>
-										<div className='justify-end'>
-											<></>
-											<ArrowForwardIosIcon></ArrowForwardIosIcon>
-										</div>
-									</div>
+									<Link to={editAddStudentUrl}>
+										<span className='f-16 ml-16 fc-primary fw-500'>
+											Add/Edit Student
+										</span>
+									</Link>
 								</div>
-							</>
-						);
-          })}
-        </div>
-        
-      </div>
-        
-      </>
-    );
+							</div>
+							{this.state.attendances.slice(0, 5).map((attend, index) => {
+								return (
+									<>
+										<div
+											className='class-attendance-content flex align-center cursor'
+											onClick={() => this.goStudentDetail(attend.student_id)}
+										>
+											<div className='student-content col-10 flex align-center'>
+												<div className='plus flex-center ml-16'>
+													{attend.icon}
+												</div>
+
+												<span className='f-16 ml-16'>{attend.text}</span>
+											</div>
+
+											<div className='attendance-content col-2 align-center justify-space-around'>
+												{attend.checked}
+												<Checkbox
+													disabled
+													checked={attend.checked}
+													icon={<RadioButtonUncheckedIcon />}
+													checkedIcon={<CheckCircleIcon />}
+												/>
+												<div className='justify-end'>
+													<></>
+													<ArrowForwardIosIcon></ArrowForwardIosIcon>
+												</div>
+											</div>
+										</div>
+									</>
+								);
+							})}
+						</table>
+					</div>
+				</div>
+			</>
+		);
   };
 
   render() {
@@ -625,7 +627,11 @@ class AdminClassDetailPage extends React.Component<IProps, IStates> {
                 > */}
 								<div
 									className='cursor'
-									onClick={() => this.props.history.back()}
+									onClick={() =>
+										this.props.history.push(
+											"/admin/school/" + this.schoolId
+										)
+									}
 								>
 									<ArrowBackIcon
 										sx={{ color: "#0070F8", fontSize: 18, mr: 0.5 }}

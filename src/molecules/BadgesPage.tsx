@@ -113,7 +113,7 @@ class BadgesListPage extends React.Component<IProps, IStates> {
         />
         {badgesList.length > 0 ?
           <>
-            {badgesList.slice(0, 9).map((badge: any) => {
+            {badgesList.map((badge: any) => {
               return <ListItem
                 text={badge.name}
                 key={`badgeList${badge.id}`}

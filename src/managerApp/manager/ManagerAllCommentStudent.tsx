@@ -177,7 +177,9 @@ class ManagerAllCommentStudent extends React.Component<IProps, IStates> {
 								})}
 							</>
 						) : (
-							<></>
+							<div className='no-bagde'>
+								<span>There is no comments</span>
+							</div>
 						)}
 					</div>
 				</div>

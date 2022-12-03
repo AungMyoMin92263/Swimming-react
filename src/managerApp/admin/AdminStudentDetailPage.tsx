@@ -358,124 +358,130 @@ class ManagerStudentDetailPage extends React.Component<IProps, IStates> {
   };
   renderAttendance = () => {
     return (
-      <>
-        <div className="class-comment-header flex justify-space-between mt-16">
-          <span className="fc-second">Attendance</span>
-          <Link to={this.urlStudentAllAttendacnes}>
-            <span className="fc-primary">View All</span>
-          </Link>
-        </div>
-        <div className="class-attendance-body mt-16 ">
-          <table className="table mt-16">
-            <thead className="ml-16">
-              <tr>
-                <th className="col-5 f-10 ">
-                  <span className="ml-40">CLASS</span>
-                </th>
-                <th className="col-5 f-10">DATE/TIME</th>
-                <th className="col-2 f-10">ATTENDACE</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.attendances.slice(0, 5).map((attend, index) => {
-                return (
-                  <>
-                    <tr className="">
-                      <td className="col-5 ">
-                        <img
-                          src={
-                            process.env.REACT_APP_API_ENDPOINT +
-                            "/" +
-                            attend.logo
-                          }
-                          alt=""
-                          className="logo-icon ml-16"
-                        />
-                        <span className="f-16 ml-16">{attend.text}</span>
-                      </td>
-                      <td className="col-5 ">
-                        <span className="f-16">{attend.record_date}</span>
-                      </td>
+			<>
+				<div className='class-comment-header flex justify-space-between mt-16'>
+					<span className='fc-second'>Attendance</span>
+					<Link to={this.urlStudentAllAttendacnes}>
+						<span className='fc-primary'>View All</span>
+					</Link>
+				</div>
+				<div className='class-attendance-body mt-16 '>
+					<table className='table mt-16'>
+						<thead className='class-attendance-sub-header flex'>
+							<th className='col-5 f-10 '>
+								<span className='ml-40'>CLASS</span>
+							</th>
+							<th className='col-5 f-10'>DATE/TIME</th>
+							<th className='col-2 f-10'>ATTENDACE</th>
+						</thead>
+						<tbody>
+							{this.state.attendances.length < 0 ? (
+								this.state.attendances.slice(0, 5).map((attend, index) => {
+									return (
+										<>
+											<tr className=''>
+												<td className='col-5 '>
+													<img
+														src={
+															process.env.REACT_APP_API_ENDPOINT +
+															"/" +
+															attend.logo
+														}
+														alt=''
+														className='logo-icon ml-16'
+													/>
+													<span className='f-16 ml-16'>{attend.text}</span>
+												</td>
+												<td className='col-5 '>
+													<span className='f-16'>{attend.record_date}</span>
+												</td>
 
-                      <td className="attendance-content col-2 ">
-                        {attend.checked}
-                        <Checkbox
-                          disabled
-                          checked={attend.attended}
-                          icon={<RadioButtonUncheckedIcon />}
-                          checkedIcon={<CheckCircleIcon />}
-                        />
-                      </td>
-                    </tr>
-                  </>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </>
-    );
+												<td className='attendance-content col-2 '>
+													{attend.checked}
+													<Checkbox
+														disabled
+														checked={attend.attended}
+														icon={<RadioButtonUncheckedIcon />}
+														checkedIcon={<CheckCircleIcon />}
+													/>
+												</td>
+											</tr>
+										</>
+									);
+								})
+							) : (
+								<div className='no-bagde'>
+									<span>There is no attendances</span>
+								</div>
+							)}
+						</tbody>
+					</table>
+				</div>
+			</>
+		);
   };
   renderEventList = () => {
     const events = this.props.eventList?.result || [];
     return (
-      <>
-        <div className="class-comment-header flex justify-space-between mt-16">
-          <span className="fc-second">Events</span>
-          <Link to={this.urlStudentEventList}>
-            <span className="fc-primary">View All</span>
-          </Link>
-        </div>
-        <div className="class-attendance-body mt-16">
-          <table className="event-list-table ml-16">
-            <thead className="class-attendance-sub-header flex ">
-              <th className="col-4 f-10">
-                <span className="fc-second fw-500">EVENT</span>
-              </th>
-              <th className="col-3 f-10">
-                <span className="fc-second fw-500">GENDER</span>
-              </th>
-              <th className="col-3 f-10">
-                <span className="fc-second fw-500">AGE GROUP</span>
-              </th>
-              <th className="col-2 f-10">
-                <span className="fc-second fw-500">RECORD</span>
-              </th>
-            </thead>
-            <tbody>
-              {events && events.length > 0 ? (
-                <>
-                  {events.map((event: any, index: number) => {
-                    return (
-                      <tr className="flex">
-                        <td className="col-4 f-10">
-                          <span className="f-16">{event.event.name}</span>
-                        </td>
-                        <td className="col-3 f-10">
-                          <span className="f-16 fc-second">
-                            {event.event.gender}
-                          </span>
-                        </td>
-                        <td className="col-3 f-10">
-                          <span className="f-16 fc-second">
-                            {event.event.from_age} - {event.event.to_age} y/o
-                          </span>
-                        </td>
-                        <td className="col-2 f-10">
-                          <span>-</span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </>
-              ) : (
-                <span>There is no events</span>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </>
-    );
+			<>
+				<div className='class-comment-header flex justify-space-between mt-16'>
+					<span className='fc-second'>Events</span>
+					<Link to={this.urlStudentEventList}>
+						<span className='fc-primary'>View All</span>
+					</Link>
+				</div>
+				<div className='class-attendance-body mt-16'>
+					<table className='table ml-16'>
+						<thead className='class-attendance-sub-header flex '>
+							<th className='col-4 f-10'>
+								<span className=' ml-16 fc-second'>EVENT</span>
+							</th>
+							<th className='col-3 f-10'>
+								<span className='fc-second'>GENDER</span>
+							</th>
+							<th className='col-3 f-10'>
+								<span className='fc-second'>AGE GROUP</span>
+							</th>
+							<th className='col-2 f-10'>
+								<span className='fc-second'>RECORD</span>
+							</th>
+						</thead>
+						<tbody>
+							{events && events.length > 0 ? (
+								<>
+									{events.map((event: any, index: number) => {
+										return (
+											<tr className='flex'>
+												<td className='col-4 f-10'>
+													<span className='f-16'>{event.event.name}</span>
+												</td>
+												<td className='col-3 f-10'>
+													<span className='f-16 fc-second'>
+														{event.event.gender}
+													</span>
+												</td>
+												<td className='col-3 f-10'>
+													<span className='f-16 fc-second'>
+														{event.event.from_age} - {event.event.to_age} y/o
+													</span>
+												</td>
+												<td className='col-2 f-10'>
+													<span>-</span>
+												</td>
+											</tr>
+										);
+									})}
+								</>
+							) : (
+								<div className='no-bagde'>
+									<span>There is no events</span>
+								</div>
+							)}
+						</tbody>
+					</table>
+				</div>
+			</>
+		);
   };
 
   render() {

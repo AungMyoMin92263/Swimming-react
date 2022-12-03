@@ -27,6 +27,7 @@ interface IStates {
   isDesEmpty: boolean;
   goBadges: boolean;
   schoolId : any;
+  errMsg: any;
 }
 
 interface IProps {
@@ -56,6 +57,7 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
       goBadges: false,
       color: "",
       schoolId : -1,
+      errMsg: ""
     };
   }
   componentDidMount() {
@@ -96,15 +98,22 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
   };
 
   createBadge = async () => {
-    let postData = {
-      "name": this.state.name,
-      "logo": this.props.badges.selectedIcon || "/assets/icons/star.svg",
-      "color": this.state.color,
-      "school_id" : this.state.schoolId,
-      "description": this.state.description
-    }
-    await this.props.createBadge(postData)
-    this.props.history.back()
+    if ( this.state.color === ""){
+      this.setState({
+				errMsg: "Color must be selected",
+			});
+    }else{
+			let postData = {
+				name: this.state.name,
+				logo: this.props.badges.selectedIcon || "/assets/icons/star.svg",
+				color: this.state.color,
+				school_id: this.state.schoolId,
+				description: this.state.description,
+			};
+			await this.props.createBadge(postData);
+			this.props.history.back()
+		}
+    
   }
 
   renderImageUpload = (image_url: string, color?: string,) => {
@@ -156,103 +165,125 @@ class CoachCreateBadgePage extends React.Component<IProps, IStates> {
     } = this.state;
     let badgeIcon = this.props.badges.selectedIcon || ''
     return (
-      <>
-        <div className="wrapper-mobile">
-          {goBadges && <Navigate to="/coach/dashboard/badge-list" replace={true} />}
+			<>
+				<div className='wrapper-mobile'>
+					{goBadges && (
+						<Navigate to='/coach/dashboard/badge-list' replace={true} />
+					)}
 
-          <div className="content-mobile-cus-space bg-w col-sm-12">
-            <CoachMobileHeader backBtn={true}></CoachMobileHeader>
-            <div className="f-32 fw-500 mt-32 mb-32" style={{ width: "247px" }}>
-              <span>Create Badge</span>
-            </div>
-            <div className="text-center pt-8">
-              <div className="mb-16 f-12">
-                <span>Badge Preview</span>
-              </div>
-              <div className="mb-32">{this.renderImageUpload(badgeIcon, this.state.color)}</div>
-            </div>
-            <div className="f-12 fw-500 mb-16">
-              <span>Badge Colour</span>
-            </div>
-            <div className="align-center mb-16" style={{ justifyContent: "space-between" }}>
-              {this.colors.map((color, index) => {
-                return <button key={`colotbtn${index}`} className={`badge-color-btn bg-${color}`} onClick={() => {
-                  this.setState({
-                    ...this.state,
-                    color: color
-                  })
-                }}></button>
-              })}
+					<div className='content-mobile-cus-space bg-w col-sm-12'>
+						<CoachMobileHeader backBtn={true}></CoachMobileHeader>
+						<div className='f-32 fw-500 mt-32 mb-32' style={{ width: "247px" }}>
+							<span>Create Badge</span>
+						</div>
+						<div className='text-center pt-8'>
+							<div className='mb-16 f-12'>
+								<span>Badge Preview</span>
+							</div>
+							<div className='mb-32'>
+								{this.renderImageUpload(badgeIcon, this.state.color)}
+							</div>
+						</div>
+						<div className='f-12 fw-500 mb-16'>
+							<span>Badge Colour</span>
+						</div>
+						<div
+							className='align-center mb-16'
+							style={{ justifyContent: "space-between" }}
+						>
+							{this.colors.map((color, index) => {
+								return (
+									<button
+										key={`colotbtn${index}`}
+										className={`badge-color-btn bg-${color}`}
+										onClick={() => {
+											this.setState({
+												...this.state,
+												color: color,
+											});
+										}}
+									></button>
+								);
+							})}
 
-              {/* <button className="mr-16 badge-color"></button>
+							{/* <button className="mr-16 badge-color"></button>
               <button className="mr-16 badge-color" style={{ backgroundColor: '#0070F8' }}></button>
               <button className="mr-16 badge-color" style={{ backgroundColor: '#E6F1FE' }}></button>
               <button className="mr-16 badge-color" style={{ backgroundColor: '#FAEFEF' }}></button>
               <button className="mr-16 badge-color" style={{ backgroundColor: '#C95D63' }}></button> */}
-            </div>
-            <div className="mb-16">
-              <InputFormAtom
-                label="Badge Name"
-                placeholder={"Enter badge name"}
-                warning={NameMsg}
-                type="text"
-                showWarning={isNameEmpty || !isNameValid}
-                isDropdown={false}
-                callback={(value: string) => {
-                  this.setState({
-                    name: value,
-                  });
-                }}
-                id="badgeName"
-                name="badgeName"
-                value={name}
-                required={true}
-                maxLength={200}
-                className=""
-                clickCallback={() => { }}
-                focusCallback={() => {
-                  this.setState({
-                    isNameEmpty: false,
-                    isNameValid: true,
-                  });
-                }}
-              />
-            </div>
-            <div className="mb-16">
-              <InputFormAtom
-                label="Badge Description"
-                placeholder={"Enter badge description or criteria"}
-                warning={DesMsg}
-                type="text"
-                showWarning={isDesEmpty || !isDesValid}
-                isDropdown={false}
-                callback={(value: string) => {
-                  this.setState({
-                    description: value,
-                  });
-                }}
-                id="description"
-                name="description"
-                value={description}
-                required={true}
-                maxLength={200}
-                className=""
-                clickCallback={() => { }}
-                focusCallback={() => {
-                  this.setState({
-                    isDesEmpty: false,
-                    isDesValid: true,
-                  });
-                }}
-              />
-            </div>
-            <button type="submit" className="btn btn-primary cus-primay-btn-m right w-100" onClick={() => this.createBadge()}>
-              Done
-            </button>
-          </div>
-        </div>
-      </>
-    );
+						</div>
+						<div className='mb-16'>
+							<InputFormAtom
+								label='Badge Name'
+								placeholder={"Enter badge name"}
+								warning={NameMsg}
+								type='text'
+								showWarning={isNameEmpty || !isNameValid}
+								isDropdown={false}
+								callback={(value: string) => {
+									this.setState({
+										name: value,
+									});
+								}}
+								id='badgeName'
+								name='badgeName'
+								value={name}
+								required={true}
+								maxLength={200}
+								className=''
+								clickCallback={() => {}}
+								focusCallback={() => {
+									this.setState({
+										isNameEmpty: false,
+										isNameValid: true,
+									});
+								}}
+							/>
+						</div>
+						<div className='mb-16'>
+							<InputFormAtom
+								label='Badge Description'
+								placeholder={"Enter badge description or criteria"}
+								warning={DesMsg}
+								type='text'
+								showWarning={isDesEmpty || !isDesValid}
+								isDropdown={false}
+								callback={(value: string) => {
+									this.setState({
+										description: value,
+									});
+								}}
+								id='description'
+								name='description'
+								value={description}
+								required={true}
+								maxLength={200}
+								className=''
+								clickCallback={() => {}}
+								focusCallback={() => {
+									this.setState({
+										isDesEmpty: false,
+										isDesValid: true,
+									});
+								}}
+							/>
+						</div>
+						<div>
+							{this.state.errMsg && (
+								<p className='text-danger'>{this.state.errMsg}</p>
+							)}
+						</div>
+						<button
+							type='submit'
+							className='btn btn-primary cus-primay-btn-m right w-100'
+							onClick={() => this.createBadge()}
+						>
+							Done
+						</button>
+					</div>
+				</div>
+			</>
+		);
   }
 }
 

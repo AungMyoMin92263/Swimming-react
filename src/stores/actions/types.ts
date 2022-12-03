@@ -8,7 +8,7 @@ import { createCoachAction, deleteCoachAction, editCoachAction, getCoachAction,g
 import { createStudentAction, deleteStudentAction, editStudentAction, getStudentAction,getStudentObjAction } from "./student-action";
 import { CommentAction } from "./comment-action";
 import { CreateAttendanceAction, GetMyAttendanceAction } from "./attendance-action";
-import { CreateBadgeAction, CreatingBadgeAction, editBadgeAction, getBadgeObjAction, GetMyBadgesAction } from "./badge-action";
+import { CreateBadgeAction, CreatingBadgeAction, deleteBadgeAction, editBadgeAction, getBadgeObjAction, GetMyBadgesAction } from "./badge-action";
 import { S3FileUploadAction } from "./s3-file-upload.action";
 
 export enum ActionTypes {
@@ -45,6 +45,7 @@ export enum ActionTypes {
   getClassProgram,
   editClass,
   deleteClass,
+  deleteBadge,
   
   // Comment
   getComments,
@@ -159,3 +160,4 @@ export type Action = SignUpAction
   | S3FileUploadAction
   | getBadgeObjAction
   | editBadgeAction
+  | deleteBadgeAction

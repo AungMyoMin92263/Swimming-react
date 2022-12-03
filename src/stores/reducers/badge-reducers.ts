@@ -39,6 +39,13 @@ export const badgeReducers = (
           error: null,
         };
 
+    case ActionTypes.deleteBadge:
+      return {
+        ...state,
+        result: action.payload,
+        error: null,
+      };
+
     case ActionTypes.createBadges:
       return {
         ...state,

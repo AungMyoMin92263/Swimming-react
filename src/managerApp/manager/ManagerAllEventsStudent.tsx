@@ -146,16 +146,16 @@ class ManagerAllEventsStudent extends React.Component<IProps, IStates> {
 					<table className='event-list-table ml-16'>
 						<thead className='class-attendance-sub-header flex '>
 							<th className='col-4 f-10'>
-								<span className='fc-second fw-500'>EVENT</span>
+								<span className='fc-second'>EVENT</span>
 							</th>
 							<th className='col-3 f-10'>
-								<span className='fc-second fw-500'>GENDER</span>
+								<span className='fc-second'>GENDER</span>
 							</th>
 							<th className='col-3 f-10'>
-								<span className='fc-second fw-500'>AGE GROUP</span>
+								<span className='fc-second'>AGE GROUP</span>
 							</th>
 							<th className='col-2 f-10'>
-								<span className='fc-second fw-500'>RECORD</span>
+								<span className='fc-second'>RECORD</span>
 							</th>
 						</thead>
 						<tbody>
@@ -185,7 +185,9 @@ class ManagerAllEventsStudent extends React.Component<IProps, IStates> {
 									})}
 								</>
 							) : (
-								<span>There is no events</span>
+								<div className='no-bagde'>
+									<span>There is no events</span>
+								</div>
 							)}
 						</tbody>
 					</table>
