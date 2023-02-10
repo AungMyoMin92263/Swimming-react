@@ -1056,6 +1056,7 @@ const mapStateToProps = ({
 };
 
 export default connect(mapStateToProps, {
+	deleteClass,
 	deleteUser,
 	getClassObject,
 	getSchoolObj,
